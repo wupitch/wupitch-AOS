@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,7 +34,10 @@ class WupitchApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        initRetrofitInstance()
+//        initRetrofitInstance()
+
+
+        KakaoSdk.init(this, getString(R.string.kakao_native_app_key))
 
     }
 

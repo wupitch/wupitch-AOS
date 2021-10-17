@@ -9,6 +9,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import wupitch.android.WupitchApplication.Companion.dataStore
+import wupitch.android.common.Constants.JWT_PREFERENCE_KEY
 import java.io.IOException
 
 class JwtTokenInterceptor(
@@ -19,10 +20,10 @@ class JwtTokenInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val builder: Request.Builder = chain.request().newBuilder()
 
-        val jwtPreferenceKey = stringPreferencesKey("jwt_token")
+
         val jwtPreferenceFlow: Flow<String> = context.dataStore.data
             .map { preferences ->
-                preferences[jwtPreferenceKey] ?: ""
+                preferences[JWT_PREFERENCE_KEY] ?: ""
             }
 
         val jwtToken: Flow<String> = jwtPreferenceFlow

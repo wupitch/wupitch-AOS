@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">Wupitch</string>
+    <string name="app_name">우피치</string>
+
+<!--    카카오 로그인-->
+    <string name="kakao_native_app_key">b587874a0a178d33f63d9dd3a38b35b9</string>
+    <string name="login_kakao_access_denied_toast_message">접근이 거부 됨(동의 취소)</string>
+    <string name="login_kakao_invalid_client_toast_message">유효하지 않은 앱</string>
+    <string name="login_kakao_invalid_grant_toast_message">인증 수단이 유효하지 않아 인증할 수 없는 상태</string>
+    <string name="login_kakao_invalid_request_toast_message">요청 파라미터 오류</string>
+    <string name="login_kakao_invalid_scope_toast_message">유효하지 않은 scope ID</string>
+    <string name="login_kakao_misconfigured_toast_message">설정이 올바르지 않음(android key hash)</string>
+    <string name="login_kakao_server_error_toast_message">서버 내부 에러</string>
+    <string name="login_kakao_unauthorized_toast_message">앱이 요청 권한이 없음</string>
+    <string name="login_kakao_etc_toast_message">기타 오류</string>
 </resources>
