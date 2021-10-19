@@ -1,7 +1,18 @@
 <resources>
     <string name="app_name">우피치</string>
 
-<!--    카카오 로그인-->
+<!--    온보딩 -->
+    <string name="onboarding_title1"><![CDATA[내가 원하는 팀 스포츠<br><font color=#ec8541>동호회</font>를 한 눈에!]]></string>
+    <string name="onboarding_title2"><![CDATA[<font color=#ec8541>번개와 리그</font>를 통해<br>함께 운동하세요]]></string>
+    <string name="onboarding_title3"><![CDATA[<font color=#ec8541>내 활동</font>에서 확인하는<br>나의 동호회 이야기]]></string>
+    <string name="onboarding_title4"><![CDATA[<font color=#ec8541>피드</font>를 통해 나누는<br>스포츠 정신!]]></string>
+    <string name="onboarding_subtitle1">지역구를 기반으로 원하는 동호회를 찾아보세요.</string>
+    <string name="onboarding_subtitle2">번개모임과 팀 리그를 조직하고 참여하세요.</string>
+    <string name="onboarding_subtitle3">공지사항부터 사진까지 동호회 소식을 확인하세요.</string>
+    <string name="onboarding_subtitle4">서로의 스포츠 활동 사진을 공유하세요.</string>
+    <string name="skip_onboarding">건너뛰기</string>
+
+    <!--    카카오 로그인-->
     <string name="kakao_native_app_key">b587874a0a178d33f63d9dd3a38b35b9</string>
     <string name="login_kakao_access_denied_toast_message">접근이 거부 됨(동의 취소)</string>
     <string name="login_kakao_invalid_client_toast_message">유효하지 않은 앱</string>
@@ -12,4 +23,5 @@
     <string name="login_kakao_server_error_toast_message">서버 내부 에러</string>
     <string name="login_kakao_unauthorized_toast_message">앱이 요청 권한이 없음</string>
     <string name="login_kakao_etc_toast_message">기타 오류</string>
+
 </resources>
