@@ -22,6 +22,7 @@ class WupitchApplication : Application() {
 
 
     companion object {
+
         lateinit var retrofit: Retrofit
 
         val Context.dataStore by preferencesDataStore(

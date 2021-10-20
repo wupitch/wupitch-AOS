@@ -71,8 +71,7 @@
             android:src="@drawable/kakao_login"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="44dp"
-            android:onClick="@{() -> viewModel.signInWithKakao()"/>
+            android:layout_marginBottom="44dp" />
 
     </RelativeLayout>
 

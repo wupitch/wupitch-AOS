@@ -8,6 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import wupitch.android.databinding.ItemOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
+import android.widget.LinearLayout
+import androidx.core.view.setMargins
+
 
 class OnboardingVpAdapter(
     private val context : Context,
@@ -32,6 +35,11 @@ class OnboardingVpAdapter(
         holder.binding.ivOnboarding.setImageDrawable(
             ContextCompat.getDrawable(context, onBoardingContentList[position].imgDrawable)
         )
+        if(position ==1) {
+            val params = holder.binding.ivOnboarding.layoutParams as ViewGroup.MarginLayoutParams
+            params.setMargins(0, 0, 0, 0)
+            holder.binding.ivOnboarding.layoutParams = params
+        }
     }
 
     override fun getItemCount(): Int = onBoardingContentList.size

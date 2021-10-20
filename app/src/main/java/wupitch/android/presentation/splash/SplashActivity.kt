@@ -25,6 +25,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             delay(1500L)
             withContext(Dispatchers.Main){
                 startActivity(Intent(this@SplashActivity, OnboardingActivity::class.java))
+                finish()
             }
         }
     }

@@ -4,21 +4,25 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
 import wupitch.android.databinding.ActivityOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
 
+@AndroidEntryPoint
 class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboardingBinding::inflate) {
 
     private lateinit var viewPagerAdapter: OnboardingVpAdapter
     private var onBoardingList = ArrayList<OnboardingContent>()
+    private val viewModel : OnboardingViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +30,10 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
         setStatusBar()
         setViewpager()
         binding.onboardingActivity = this
+        binding.viewModel = viewModel
+        binding.ivKakaoLogin.setOnClickListener {
+            viewModel.signInWithKakao()
+        }
 
     }
 
