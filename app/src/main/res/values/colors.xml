@@ -13,4 +13,5 @@
     <color name="black_onboarding_title">#222222</color>
     <color name="gray_indicator_onboarding">#e5e5e5</color>
     <color name="gray_onboarding_background">#f5f5f5</color>
+    <color name="gray_service_agreement_subtitle">#b5b5b5</color>
 </resources>

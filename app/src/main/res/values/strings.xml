@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">우피치</string>
 
-<!--    온보딩 -->
+    <!--    온보딩 -->
     <string name="onboarding_title1"><![CDATA[내가 원하는 팀 스포츠<br><font color=#ec8541>동호회</font>를 한 눈에!]]></string>
     <string name="onboarding_title2"><![CDATA[<font color=#ec8541>번개와 리그</font>를 통해<br>함께 운동하세요]]></string>
     <string name="onboarding_title3"><![CDATA[<font color=#ec8541>내 활동</font>에서 확인하는<br>나의 동호회 이야기]]></string>
@@ -24,4 +24,16 @@
     <string name="login_kakao_unauthorized_toast_message">앱이 요청 권한이 없음</string>
     <string name="login_kakao_etc_toast_message">기타 오류</string>
 
+<!--    회원가입-->
+    <string name="service_agreement_title"><![CDATA[<font color=#ec8541>우피치</font>에 오신 것을<br>환영합니다.]]></string>
+    <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 즐겨주세요.</string>
+    <string name="agree_all">전체동의</string>
+    <string name="terms_of_service_agreement">이용약관</string>
+    <string name="terms_of_privacy_policy">개인정보 수집 및 이용</string>
+    <string name="push_notification_agreement">푸시 알람 동의 (선택)</string>
+    <string name="detail_agreement">보기</string>
+    <string name="next_one_over_four">다음 (1/4)</string>
+    <string name="next_two_over_four">다음 (2/4)</string>
+    <string name="next_three_over_four">다음 (3/4)</string>
+    <string name="start">시작하기</string>
 </resources>

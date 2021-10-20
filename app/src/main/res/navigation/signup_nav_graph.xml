@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/signup_nav_graph"
+    app:startDestination="@id/serviceAgreementFragment">
+
+    <fragment
+        android:id="@+id/serviceAgreementFragment"
+        android:name="wupitch.android.presentation.signup.ServiceAgreementFragment"
+        android:label="ServiceAgreementFragment">
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_regionFragment"
+            app:destination="@id/regionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sportFragment"
+        android:name="wupitch.android.presentation.signup.SportFragment"
+        android:label="SportFragment" >
+        <action
+            android:id="@+id/action_sportFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/regionFragment"
+        android:name="wupitch.android.presentation.signup.RegionFragment"
+        android:label="RegionFragment" >
+        <action
+            android:id="@+id/action_regionFragment_to_sportFragment"
+            app:destination="@id/sportFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="wupitch.android.presentation.signup.ProfileFragment"
+        android:label="ProfileFragment" />
+</navigation>
