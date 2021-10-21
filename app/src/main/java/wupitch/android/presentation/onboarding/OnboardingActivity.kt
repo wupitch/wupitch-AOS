@@ -1,5 +1,6 @@
 package wupitch.android.presentation.onboarding
 
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,13 +10,16 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
+import wupitch.android.common.Resource
 import wupitch.android.databinding.ActivityOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
+import wupitch.android.presentation.signup.SignupActivity
 
 @AndroidEntryPoint
 class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboardingBinding::inflate) {
@@ -27,29 +31,25 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setStatusBar()
+        setStatusBar(R.color.gray_onboarding_background)
         setViewpager()
         binding.onboardingActivity = this
         binding.viewModel = viewModel
         binding.ivKakaoLogin.setOnClickListener {
             viewModel.signInWithKakao()
         }
+        viewModel.kakaoLoginState.observe(this, Observer {
+            when(it) {
+                is Resource.Success -> {
+                    startActivity(Intent(this, SignupActivity::class.java))
+                }
+            }
+        })
 
     }
 
     fun skipOnboarding () {
         binding.tablayoutOnboarding.getTabAt(3)?.select()
-    }
-
-    private fun setStatusBar() {
-        window.statusBarColor = ContextCompat.getColor(this, R.color.gray_onboarding_background)
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
-        }else {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-
     }
 
     private fun setViewpager() {

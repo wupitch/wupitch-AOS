@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import wupitch.android.R
 import wupitch.android.WupitchApplication
+import wupitch.android.common.Resource
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +26,9 @@ class OnboardingViewModel @Inject constructor(
 
     private var _kakaoErrorMessage = MutableStateFlow<Int>(0)
     val kakaoErrorMessage : StateFlow<Int> = _kakaoErrorMessage
+
+    private var _kakaoLoginState = MutableLiveData<Resource<String>>()
+    val kakaoLoginState : LiveData<Resource<String>> = _kakaoLoginState
 
     fun signInWithKakao() {
 //        val jwtPreferenceFlow: Flow<String?> = dataStore.data.map { preferences ->
@@ -45,6 +51,8 @@ class OnboardingViewModel @Inject constructor(
 
     private val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
+            Log.d("{MainActivity.kakaoCallback}", "login success! ${error.message}")
+
             when (error.toString()) {
                 //flow 로 처리할 것
 //                AuthErrorCause.AccessDenied.toString() -> _kakaoErrorMessage = R.string.login_kakao_access_denied_toast_message
@@ -61,6 +69,7 @@ class OnboardingViewModel @Inject constructor(
             Log.d("{MainActivity.kakaoCallback}", "login success! ${token.accessToken}")
             //showLoadingDialog(this)
             //서버에게 토큰 보내기.
+            _kakaoLoginState.value = Resource.Success<String>("success")
         }
     }
 }

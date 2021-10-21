@@ -5,6 +5,7 @@ import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -26,7 +27,12 @@ class ServiceAgreementFragment
 
         binding.fragment = this
         setTitleText()
+        setStatusBar(R.color.white)
 
+    }
+
+    fun testClick() {
+        Toast.makeText(requireContext(), "left icon clicked!", Toast.LENGTH_SHORT).show()
     }
 
     val checkedChangeListener =
