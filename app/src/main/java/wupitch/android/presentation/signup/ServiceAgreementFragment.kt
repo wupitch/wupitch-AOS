@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
+import wupitch.android.common.CustomToolbar
 import wupitch.android.databinding.FragmentServiceAgreementBinding
 
 class ServiceAgreementFragment
@@ -32,8 +33,12 @@ class ServiceAgreementFragment
     }
 
     fun testClick() {
+        //왜 on left icon click 이거는 작동하고 detail 에서는 작동 안 하지? toast 도 안 띄워지고
+        //그냥 on left icon click 설정만 해도 터진다. 왜지?
         Toast.makeText(requireContext(), "left icon clicked!", Toast.LENGTH_SHORT).show()
     }
+
+
 
     val checkedChangeListener =
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
@@ -41,14 +46,14 @@ class ServiceAgreementFragment
             else --agreementSatisfiedNum
         }
 
-    fun setAllButtonClickListener () {
+    fun setAllButtonClickListener() {
         nonAllButtonClicked = false
         if (!binding.toggleAgreeAll.isChecked && !nonAllButtonClicked) {
             binding.btnNext.isActivated = false
             binding.toggleServiceAgreement.isChecked = false
             binding.togglePrivacy.isChecked = false
             binding.togglePushNotification.isChecked = false
-        }else {
+        } else {
             binding.btnNext.isActivated = true
             binding.toggleServiceAgreement.isChecked = true
             binding.togglePrivacy.isChecked = true
@@ -57,7 +62,7 @@ class ServiceAgreementFragment
         checkIfAgreementSatisfied()
     }
 
-    fun setNonAllButtonClickListener () {
+    fun setNonAllButtonClickListener() {
         nonAllButtonClicked = true
         checkIfAgreementSatisfied()
     }
@@ -76,5 +81,16 @@ class ServiceAgreementFragment
     fun checkForNavigationToRegion(view: View) {
         if (view.isActivated) Navigation.findNavController(view)
             .navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
+    }
+
+    fun showServiceAgreementDetailFragment(view: View) {
+        view.findNavController()
+            .navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
+    }
+
+
+    fun showUseOfPersonalInfoDetailFragment(view: View) {
+        view.findNavController()
+            .navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
     }
 }

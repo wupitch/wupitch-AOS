@@ -41,7 +41,9 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
         viewModel.kakaoLoginState.observe(this, Observer {
             when(it) {
                 is Resource.Success -> {
-                    startActivity(Intent(this, SignupActivity::class.java))
+                    val intent = Intent(this, SignupActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
                 }
             }
         })

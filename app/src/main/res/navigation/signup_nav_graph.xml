@@ -11,6 +11,12 @@
         <action
             android:id="@+id/action_serviceAgreementFragment_to_regionFragment"
             app:destination="@id/regionFragment" />
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
+            app:destination="@id/serviceAgreementDetailFragment" />
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
+            app:destination="@id/useOfPersonalInfoDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/sportFragment"
@@ -32,4 +38,12 @@
         android:id="@+id/profileFragment"
         android:name="wupitch.android.presentation.signup.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/serviceAgreementDetailFragment"
+        android:name="wupitch.android.presentation.signup.ServiceAgreementDetailFragment"
+        android:label="ServiceAgreementDetailFragment" />
+    <fragment
+        android:id="@+id/useOfPersonalInfoDetailFragment"
+        android:name="wupitch.android.presentation.signup.UseOfPersonalInfoDetailFragment"
+        android:label="UseOfPersonalInfoDetailFragment" />
 </navigation>
