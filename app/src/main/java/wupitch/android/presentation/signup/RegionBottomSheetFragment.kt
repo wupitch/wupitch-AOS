@@ -1,6 +1,7 @@
 package wupitch.android.presentation.signup
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,12 +44,26 @@ class RegionBottomSheetFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        binding.bottomSheet = this
+        setPicker()
+
+
+    }
+
+    private fun setPicker() {
         binding.pickerRegion.apply {
             minValue = 0
             maxValue = regionList.size -1
             binding.pickerRegion.displayedValues = regionList
         }
+    }
 
+    fun getPickerValue() {
+        val pickedRegion = regionList[binding.pickerRegion.value]
+        Log.d("{RegionBottomSheetFragment.getPickerValue}", pickedRegion)
+        //viewmodel 에게 보내기.
+        dismiss()
     }
 
     override fun onDestroyView() {
