@@ -16,7 +16,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_onboarding_background"
+    android:background="@color/gray04"
     tools:context=".presentation.onboarding.OnboardingActivity">
 
     <com.google.android.material.tabs.TabLayout
@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/skip_onboarding"
-            android:textColor="@color/gray_onboarding_subtitle"
+            android:textColor="@color/gray02"
             android:textSize="14sp"
             android:fontFamily="@font/noto_sans_kr_regular"
             android:background="@android:color/transparent"

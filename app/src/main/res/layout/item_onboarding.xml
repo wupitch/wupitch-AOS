@@ -29,7 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/noto_sans_kr_regular"
-        android:textColor="@color/gray_onboarding_subtitle"
+        android:textColor="@color/gray02"
         android:textSize="14sp"
         android:includeFontPadding="false"
         android:layout_marginTop="4dp"

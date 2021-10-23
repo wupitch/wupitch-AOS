@@ -40,4 +40,17 @@
     <string name="select_region_btn">지역구 선택</string>
     <string name="select_region_bottom_sheet">지역을 선택해주세요.</string>
     <string name="select">선택하기</string>
+    <string name="select_sport">관심 스포츠를\n선택해주세요.</string>
+    <string name="select_sport_at_least_one">(최소 1개이상 선택)</string>
+    <string name="soccer_football">축구/풋살</string>
+    <string name="badminton">배드민턴</string>
+    <string name="volleyball">배구</string>
+    <string name="basketball">농구</string>
+    <string name="etc">기타</string>
+    <string name="set_profile">프로필을\n설정해주세요.</string>
+    <string name="input_nickname">닉네임 (최대 6자)</string>
+    <string name="input_introduction">자기소개를 입력해주세요.</string>
+    <string name="introduction_length">%d/100</string>
+    <string name="available_nickname">사용 가능한 닉네임입니다.</string>
+    <string name="not_available_nickname">사용 불가능한 닉네임입니다.</string>
 </resources>
