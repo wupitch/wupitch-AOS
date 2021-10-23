@@ -7,11 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.scopes.FragmentScoped
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentRegionBottomSheetBinding
+import javax.inject.Inject
 
-class RegionBottomSheetFragment
+@FragmentScoped
+class RegionBottomSheetFragment @Inject constructor(
+    val viewModel : SignupViewModel
+)
     : BottomSheetDialogFragment()
 {
 
@@ -61,8 +66,8 @@ class RegionBottomSheetFragment
 
     fun getPickerValue() {
         val pickedRegion = regionList[binding.pickerRegion.value]
-        Log.d("{RegionBottomSheetFragment.getPickerValue}", pickedRegion)
         //viewmodel 에게 보내기.
+        viewModel.setUserRegion(pickedRegion)
         dismiss()
     }
 
