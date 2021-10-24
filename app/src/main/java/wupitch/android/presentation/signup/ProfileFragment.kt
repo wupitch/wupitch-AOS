@@ -29,6 +29,8 @@ class ProfileFragment
 
 
     private val viewModel: SignupViewModel by viewModels()
+    private var jobForNickname: Job? = null
+    var jobForIntro: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,15 +63,15 @@ class ProfileFragment
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             s?.let {
                 if(it.isNotEmpty()){
-                    var job: Job? = null
-                    job?.cancel()
-                    job = lifecycleScope.launch {
+                    jobForNickname?.cancel()
+                    jobForNickname = lifecycleScope.launch {
                         delay(2000L)
-                        viewModel.checkNicknameValidation(binding.etProfileNickname.text.toString())
+                        Log.d("{ProfileFragment.onTextChanged}", it.toString())
+                        viewModel.checkNicknameValidation(it.toString())
                     }
                 }else {
                     binding.tvNicknameAvailability.isVisible = false
-                    binding.btnNext.isActivated = false
+                    viewModel.checkNicknameValidation(null)
                 }
             }
         }
@@ -87,17 +89,16 @@ class ProfileFragment
                     return
                 }
                 binding.tvIntroLength.text = getString(R.string.introduction_length, it.length)
-                if (s.isNotEmpty()) {
-                    var job: Job? = null
-                    job?.cancel()
-                    job = lifecycleScope.launch {
+                if (it.isNotEmpty()) {
+                    jobForIntro?.cancel()
+                    jobForIntro = lifecycleScope.launch {
                         delay(2000L)
-                        viewModel.setUserIntroduction(binding.etProfileIntro.text.toString())
+                        Log.d("{ProfileFragment.onTextChanged}", it.toString())
+                        viewModel.setUserIntroduction(it.toString())
                     }
                 }else {
-                    binding.btnNext.isActivated = false
+                    viewModel.setUserIntroduction(null)
                 }
-
             }
         }
 

@@ -214,25 +214,27 @@
             android:layout_marginEnd="20dp"
             android:includeFontPadding="false"/>
 
-        <TextView
-            android:id="@+id/btn_next"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="@string/next_one_over_four"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:fontFamily="@font/noto_sans_kr_bold"
-            android:textSize="16sp"
-            android:background="@drawable/selector_btn_signup"
-            android:layout_marginHorizontal="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.9"
-            android:onClick="@{(view) -> fragment.checkForNavigationToRegion(view)}"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text="@string/next_one_over_four"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:fontFamily="@font/noto_sans_kr_bold"
+        android:textSize="16sp"
+        android:background="@drawable/selector_btn_signup"
+        android:layout_marginHorizontal="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.95"
+        android:onClick="@{(view) -> fragment.checkForNavigationToRegion(view)}"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

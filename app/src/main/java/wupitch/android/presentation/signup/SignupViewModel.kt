@@ -15,9 +15,9 @@ class SignupViewModel : ViewModel() {
     private var _isNicknameValid = MutableLiveData<Boolean>()
     val isNicknameValid : LiveData<Boolean> = _isNicknameValid
 
-    private var _userNickname = MutableLiveData<String>()
+    private var _userNickname = MutableLiveData<String?>()
 
-    private var _userIntroduction = MutableLiveData<String>()
+    private var _userIntroduction = MutableLiveData<String?>()
 //    val userIntroduction : LiveData<String> = _userIntroduction
 
     private var _isProfileBtnActivated = MutableLiveData<Boolean>()
@@ -31,19 +31,26 @@ class SignupViewModel : ViewModel() {
         Log.d("{SignupViewModel.getUserRegion}", userRegion.value.toString())
     }
 
-    fun checkNicknameValidation(nickname : String) {
+    fun checkNicknameValidation(nickname : String?) {
         //서버 validation
         //okay 이면,
-        Log.d("{SignupViewModel.checkNicknameValidation}", nickname)
+        Log.d("{SignupViewModel.checkNicknameValidation}", nickname.toString())
         _isNicknameValid.value = true
         _userNickname.value = nickname
-        if(_userIntroduction.value != null) _isProfileBtnActivated.value = true
+        setProfileBtnActivation()
     }
 
-    fun setUserIntroduction(intro: String) {
+    fun setUserIntroduction(intro: String?) {
         _userIntroduction.value = intro
         Log.d("{SignupViewModel.setUserIntroduction}", _userIntroduction.value.toString())
-        if(_userNickname.value != null) _isProfileBtnActivated.value = true
+        setProfileBtnActivation()
+    }
+
+    private fun setProfileBtnActivation() {
+        _isProfileBtnActivated.value = _userNickname.value != null && _userNickname.value != ""
+                && _userIntroduction.value != null && _userIntroduction.value != ""
+        Log.d("{SignupViewModel.setProfileBtnActivation}", _isProfileBtnActivated.value.toString())
+        Log.d("{SignupViewModel.setProfileBtnActivation}", "${_userNickname.value} ${_userIntroduction.value}")
     }
 
     fun setUserEtcSport(etcSport : String) {
