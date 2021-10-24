@@ -45,8 +45,6 @@ class ServiceAgreementFragment
         Toast.makeText(requireContext(), "left icon clicked!", Toast.LENGTH_SHORT).show()
     }
 
-
-
     val checkedChangeListener =
         CompoundButton.OnCheckedChangeListener { _, isChecked ->
             if (isChecked) ++agreementSatisfiedNum

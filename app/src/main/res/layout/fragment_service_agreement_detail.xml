@@ -22,6 +22,8 @@
         app:leftIcon="@drawable/left"
         app:rightIcon="@drawable/close"
         app:titleText="@string/terms_of_service_agreement"
+        on_left_icon_click="@{fragment.backToServiceAgreement}"
+        on_right_icon_click="@{fragment.backToServiceAgreement}"
         />
 
 

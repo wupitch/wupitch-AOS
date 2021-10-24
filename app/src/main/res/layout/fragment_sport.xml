@@ -21,7 +21,10 @@
             app:contentInsetStart="0dp"
             app:layout_constraintTop_toTopOf="parent"
             app:leftIcon="@drawable/left"
-            app:rightIcon="@drawable/close" />
+            app:rightIcon="@drawable/close"
+            on_left_icon_click="@{fragment.navigateUp}"
+            on_right_icon_click="@{fragment.requireActivity().finish}"
+            />
 
         <TextView
             android:id="@+id/tv_select_sport"

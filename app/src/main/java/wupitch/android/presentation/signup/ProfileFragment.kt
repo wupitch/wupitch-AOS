@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -104,5 +105,9 @@ class ProfileFragment
 
         override fun afterTextChanged(s: Editable?) = Unit
 
+    }
+
+    fun navigateUp() {
+        view?.findNavController()?.navigateUp()
     }
 }

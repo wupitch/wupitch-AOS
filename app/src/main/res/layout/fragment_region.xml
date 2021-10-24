@@ -22,6 +22,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:leftIcon="@drawable/left"
         app:rightIcon="@drawable/close"
+        on_left_icon_click="@{fragment.navigateUp}"
+        on_right_icon_click="@{fragment.requireActivity().finish}"
         />
 
     <TextView

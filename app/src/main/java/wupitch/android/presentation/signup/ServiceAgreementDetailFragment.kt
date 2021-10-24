@@ -17,13 +17,10 @@ class ServiceAgreementDetailFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbarServiceAgreementDetail.llLeftIcon.setOnClickListener {
-            it.findNavController().navigateUp()
-        }
+        binding.fragment = this
     }
 
-//    fun backToServiceAgreement() {
-//        view?.findNavController()?.navigateUp()
-//        Toast.makeText(requireContext(), "back clicked", Toast.LENGTH_SHORT).show()
-//    }
+    fun backToServiceAgreement() {
+        view?.findNavController()?.navigateUp()
+    }
 }

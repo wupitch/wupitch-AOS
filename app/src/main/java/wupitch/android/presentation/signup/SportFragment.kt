@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentRegionBinding
@@ -42,6 +43,10 @@ class SportFragment
         }
         setEtcEtLengthCounter()
 
+    }
+
+    fun navigateUp() {
+        view?.findNavController()?.navigateUp()
     }
 
     private fun setEtcEtLengthCounter() {

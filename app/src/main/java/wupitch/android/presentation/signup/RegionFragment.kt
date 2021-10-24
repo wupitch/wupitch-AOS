@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
@@ -30,6 +31,10 @@ class RegionFragment
             }
             binding.btnNext.isActivated = true
         })
+    }
+
+    fun navigateUp() {
+        view?.findNavController()?.navigateUp()
     }
 
     fun showRegionBottomSheet() {

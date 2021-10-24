@@ -13,11 +13,10 @@ class UseOfPersonalInfoDetailFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbarPersonalInfoDetail.llLeftIcon.setOnClickListener {
-            it.findNavController().navigateUp()
-        }
+        binding.fragment = this
+
     }
-//    fun backToServiceAgreement() {
-//        view?.findNavController()?.navigateUp()
-//    }
+    fun backToServiceAgreement() {
+        view?.findNavController()?.navigateUp()
+    }
 }
