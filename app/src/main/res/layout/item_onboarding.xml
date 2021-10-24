@@ -15,7 +15,7 @@
         android:layout_marginHorizontal="63dp"
         android:gravity="center"
         android:fontFamily="@font/noto_sans_kr_bold"
-        android:textColor="@color/black_onboarding_title"
+        android:textColor="@color/main_black"
         android:textSize="26sp"
         tools:text="대표 문구"
         android:includeFontPadding="false"

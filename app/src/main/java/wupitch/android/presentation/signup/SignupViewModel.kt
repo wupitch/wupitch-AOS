@@ -24,6 +24,7 @@ class SignupViewModel : ViewModel() {
     val isProfileBtnActivated : LiveData<Boolean> = _isProfileBtnActivated
 
 
+
     fun setUserRegion(region : String) {
         //서버에 보내기 또는 데이터에 넣어두기?
         _userRegion.value = region
@@ -43,5 +44,14 @@ class SignupViewModel : ViewModel() {
         _userIntroduction.value = intro
         Log.d("{SignupViewModel.setUserIntroduction}", _userIntroduction.value.toString())
         if(_userNickname.value != null) _isProfileBtnActivated.value = true
+    }
+
+    fun setUserEtcSport(etcSport : String) {
+        Log.d("{SignupViewModel.setUserEtcSport}", etcSport)
+    }
+
+    fun getUserSport(sport : ArrayList<String>) {
+        //todo : send sport to server!
+        //list 로 받아서 서버에 전해주어야 한다면...
     }
 }

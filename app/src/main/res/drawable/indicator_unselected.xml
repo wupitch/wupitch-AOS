@@ -7,7 +7,7 @@
             android:shape="ring"
             android:thickness="4dp"
             android:useLevel="false">
-            <solid android:color="@color/gray_indicator_onboarding"/>
+            <solid android:color="@color/gray01"/>
         </shape>
     </item>
 </layer-list>
