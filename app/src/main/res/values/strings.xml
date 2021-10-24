@@ -55,4 +55,9 @@
     <string name="not_available_nickname">사용 불가능한 닉네임입니다.</string>
     <string name="input_etc_sport">기타 스포츠를 입력해주세요. (선택)</string>
     <string name="etc_sport_length">%d/20</string>
+    <string name="select_sport_talent">실력을 선택해주세요.</string>
+    <string name="sport_talent_good">상</string>
+    <string name="sport_talent_medium">중</string>
+    <string name="sport_talent_bad">하</string>
+    <string name="done">완료</string>
 </resources>

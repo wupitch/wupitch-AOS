@@ -54,4 +54,9 @@ class SignupViewModel : ViewModel() {
         //todo : send sport to server!
         //list 로 받아서 서버에 전해주어야 한다면...
     }
+
+    fun getUserSportTalent(talentCode : Int) {
+        //todo : 종목 별로 실력이랑 짝지어서 서버에 보내기!!!
+        Log.d("{SignupViewModel.getUserSportTalent}", talentCode.toString())
+    }
 }

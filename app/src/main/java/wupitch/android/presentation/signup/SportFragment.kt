@@ -20,6 +20,7 @@ class SportFragment
 
     private var checkedToggleNum = 0
     private val viewModel: SignupViewModel by viewModels()
+    private lateinit var talentBottomSheet : SportTalentBottomSheetFragment
 
     override fun onResume() {
         super.onResume()
@@ -64,14 +65,30 @@ class SportFragment
 
     private val toggleClickedListener =
         View.OnClickListener { view ->
-            if ((view as ToggleButton).isChecked) checkedToggleNum++
+            if ((view as ToggleButton).isChecked) {
+                checkedToggleNum++
+                openTalentBottomSheet()
+            }
             else checkedToggleNum--
             checkForNextBtnActivation()
         }
 
+    private fun openTalentBottomSheet() {
+        //실력선택하고 나서 선택했다는 표시 같은거 버튼에서 볼 수 있으면 좋겠는데...
+        talentBottomSheet = SportTalentBottomSheetFragment(viewModel)
+        talentBottomSheet.show(childFragmentManager, "sport_talent_bottom_sheet")
+    }
+
     private val etcToggleClickedListener =
         View.OnClickListener { view ->
-            if ((view as ToggleButton).isChecked) checkedToggleNum++
+            if ((view as ToggleButton).isChecked) {
+                checkedToggleNum++
+
+                //edit text 보여줌과 동시에 나온다.
+                //어떤 스포츠 종목인지 정하지도 않았는데 실력을 선택하라는 것이 조금 그러지 않나?
+                //구체적인 스포츠를 입력하고 띄우도록 해야 될까?
+                openTalentBottomSheet()
+            }
             else checkedToggleNum--
             binding.clEtcSportContainer.isVisible = (view as ToggleButton).isChecked
             checkForNextBtnActivation()
