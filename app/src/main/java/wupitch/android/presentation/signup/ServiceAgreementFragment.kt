@@ -1,11 +1,13 @@
 package wupitch.android.presentation.signup
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -22,6 +24,11 @@ class ServiceAgreementFragment
 
     private var agreementSatisfiedNum = 0
     private var nonAllButtonClicked = true
+
+    override fun onResume() {
+        super.onResume()
+        checkIfAgreementSatisfied()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,14 +75,15 @@ class ServiceAgreementFragment
     }
 
     private fun checkIfAgreementSatisfied() {
+        binding.toggleAgreeAll.isChecked = agreementSatisfiedNum >= 3
         binding.btnNext.isActivated =
             (binding.toggleServiceAgreement.isChecked && binding.togglePrivacy.isChecked) || binding.toggleAgreeAll.isChecked
-        binding.toggleAgreeAll.isChecked = agreementSatisfiedNum >= 3
     }
 
     private fun setTitleText() {
         binding.tvServiceAgreementTitle.text =
-            Html.fromHtml(getString(R.string.service_agreement_title))
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) Html.fromHtml(getString(R.string.service_agreement_title), FROM_HTML_MODE_LEGACY)
+            else Html.fromHtml(getString(R.string.service_agreement_title))
     }
 
     fun checkForNavigationToRegion(view: View) {
