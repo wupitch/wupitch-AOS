@@ -7,7 +7,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
         android:shape="ring"
         android:thickness="4dp"
         android:useLevel="false">
-        <solid android:color="@color/main_orange"/>
+        <solid android:color="@color/main_black"/>
     </shape>
 </item>
 </layer-list>

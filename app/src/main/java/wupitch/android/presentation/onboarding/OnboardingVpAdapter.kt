@@ -3,6 +3,7 @@ package wupitch.android.presentation.onboarding
 import android.content.Context
 import android.os.Build
 import android.text.Html
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -33,21 +34,11 @@ class OnboardingVpAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.tvOnboardingTitle.text =
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)  Html.fromHtml(onBoardingContentList[position].title,
-                HtmlCompat.FROM_HTML_MODE_LEGACY
-            )
-            else Html.fromHtml(onBoardingContentList[position].title)
-
+        holder.binding.tvOnboardingTitle.text = onBoardingContentList[position].title
         holder.binding.tvOnboardingSubtitle.text = onBoardingContentList[position].subtitle
         holder.binding.ivOnboarding.setImageDrawable(
             ContextCompat.getDrawable(context, onBoardingContentList[position].imgDrawable)
         )
-        if(position ==1) {
-            val params = holder.binding.ivOnboarding.layoutParams as ViewGroup.MarginLayoutParams
-            params.setMargins(0, 0, 0, 0)
-            holder.binding.ivOnboarding.layoutParams = params
-        }
     }
 
     override fun getItemCount(): Int = onBoardingContentList.size
