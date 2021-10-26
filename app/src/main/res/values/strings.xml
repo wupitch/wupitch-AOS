@@ -2,9 +2,9 @@
     <string name="app_name">우피치</string>
 
     <!--    온보딩 -->
-    <string name="onboarding_title1">내가 원하는 팀 스포츠\n동호회를 한 눈에</string>
+    <string name="onboarding_title1">내가 원하는 크루 스포츠\n동호회를 한 눈에</string>
     <string name="onboarding_title2">번개와 리그를 통해\n함께 운동하세요</string>
-    <string name="onboarding_title3">내 활동에서 확인하는\n나의 동호회 이야기</string>
+    <string name="onboarding_title3">내 활동에서 확인하는\n나의 크루 이야기</string>
     <string name="onboarding_title4">피드를 통해 나누는\n스포츠 정신!</string>
     <string name="onboarding_subtitle1">지역구를 기반으로 원하는 동호회를 찾아보세요.</string>
     <string name="onboarding_subtitle2">번개모임과 팀 리그를 조직하고 참여하세요.</string>
@@ -32,20 +32,22 @@
     <string name="terms_of_privacy_policy">개인정보 수집 및 이용</string>
     <string name="push_notification_agreement">푸시 알람 동의 (선택)</string>
     <string name="detail_agreement">보기</string>
-    <string name="next_one_over_four">다음 (1/4)</string>
-    <string name="next_two_over_four">다음 (2/4)</string>
-    <string name="next_three_over_four">다음 (3/4)</string>
+    <string name="next_one_over_five">다음 (1/5)</string>
+    <string name="next_two_over_five">다음 (2/5)</string>
+    <string name="next_three_over_five">다음 (3/5)</string>
+    <string name="next_four_over_five">다음 (4/5)</string>
     <string name="start">시작하기</string>
     <string name="select_region">지역을\n선택해주세요.</string>
     <string name="select_region_btn">지역구 선택</string>
     <string name="select_region_bottom_sheet">지역을 선택해주세요.</string>
-    <string name="select">선택하기</string>
     <string name="select_sport">관심 스포츠를\n선택해주세요.</string>
     <string name="select_sport_at_least_one">(최소 1개이상 선택)</string>
     <string name="soccer_football">축구/풋살</string>
     <string name="badminton">배드민턴</string>
     <string name="volleyball">배구</string>
     <string name="basketball">농구</string>
+    <string name="climbing">등산</string>
+    <string name="running">러닝</string>
     <string name="etc">기타</string>
     <string name="set_profile">프로필을\n설정해주세요.</string>
     <string name="input_nickname">닉네임 (최대 6자)</string>
@@ -59,5 +61,11 @@
     <string name="sport_talent_good">상</string>
     <string name="sport_talent_medium">중</string>
     <string name="sport_talent_bad">하</string>
-    <string name="done">완료</string>
+    <string name="selection">선택</string>
+    <string name="select_age">연령대를\n선택해주세요.</string>
+    <string name="teenager">10대</string>
+    <string name="twenties">20대</string>
+    <string name="thirties">30대</string>
+    <string name="forties">40대</string>
+    <string name="fifties">50대</string>
 </resources>

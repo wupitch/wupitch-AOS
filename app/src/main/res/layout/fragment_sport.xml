@@ -67,7 +67,7 @@
                 android:id="@+id/toggle_soccer"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/selector_sports_btn"
                 android:fontFamily="@font/noto_sans_kr_bold"
                 android:gravity="center"
@@ -76,15 +76,17 @@
                 android:textOff="@string/soccer_football"
                 android:textOn="@string/soccer_football"
                 android:textSize="14sp"
+                android:tag="0"
                 app:layout_constraintEnd_toStartOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:onClickListener="@{fragment.toggleClickedListener}"/>
 
             <ToggleButton
                 android:id="@+id/toggle_badminton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/selector_sports_btn"
                 android:fontFamily="@font/noto_sans_kr_bold"
                 android:gravity="center"
@@ -92,7 +94,9 @@
                 android:textColor="@drawable/selector_text_color_sports"
                 android:textOff="@string/badminton"
                 android:textOn="@string/badminton"
+                android:tag="1"
                 android:textSize="14sp"
+                android:onClickListener="@{fragment.toggleClickedListener}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintTop_toTopOf="@id/toggle_soccer" />
@@ -102,7 +106,7 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/selector_sports_btn"
                 android:fontFamily="@font/noto_sans_kr_bold"
                 android:gravity="center"
@@ -110,7 +114,9 @@
                 android:textColor="@drawable/selector_text_color_sports"
                 android:textOff="@string/volleyball"
                 android:textOn="@string/volleyball"
+                android:tag="2"
                 android:textSize="14sp"
+                android:onClickListener="@{fragment.toggleClickedListener}"
                 app:layout_constraintEnd_toStartOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toggle_soccer" />
@@ -119,7 +125,7 @@
                 android:id="@+id/toggle_basketball"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:background="@drawable/selector_sports_btn"
                 android:fontFamily="@font/noto_sans_kr_bold"
                 android:gravity="center"
@@ -127,17 +133,58 @@
                 android:textColor="@drawable/selector_text_color_sports"
                 android:textOff="@string/basketball"
                 android:textOn="@string/basketball"
+                android:tag="3"
                 android:textSize="14sp"
+                android:onClickListener="@{fragment.toggleClickedListener}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/guideline"
                 app:layout_constraintTop_toTopOf="@id/toggle_volleyball" />
+
+            <ToggleButton
+                android:id="@+id/toggle_climbing"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/selector_sports_btn"
+                android:fontFamily="@font/noto_sans_kr_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@drawable/selector_text_color_sports"
+                android:textOff="@string/climbing"
+                android:textOn="@string/climbing"
+                android:tag="4"
+                android:textSize="14sp"
+                android:onClickListener="@{fragment.toggleClickedListener}"
+                app:layout_constraintEnd_toStartOf="@id/guideline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toggle_volleyball" />
+
+            <ToggleButton
+                android:id="@+id/toggle_running"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/selector_sports_btn"
+                android:fontFamily="@font/noto_sans_kr_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textColor="@drawable/selector_text_color_sports"
+                android:textOff="@string/running"
+                android:textOn="@string/running"
+                android:tag="5"
+                android:textSize="14sp"
+                android:onClickListener="@{fragment.toggleClickedListener}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/guideline"
+                app:layout_constraintTop_toTopOf="@id/toggle_climbing" />
 
             <ToggleButton
                 android:id="@+id/toggle_etc"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
+                android:layout_marginEnd="8dp"
                 android:background="@drawable/selector_sports_btn"
                 android:fontFamily="@font/noto_sans_kr_bold"
                 android:gravity="center"
@@ -145,10 +192,14 @@
                 android:textColor="@drawable/selector_text_color_sports"
                 android:textOff="@string/etc"
                 android:textOn="@string/etc"
+                android:tag="6"
                 android:textSize="14sp"
+                android:onClickListener="@{fragment.etcToggleClickedListener}"
                 app:layout_constraintEnd_toStartOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toggle_volleyball" />
+                app:layout_constraintTop_toBottomOf="@id/toggle_climbing" />
+
+
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
@@ -208,8 +259,8 @@
             android:background="@drawable/selector_btn_signup"
             android:fontFamily="@font/noto_sans_kr_bold"
             android:gravity="center"
-            android:onClick="@{(view)->fragment.checkForNavigationToProfile(view)}"
-            android:text="@string/next_three_over_four"
+            android:onClick="@{(view)->fragment.checkForNavigationToAge(view)}"
+            android:text="@string/next_three_over_five"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginHorizontal="20dp"

@@ -23,8 +23,8 @@
         android:name="wupitch.android.presentation.signup.SportFragment"
         android:label="SportFragment" >
         <action
-            android:id="@+id/action_sportFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_sportFragment_to_ageFragment"
+            app:destination="@id/ageFragment" />
     </fragment>
     <fragment
         android:id="@+id/regionFragment"
@@ -46,4 +46,12 @@
         android:id="@+id/useOfPersonalInfoDetailFragment"
         android:name="wupitch.android.presentation.signup.UseOfPersonalInfoDetailFragment"
         android:label="UseOfPersonalInfoDetailFragment" />
+    <fragment
+        android:id="@+id/ageFragment"
+        android:name="wupitch.android.presentation.signup.AgeFragment"
+        android:label="AgeFragment" >
+        <action
+            android:id="@+id/action_ageFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 </navigation>

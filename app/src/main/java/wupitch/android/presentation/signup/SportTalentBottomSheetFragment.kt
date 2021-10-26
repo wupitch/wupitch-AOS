@@ -18,14 +18,15 @@ import javax.inject.Inject
 
 @FragmentScoped
 class SportTalentBottomSheetFragment @Inject constructor(
-    val viewModel : SignupViewModel
+    val viewModel : SignupViewModel,
+    val checkedSport : Int
 )
     : BottomSheetDialogFragment()
 {
 
     private var _binding: FragmentSportTalentBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private var checkedTalent = -1
+    var checkedTalent : Int? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +51,7 @@ class SportTalentBottomSheetFragment @Inject constructor(
 
         binding.bottomSheet = this
 
-        isCancelable = false
+//        isCancelable = false
         //스포츠 선택했는데 실력 선택하지 않았을 경우는?
 
         binding.radiogroupSportTalent.setOnCheckedChangeListener { group, checkedId ->
@@ -65,7 +66,7 @@ class SportTalentBottomSheetFragment @Inject constructor(
     fun getTalentValue(view: View) {
 
         if(view.isActivated) {
-            viewModel.getUserSportTalent(checkedTalent)
+            viewModel.getUserSportTalent(checkedTalent, checkedSport)
             dismiss()
         }else {
             Toast.makeText(requireContext(), "실력을 선택해주세요.", Toast.LENGTH_SHORT)
@@ -74,12 +75,8 @@ class SportTalentBottomSheetFragment @Inject constructor(
     }
 
     fun checkIfTalentSelected() {
-        if(checkedTalent == -1) {
-            Toast.makeText(requireContext(), "실력을 선택해주세요.", Toast.LENGTH_SHORT)
-                .show()
-        }else {
-            dismiss()
-        }
+        viewModel.getUserSportTalent(checkedTalent, checkedSport)
+        dismiss()
     }
 
     override fun onDestroyView() {

@@ -23,6 +23,14 @@ class SignupViewModel : ViewModel() {
     private var _isProfileBtnActivated = MutableLiveData<Boolean>()
     val isProfileBtnActivated : LiveData<Boolean> = _isProfileBtnActivated
 
+    private var _userSportTalent = MutableLiveData<Int?>()
+    val userSportTalent : LiveData<Int?> = _userSportTalent
+
+    private var _userSport = MutableLiveData<Int>()
+    val userSport : LiveData<Int> = _userSport
+
+    private var _userAge = MutableLiveData<Int>()
+
 
 
     fun setUserRegion(region : String) {
@@ -62,8 +70,19 @@ class SignupViewModel : ViewModel() {
         //list 로 받아서 서버에 전해주어야 한다면...
     }
 
-    fun getUserSportTalent(talentCode : Int) {
-        //todo : 종목 별로 실력이랑 짝지어서 서버에 보내기!!!
-        Log.d("{SignupViewModel.getUserSportTalent}", talentCode.toString())
+    fun getUserSportTalent(talentCode : Int?, sportCode: Int) {
+        //todo : talentCode 가 null 이 아니라면, 종목 별로 실력이랑 짝지어서 서버에 보내기!!! int or string?
+        Log.d("{SignupViewModel.getUserSportTalent}", "talentCode : $talentCode sportCode : $sportCode")
+        _userSportTalent.value = talentCode
+        _userSport.value = sportCode
+
+
+
+    }
+
+
+    fun setUserAge(ageCode : Int) {
+        _userAge.value = ageCode
+        Log.d("{SignupViewModel.setUserAge}", _userAge.value.toString())
     }
 }

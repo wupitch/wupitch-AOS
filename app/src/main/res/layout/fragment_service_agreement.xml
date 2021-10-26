@@ -222,7 +222,7 @@
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:text="@string/next_one_over_four"
+        android:text="@string/next_one_over_five"
         android:gravity="center"
         android:textColor="@color/white"
         android:fontFamily="@font/noto_sans_kr_bold"
