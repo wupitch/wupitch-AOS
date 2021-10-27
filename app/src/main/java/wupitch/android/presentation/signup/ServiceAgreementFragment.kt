@@ -1,5 +1,6 @@
 package wupitch.android.presentation.signup
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -7,7 +8,11 @@ import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -20,10 +25,13 @@ class ServiceAgreementFragment
     : BaseFragment<FragmentServiceAgreementBinding>(
     FragmentServiceAgreementBinding::bind,
     R.layout.fragment_service_agreement
-) {
+), OnStopSignupClick {
 
     private var agreementSatisfiedNum = 0
     private var nonAllButtonClicked = true
+    private lateinit var backPressedCallback: OnBackPressedCallback
+    private lateinit var stopSignupDialog: StopSignupDialog
+    private val viewModel : SignupViewModel by activityViewModels()
 
     override fun onResume() {
         super.onResume()
@@ -37,12 +45,38 @@ class ServiceAgreementFragment
         setTitleText()
         setStatusBar(R.color.white)
 
+
     }
 
-    fun testClick() {
-        //왜 on left icon click 이거는 작동하고 detail 에서는 작동 안 하지? toast 도 안 띄워지고
-        //그냥 on left icon click 설정만 해도 터진다. 왜지?
-        Toast.makeText(requireContext(), "left icon clicked!", Toast.LENGTH_SHORT).show()
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(viewModel.userRegion.value != null) showStopSignupDialog()
+//                else return 이때는 왜 아무것도 없지? todo : onboading activity 와 연결되었을 때 확인해볼것!!!
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
+    }
+
+    fun checkOkayToStopSignup() {
+        if(viewModel.userRegion.value != null) showStopSignupDialog()
+        else activity?.finish()
+    }
+
+    private fun showStopSignupDialog() {
+        stopSignupDialog = StopSignupDialog(requireContext(), this)
+        stopSignupDialog.show()
+    }
+
+    override fun onStopSignupClick() {
+        stopSignupDialog.dismiss()
+        activity?.finish()
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        backPressedCallback.remove()
     }
 
     val checkedChangeListener =

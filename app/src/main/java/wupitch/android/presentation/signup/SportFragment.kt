@@ -7,6 +7,7 @@ import android.widget.CompoundButton
 import android.widget.ToggleButton
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -18,11 +19,12 @@ import wupitch.android.databinding.FragmentServiceAgreementBinding
 import wupitch.android.databinding.FragmentSportBinding
 
 class SportFragment
-    : BaseFragment<FragmentSportBinding>(FragmentSportBinding::bind, R.layout.fragment_sport) {
+    : BaseFragment<FragmentSportBinding>(FragmentSportBinding::bind, R.layout.fragment_sport), OnStopSignupClick {
 
     private var checkedToggleNum = 0
-    private val viewModel: SignupViewModel by viewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
     private lateinit var talentBottomSheet : SportTalentBottomSheetFragment
+    private lateinit var stopSignupDialog : StopSignupDialog
     private var clickedSport = -1
 
     override fun onResume() {
@@ -113,6 +115,15 @@ class SportFragment
         binding.etEtcSport.text?.let {
             if (it.isNotEmpty()) viewModel.setUserEtcSport(it.toString())
         }
+    }
+    fun showStopSignupDialog() {
+        stopSignupDialog = StopSignupDialog(requireContext(), this)
+        stopSignupDialog.show()
+    }
+
+    override fun onStopSignupClick() {
+        stopSignupDialog.dismiss()
+        activity?.finish()
     }
 
 }

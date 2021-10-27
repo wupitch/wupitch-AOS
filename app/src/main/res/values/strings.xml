@@ -71,4 +71,8 @@
     <string name="welcome_title">%s 님, 환영합니다</string>
     <string name="welcome_subtitle">우피치와 함께 신나고 건강하게 땀흘려봐요!</string>
     <string name="checkout_main">크루를 둘러보러 가볼까요?</string>
+    <string name="warning_stop_signup">작성한 모든 기입정보가 삭제됩니다.\n회원가입을 그만두시겠습니까?</string>
+    <string name="stop_signup">그만둘래요</string>
+    <string name="continue_signup">계속 할래요</string>
+    <string name="icon_warning_stop_signup">&#9888;&#65039;</string>
 </resources>

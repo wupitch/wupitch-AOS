@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -26,10 +27,10 @@ import wupitch.android.databinding.FragmentServiceAgreementBinding
 
 class ProfileFragment
     :
-    BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::bind, R.layout.fragment_profile) {
+    BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::bind, R.layout.fragment_profile), OnStopSignupClick {
 
-
-    private val viewModel: SignupViewModel by viewModels()
+    private lateinit var stopSignupDialog : StopSignupDialog
+    private val viewModel: SignupViewModel by activityViewModels()
     private var jobForNickname: Job? = null
     var jobForIntro: Job? = null
 
@@ -113,5 +114,15 @@ class ProfileFragment
 
     fun checkNavToWelcome(view: View) {
         if(view.isActivated) view.findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+    }
+
+    fun showStopSignupDialog() {
+        stopSignupDialog = StopSignupDialog(requireContext(), this)
+        stopSignupDialog.show()
+    }
+
+    override fun onStopSignupClick() {
+        stopSignupDialog.dismiss()
+        activity?.finish()
     }
 }

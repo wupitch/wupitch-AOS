@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.RadioButton
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
@@ -13,9 +14,10 @@ import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentAgeBinding
 
 class AgeFragment
-    : BaseFragment<FragmentAgeBinding>(FragmentAgeBinding::bind, R.layout.fragment_age) {
+    : BaseFragment<FragmentAgeBinding>(FragmentAgeBinding::bind, R.layout.fragment_age), OnStopSignupClick {
 
-    private val viewModel: SignupViewModel by viewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
+    private lateinit var stopSignupDialog : StopSignupDialog
 
     override fun onResume() {
         super.onResume()
@@ -55,6 +57,16 @@ class AgeFragment
                 .navigate(R.id.action_ageFragment_to_profileFragment)
             viewModel.setUserAge(binding.radiogroupAge.checkedRadioBtnTag.value!!)
         }
+    }
+
+    fun showStopSignupDialog() {
+        stopSignupDialog = StopSignupDialog(requireContext(), this)
+        stopSignupDialog.show()
+    }
+
+    override fun onStopSignupClick() {
+        stopSignupDialog.dismiss()
+        activity?.finish()
     }
 
 

@@ -23,7 +23,7 @@
             app:leftIcon="@drawable/left"
             app:rightIcon="@drawable/close"
             on_left_icon_click="@{fragment.navigateUp}"
-            on_right_icon_click="@{fragment.requireActivity().finish}"
+            on_right_icon_click="@{fragment.showStopSignupDialog}"
             />
 
         <TextView
@@ -198,7 +198,6 @@
                 app:layout_constraintEnd_toStartOf="@id/guideline"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toggle_climbing" />
-
 
 
             <androidx.constraintlayout.widget.Guideline

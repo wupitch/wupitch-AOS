@@ -23,7 +23,7 @@
             app:leftIcon="@drawable/left"
             app:rightIcon="@drawable/close"
             on_left_icon_click="@{fragment.navigateUp}"
-            on_right_icon_click="@{fragment.requireActivity().finish}"
+            on_right_icon_click="@{fragment.showStopSignupDialog}"
             />
 
         <TextView
