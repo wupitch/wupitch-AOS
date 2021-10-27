@@ -20,6 +20,8 @@ class SignupActivity : BaseActivity<ActivitySignupBinding>(ActivitySignupBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setNavBarColor()
+
 
     }
 

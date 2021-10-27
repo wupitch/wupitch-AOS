@@ -50,7 +50,10 @@ abstract class BaseActivity<B : ViewBinding>(private val inflate: (LayoutInflate
         }else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+    }
 
+    fun setNavBarColor() {
+        window.navigationBarColor = ContextCompat.getColor(this, R.color.bottom_nav_color)
     }
 
 }

@@ -72,7 +72,8 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="44dp"
-            android:src="@drawable/kakao_login" />
+            android:src="@drawable/kakao_login"
+            android:onClick="@{()-> onboardingActivity.signInWithKakao()}"/>
 
     </RelativeLayout>
 

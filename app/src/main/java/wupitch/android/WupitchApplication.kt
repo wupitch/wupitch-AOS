@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.HiltAndroidApp
@@ -35,7 +37,7 @@ class WupitchApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-//        initRetrofitInstance()
+        initRetrofitInstance()
 
 
         KakaoSdk.init(this, getString(R.string.kakao_native_app_key))
@@ -43,6 +45,9 @@ class WupitchApplication : Application() {
     }
 
     private fun initRetrofitInstance() {
+
+//        val gson = GsonBuilder().setLenient().create()
+
         val client: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(5000, TimeUnit.MILLISECONDS)
             .connectTimeout(5000, TimeUnit.MILLISECONDS)

@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import wupitch.android.R
 import wupitch.android.util.LoadingDialog
 
 abstract class BaseFragment<B : ViewBinding>(
@@ -63,9 +64,6 @@ abstract class BaseFragment<B : ViewBinding>(
                 it.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }
-
-
     }
-
 
 }

@@ -2,11 +2,15 @@ package wupitch.android.presentation.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.AuthErrorCause
+import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
@@ -25,19 +29,16 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setNavBarColor()
         setStatusBar(R.color.gray04)
         setViewpager()
         binding.onboardingActivity = this
         binding.viewModel = viewModel
-        binding.ivKakaoLogin.setOnClickListener {
-            viewModel.signInWithKakao()
-        }
+
         viewModel.kakaoLoginState.observe(this, Observer {
             when(it) {
                 is Resource.Success -> {
-                    val intent = Intent(this, SignupActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
+                    startActivity(Intent(this, SignupActivity::class.java))
                 }
             }
         })
@@ -98,5 +99,49 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
             add(onboarding4)
         }
 
+    }
+
+    fun signInWithKakao() {
+//        val jwtPreferenceFlow: Flow<String?> = dataStore.data.map { preferences ->
+//                preferences[JWT_PREFERENCE_KEY] ?: ""
+//            }
+//
+//        val jwtToken: Flow<String?> = jwtPreferenceFlow
+//        Log.d("{MainActivity.setKakaoLogin}", "$jwtToken")
+
+//        if(jwtToken != null) {
+//            //메인 화면으로 이동
+//        }else {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) { //사용자 기기에 카카오톡 있는지 확인
+            UserApiClient.instance.loginWithKakaoTalk(this, callback = kakaoCallback) //카카오톡 실행
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = kakaoCallback) //웹뷰 실행.
+        }
+//        }
+
+    }
+
+    private val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        if (error != null) {
+            Log.d("{OnboardingActivity.kakaoCallback}", "login error! ${error.message}")
+
+            when (error.toString()) {
+                //flow 로 처리할 것
+//                AuthErrorCause.AccessDenied.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_access_denied_toast_message
+//                AuthErrorCause.InvalidClient.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_invalid_client_toast_message
+//                AuthErrorCause.InvalidGrant.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_invalid_grant_toast_message
+//                AuthErrorCause.InvalidRequest.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_invalid_request_toast_message
+//                AuthErrorCause.InvalidScope.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_invalid_scope_toast_message
+//                AuthErrorCause.Misconfigured.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_misconfigured_toast_message
+//                AuthErrorCause.ServerError.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_server_error_toast_message
+//                AuthErrorCause.Unauthorized.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_unauthorized_toast_message
+//                AuthErrorCause.Unknown.toString() -> _kakaoErrorMessage.value = R.string.login_kakao_etc_toast_message
+            }
+        } else if (token != null) {
+            Log.d("{OnboardingActivity.kakaoCallback}", "login success! ${token.accessToken}")
+            //showLoadingDialog(this)
+            //todo : viewmodel -> 서버에게 토큰 보내기.
+            startActivity(Intent(this, SignupActivity::class.java))
+        }
     }
 }

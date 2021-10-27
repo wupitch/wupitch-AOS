@@ -49,10 +49,11 @@
         android:layout_marginTop="48dp"
         android:hint="@string/input_nickname"
         android:textSize="16sp"
-        android:gravity="center"
         android:inputType="text"
         android:maxLines="1"
         android:maxLength="6"
+        android:paddingStart="18dp"
+        android:includeFontPadding="false"
         android:fontFamily="@font/noto_sans_kr_regular"
         android:textColorHint="@color/gray02"/>
 
@@ -87,6 +88,7 @@
         android:fontFamily="@font/noto_sans_kr_regular"
         android:textColorHint="@color/gray02"
         android:paddingTop="10dp"
+        android:includeFontPadding="false"
         android:paddingHorizontal="18dp"/>
 
     <TextView

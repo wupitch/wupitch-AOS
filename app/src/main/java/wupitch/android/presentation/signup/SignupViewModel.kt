@@ -20,8 +20,6 @@ class SignupViewModel : ViewModel() {
     private var _userIntroduction = MutableLiveData<String?>()
 //    val userIntroduction : LiveData<String> = _userIntroduction
 
-    private var _isProfileBtnActivated = MutableLiveData<Boolean>()
-    val isProfileBtnActivated : LiveData<Boolean> = _isProfileBtnActivated
 
     private var _userSportTalent = MutableLiveData<Int?>()
     val userSportTalent : LiveData<Int?> = _userSportTalent
@@ -46,20 +44,11 @@ class SignupViewModel : ViewModel() {
         Log.d("{SignupViewModel.checkNicknameValidation}", nickname.toString())
         _isNicknameValid.value = true
         _userNickname.value = nickname
-        setProfileBtnActivation()
     }
 
     fun setUserIntroduction(intro: String?) {
         _userIntroduction.value = intro
         Log.d("{SignupViewModel.setUserIntroduction}", _userIntroduction.value.toString())
-        setProfileBtnActivation()
-    }
-
-    private fun setProfileBtnActivation() {
-        _isProfileBtnActivated.value = _userNickname.value != null && _userNickname.value != ""
-                && _userIntroduction.value != null && _userIntroduction.value != ""
-        Log.d("{SignupViewModel.setProfileBtnActivation}", _isProfileBtnActivated.value.toString())
-        Log.d("{SignupViewModel.setProfileBtnActivation}", "${_userNickname.value} ${_userIntroduction.value}")
     }
 
     fun setUserEtcSport(etcSport : String) {
@@ -76,8 +65,6 @@ class SignupViewModel : ViewModel() {
         Log.d("{SignupViewModel.getUserSportTalent}", "talentCode : $talentCode sportCode : $sportCode")
         _userSportTalent.value = talentCode
         _userSport.value = sportCode
-
-
 
     }
 

@@ -27,12 +27,12 @@ import wupitch.android.databinding.FragmentServiceAgreementBinding
 
 class ProfileFragment
     :
-    BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::bind, R.layout.fragment_profile), OnStopSignupClick {
+    BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::bind, R.layout.fragment_profile),
+    OnStopSignupClick {
 
-    private lateinit var stopSignupDialog : StopSignupDialog
+    private lateinit var stopSignupDialog: StopSignupDialog
     private val viewModel: SignupViewModel by activityViewModels()
     private var jobForNickname: Job? = null
-    var jobForIntro: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,58 +52,48 @@ class ProfileFragment
                 isVisible = binding.etProfileNickname.text.toString().isNotEmpty()
             }
         })
-
-        viewModel.isProfileBtnActivated.observe(viewLifecycleOwner, Observer {
-            Log.d("{ProfileFragment.onViewCreated}", it.toString())
-            binding.btnNext.isActivated = it
-        })
     }
 
     private val nicknameTextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            s?.let {
-                if(it.isNotEmpty()){
-                    jobForNickname?.cancel()
-                    jobForNickname = lifecycleScope.launch {
-                        delay(2000L)
-                        Log.d("{ProfileFragment.onTextChanged}", it.toString())
-                        viewModel.checkNicknameValidation(it.toString())
-                    }
-                }else {
-                    binding.tvNicknameAvailability.isVisible = false
-                    viewModel.checkNicknameValidation(null)
+
+            if (s != null && s.isNotEmpty()) {
+                jobForNickname?.cancel()
+                jobForNickname = lifecycleScope.launch {
+                    delay(1500L)
+                    Log.d("{ProfileFragment.onTextChanged}", s.toString())
+                    viewModel.checkNicknameValidation(s.toString())
                 }
+                binding.btnNext.isActivated = binding.etProfileIntro.text?.isNotEmpty() == true
+            } else {
+                binding.btnNext.isActivated = false
+                binding.tvNicknameAvailability.isVisible = false
+                viewModel.checkNicknameValidation(null)
             }
+
         }
         override fun afterTextChanged(s: Editable?) = Unit
 
     }
 
     private val introTextWatcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =Unit
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            s?.let {
-                if(it.length >100){
+
+            if (s != null && s.isNotEmpty()) {
+                binding.tvIntroLength.text = getString(R.string.introduction_length, s.length)
+                if (s.length > 100) {
                     Toast.makeText(requireContext(), "100자 이내로 작성해주세요.", Toast.LENGTH_SHORT).show()
                     return
                 }
-                binding.tvIntroLength.text = getString(R.string.introduction_length, it.length)
-                if (it.isNotEmpty()) {
-                    jobForIntro?.cancel()
-                    jobForIntro = lifecycleScope.launch {
-                        delay(2000L)
-                        Log.d("{ProfileFragment.onTextChanged}", it.toString())
-                        viewModel.setUserIntroduction(it.toString())
-                    }
-                }else {
-                    viewModel.setUserIntroduction(null)
-                }
+                binding.btnNext.isActivated = binding.etProfileNickname.text?.isNotEmpty() == true
+            } else {
+                binding.btnNext.isActivated = false
             }
         }
-
         override fun afterTextChanged(s: Editable?) = Unit
 
     }
@@ -113,7 +103,10 @@ class ProfileFragment
     }
 
     fun checkNavToWelcome(view: View) {
-        if(view.isActivated) view.findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+        if (view.isActivated) {
+            viewModel.setUserIntroduction(binding.etProfileIntro.text.toString())
+            view.findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+        }
     }
 
     fun showStopSignupDialog() {

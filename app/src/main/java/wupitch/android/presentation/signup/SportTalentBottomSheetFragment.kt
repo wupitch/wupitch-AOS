@@ -61,7 +61,11 @@ class SportTalentBottomSheetFragment @Inject constructor(
             //todo : match each talent tag to given server code!!
         }
 
+
+
     }
+
+
 
     fun getTalentValue(view: View) {
 
