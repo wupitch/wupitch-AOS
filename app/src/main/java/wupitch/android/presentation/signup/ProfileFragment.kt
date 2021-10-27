@@ -110,4 +110,8 @@ class ProfileFragment
     fun navigateUp() {
         view?.findNavController()?.navigateUp()
     }
+
+    fun checkNavToWelcome(view: View) {
+        if(view.isActivated) view.findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+    }
 }

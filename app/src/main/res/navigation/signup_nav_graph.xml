@@ -37,7 +37,11 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="wupitch.android.presentation.signup.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/serviceAgreementDetailFragment"
         android:name="wupitch.android.presentation.signup.ServiceAgreementDetailFragment"
@@ -54,4 +58,8 @@
             android:id="@+id/action_ageFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="wupitch.android.presentation.signup.WelcomeFragment"
+        android:label="WelcomeFragment" />
 </navigation>

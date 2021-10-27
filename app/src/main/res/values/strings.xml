@@ -36,7 +36,7 @@
     <string name="next_two_over_five">다음 (2/5)</string>
     <string name="next_three_over_five">다음 (3/5)</string>
     <string name="next_four_over_five">다음 (4/5)</string>
-    <string name="start">시작하기</string>
+    <string name="done">완료</string>
     <string name="select_region">지역을\n선택해주세요.</string>
     <string name="select_region_btn">지역구 선택</string>
     <string name="select_region_bottom_sheet">지역을 선택해주세요.</string>
@@ -68,4 +68,7 @@
     <string name="thirties">30대</string>
     <string name="forties">40대</string>
     <string name="fifties">50대</string>
+    <string name="welcome_title">%s 님, 환영합니다</string>
+    <string name="welcome_subtitle">우피치와 함께 신나고 건강하게 땀흘려봐요!</string>
+    <string name="checkout_main">크루를 둘러보러 가볼까요?</string>
 </resources>
