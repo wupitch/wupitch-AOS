@@ -30,6 +30,7 @@ class SignupViewModel : ViewModel() {
     val userSport : LiveData<Int> = _userSport
 
     private var _userAge = MutableLiveData<Int>()
+    val userAge : LiveData<Int> = _userAge
 
 
 

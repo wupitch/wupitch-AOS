@@ -27,7 +27,7 @@
             />
 
         <TextView
-            android:id="@+id/tv_select_sport"
+            android:id="@+id/tv_select_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -40,21 +40,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_age" />
 
-        <RadioGroup
+        <wupitch.android.util.RadioBtnGroupTableLayout
             android:id="@+id/radiogroup_age"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
             android:layout_marginEnd="20dp"
-            android:orientation="vertical"
+            android:layout_marginTop="28dp"
+            app:layout_constraintStart_toStartOf="@id/tv_select_age"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tv_select_sport"
-            app:layout_constraintTop_toBottomOf="@id/tv_select_sport">
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            app:layout_constraintTop_toBottomOf="@id/tv_select_age">
 
+            <TableRow>
                 <RadioButton
                     android:id="@+id/radiobtn_teenager"
                     android:layout_width="wrap_content"
@@ -86,14 +82,10 @@
                     android:textSize="14sp"
                     android:button="@null"
                     android:layout_weight="1"/>
+            </TableRow>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <TableRow
                 android:layout_marginTop="16dp">
-
                 <RadioButton
                     android:id="@+id/radiobtn_thirties"
                     android:layout_width="wrap_content"
@@ -125,14 +117,10 @@
                     android:textSize="14sp"
                     android:button="@null"
                     android:layout_weight="1"/>
+            </TableRow>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <TableRow
                 android:layout_marginTop="16dp">
-
                 <RadioButton
                     android:id="@+id/radiobtn_fifties"
                     android:layout_width="wrap_content"
@@ -161,11 +149,10 @@
                     android:includeFontPadding="false"
                     android:textColor="@drawable/selector_text_color_sports"
                     android:textSize="14sp"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
-
-        </RadioGroup>
+                    android:layout_weight="1"
+                    android:tag="-1"/>
+            </TableRow>
+        </wupitch.android.util.RadioBtnGroupTableLayout>
 
 
 
