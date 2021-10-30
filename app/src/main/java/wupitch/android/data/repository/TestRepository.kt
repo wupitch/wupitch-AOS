@@ -5,6 +5,6 @@ import wupitch.android.WupitchApplication
 
 class TestRepository {
 
-    suspend fun getBreakingNews()=
-        WupitchApplication.retrofit.create(TestApi::class.java).getTest()
+    suspend fun postKakaoUserInfo(userInfo : KakaoLoginReq)=
+        WupitchApplication.retrofit.create(TestApi::class.java).postTest(userInfo)
 }

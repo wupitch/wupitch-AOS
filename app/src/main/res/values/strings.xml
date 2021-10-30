@@ -75,4 +75,11 @@
     <string name="stop_signup">그만둘래요</string>
     <string name="continue_signup">계속 할래요</string>
     <string name="icon_warning_stop_signup">&#9888;&#65039;</string>
+
+<!--    홈-->
+    <string name="home">홈</string>
+    <string name="impromptu">번개</string>
+    <string name="my_activity">내 활동</string>
+    <string name="feed">피드</string>
+    <string name="profile">프로필</string>
 </resources>

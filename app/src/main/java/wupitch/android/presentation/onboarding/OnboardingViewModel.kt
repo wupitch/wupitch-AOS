@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.WupitchApplication
 import wupitch.android.common.Resource
+import wupitch.android.data.repository.KakaoLoginReq
 import wupitch.android.data.repository.TestRepository
 import javax.inject.Inject
 
@@ -28,5 +29,14 @@ class OnboardingViewModel @Inject constructor(
 
     private var _kakaoLoginState = MutableLiveData<Resource<String>>()
     val kakaoLoginState : LiveData<Resource<String>> = _kakaoLoginState
+
+    fun postKakaoUserInfo(kakaoUserInfo : KakaoLoginReq) = viewModelScope.launch {
+        val response = repository.postKakaoUserInfo(kakaoUserInfo)
+        if(response.isSuccessful) {
+            response.body()?.let {
+                Log.d("{OnboardingViewModel.postKakaoUserInfo}", it.result.toString())
+            }
+        }
+    }
 
 }

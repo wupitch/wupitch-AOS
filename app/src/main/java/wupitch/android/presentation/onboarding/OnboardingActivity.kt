@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
 import wupitch.android.common.Resource
+import wupitch.android.data.repository.KakaoLoginReq
 import wupitch.android.databinding.ActivityOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
 import wupitch.android.presentation.signup.SignupActivity
@@ -121,6 +122,32 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
 
     }
 
+    private fun getKakaoUserInfo() {
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                Log.d("{OnboardingActivity.getKakaoUserInfo}", error.message.toString())
+            }
+            else if (user != null) {
+               Log.d("{OnboardingActivity.getKakaoUserInfo}", "사용자 정보 요청 성공" +
+                        "\n회원번호: ${user.id}" +
+                        "\n이메일: ${user.kakaoAccount?.email}" +
+                        "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
+                        "\n성별: ${user.kakaoAccount?.gender?.name}")
+                val email = user.kakaoAccount?.email
+                val genderType = user.kakaoAccount?.gender?.name
+                val id = user.id
+                val nickname = user.kakaoAccount?.profile?.nickname
+
+                viewModel.postKakaoUserInfo(KakaoLoginReq(
+                    email = email!!,
+                    genderType = genderType!!,
+                    id =  id,
+                    nickname = nickname!!
+                ))
+            }
+        }
+    }
+
     private val kakaoCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
             Log.d("{OnboardingActivity.kakaoCallback}", "login error! ${error.message}")
@@ -141,7 +168,9 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
             Log.d("{OnboardingActivity.kakaoCallback}", "login success! ${token.accessToken}")
             //showLoadingDialog(this)
             //todo : viewmodel -> 서버에게 토큰 보내기.
-            startActivity(Intent(this, SignupActivity::class.java))
+//            startActivity(Intent(this, SignupActivity::class.java))
+            getKakaoUserInfo()
+
         }
     }
 }
