@@ -5,7 +5,7 @@
     <data>
         <variable
             name="fragment"
-            type="wupitch.android.presentation.signup.ProfileFragment" />
+            type="wupitch.android.presentation.ui.signup.ProfileFragment" />
     </data>
 
 

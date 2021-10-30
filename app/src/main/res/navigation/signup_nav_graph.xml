@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/serviceAgreementFragment"
-        android:name="wupitch.android.presentation.signup.ServiceAgreementFragment"
+        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
         android:label="ServiceAgreementFragment">
         <action
             android:id="@+id/action_serviceAgreementFragment_to_regionFragment"
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/sportFragment"
-        android:name="wupitch.android.presentation.signup.SportFragment"
+        android:name="wupitch.android.presentation.ui.signup.SportFragment"
         android:label="SportFragment" >
         <action
             android:id="@+id/action_sportFragment_to_ageFragment"
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/regionFragment"
-        android:name="wupitch.android.presentation.signup.RegionFragment"
+        android:name="wupitch.android.presentation.ui.signup.RegionFragment"
         android:label="RegionFragment" >
         <action
             android:id="@+id/action_regionFragment_to_sportFragment"
@@ -36,7 +36,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="wupitch.android.presentation.signup.ProfileFragment"
+        android:name="wupitch.android.presentation.ui.signup.ProfileFragment"
         android:label="ProfileFragment" >
         <action
             android:id="@+id/action_profileFragment_to_welcomeFragment"
@@ -44,15 +44,15 @@
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementDetailFragment"
-        android:name="wupitch.android.presentation.signup.ServiceAgreementDetailFragment"
+        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementDetailFragment"
         android:label="ServiceAgreementDetailFragment" />
     <fragment
         android:id="@+id/useOfPersonalInfoDetailFragment"
-        android:name="wupitch.android.presentation.signup.UseOfPersonalInfoDetailFragment"
+        android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
         android:label="UseOfPersonalInfoDetailFragment" />
     <fragment
         android:id="@+id/ageFragment"
-        android:name="wupitch.android.presentation.signup.AgeFragment"
+        android:name="wupitch.android.presentation.ui.signup.AgeFragment"
         android:label="AgeFragment" >
         <action
             android:id="@+id/action_ageFragment_to_profileFragment"
@@ -60,6 +60,6 @@
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="wupitch.android.presentation.signup.WelcomeFragment"
+        android:name="wupitch.android.presentation.ui.signup.WelcomeFragment"
         android:label="WelcomeFragment" />
 </navigation>

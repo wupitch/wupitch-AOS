@@ -7,7 +7,7 @@
 
         <variable
             name="fragment"
-            type="wupitch.android.presentation.signup.AgeFragment" />
+            type="wupitch.android.presentation.ui.signup.AgeFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

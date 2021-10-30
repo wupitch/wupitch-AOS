@@ -7,17 +7,17 @@
         
         <variable
             name="onboardingActivity"
-            type="wupitch.android.presentation.onboarding.OnboardingActivity" />
+            type="wupitch.android.presentation.ui.onboarding.OnboardingActivity" />
         <variable
             name="viewModel"
-            type="wupitch.android.presentation.onboarding.OnboardingViewModel" />
+            type="wupitch.android.presentation.ui.onboarding.OnboardingViewModel" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray04"
-    tools:context=".presentation.onboarding.OnboardingActivity">
+    tools:context=".presentation.ui.onboarding.OnboardingActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout_onboarding"
