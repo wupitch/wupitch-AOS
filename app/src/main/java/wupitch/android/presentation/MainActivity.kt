@@ -20,7 +20,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.bottomNavView.setOnItemSelectedListener(itemSelectedListener)
+        setNavBarColor()
+        setStatusBar(R.color.white)
+        binding.bottomNavView.apply {
+            setOnItemSelectedListener(itemSelectedListener)
+            selectedItemId = R.id.menu_home
+        }
 
     }
 

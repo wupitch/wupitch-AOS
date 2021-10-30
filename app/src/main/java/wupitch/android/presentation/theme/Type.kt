@@ -10,7 +10,10 @@ import wupitch.android.R
 
 // Set of Material typography styles to start with
 
-
+val Roboto = FontFamily(
+    Font(R.font.roboto_bold, FontWeight.Bold),
+    Font(R.font.roboto_regular, FontWeight.Normal)
+)
 
 val Typography = Typography(
     body1 = TextStyle(
