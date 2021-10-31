@@ -1,4 +1,4 @@
-package wupitch.android.data.repository
+package wupitch.android.data.remote
 
 
 import com.google.gson.annotations.SerializedName

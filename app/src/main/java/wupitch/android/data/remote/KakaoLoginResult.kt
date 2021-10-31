@@ -1,9 +1,9 @@
-package wupitch.android.data.repository
+package wupitch.android.data.remote
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class KakaoLoginResult(
     val accountId: Int,
     val jwt: String,
     val oauthId: String

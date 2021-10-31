@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
 import wupitch.android.common.Resource
-import wupitch.android.data.repository.KakaoLoginReq
+import wupitch.android.data.remote.KakaoLoginReq
 import wupitch.android.databinding.ActivityOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
 import wupitch.android.presentation.ui.signup.SignupActivity
@@ -137,12 +137,14 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
                 val id = user.id
                 val nickname = user.kakaoAccount?.profile?.nickname
 
-                viewModel.postKakaoUserInfo(KakaoLoginReq(
+                viewModel.postKakaoUserInfo(
+                    KakaoLoginReq(
                     email = email!!,
                     genderType = genderType!!,
                     id =  id,
                     nickname = nickname!!
-                ))
+                )
+                )
             }
         }
     }
