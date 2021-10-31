@@ -46,7 +46,7 @@
     <string name="badminton">배드민턴</string>
     <string name="volleyball">배구</string>
     <string name="basketball">농구</string>
-    <string name="climbing">등산</string>
+    <string name="hiking">등산</string>
     <string name="running">러닝</string>
     <string name="etc">기타</string>
     <string name="set_profile">프로필을\n설정해주세요.</string>
@@ -84,4 +84,6 @@
     <string name="profile">프로필</string>
     
     <string name="district">지역구</string>
+    <string name="biweekly">(격)&#160;</string>
+    <string name="moreThanOnceAWeek">&#160;+</string>
 </resources>

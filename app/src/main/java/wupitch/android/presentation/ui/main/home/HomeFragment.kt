@@ -7,27 +7,35 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import wupitch.android.R
+import wupitch.android.data.remote.CrewCardInfo
+import wupitch.android.presentation.components.CrewCard
+import wupitch.android.presentation.components.SportKeyword
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.util.Sport
 
 
 class HomeFragment : Fragment() {
@@ -39,7 +47,25 @@ class HomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                MainAppBar()
+                Column(modifier = Modifier.fillMaxSize()) {
+                    MainAppBar()
+                    CrewCard(crewCard = (
+                            CrewCardInfo(
+                                "축구",
+                                "법정동",
+                                true,
+                                "크루이름",
+                                true,
+                                "월요일 23:00 - 24:00",
+                                true,
+                                "동백 2로 37"
+                            )
+                            ), onClick = {
+                        Log.d("{HomeFragment.onCreateView}", "card clicked!")
+                    }
+                    )
+                }
+
             }
         }
 
@@ -72,12 +98,14 @@ class HomeFragment : Fragment() {
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(
-                        modifier = Modifier.constrainAs(icon_down) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            start.linkTo(text.end, margin = 8.dp)
-                        }.size(24.dp),
-                        onClick = {Log.d("{HomeFragment.MainAppBar}", "on click down!")}
+                        modifier = Modifier
+                            .constrainAs(icon_down) {
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                start.linkTo(text.end, margin = 8.dp)
+                            }
+                            .size(24.dp),
+                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click down!") }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_down),
@@ -85,12 +113,14 @@ class HomeFragment : Fragment() {
                         )
                     }
                     IconButton(
-                        modifier = Modifier.constrainAs(icon_search) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            end.linkTo(icon_filter.start, margin = 16.dp)
-                        }.size(24.dp),
-                        onClick = {Log.d("{HomeFragment.MainAppBar}", "on click search!")}
+                        modifier = Modifier
+                            .constrainAs(icon_search) {
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                end.linkTo(icon_filter.start, margin = 16.dp)
+                            }
+                            .size(24.dp),
+                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click search!") }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
@@ -98,12 +128,14 @@ class HomeFragment : Fragment() {
                         )
                     }
                     IconButton(
-                        modifier = Modifier.constrainAs(icon_filter) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            end.linkTo(icon_notification.start, margin = 16.dp)
-                        }.size(24.dp),
-                        onClick = {Log.d("{HomeFragment.MainAppBar}", "on click filter!")}
+                        modifier = Modifier
+                            .constrainAs(icon_filter) {
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                end.linkTo(icon_notification.start, margin = 16.dp)
+                            }
+                            .size(24.dp),
+                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click filter!") }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter),
@@ -111,12 +143,14 @@ class HomeFragment : Fragment() {
                         )
                     }
                     IconButton(
-                        modifier = Modifier.constrainAs(icon_notification) {
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                            end.linkTo(parent.end)
-                        }.size(24.dp),
-                        onClick = {Log.d("{HomeFragment.MainAppBar}", "on click noti!")}
+                        modifier = Modifier
+                            .constrainAs(icon_notification) {
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                end.linkTo(parent.end)
+                            }
+                            .size(24.dp),
+                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click noti!") }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_bell),

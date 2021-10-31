@@ -19,6 +19,18 @@
     <color name="gray04">#f5f5f5</color>
     <color name="gray03">#b5b5b5</color>
     <color name="gray05">#656565</color>
+
+<!--    nickname validation-->
     <color name="red">#f10000</color>
     <color name="green">#48be00</color>
+
+<!--    sports-->
+    <color name="blue_basketball">#5c8aff</color>
+    <color name="red_soccer">#ef6c5a</color>
+    <color name="green_badminton">#64cba3</color>
+    <color name="pink_volleyball">#ff96be</color>
+    <color name="yellow_running">#ffc837</color>
+    <color name="purple_hiking">#cda0ff</color>
+
+
 </resources>
