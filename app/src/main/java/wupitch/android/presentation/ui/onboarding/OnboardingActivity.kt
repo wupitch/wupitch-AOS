@@ -35,14 +35,6 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
         binding.onboardingActivity = this
         binding.viewModel = viewModel
 
-        viewModel.kakaoLoginState.observe(this, Observer {
-            when(it) {
-                is Resource.Success -> {
-                    startActivity(Intent(this, SignupActivity::class.java))
-                }
-            }
-        })
-
     }
 
     fun skipOnboarding () {
@@ -137,7 +129,7 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
                 val id = user.id
                 val nickname = user.kakaoAccount?.profile?.nickname
 
-                viewModel.postKakaoUserInfo(
+                viewModel.postKakaoLogin(
                     KakaoLoginReq(
                     email = email!!,
                     genderType = genderType!!,

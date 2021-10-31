@@ -5,42 +5,50 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import wupitch.android.common.Resource
+import wupitch.android.common.ResultState
 import wupitch.android.data.remote.KakaoLoginReq
-import wupitch.android.domain.use_case.login.PostKakaoLoginUseCase
+import wupitch.android.data.remote.KakaoLoginRes
+import wupitch.android.domain.repository.KakaoLoginRepository
+import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    val postKakaoLoginUseCase: PostKakaoLoginUseCase
+    val kakaoLoginRepository: KakaoLoginRepository
 ) : ViewModel() {
 
     private var _kakaoErrorMessage = MutableLiveData<Int>()
     val kakaoErrorMessage : LiveData<Int> = _kakaoErrorMessage
 
-    private var _kakaoLoginState = mutableStateOf(KakaoLoginState())
-    val kakaoLoginState : State<KakaoLoginState> = _kakaoLoginState
+    private var _kakaoLoginState = mutableStateOf(ResultState<KakaoLoginRes>())
+    val kakaoLoginState : State<ResultState<KakaoLoginRes>> = _kakaoLoginState
 
 
-    fun postKakaoLogin(kakaoUserInfo : KakaoLoginReq) {
-        postKakaoLoginUseCase(kakaoUserInfo).onEach { result ->
-            when (result) {
-                is Resource.Success -> {
-                    _kakaoLoginState.value = KakaoLoginState(isSuccess = true)
+    fun postKakaoLogin(kakaoUserInfo : KakaoLoginReq) = viewModelScope.launch {
+        _kakaoLoginState.value = ResultState(isLoading = true)
+        try {
+            //todo : try catch 가 필요한지.. 고민필요.
+            val response = kakaoLoginRepository.postKakaoUserInfo(kakaoUserInfo)
+            if (response.isSuccessful) {
+                response.body()?.let { result ->
+                    if (result.isSuccess) {
+                        //todo : success 이면 화면 이동. result 값 넘길 필요 없음....
+                        _kakaoLoginState.value = ResultState(result = result)
+                        Log.d("{OnboardingViewModel.postKakaoLogin}", _kakaoLoginState.value.result.toString())
+                    }
+                    else _kakaoLoginState.value = ResultState(error = "An unexpected error occured")
                 }
-                is Resource.Error -> {
-                    _kakaoLoginState.value = KakaoLoginState(
-                        error = result.message ?: "An unexpected error occured"
-                    )
-                }
-                is Resource.Loading -> {
-                    _kakaoLoginState.value = KakaoLoginState(isLoading = true)
-                }
+            } else {
+                _kakaoLoginState.value = ResultState(error = "An unexpected error occured")
             }
-        }.launchIn(viewModelScope)
+
+        } catch (t: Throwable) {
+            when (t) {
+                is IOException -> _kakaoLoginState.value = ResultState(error = "Network Failure")
+                else -> _kakaoLoginState.value = ResultState(error = "Conversion Error")
+            }
+        }
     }
 
 }
