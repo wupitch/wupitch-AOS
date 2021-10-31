@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="wupitch.android.presentation.ui.main.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_crewDetailFragment"
+            app:destination="@id/crewDetailFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/crewDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.crew_detail.components.CrewDetailFragment"
+        android:label="CrewDetailFragment" >
+        <argument
+            android:name="crew_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/impromptuFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.ImpromptuFragment"
+        android:label="ImpromptuFragment" />
+    <fragment
+        android:id="@+id/myActivityFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.MyActivityFragment"
+        android:label="MyActivityFragment" />
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="wupitch.android.presentation.ui.main.feed.FeedFragment"
+        android:label="FeedFragment" />
+    <fragment
+        android:id="@+id/profileFragment2"
+        android:name="wupitch.android.presentation.ui.main.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+</navigation>

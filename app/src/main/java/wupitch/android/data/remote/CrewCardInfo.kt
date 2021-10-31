@@ -1,6 +1,7 @@
 package wupitch.android.data.remote
 
 data class CrewCardInfo(
+    val id : Int,
     val sport : String,
     val location : String,
     val isPinned : Boolean,

@@ -6,39 +6,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.data.remote.CrewCardInfo
-import wupitch.android.presentation.components.CrewCard
-import wupitch.android.presentation.components.SportKeyword
+import wupitch.android.presentation.ui.main.home.components.CrewCard
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.util.Sport
+import wupitch.android.presentation.ui.main.home.components.CrewList
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
+
+    private val viewModel : HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,23 +46,20 @@ class HomeFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+
+                val crewList = viewModel.crewList.value
+                val loading = viewModel.loading.value
+
                 Column(modifier = Modifier.fillMaxSize()) {
                     MainAppBar()
-                    CrewCard(crewCard = (
-                            CrewCardInfo(
-                                "축구",
-                                "법정동",
-                                true,
-                                "크루이름",
-                                true,
-                                "월요일 23:00 - 24:00",
-                                true,
-                                "동백 2로 37"
-                            )
-                            ), onClick = {
-                        Log.d("{HomeFragment.onCreateView}", "card clicked!")
-                    }
-                    )
+                    CrewList(
+                        loading = loading,
+                        crewList = crewList,
+                        navigationToCrewDetailScreen = {
+                            val bundle = Bundle().apply { putInt("crewId", it) }
+                            findNavController().navigate(R.id.action_homeFragment_to_crewDetailFragment, bundle)
+                        })
+                    
                 }
 
             }

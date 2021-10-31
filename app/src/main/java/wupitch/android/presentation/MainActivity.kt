@@ -2,6 +2,9 @@ package wupitch.android.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,28 +25,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
         setNavBarColor()
         setStatusBar(R.color.white)
-        binding.bottomNavView.apply {
-            setOnItemSelectedListener(itemSelectedListener)
-            selectedItemId = R.id.menu_home
-        }
 
-    }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.bottomNavView.setupWithNavController(navController)
 
-    private val itemSelectedListener =
-        NavigationBarView.OnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.menu_home -> loadFragment(HomeFragment())
-                R.id.menu_impromptu -> loadFragment(ImpromptuFragment())
-                R.id.menu_feed -> loadFragment(FeedFragment())
-                R.id.menu_myactivity -> loadFragment(MyActivityFragment())
-                else -> loadFragment(ProfileFragment())
-            }
-            true
-        }
 
-    private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container_main, fragment)
-            .commit()
     }
 }

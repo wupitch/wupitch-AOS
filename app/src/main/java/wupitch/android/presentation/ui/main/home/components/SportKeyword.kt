@@ -1,4 +1,4 @@
-package wupitch.android.presentation.components
+package wupitch.android.presentation.ui.main.home.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.util.Sport
 
 @Composable
 fun SportKeyword (
