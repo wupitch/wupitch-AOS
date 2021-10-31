@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.data.remote.CrewCardInfo
 import wupitch.android.presentation.ui.main.home.components.CrewCard
@@ -37,8 +40,9 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val viewModel : HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
+    @ExperimentalMaterialApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,20 +51,9 @@ class HomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
 
-                val crewList = viewModel.crewList.value
-                val loading = viewModel.loading.value
 
-                Column(modifier = Modifier.fillMaxSize()) {
-                    MainAppBar()
-                    CrewList(
-                        loading = loading,
-                        crewList = crewList,
-                        navigationToCrewDetailScreen = {
-                            val bundle = Bundle().apply { putInt("crewId", it) }
-                            findNavController().navigate(R.id.action_homeFragment_to_crewDetailFragment, bundle)
-                        })
-                    
-                }
+                DistrictBottomSheet()
+
 
             }
         }
@@ -68,7 +61,9 @@ class HomeFragment : Fragment() {
     }
 
     @Composable
-    fun MainAppBar() {
+    fun MainAppBar(
+        districtOnClick: () -> Unit
+    ) {
         ConstraintLayout {
 
             Row(
@@ -101,7 +96,7 @@ class HomeFragment : Fragment() {
                                 start.linkTo(text.end, margin = 8.dp)
                             }
                             .size(24.dp),
-                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click down!") }
+                        onClick = { districtOnClick() }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_down),
@@ -157,5 +152,54 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @ExperimentalMaterialApi
+    @Composable
+    fun DistrictBottomSheet() {
+        val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+            bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+        )
+        val coroutineScope = rememberCoroutineScope()
+        BottomSheetScaffold(
+            scaffoldState = bottomSheetScaffoldState,
+            sheetContent = {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                ) {
+                    Text(text = "Hello from sheet")
+                }
+            },
+            sheetPeekHeight = 0.dp
+        ) {
+            val crewList = viewModel.crewList.value
+            val loading = viewModel.loading.value
+
+            Column(modifier = Modifier.fillMaxSize()) {
+                MainAppBar(districtOnClick = {
+                    coroutineScope.launch {
+
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        } else {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    }
+                })
+                CrewList(
+                    loading = loading,
+                    crewList = crewList,
+                    navigationToCrewDetailScreen = {
+                        val bundle = Bundle().apply { putInt("crewId", it) }
+                        findNavController().navigate(
+                            R.id.action_homeFragment_to_crewDetailFragment,
+                            bundle
+                        )
+                    })
+            }
+        }
+
     }
 }
