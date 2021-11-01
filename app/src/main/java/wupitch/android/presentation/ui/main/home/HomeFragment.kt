@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
     }
 
     @Composable
-    fun MainAppBar(
+    fun HomeAppBar(
         districtOnClick: () -> Unit
     ) {
         ConstraintLayout {
@@ -178,7 +178,7 @@ class HomeFragment : Fragment() {
             val loading = viewModel.loading.value
 
             Column(modifier = Modifier.fillMaxSize()) {
-                MainAppBar(districtOnClick = {
+                HomeAppBar(districtOnClick = {
                     coroutineScope.launch {
 
                         if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {

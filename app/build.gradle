@@ -117,4 +117,7 @@ dependencies {
 
     //Compose Constraintlayout
     implementation 'androidx.constraintlayout:constraintlayout-compose:1.0.0-rc01'
+
+    //accompanist flowLayout (flexBox like)
+    implementation "com.google.accompanist:accompanist-flowlayout:0.21.0-beta"
 }

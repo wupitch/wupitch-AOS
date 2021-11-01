@@ -8,5 +8,9 @@ enum class Sport(val no : Int, val sportName : Int, val color: Int, val icon : I
     BADMINTON(2, R.string.badminton, R.color.green_badminton, R.drawable.image_72),
     VOLLEYBALL(3, R.string.volleyball, R.color.pink_volleyball, R.drawable.image_71),
     RUNNING(4, R.string.running, R.color.yellow_running, R.drawable.image_74),
-    HIKING(5, R.string.hiking, R.color.purple_hiking, R.drawable.image_73)
+    HIKING(5, R.string.hiking, R.color.purple_hiking, R.drawable.image_73);
+
+    companion object {
+        fun getNumOf(no : Int) = Sport.values().first() {it.no == no}
+    }
 }

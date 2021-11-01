@@ -23,12 +23,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import wupitch.android.R
 import wupitch.android.data.remote.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.components.SportKeyword
 import wupitch.android.util.Sport
 
 @Composable
 fun CrewCard(
-    crewCard : CrewCardInfo,
-    onClick : () -> Unit
+    crewCard: CrewCardInfo,
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -42,7 +43,8 @@ fun CrewCard(
                 width = 1.dp,
                 color = colorResource(id = R.color.gray01),
                 shape = RoundedCornerShape(16.dp)
-            ).clickable { onClick() }
+            )
+            .clickable { onClick() }
 
     ) {
         Box(
@@ -71,13 +73,16 @@ fun CrewCard(
                 val (keyword, location, pin) = createRefs()
 
                 SportKeyword(
-                    modifier = Modifier.constrainAs(keyword) {
-                        top.linkTo(pin.top)
-                        start.linkTo(parent.start)
-                        bottom.linkTo(pin.bottom)
-                    },
-                    sportName = Sport.BASKETBALL.sportName,
-                    sportColor = Sport.BASKETBALL.color
+                    modifier = Modifier
+                        .constrainAs(keyword) {
+                            top.linkTo(pin.top)
+                            start.linkTo(parent.start)
+                            bottom.linkTo(pin.bottom)
+                        }
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(colorResource(id = Sport.BASKETBALL.color))
+                        .padding(horizontal = 8.dp),
+                    sportName = Sport.BASKETBALL.sportName
                 )
                 Text(
                     modifier = Modifier
@@ -96,14 +101,16 @@ fun CrewCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-                if(crewCard.isPinned) {
+                if (crewCard.isPinned) {
                     Image(
                         modifier = Modifier.constrainAs(pin) {
                             top.linkTo(keyword.top)
                             bottom.linkTo(keyword.bottom)
                             end.linkTo(parent.end)
                         },
-                        painter = painterResource(id = R.drawable.ic_pin), contentDescription = "pin")
+                        painter = painterResource(id = R.drawable.ic_pin),
+                        contentDescription = "pin"
+                    )
                 }
 
             }
@@ -118,28 +125,33 @@ fun CrewCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Row(modifier = Modifier.padding(top=4.dp)) {
-                if(crewCard.isBiweekly) {
+            Row(modifier = Modifier.padding(top = 4.dp)) {
+                if (crewCard.isBiweekly) {
                     Text(
                         text = stringResource(id = R.string.biweekly),
                         color = colorResource(id = R.color.gray05),
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp)
+                        fontSize = 14.sp
+                    )
                 }
 
-                Text(text = crewCard.time,
+                Text(
+                    text = crewCard.time,
                     color = colorResource(id = R.color.gray05),
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp)
+                    fontSize = 14.sp
+                )
 
-                if(crewCard.isMoreThanOnceAWeek) {
-                    Text(text = stringResource(id = R.string.moreThanOnceAWeek),
+                if (crewCard.isMoreThanOnceAWeek) {
+                    Text(
+                        text = stringResource(id = R.string.moreThanOnceAWeek),
                         color = colorResource(id = R.color.gray05),
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp)
+                        fontSize = 14.sp
+                    )
                 }
             }
 
@@ -153,9 +165,6 @@ fun CrewCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-
-
-
 
 
         }

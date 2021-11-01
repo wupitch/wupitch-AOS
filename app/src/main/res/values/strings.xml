@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">우피치</string>
 
+<!--    test string-->
+    <string name="long_text">동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르</string>
+    <string name="medium_text">동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해물과백두산이마르고닳도록동해</string>
     <!--    온보딩 -->
     <string name="onboarding_title1">내가 원하는 크루 스포츠\n동호회를 한 눈에</string>
     <string name="onboarding_title2">번개와 리그를 통해\n함께 운동하세요</string>
@@ -82,8 +85,30 @@
     <string name="my_activity">내 활동</string>
     <string name="feed">피드</string>
     <string name="profile">프로필</string>
-    
+
+<!--    home-->
     <string name="district">지역구</string>
     <string name="biweekly">(격)&#160;</string>
     <string name="moreThanOnceAWeek">&#160;+</string>
+
+<!--    crew detail-->
+    <string name="crew">크루</string>
+    <string name="introduction">소개</string>
+    <string name="persons">인원:&#160;</string>
+    <string name="age">연령:&#160;</string>
+    <string name="welcome_beginner">초보 환영</string>
+    <string name="semi_expert">중수</string>
+    <string name="expert">고수</string>
+    <string name="beginners_to_experts">초보부터 고수까지</string>
+    <string name="has_lesson">레슨 운영</string>
+    <string name="train_with_coach">코치님과 훈련</string>
+    <string name="train_centered">훈련 중심</string>
+    <string name="game_centered">경기 중심</string>
+    <string name="supplies">준비물</string>
+    <string name="what_is_visitors">손님이란?</string>
+    <string name="visitor_explanation">손님 신청 시, 별다른 동호회 가입 절차 없이 하루 동안 기존 동호회 회원들과 함께 운동을 즐길 수 있습니다.</string>
+    <string name="inquiry">문의</string>
+    <string name="guidance">안내사항</string>
+    <string name="join_as_visitor">손님으로 참여</string>
+    <string name="join">가입하기</string>
 </resources>

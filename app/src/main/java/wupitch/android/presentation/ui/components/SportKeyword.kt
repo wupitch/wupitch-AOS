@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.home.components
+package wupitch.android.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,14 +19,9 @@ import wupitch.android.presentation.theme.Roboto
 @Composable
 fun SportKeyword (
     modifier: Modifier,
-    sportName : Int,
-    sportColor : Int
+    sportName : Int
 ){
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(colorResource(id = sportColor))
-            .padding(horizontal = 8.dp)
+    Box(modifier = modifier
     ) {
         Text(
             text = stringResource(id = sportName),
