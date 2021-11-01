@@ -10,11 +10,15 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
@@ -32,8 +36,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.data.remote.CrewCardInfo
+import wupitch.android.presentation.theme.BottomSheetShape
 import wupitch.android.presentation.ui.main.home.components.CrewCard
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.components.NumberPicker
 import wupitch.android.presentation.ui.main.home.components.CrewList
 import javax.inject.Inject
 
@@ -162,14 +168,63 @@ class HomeFragment : Fragment() {
         )
         val coroutineScope = rememberCoroutineScope()
         BottomSheetScaffold(
+            sheetShape = BottomSheetShape,
             scaffoldState = bottomSheetScaffoldState,
             sheetContent = {
-                Box(
-                    Modifier
+
+                Column(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(398.dp)
                 ) {
-                    Text(text = "Hello from sheet")
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp)
+                            .padding(horizontal = 20.dp)
+                    ) {
+                        val (title, close) = createRefs()
+
+                        Text(
+                            modifier = Modifier.constrainAs(title) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                            },
+                            text = stringResource(id = R.string.select_region_bottom_sheet),
+                            fontFamily = Roboto,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.main_black)
+                        )
+
+                        Image(
+                            modifier = Modifier
+                                .constrainAs(close) {
+                                    top.linkTo(title.top)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(title.bottom)
+                                }
+                                .size(24.dp)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                                    }
+                                },
+                            painter = painterResource(id = R.drawable.close),
+                            contentDescription = "close icon"
+                        )
+
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            NumberPicker(
+                                state = remember { mutableStateOf(9) },
+                                range = 0..10,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
+
+                    }
+
+
                 }
             },
             sheetPeekHeight = 0.dp
@@ -186,6 +241,7 @@ class HomeFragment : Fragment() {
                         } else {
                             bottomSheetScaffoldState.bottomSheetState.collapse()
                         }
+
                     }
                 })
                 CrewList(
