@@ -6,7 +6,7 @@ import retrofit2.http.POST
 
 interface KakaoLoginApi {
 
-    @POST("app/account/kakao")
+    @POST("app/accounts/kakao")
     suspend fun postKakaoLogin(
         @Body kakaoUserInfo : KakaoLoginReq
     ) : Response<KakaoLoginRes>

@@ -7,21 +7,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="wupitch.android.presentation.ui.main.home.HomeFragment"
-        android:label="HomeFragment" >
-        <action
-            android:id="@+id/action_homeFragment_to_crewDetailFragment"
-            app:destination="@id/crewDetailFragment" />
-
-    </fragment>
-    <fragment
-        android:id="@+id/crewDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.crew_detail.components.CrewDetailFragment"
-        android:label="CrewDetailFragment" >
-        <argument
-            android:name="crew_id"
-            app:argType="integer"
-            android:defaultValue="-1" />
-    </fragment>
+        android:label="HomeFragment" />
     <fragment
         android:id="@+id/impromptuFragment"
         android:name="wupitch.android.presentation.ui.main.impromptu.ImpromptuFragment"

@@ -193,9 +193,8 @@ class HomeFragment : Fragment() {
                     crewList = crewList,
                     navigationToCrewDetailScreen = {
                         val bundle = Bundle().apply { putInt("crewId", it) }
-                        findNavController().navigate(
-                            R.id.action_homeFragment_to_crewDetailFragment,
-                            bundle
+                        activity?.findNavController(R.id.main_nav_container_view)?.navigate(
+                            R.id.action_mainFragment_to_crewDetailFragment, bundle
                         )
                     })
             }

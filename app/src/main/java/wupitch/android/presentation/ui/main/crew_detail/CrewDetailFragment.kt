@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.crew_detail.components
+package wupitch.android.presentation.ui.main.crew_detail
 
 import android.os.Bundle
 import android.util.Log
@@ -61,10 +61,12 @@ class CrewDetailFragment : Fragment() {
                     val (appbar, crewInfo, joinBtns) = createRefs()
 
                     SetAppBar(
-                        modifier = Modifier.fillMaxWidth().constrainAs(appbar) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .constrainAs(appbar) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                            },
                         onClick = {
                             findNavController().navigateUp()
                         },
@@ -72,9 +74,12 @@ class CrewDetailFragment : Fragment() {
                     )
 
                     Column(
-                        modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
-                            .constrainAs(crewInfo){
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState())
+                            .constrainAs(crewInfo) {
                                 top.linkTo(appbar.bottom)
+                                //todo 이슈 해결: 안내사항 bottom padding 끝까지 안 보이는 현상
 //                                bottom.linkTo(joinBtns.top)
                             }
                     ) {
@@ -91,86 +96,95 @@ class CrewDetailFragment : Fragment() {
                         CrewGuidance()
                     }
 
-                    Column(
+                    JoinCrewBtns(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(68.dp)
                             .background(Color.White)
                             .constrainAs(joinBtns) {
+//                                top.linkTo(crewInfo.bottom)
                                 bottom.linkTo(parent.bottom)
                             }
-                    ) {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(
-                                    colorResource(id = R.color.gray01)
-                                )
-                        )
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 20.dp, vertical = 12.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Color.White)
-                                    .border(
-                                        width = 1.dp, color = colorResource(
-                                            id = R.color.main_orange
-                                        ),
-                                        shape = RoundedCornerShape(8.dp)
-                                    )
-                                    .clickable {
-                                        Log.d("{CrewDetailFragment.onCreateView}", "손님으로 참여 클릭")
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.join_as_visitor),
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 16.sp,
-                                    fontFamily = Roboto,
-                                    fontWeight = FontWeight.Bold,
-                                    color = colorResource(id = R.color.main_orange)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(12.dp))
-
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight()
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(colorResource(id = R.color.main_orange))
-                                    .clickable {
-                                        Log.d("{CrewDetailFragment.onCreateView}", "가입하기 클릭")
-                                    },
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = stringResource(id = R.string.join),
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 16.sp,
-                                    fontFamily = Roboto,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White
-                                )
-                            }
-                        }
-
-
-                    }
-
-
+                    )
                 }
             }
         }
+    }
+
+    @Composable
+    fun JoinCrewBtns(
+        modifier: Modifier
+    ) {
+        Column(
+            modifier = modifier
+        ) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(
+                        colorResource(id = R.color.gray01)
+                    )
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White)
+                        .border(
+                            width = 1.dp, color = colorResource(
+                                id = R.color.main_orange
+                            ),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .clickable {
+                            Log.d("{CrewDetailFragment.onCreateView}", "손님으로 참여 클릭")
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.join_as_visitor),
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.main_orange)
+                    )
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colorResource(id = R.color.main_orange))
+                        .clickable {
+                            Log.d("{CrewDetailFragment.onCreateView}", "가입하기 클릭")
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.join),
+                        textAlign = TextAlign.Center,
+                        fontSize = 16.sp,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
+
+
+        }
+
     }
 
     @Composable
@@ -382,7 +396,7 @@ class CrewDetailFragment : Fragment() {
             mainAxisSpacing = 12.dp,
             crossAxisSpacing = 14.dp
         ) {
-            if(keywordList.isNotEmpty()){
+            if (keywordList.isNotEmpty()) {
                 keywordList.forEach {
 
                     Box(
