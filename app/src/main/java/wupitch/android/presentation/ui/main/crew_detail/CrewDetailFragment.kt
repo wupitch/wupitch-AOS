@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
@@ -55,6 +56,7 @@ class CrewDetailFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
+                val scrollState = rememberScrollState(0)
                 ConstraintLayout(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -76,12 +78,13 @@ class CrewDetailFragment : Fragment() {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
                             .constrainAs(crewInfo) {
                                 top.linkTo(appbar.bottom)
-                                //todo 이슈 해결: 안내사항 bottom padding 끝까지 안 보이는 현상
-//                                bottom.linkTo(joinBtns.top)
+                                bottom.linkTo(joinBtns.top)
+                                height = Dimension.fillToConstraints
                             }
+                            .verticalScroll(scrollState)
+
                     ) {
                         CrewImageCard()
                         CrewInfo()
