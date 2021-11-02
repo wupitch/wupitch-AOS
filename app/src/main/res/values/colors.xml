@@ -33,5 +33,7 @@
     <color name="yellow_running">#ffc837</color>
     <color name="purple_hiking">#cda0ff</color>
 
+    <color name="black03">#cc222222</color>
+
 
 </resources>

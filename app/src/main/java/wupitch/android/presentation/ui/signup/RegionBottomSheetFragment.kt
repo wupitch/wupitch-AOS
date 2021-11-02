@@ -57,7 +57,7 @@ class RegionBottomSheetFragment @Inject constructor(
         binding.pickerRegion.apply {
             minValue = 0
             maxValue = regionList.size -1
-            binding.pickerRegion.displayedValues = regionList
+            displayedValues = regionList
         }
     }
 
