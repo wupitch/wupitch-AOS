@@ -1,6 +1,7 @@
 package wupitch.android.presentation.ui.components
 
 import android.util.Log
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,8 +25,9 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
-fun OrangeRoundBtn(
+fun RoundBtn(
     modifier: Modifier,
+    @ColorRes btnColor : Int,
     @StringRes textString : Int,
     fontSize : TextUnit,
     onClick : () ->Unit
@@ -33,7 +35,7 @@ fun OrangeRoundBtn(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(colorResource(id = R.color.main_orange))
+            .background(colorResource(id = btnColor))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {

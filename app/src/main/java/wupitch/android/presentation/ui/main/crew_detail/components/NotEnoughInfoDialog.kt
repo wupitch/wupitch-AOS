@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +25,7 @@ import androidx.compose.ui.window.DialogProperties
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.components.OrangeRoundBtn
+import wupitch.android.presentation.ui.components.RoundBtn
 
 @Composable
 fun NotEnoughInfoDialog(
@@ -75,12 +76,13 @@ fun NotEnoughInfoDialog(
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp
                 )
-                OrangeRoundBtn(
+                RoundBtn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .padding(top = 36.dp)
                         .padding(horizontal = 30.dp),
+                    btnColor = R.color.main_orange,
                     textString = R.string.go_fill_profile,
                     fontSize = 14.sp
                 ) {

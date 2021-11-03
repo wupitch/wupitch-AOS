@@ -119,4 +119,14 @@
     <string name="not_enough_info_title">잠깐만요! 프로필 정보가 부족해요.</string>
     <string name="not_enough_info_subtitle">모든 프로필 정보가 기입되어야\n크루에 신청할 수 있습니다.</string>
     <string name="go_fill_profile">프로필 작성하러 가기</string>
+    <string name="join_visitor_bottom_sheet_title">손님으로 참여해 가입절차없이\n하루동안 크루에 참여해보세요!</string>
+    <string name="join_visitor_step1">프로필 정보를 동호회장에게 제공합니다.</string>
+    <string name="join_visitor_step2">해당 동호회의 손님비는&#160;</string>
+    <string name="join_visitor_step2_subtitle">(신청 승인 이후, 별도납부)</string>
+    <string name="join_visitor_step3">희망하는 날짜를 선택해주세요.</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="register">가입하기</string>
+    <string name="end_sentence">&#160;입니다.</string>
 </resources>

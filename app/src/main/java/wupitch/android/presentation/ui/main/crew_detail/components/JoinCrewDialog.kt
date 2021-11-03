@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,7 +21,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.components.OrangeRoundBtn
+import wupitch.android.presentation.ui.components.RoundBtn
 
 @Composable
 fun JoinCrewDialog(
@@ -52,12 +53,13 @@ fun JoinCrewDialog(
                     textAlign = TextAlign.Center,
                     fontSize = 14.sp
                 )
-                OrangeRoundBtn(
+                RoundBtn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
                         .padding(top = 36.dp)
                         .padding(horizontal = 30.dp),
+                    btnColor = R.color.main_orange,
                     textString = R.string.confirmed,
                     fontSize = 14.sp
                 ) {

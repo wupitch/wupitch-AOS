@@ -47,6 +47,8 @@ import wupitch.android.util.Sport
 
 class CrewDetailFragment : Fragment() {
 
+    private lateinit var visitorBottomSheet : VisitorBottomSheetFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("crewId")?.let { crewId ->
@@ -171,15 +173,18 @@ class CrewDetailFragment : Fragment() {
                     .fillMaxHeight(),
                     textString = R.string.join_as_visitor,
                     fontSize = 16.sp) {
-                    joinVisitorDialogOpenState.value = true
+                    // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
+                    visitorBottomSheet = VisitorBottomSheetFragment("1만원", listOf("21.00.00수", "21.00.00목","21.00.00금")) //"21.00.00수", "21.00.00목","21.00.00금"
+                    visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                OrangeRoundBtn(
+                RoundBtn(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight(),
+                    btnColor = R.color.main_orange,
                     textString = R.string.join, fontSize = 16.sp
                 ) {
                     joinDialogOpenState.value = true
