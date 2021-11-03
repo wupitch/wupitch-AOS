@@ -37,9 +37,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.data.remote.CrewCardInfo
 import wupitch.android.presentation.theme.BottomSheetShape
-import wupitch.android.presentation.ui.main.home.components.CrewCard
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.components.NumberPicker
 import wupitch.android.presentation.ui.main.home.components.CrewList
 import javax.inject.Inject
 

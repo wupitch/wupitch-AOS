@@ -42,6 +42,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.crew_detail.components.JoinCrewDialog
+import wupitch.android.presentation.ui.main.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.util.Sport
 
 class CrewDetailFragment : Fragment() {
@@ -69,12 +70,16 @@ class CrewDetailFragment : Fragment() {
                 val joinDialogOpenState = remember {
                     mutableStateOf(false)
                 }
+                val notEnoughInfoDialogOpenState = remember {
+                    mutableStateOf(false)
+                }
 
                 if (joinVisitorDialogOpenState.value)
                     JoinCrewDialog(dialogOpen = joinVisitorDialogOpenState, R.string.join_visitor_success)
                 if (joinDialogOpenState.value)
                     JoinCrewDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
-
+                if(notEnoughInfoDialogOpenState.value)
+                    NotEnoughInfoDialog(dialogOpen = notEnoughInfoDialogOpenState)
 
                 ConstraintLayout(
                     modifier = Modifier.fillMaxSize()
@@ -126,7 +131,9 @@ class CrewDetailFragment : Fragment() {
                             .constrainAs(joinBtns) {
                                 bottom.linkTo(parent.bottom)
                             },
-                        joinVisitorDialogOpenState = joinVisitorDialogOpenState,
+
+                        //todo: bottom dialog 구현 후 분기처리.
+                        joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
                         joinDialogOpenState = joinDialogOpenState
                     )
                 }
