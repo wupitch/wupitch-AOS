@@ -291,8 +291,7 @@ class HomeFragment : Fragment() {
             val loading = viewModel.loading.value
 
             Column(modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.black03))) {
+                .fillMaxSize()) {
                 HomeAppBar(districtOnClick = {
                     coroutineScope.launch {
 

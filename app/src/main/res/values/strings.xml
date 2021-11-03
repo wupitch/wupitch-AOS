@@ -111,4 +111,8 @@
     <string name="guidance">안내사항</string>
     <string name="join_as_visitor">손님으로 참여</string>
     <string name="join">가입하기</string>
+    <string name="firecracker">&#127881;</string>
+    <string name="join_success">가입 신청이 완료됐습니다!\n크루의 수락은 알림을 통해 확인하세요.</string>
+    <string name="join_visitor_success">손님 신청이 완료됐습니다!\n크루의 수락은 알림을 통해 확인하세요.</string>
+    <string name="confirmed">확인</string>
 </resources>

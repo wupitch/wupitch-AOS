@@ -10,9 +10,14 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,6 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
@@ -33,9 +40,8 @@ import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.components.GrayDivider
-import wupitch.android.presentation.ui.components.SetAppBar
-import wupitch.android.presentation.ui.components.SportKeyword
+import wupitch.android.presentation.ui.components.*
+import wupitch.android.presentation.ui.main.crew_detail.components.JoinCrewDialog
 import wupitch.android.util.Sport
 
 class CrewDetailFragment : Fragment() {
@@ -57,6 +63,19 @@ class CrewDetailFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 val scrollState = rememberScrollState(0)
+                val joinVisitorDialogOpenState = remember {
+                    mutableStateOf(false)
+                }
+                val joinDialogOpenState = remember {
+                    mutableStateOf(false)
+                }
+
+                if (joinVisitorDialogOpenState.value)
+                    JoinCrewDialog(dialogOpen = joinVisitorDialogOpenState, R.string.join_visitor_success)
+                if (joinDialogOpenState.value)
+                    JoinCrewDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
+
+
                 ConstraintLayout(
                     modifier = Modifier.fillMaxSize()
                 ) {
@@ -105,9 +124,10 @@ class CrewDetailFragment : Fragment() {
                             .height(68.dp)
                             .background(Color.White)
                             .constrainAs(joinBtns) {
-//                                top.linkTo(crewInfo.bottom)
                                 bottom.linkTo(parent.bottom)
-                            }
+                            },
+                        joinVisitorDialogOpenState = joinVisitorDialogOpenState,
+                        joinDialogOpenState = joinDialogOpenState
                     )
                 }
             }
@@ -116,8 +136,11 @@ class CrewDetailFragment : Fragment() {
 
     @Composable
     fun JoinCrewBtns(
-        modifier: Modifier
+        modifier: Modifier,
+        joinVisitorDialogOpenState: MutableState<Boolean>,
+        joinDialogOpenState: MutableState<Boolean>,
     ) {
+
         Column(
             modifier = modifier
         ) {
@@ -135,53 +158,24 @@ class CrewDetailFragment : Fragment() {
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.White)
-                        .border(
-                            width = 1.dp, color = colorResource(
-                                id = R.color.main_orange
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .clickable {
-                            Log.d("{CrewDetailFragment.onCreateView}", "손님으로 참여 클릭")
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.join_as_visitor),
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.main_orange)
-                    )
+
+                WhiteRoundBtn(modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                    textString = R.string.join_as_visitor,
+                    fontSize = 16.sp) {
+                    joinVisitorDialogOpenState.value = true
                 }
+
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Box(
+                OrangeRoundBtn(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(colorResource(id = R.color.main_orange))
-                        .clickable {
-                            Log.d("{CrewDetailFragment.onCreateView}", "가입하기 클릭")
-                        },
-                    contentAlignment = Alignment.Center
+                        .fillMaxHeight(),
+                    textString = R.string.join, fontSize = 16.sp
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.join),
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    joinDialogOpenState.value = true
                 }
             }
 
