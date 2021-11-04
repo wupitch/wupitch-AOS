@@ -46,8 +46,29 @@ fun WupitchTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) 
         shapes = Shapes,
         content = content
     )
+}
 
+@Composable
+fun OnboardingTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) {
 
+    val systemUiController = rememberSystemUiController()
+    systemUiController.apply {
+        setStatusBarColor(colorResource(id = R.color.gray04))
+        setNavigationBarColor(colorResource(id = R.color.bottom_nav_color))
+    }
+
+    val colors = if (darkTheme) {
+        DarkColorPalette
+    } else {
+        LightColorPalette
+    }
+
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
 }
 
 @Composable
@@ -69,5 +90,4 @@ fun SplashTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) {
         shapes = Shapes,
         content = content
     )
-
 }

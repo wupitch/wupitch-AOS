@@ -28,8 +28,8 @@
             android:id="@+id/action_splashFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
-            app:destination="@id/serviceAgreementFragment" />
+            android:id="@+id/action_splashFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
@@ -89,4 +89,12 @@
         android:id="@+id/welcomeFragment"
         android:name="wupitch.android.presentation.ui.signup.WelcomeFragment"
         android:label="WelcomeFragment" />
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="wupitch.android.presentation.ui.onboarding.OnboardingFragment"
+        android:label="OnboardingFragment" >
+        <action
+            android:id="@+id/action_onboardingFragment_to_serviceAgreementFragment"
+            app:destination="@id/serviceAgreementFragment" />
+    </fragment>
 </navigation>

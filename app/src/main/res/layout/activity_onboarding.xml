@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     
     <data>
-        
-        <variable
-            name="onboardingActivity"
-            type="wupitch.android.presentation.ui.onboarding.OnboardingActivity" />
         <variable
             name="viewModel"
             type="wupitch.android.presentation.ui.onboarding.OnboardingViewModel" />
@@ -24,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        app:tabBackground="@drawable/indicator_onboarding"
         app:tabIndicatorHeight="0dp"
         app:tabGravity="center"
         android:layout_marginTop="36dp"
@@ -61,8 +56,7 @@
             android:layout_marginBottom="24dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="18dp"
-            android:layout_alignParentEnd="true"
-            android:onClick="@{() -> onboardingActivity.skipOnboarding()}"/>
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/iv_kakao_login"
@@ -72,8 +66,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="44dp"
-            android:src="@drawable/kakao_login"
-            android:onClick="@{()-> onboardingActivity.signInWithKakao()}"/>
+            android:src="@drawable/kakao_login" />
 
     </RelativeLayout>
 
