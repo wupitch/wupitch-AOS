@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.map
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import wupitch.android.WupitchApplication.Companion.dataStore
-import wupitch.android.common.Constants.JWT_PREFERENCE_KEY
 import java.io.IOException
 
 class JwtTokenInterceptor(

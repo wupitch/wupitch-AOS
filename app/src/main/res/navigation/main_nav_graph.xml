@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_splashFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
+            app:destination="@id/serviceAgreementFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
