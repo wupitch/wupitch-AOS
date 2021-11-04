@@ -1,26 +1,23 @@
 package wupitch.android.presentation.ui.onboarding
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.IconButton
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -30,7 +27,6 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -38,30 +34,21 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
-import com.google.android.material.tabs.TabLayoutMediator
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import wupitch.android.R
-import wupitch.android.common.BaseActivity
 import wupitch.android.common.Resource
-import wupitch.android.common.ResultState
 import wupitch.android.data.remote.KakaoLoginReq
-import wupitch.android.databinding.ActivityOnboardingBinding
 import wupitch.android.domain.model.OnboardingContent
 import wupitch.android.presentation.theme.OnboardingTheme
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.signup.SignupActivity
-import java.io.IOException
 
 @AndroidEntryPoint
 class OnboardingFragment : Fragment() {
@@ -78,6 +65,18 @@ class OnboardingFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 OnboardingTheme {
+                    val kakaoLoginState by viewModel.kakaoLoginLiveData.observeAsState()
+                    when(kakaoLoginState){
+                        is Resource.Success -> findNavController().navigate(R.id.action_onboardingFragment_to_serviceAgreementFragment)
+                        is Resource.Error -> {
+                            Log.d("{OnboardingFragment.onCreateView}", "error!")
+                        }
+                        is Resource.Loading -> {
+                            CircularProgressIndicator(modifier = Modifier.fillMaxSize(), color = colorResource(
+                                id = R.color.main_orange
+                            ))
+                        }
+                    }
                     setOnboardingList()
                     val pagerState = rememberPagerState()
                     val scope = rememberCoroutineScope()

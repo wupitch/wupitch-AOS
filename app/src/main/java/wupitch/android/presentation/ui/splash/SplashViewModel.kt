@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
-import wupitch.android.WupitchApplication.Companion.dataStore
 import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import javax.inject.Inject
 
 @HiltViewModel

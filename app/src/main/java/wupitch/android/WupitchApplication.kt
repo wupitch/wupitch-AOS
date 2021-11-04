@@ -22,44 +22,11 @@ import java.util.concurrent.TimeUnit
 @HiltAndroidApp
 class WupitchApplication : Application() {
 
-
-    companion object {
-
-        lateinit var retrofit: Retrofit
-
-        val Context.dataStore by preferencesDataStore(
-            name = PREFERENCES_NAME
-        )
-    }
-
-
-
     override fun onCreate() {
         super.onCreate()
 
-        initRetrofitInstance()
-
-
         KakaoSdk.init(this, getString(R.string.kakao_native_app_key))
 
-    }
-
-    private fun initRetrofitInstance() {
-
-//        val gson = GsonBuilder().setLenient().create()
-
-        val client: OkHttpClient = OkHttpClient.Builder()
-            .readTimeout(5000, TimeUnit.MILLISECONDS)
-            .connectTimeout(5000, TimeUnit.MILLISECONDS)
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .addNetworkInterceptor(JwtTokenInterceptor(this))
-            .build()
-
-        retrofit = Retrofit.Builder()
-            .baseUrl(API_URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 
 }

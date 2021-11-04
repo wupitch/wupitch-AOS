@@ -2,23 +2,17 @@ package wupitch.android.presentation.ui.onboarding
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.*
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import wupitch.android.WupitchApplication.Companion.dataStore
 import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import wupitch.android.common.Resource
-import wupitch.android.common.ResultState
 import wupitch.android.data.remote.KakaoLoginReq
 import wupitch.android.data.remote.KakaoLoginRes
 import wupitch.android.domain.repository.KakaoLoginRepository
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
