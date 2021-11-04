@@ -27,6 +27,7 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.home.components.CrewList
 
 @AndroidEntryPoint
@@ -42,30 +43,32 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
+
             setContent {
+                WupitchTheme {
+                    districtBottomSheet = DistrictBottomSheetFragment()
 
-                districtBottomSheet = DistrictBottomSheetFragment()
+                    //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
+                    val crewList = viewModel.crewList.value
+                    val loading = viewModel.loading.value
 
-                //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
-                val crewList = viewModel.crewList.value
-                val loading = viewModel.loading.value
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    HomeAppBar(districtOnClick = {
-                        districtBottomSheet.show(childFragmentManager, "district bottom sheet")
-                    })
-                    CrewList(
-                        loading = loading,
-                        crewList = crewList,
-                        navigationToCrewDetailScreen = {
-                            val bundle = Bundle().apply { putInt("crewId", it) }
-                            activity?.findNavController(R.id.main_nav_container_view)?.navigate(
-                                R.id.action_mainFragment_to_crewDetailFragment, bundle
-                            )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        HomeAppBar(districtOnClick = {
+                            districtBottomSheet.show(childFragmentManager, "district bottom sheet")
                         })
+                        CrewList(
+                            loading = loading,
+                            crewList = crewList,
+                            navigationToCrewDetailScreen = {
+                                val bundle = Bundle().apply { putInt("crewId", it) }
+                                activity?.findNavController(R.id.main_nav_container_view)?.navigate(
+                                    R.id.action_mainFragment_to_crewDetailFragment, bundle
+                                )
+                            })
+                    }
                 }
             }
         }

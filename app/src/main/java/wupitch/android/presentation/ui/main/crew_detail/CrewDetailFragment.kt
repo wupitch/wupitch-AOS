@@ -40,6 +40,7 @@ import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.crew_detail.components.JoinCrewDialog
 import wupitch.android.presentation.ui.main.crew_detail.components.NotEnoughInfoDialog
@@ -47,7 +48,7 @@ import wupitch.android.util.Sport
 
 class CrewDetailFragment : Fragment() {
 
-    private lateinit var visitorBottomSheet : VisitorBottomSheetFragment
+    private lateinit var visitorBottomSheet: VisitorBottomSheetFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,82 +66,88 @@ class CrewDetailFragment : Fragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                val scrollState = rememberScrollState(0)
-                val joinVisitorDialogOpenState = remember {
-                    mutableStateOf(false)
-                }
-                val joinDialogOpenState = remember {
-                    mutableStateOf(false)
-                }
-                val notEnoughInfoDialogOpenState = remember {
-                    mutableStateOf(false)
-                }
-
-                if (joinVisitorDialogOpenState.value)
-                    JoinCrewDialog(dialogOpen = joinVisitorDialogOpenState, R.string.join_visitor_success)
-                if (joinDialogOpenState.value)
-                    JoinCrewDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
-                if(notEnoughInfoDialogOpenState.value)
-                    NotEnoughInfoDialog(dialogOpen = notEnoughInfoDialogOpenState)
-
-                ConstraintLayout(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val (appbar, crewInfo, joinBtns) = createRefs()
-
-                    SetAppBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .constrainAs(appbar) {
-                                top.linkTo(parent.top)
-                                start.linkTo(parent.start)
-                            },
-                        onClick = {
-                            findNavController().navigateUp()
-                        },
-                        textString = R.string.crew
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .constrainAs(crewInfo) {
-                                top.linkTo(appbar.bottom)
-                                bottom.linkTo(joinBtns.top)
-                                height = Dimension.fillToConstraints
-                            }
-                            .verticalScroll(scrollState)
-
-                    ) {
-                        CrewImageCard()
-                        CrewInfo()
-                        GrayDivider()
-
-                        CrewIntroCard()
-                        GrayDivider()
-
-                        CrewExtraInfo()
-                        GrayDivider()
-
-                        CrewGuidance()
+                WupitchTheme {
+                    val scrollState = rememberScrollState(0)
+                    val joinVisitorDialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    val joinDialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    val notEnoughInfoDialogOpenState = remember {
+                        mutableStateOf(false)
                     }
 
-                    JoinCrewBtns(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(68.dp)
-                            .background(Color.White)
-                            .constrainAs(joinBtns) {
-                                bottom.linkTo(parent.bottom)
-                            },
+                    if (joinVisitorDialogOpenState.value)
+                        JoinCrewDialog(
+                            dialogOpen = joinVisitorDialogOpenState,
+                            R.string.join_visitor_success
+                        )
+                    if (joinDialogOpenState.value)
+                        JoinCrewDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
+                    if (notEnoughInfoDialogOpenState.value)
+                        NotEnoughInfoDialog(dialogOpen = notEnoughInfoDialogOpenState)
 
-                        //todo: bottom dialog 구현 후 분기처리.
-                        joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
-                        joinDialogOpenState = joinDialogOpenState
-                    )
+                    ConstraintLayout(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val (appbar, crewInfo, joinBtns) = createRefs()
+
+                        SetAppBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .constrainAs(appbar) {
+                                    top.linkTo(parent.top)
+                                    start.linkTo(parent.start)
+                                },
+                            onClick = {
+                                findNavController().navigateUp()
+                            },
+                            textString = R.string.crew
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .constrainAs(crewInfo) {
+                                    top.linkTo(appbar.bottom)
+                                    bottom.linkTo(joinBtns.top)
+                                    height = Dimension.fillToConstraints
+                                }
+                                .verticalScroll(scrollState)
+
+                        ) {
+                            CrewImageCard()
+                            CrewInfo()
+                            GrayDivider()
+
+                            CrewIntroCard()
+                            GrayDivider()
+
+                            CrewExtraInfo()
+                            GrayDivider()
+
+                            CrewGuidance()
+                        }
+
+                        JoinCrewBtns(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(68.dp)
+                                .background(Color.White)
+                                .constrainAs(joinBtns) {
+                                    bottom.linkTo(parent.bottom)
+                                },
+
+                            //todo: bottom dialog 구현 후 분기처리.
+                            joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
+                            joinDialogOpenState = joinDialogOpenState
+                        )
+                    }
                 }
             }
         }
+
     }
 
     @Composable
@@ -168,13 +175,18 @@ class CrewDetailFragment : Fragment() {
                     .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
 
-                WhiteRoundBtn(modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                WhiteRoundBtn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                     textString = R.string.join_as_visitor,
-                    fontSize = 16.sp) {
+                    fontSize = 16.sp
+                ) {
                     // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
-                    visitorBottomSheet = VisitorBottomSheetFragment("1만원", listOf("21.00.00수", "21.00.00목","21.00.00금")) //"21.00.00수", "21.00.00목","21.00.00금"
+                    visitorBottomSheet = VisitorBottomSheetFragment(
+                        "1만원",
+                        listOf("21.00.00수", "21.00.00목", "21.00.00금")
+                    ) //"21.00.00수", "21.00.00목","21.00.00금"
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
 

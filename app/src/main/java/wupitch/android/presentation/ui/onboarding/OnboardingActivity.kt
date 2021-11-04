@@ -29,8 +29,7 @@ class OnboardingActivity : BaseActivity<ActivityOnboardingBinding>(ActivityOnboa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setNavBarColor()
-        setStatusBar(R.color.gray04)
+
         setViewpager()
         binding.onboardingActivity = this
         binding.viewModel = viewModel

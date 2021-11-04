@@ -24,8 +24,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setNavBarColor()
-        setStatusBar(R.color.white)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_nav_container_view) as NavHostFragment

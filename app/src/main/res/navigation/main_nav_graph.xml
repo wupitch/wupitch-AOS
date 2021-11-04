@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/mainFragment">
+    app:startDestination="@id/splashFragment">
     <fragment
         android:id="@+id/mainFragment"
         android:name="wupitch.android.presentation.ui.main.MainFragment"
@@ -20,4 +20,73 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="wupitch.android.presentation.ui.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
+            app:destination="@id/serviceAgreementFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceAgreementFragment"
+        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
+        android:label="ServiceAgreementFragment">
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_regionFragment"
+            app:destination="@id/regionFragment" />
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
+            app:destination="@id/serviceAgreementDetailFragment" />
+        <action
+            android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
+            app:destination="@id/useOfPersonalInfoDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sportFragment"
+        android:name="wupitch.android.presentation.ui.signup.SportFragment"
+        android:label="SportFragment" >
+        <action
+            android:id="@+id/action_sportFragment_to_ageFragment"
+            app:destination="@id/ageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/regionFragment"
+        android:name="wupitch.android.presentation.ui.signup.RegionFragment"
+        android:label="RegionFragment" >
+        <action
+            android:id="@+id/action_regionFragment_to_sportFragment"
+            app:destination="@id/sportFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="wupitch.android.presentation.ui.signup.ProfileFragment"
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/serviceAgreementDetailFragment"
+        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementDetailFragment"
+        android:label="ServiceAgreementDetailFragment" />
+    <fragment
+        android:id="@+id/useOfPersonalInfoDetailFragment"
+        android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
+        android:label="UseOfPersonalInfoDetailFragment" />
+    <fragment
+        android:id="@+id/ageFragment"
+        android:name="wupitch.android.presentation.ui.signup.AgeFragment"
+        android:label="AgeFragment" >
+        <action
+            android:id="@+id/action_ageFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="wupitch.android.presentation.ui.signup.WelcomeFragment"
+        android:label="WelcomeFragment" />
 </navigation>
