@@ -393,14 +393,14 @@ class CrewDetailFragment : Fragment() {
 
         //todo : 소개 키워드 받기. 
         val keywordList = listOf<String>(
-//            "크루 키워드",
-//            "이 부분에",
-//            "들어갑니다.",
-//            "초보 환영",
-//            "코치님과 훈련",
-//            "레슨 운영",
-//            "훈련 중심",
-//            "경기 중심"
+            "크루 키워드",
+            "이 부분에",
+            "들어갑니다.",
+            "초보 환영",
+            "코치님과 훈련",
+            "레슨 운영",
+            "훈련 중심",
+            "경기 중심"
         )
         FlowRow(
             modifier = Modifier

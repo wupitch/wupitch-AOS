@@ -43,21 +43,16 @@ import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentServiceAgreementBinding
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.signup.components.AllToggleIcon
 import wupitch.android.presentation.ui.signup.components.ToggleIcon
 
 class ServiceAgreementFragment : Fragment() {
 
-    private var agreementSatisfiedNum = 0
-    private var nonAllButtonClicked = true
     private lateinit var backPressedCallback: OnBackPressedCallback
     private lateinit var stopSignupDialog: StopSignupDialog
     private val viewModel: SignupViewModel by activityViewModels()
-
-//    override fun onResume() {
-//        super.onResume()
-//        checkIfAgreementSatisfied()
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -72,7 +67,24 @@ class ServiceAgreementFragment : Fragment() {
                             .fillMaxSize()
                             .background(Color.White)
                     ) {
-                        val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, NextBtn) = createRefs()
+                        val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, nextBtn)  = createRefs()
+
+                        val selectedState = remember {
+                            mutableStateOf(false)
+                        }
+                        val allToggleState = remember {
+                            mutableStateOf(false)
+                        }
+                        val serviceToggleState = remember {
+                            mutableStateOf(false)
+                        }
+                        val privacyToggleState = remember {
+                            mutableStateOf(false)
+                        }
+                        val pushToggleState = remember {
+                            mutableStateOf(false)
+                        }
+
                         SetToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
@@ -124,11 +136,7 @@ class ServiceAgreementFragment : Fragment() {
                             fontSize = 14.sp
                         )
 
-                        val allToggleState = remember {
-                            mutableStateOf(false)
-                        }
-
-                        ToggleIcon(
+                        AllToggleIcon(
                             toggleState = allToggleState,
                             modifier = Modifier
                                 .constrainAs(allToggleBtn) {
@@ -137,13 +145,20 @@ class ServiceAgreementFragment : Fragment() {
                                     end.linkTo(parent.end)
                                     width = Dimension.fillToConstraints
                                 },
-                            onCheckedChange = {
-                                allToggleState.value = it
-                                Log.d(
-                                    "{ServiceAgreementFragment.onCreateView}",
-                                    it.toString()
-                                )
+                            onToggleClick = {
+                                if(!allToggleState.value) {
+                                    privacyToggleState.value = true
+                                    serviceToggleState.value = true
+                                    pushToggleState.value = true
+                                    allToggleState.value = true
+                                }else {
+                                    privacyToggleState.value = false
+                                    serviceToggleState.value = false
+                                    pushToggleState.value = false
+                                    allToggleState.value = false
+                                }
                             },
+                            onCheckedChange = {},
                             textString = R.string.agree_all,
                             onDetailClick = null
                         )
@@ -164,21 +179,76 @@ class ServiceAgreementFragment : Fragment() {
                         ) {
 
                             ToggleIcon(
-                                toggleState = allToggleState,
+                                toggleState = serviceToggleState,
                                 modifier = Modifier.fillMaxWidth(),
                                 onCheckedChange = {
-                                    allToggleState.value = it
-                                    Log.d(
-                                        "{ServiceAgreementFragment.onCreateView}",
-                                        it.toString()
-                                    )
+                                    serviceToggleState.value = it
+                                    if(!it && allToggleState.value) allToggleState.value = false
+                                    if(serviceToggleState.value && privacyToggleState.value && pushToggleState.value) {
+                                        allToggleState.value = true
+                                    }
                                 },
                                 textString = R.string.terms_of_service_agreement,
                                 onDetailClick = {
-
+                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
                                 }
                             )
 
+                            ToggleIcon(
+                                toggleState = privacyToggleState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 19.dp),
+                                onCheckedChange = {
+                                    privacyToggleState.value = it
+                                    if(!it && allToggleState.value) allToggleState.value = false
+                                    if(serviceToggleState.value && privacyToggleState.value && pushToggleState.value) {
+                                        allToggleState.value = true
+                                    }
+                                },
+                                textString = R.string.terms_of_privacy_policy,
+                                onDetailClick = {
+                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
+                                }
+                            )
+
+                            ToggleIcon(
+                                toggleState = pushToggleState,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 19.dp),
+                                onCheckedChange = {
+                                    pushToggleState.value = it
+                                    if(!it && allToggleState.value) allToggleState.value = false
+                                    if(serviceToggleState.value && privacyToggleState.value && pushToggleState.value) {
+                                        allToggleState.value = true
+                                    }
+                                },
+                                textString = R.string.push_notification_agreement,
+                                onDetailClick = {
+                                    //todo 푸시 알림 동의 약관 페이지로 이동!!!
+                                }
+                            )
+
+                        }
+
+                        RoundBtn(
+                            modifier = Modifier
+                                .constrainAs(nextBtn) {
+                                    bottom.linkTo(parent.bottom, margin = 32.dp)
+                                    start.linkTo(parent.start, margin = 20.dp)
+                                    end.linkTo(parent.end, margin = 20.dp)
+                                    width = Dimension.fillToConstraints
+                                }
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            btnColor = if(serviceToggleState.value && privacyToggleState.value) R.color.main_orange else R.color.gray03,
+                            textString = R.string.next_one_over_five,
+                            fontSize = 16.sp
+                        ) {
+                            if(selectedState.value){
+                                findNavController().navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
+                            }
                         }
                     }
 
@@ -186,15 +256,13 @@ class ServiceAgreementFragment : Fragment() {
                 }
 
             }
+
         }
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-//        setTitleText()
 
     }
+
+
 
 //    override fun onAttach(context: Context) {
 //        super.onAttach(context)
@@ -226,55 +294,5 @@ class ServiceAgreementFragment : Fragment() {
 //        super.onDetach()
 //        backPressedCallback.remove()
 //    }
-//
-//    val checkedChangeListener =
-//        CompoundButton.OnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) ++agreementSatisfiedNum
-//            else --agreementSatisfiedNum
-//        }
-//
-//    fun setAllButtonClickListener() {
-//        nonAllButtonClicked = false
-//        if (!binding.toggleAgreeAll.isChecked && !nonAllButtonClicked) {
-//            binding.btnNext.isActivated = false
-//            binding.toggleServiceAgreement.isChecked = false
-//            binding.togglePrivacy.isChecked = false
-//            binding.togglePushNotification.isChecked = false
-//        } else {
-//            binding.btnNext.isActivated = true
-//            binding.toggleServiceAgreement.isChecked = true
-//            binding.togglePrivacy.isChecked = true
-//            binding.togglePushNotification.isChecked = true
-//        }
-//        checkIfAgreementSatisfied()
-//    }
-//
-//    fun setNonAllButtonClickListener() {
-//        nonAllButtonClicked = true
-//        checkIfAgreementSatisfied()
-//    }
-//
-//    private fun checkIfAgreementSatisfied() {
-//        binding.toggleAgreeAll.isChecked = agreementSatisfiedNum >= 3
-//        binding.btnNext.isActivated =
-//            (binding.toggleServiceAgreement.isChecked && binding.togglePrivacy.isChecked) || binding.toggleAgreeAll.isChecked
-//    }
-//
 
-//
-//    fun checkForNavigationToRegion(view: View) {
-//        if (view.isActivated) Navigation.findNavController(view)
-//            .navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
-//    }
-//
-//    fun showServiceAgreementDetailFragment(view: View) {
-//        view.findNavController()
-//            .navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
-//    }
-//
-//
-//    fun showUseOfPersonalInfoDetailFragment(view: View) {
-//        view.findNavController()
-//            .navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
-//    }
 }

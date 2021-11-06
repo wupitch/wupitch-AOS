@@ -31,9 +31,10 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
-fun ToggleIcon(
+fun AllToggleIcon(
     toggleState: MutableState<Boolean>,
     modifier: Modifier,
+    onToggleClick: () -> Unit,
     onCheckedChange: (Boolean) -> Unit,
     @StringRes textString: Int,
     onDetailClick: (() -> Unit)?
@@ -56,10 +57,14 @@ fun ToggleIcon(
                     indication = null,
                     enabled = true,
                     role = Role.Checkbox,
-                    onValueChange = {
-                        onCheckedChange(it)
-                    }
-                ),
+                    onValueChange = {}
+                )
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                    onToggleClick()
+                },
             painter = painterResource(id = R.drawable.check),
             tint = if (toggleState.value) colorResource(id = R.color.main_orange) else colorResource(
                 id = R.color.gray03

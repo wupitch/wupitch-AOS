@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
 
                     Column(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize().background(Color.White)
                     ) {
                         HomeAppBar(districtOnClick = {
                             districtBottomSheet.show(childFragmentManager, "district bottom sheet")
