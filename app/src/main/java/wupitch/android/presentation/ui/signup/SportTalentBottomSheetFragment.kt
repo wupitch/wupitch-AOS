@@ -10,11 +10,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.scopes.FragmentScoped
 import wupitch.android.R
 import wupitch.android.databinding.FragmentSportTalentBottomSheetBinding
+import wupitch.android.presentation.ui.MainViewModel
 import javax.inject.Inject
 
 @FragmentScoped
 class SportTalentBottomSheetFragment @Inject constructor(
-    val viewModel : SignupViewModel,
+    val viewModel : MainViewModel,
     val checkedSport : Int
 )
     : BottomSheetDialogFragment()

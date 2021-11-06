@@ -1,4 +1,4 @@
-package wupitch.android.presentation
+package wupitch.android.presentation.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,12 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseActivity
 import wupitch.android.databinding.ActivityMainBinding
-import wupitch.android.presentation.ui.main.MainFragment
-import wupitch.android.presentation.ui.main.feed.FeedFragment
-import wupitch.android.presentation.ui.main.home.HomeFragment
-import wupitch.android.presentation.ui.main.impromptu.ImpromptuFragment
-import wupitch.android.presentation.ui.main.my_activity.MyActivityFragment
-import wupitch.android.presentation.ui.main.profile.ProfileFragment
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {

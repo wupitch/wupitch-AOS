@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
 import wupitch.android.presentation.ui.main.home.components.CrewList
 
 @AndroidEntryPoint
@@ -35,6 +36,12 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
+    private val districtList = arrayOf<String>(
+        "서울시", "도봉구", "노원구", "강북구", "성북구", "은평구", "종로구", "동대문구",
+        "중랑구", "서대문구", "중구", "성동구", "광진구", "마포구", "용산구", "강서구",
+        "양천구", "구로구", "영등포구", "동작구", "관악구", "금천구", "서초구", "강남구",
+        "송파구", "강동구"
+    )
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -46,7 +53,7 @@ class HomeFragment : Fragment() {
 
             setContent {
                 WupitchTheme {
-                    districtBottomSheet = DistrictBottomSheetFragment()
+                    districtBottomSheet = DistrictBottomSheetFragment(viewModel, districtList )
 
                     //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
                     val crewList = viewModel.crewList.value

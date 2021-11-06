@@ -14,12 +14,13 @@ import androidx.navigation.findNavController
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentSportBinding
+import wupitch.android.presentation.ui.MainViewModel
 
 class SportFragment
     : BaseFragment<FragmentSportBinding>(FragmentSportBinding::bind, R.layout.fragment_sport), OnStopSignupClick {
 
     private var checkedToggleNum = 0
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private lateinit var talentBottomSheet : SportTalentBottomSheetFragment
     private lateinit var stopSignupDialog : StopSignupDialog
     private var clickedSport = -1

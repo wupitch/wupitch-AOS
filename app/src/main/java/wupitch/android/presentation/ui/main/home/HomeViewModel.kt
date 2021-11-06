@@ -1,7 +1,10 @@
 package wupitch.android.presentation.ui.main.home
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import wupitch.android.data.remote.CrewCardInfo
@@ -92,6 +95,15 @@ class HomeViewModel : ViewModel() {
             )
         )
     )
+
+    private var _userRegion = MutableLiveData<Int>()
+    val userRegion : LiveData<Int> = _userRegion
+
+    fun setUserRegion(region : Int) {
+        //서버에 보내기 또는 데이터에 넣어두기?
+        _userRegion.value = region
+        Log.d("{SignupViewModel.getUserRegion}", userRegion.value.toString())
+    }
 
 
 

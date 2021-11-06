@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentProfileBinding
+import wupitch.android.presentation.ui.MainViewModel
 
 class ProfileFragment
     :
@@ -24,7 +25,7 @@ class ProfileFragment
     OnStopSignupClick {
 
     private lateinit var stopSignupDialog: StopSignupDialog
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private var jobForNickname: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

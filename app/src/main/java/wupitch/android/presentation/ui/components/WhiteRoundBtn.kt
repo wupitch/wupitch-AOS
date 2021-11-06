@@ -1,6 +1,7 @@
 package wupitch.android.presentation.ui.components
 
 import android.util.Log
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,8 +28,9 @@ import wupitch.android.presentation.theme.Roboto
 @Composable
 fun WhiteRoundBtn(
     modifier: Modifier,
-    @StringRes textString : Int,
+    textString : String,
     fontSize : TextUnit,
+    @ColorRes color : Int,
     onClick : () ->Unit
 ) {
     Box(
@@ -37,7 +39,7 @@ fun WhiteRoundBtn(
             .background(Color.White)
             .border(
                 width = 1.dp, color = colorResource(
-                    id = R.color.main_orange
+                    id = color
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -45,12 +47,12 @@ fun WhiteRoundBtn(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(id = textString),
+            text = textString,
             textAlign = TextAlign.Center,
             fontSize = fontSize,
             fontFamily = Roboto,
             fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.main_orange)
+            color = colorResource(id = color)
         )
     }
 }

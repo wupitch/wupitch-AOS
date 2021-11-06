@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup
+package wupitch.android.presentation.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 
-class SignupViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
 
 
-    private var _userRegion = MutableLiveData<String>()
-    val userRegion : LiveData<String> = _userRegion
+    private var _userRegion = MutableLiveData<Int>()
+    val userRegion : LiveData<Int> = _userRegion
 
     private var _isNicknameValid = MutableLiveData<Boolean>()
     val isNicknameValid : LiveData<Boolean> = _isNicknameValid
@@ -32,7 +32,7 @@ class SignupViewModel : ViewModel() {
 
 
 
-    fun setUserRegion(region : String) {
+    fun setUserRegion(region : Int) {
         //서버에 보내기 또는 데이터에 넣어두기?
         _userRegion.value = region
         Log.d("{SignupViewModel.getUserRegion}", userRegion.value.toString())

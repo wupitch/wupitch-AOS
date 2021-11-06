@@ -10,11 +10,12 @@ import androidx.navigation.findNavController
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentAgeBinding
+import wupitch.android.presentation.ui.MainViewModel
 
 class AgeFragment
     : BaseFragment<FragmentAgeBinding>(FragmentAgeBinding::bind, R.layout.fragment_age), OnStopSignupClick {
 
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private lateinit var stopSignupDialog : StopSignupDialog
 
     override fun onResume() {

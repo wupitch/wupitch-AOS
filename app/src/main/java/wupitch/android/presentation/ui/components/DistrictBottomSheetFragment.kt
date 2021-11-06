@@ -1,24 +1,20 @@
-package wupitch.android.presentation.ui.main.home
+package wupitch.android.presentation.ui.components
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.NumberPicker
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -29,25 +25,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.ViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.FragmentScoped
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
-import wupitch.android.databinding.FragmentRegionBottomSheetBinding
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.MainViewModel
+import wupitch.android.presentation.ui.main.home.HomeViewModel
 import javax.inject.Inject
 
-
-class DistrictBottomSheetFragment : BottomSheetDialogFragment()
+@AndroidEntryPoint
+class DistrictBottomSheetFragment @Inject constructor(
+    val viewModel : ViewModel,
+    private val districtList : Array<String>
+) : BottomSheetDialogFragment()
 {
-
-    private val districtList = arrayOf<String>(
-        "서울시", "도봉구", "노원구", "강북구", "성북구", "은평구", "종로구", "동대문구",
-        "중랑구", "서대문구", "중구", "성동구", "광진구", "마포구", "용산구", "강서구",
-        "양천구", "구로구", "영등포구", "동작구", "관악구", "금천구", "서초구", "강남구",
-        "송파구", "강동구"
-    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +53,14 @@ class DistrictBottomSheetFragment : BottomSheetDialogFragment()
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
 
             setContent {
+
+                val pickerValueState = remember {
+                    mutableStateOf(-1)
+                }
 
                 Column(
                     modifier = Modifier
@@ -119,6 +115,9 @@ class DistrictBottomSheetFragment : BottomSheetDialogFragment()
                                     minValue = 0
                                     maxValue = districtList.size - 1
                                     displayedValues = districtList
+                                    setOnValueChangedListener { picker, oldVal, newVal ->
+                                        pickerValueState.value = newVal
+                                    }
                                 }
                             }
                         )
@@ -135,6 +134,14 @@ class DistrictBottomSheetFragment : BottomSheetDialogFragment()
                                 .clip(RoundedCornerShape(8.dp)),
                             onClick = {
                                 // todo : viewModel 에 number picker value 보내기. & view model 값 state 로 받아서 crew list 변경.
+                                when(viewModel){
+                                    is MainViewModel-> {
+                                        viewModel.setUserRegion(pickerValueState.value)
+                                    }
+                                    is HomeViewModel -> {
+                                        viewModel.setUserRegion(pickerValueState.value)
+                                    }
+                                }
                                 dismiss()
                             },
                             colors = ButtonDefaults.buttonColors(colorResource(id = R.color.main_black))

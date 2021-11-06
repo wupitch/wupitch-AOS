@@ -1,21 +1,13 @@
 package wupitch.android.presentation.ui.signup
 
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.toggleable
-import androidx.compose.material.Icon
-import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,36 +15,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
-import okhttp3.internal.wait
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
-import wupitch.android.common.BaseFragment
-import wupitch.android.databinding.FragmentServiceAgreementBinding
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
 import wupitch.android.presentation.ui.signup.components.AllToggleIcon
 import wupitch.android.presentation.ui.signup.components.ToggleIcon
 
+@AndroidEntryPoint
 class ServiceAgreementFragment : Fragment() {
 
     private lateinit var backPressedCallback: OnBackPressedCallback
     private lateinit var stopSignupDialog: StopSignupDialog
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,9 +56,6 @@ class ServiceAgreementFragment : Fragment() {
                     ) {
                         val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, nextBtn)  = createRefs()
 
-                        val selectedState = remember {
-                            mutableStateOf(false)
-                        }
                         val allToggleState = remember {
                             mutableStateOf(false)
                         }
@@ -246,7 +230,7 @@ class ServiceAgreementFragment : Fragment() {
                             textString = R.string.next_one_over_five,
                             fontSize = 16.sp
                         ) {
-                            if(selectedState.value){
+                            if(serviceToggleState.value && privacyToggleState.value){
                                 findNavController().navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
                             }
                         }
