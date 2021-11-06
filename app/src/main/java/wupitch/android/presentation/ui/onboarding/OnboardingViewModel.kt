@@ -10,8 +10,8 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
 import wupitch.android.common.Resource
-import wupitch.android.data.remote.KakaoLoginReq
-import wupitch.android.data.remote.KakaoLoginRes
+import wupitch.android.domain.model.KakaoLoginReq
+import wupitch.android.data.remote.dto.KakaoLoginRes
 import wupitch.android.domain.repository.KakaoLoginRepository
 import javax.inject.Inject
 

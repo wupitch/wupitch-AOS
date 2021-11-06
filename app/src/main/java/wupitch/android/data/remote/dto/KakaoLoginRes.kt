@@ -1,4 +1,6 @@
-package wupitch.android.data.remote
+package wupitch.android.data.remote.dto
+
+import wupitch.android.domain.model.KakaoLoginResult
 
 
 data class KakaoLoginRes(

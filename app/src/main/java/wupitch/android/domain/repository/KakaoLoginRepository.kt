@@ -1,8 +1,8 @@
 package wupitch.android.domain.repository
 
 import retrofit2.Response
-import wupitch.android.data.remote.KakaoLoginReq
-import wupitch.android.data.remote.KakaoLoginRes
+import wupitch.android.domain.model.KakaoLoginReq
+import wupitch.android.data.remote.dto.KakaoLoginRes
 
 interface KakaoLoginRepository {
 

@@ -39,7 +39,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.launch
 import wupitch.android.R
-import wupitch.android.databinding.FragmentRegionBottomSheetBinding
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.RoundBtn
 import javax.inject.Inject

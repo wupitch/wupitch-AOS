@@ -6,12 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import wupitch.android.data.remote.CrewCardInfo
+import kotlinx.coroutines.launch
+import wupitch.android.common.Resource
+import wupitch.android.data.remote.dto.DistrictRes
+import wupitch.android.domain.model.CrewCardInfo
+import wupitch.android.domain.repository.GetDistrictRepository
 import javax.inject.Inject
 
-
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val getDistrictRepository : GetDistrictRepository
+) : ViewModel() {
 
     val loading = mutableStateOf(false)
     val crewList : MutableState<List<CrewCardInfo>> = mutableStateOf(
@@ -96,13 +103,33 @@ class HomeViewModel : ViewModel() {
         )
     )
 
-    private var _userRegion = MutableLiveData<Int>()
-    val userRegion : LiveData<Int> = _userRegion
+    private var _district = MutableLiveData<Resource<DistrictRes>>()
+    val district : LiveData<Resource<DistrictRes>> = _district
 
-    fun setUserRegion(region : Int) {
-        //서버에 보내기 또는 데이터에 넣어두기?
-        _userRegion.value = region
-        Log.d("{SignupViewModel.getUserRegion}", userRegion.value.toString())
+    private var _userDistrictId = MutableLiveData<Int>()
+    val userDistrictId : LiveData<Int> = _userDistrictId
+
+    private var _userDistrictName = MutableLiveData<String>()
+    val userDistrictName : LiveData<String> = _userDistrictName
+
+    fun setUserRegion(districtId : Int, districtName : String) {
+        //todo 서버에 보내기
+        _userDistrictId.value = districtId
+        _userDistrictName.value = districtName
+        Log.d("{HomeViewModel.setUserRegion}", "id : $districtId name : $districtName")
+    }
+
+    fun getDistricts () = viewModelScope.launch {
+        _district.value = Resource.Loading<DistrictRes>()
+
+        val response = getDistrictRepository.getDistricts()
+        if(response.isSuccessful) {
+            response.body()?.let {
+                if(it.isSuccess) _district.value = Resource.Success<DistrictRes>(it)
+                else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+            }
+        } else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+
     }
 
 

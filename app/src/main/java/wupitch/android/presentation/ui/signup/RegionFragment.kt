@@ -63,7 +63,7 @@ class RegionFragment
                             .fillMaxSize()
                     ) {
                         val (toolbar, title, districtBtn, nextBtn) = createRefs()
-                        val regionState = viewModel.userRegion.observeAsState()
+                        val regionState = viewModel.userDistrictName.observeAsState()
 
                         SetToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -94,7 +94,7 @@ class RegionFragment
                                 }
                                 .height(48.dp)
                                 .width(152.dp),
-                            textString = if (regionState.value != null) districtList[regionState.value!!] else stringResource(
+                            textString = if (regionState.value != null) regionState.value!! else stringResource(
                                 id = R.string.select_region_btn
                             ),
                             fontSize = 14.sp,
@@ -130,13 +130,6 @@ class RegionFragment
         super.onViewCreated(view, savedInstanceState)
 
 
-//        viewModel.userRegion.observe(viewLifecycleOwner, Observer {
-//            binding.btnSelectRegion.apply {
-//                text = it
-//                isActivated = true
-//            }
-//            binding.btnNext.isActivated = true
-//        })
     }
 
     //    fun navigateUp() {
@@ -144,7 +137,7 @@ class RegionFragment
 //    }
 //
     private fun showRegionBottomSheet() {
-        districtBottomSheet = DistrictBottomSheetFragment(viewModel, districtList)
+        districtBottomSheet = DistrictBottomSheetFragment(viewModel)
         districtBottomSheet.show(childFragmentManager, "region_bottom_sheet")
     }
 //

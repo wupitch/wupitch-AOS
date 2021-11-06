@@ -45,7 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.Resource
-import wupitch.android.data.remote.KakaoLoginReq
+import wupitch.android.domain.model.KakaoLoginReq
 import wupitch.android.domain.model.OnboardingContent
 import wupitch.android.presentation.theme.OnboardingTheme
 import wupitch.android.presentation.theme.Roboto

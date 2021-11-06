@@ -53,7 +53,7 @@ class HomeFragment : Fragment() {
 
             setContent {
                 WupitchTheme {
-                    districtBottomSheet = DistrictBottomSheetFragment(viewModel, districtList )
+                    districtBottomSheet = DistrictBottomSheetFragment(viewModel)
 
                     //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
                     val crewList = viewModel.crewList.value

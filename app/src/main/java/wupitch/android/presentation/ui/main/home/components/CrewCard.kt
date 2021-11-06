@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import wupitch.android.R
-import wupitch.android.data.remote.CrewCardInfo
+import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.SportKeyword
 import wupitch.android.util.Sport
