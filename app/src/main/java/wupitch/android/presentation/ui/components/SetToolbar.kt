@@ -14,42 +14,55 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
 fun SetToolBar(
     modifier: Modifier,
-    onClick: () -> Unit,
-    textString: Int?
+    onLeftIconClick: () -> Unit,
+    onRightIconClick: (() -> Unit)? = null,
+    textString: Int?,
+    hasRightIcon: Boolean? = false
 ) {
-    Row(
+    ConstraintLayout(
         modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(horizontal = 20.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
+        val (leftIcon, text, rightIcon) = createRefs()
 
         Icon(modifier = Modifier
+            .constrainAs(leftIcon) {
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+                start.linkTo(parent.start)
+            }
             .size(24.dp)
             .clickable(interactionSource = MutableInteractionSource(), indication = null)
             //interaction source??
-            { onClick() },
+            { onLeftIconClick() },
             painter = painterResource(id = R.drawable.left),
             contentDescription = "go back previous page"
         )
 
 
-        if(textString != null) {
+        if (textString != null) {
             Text(
-                modifier = modifier.padding(start = 32.dp),
+                modifier = modifier.constrainAs(text) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(leftIcon.end, margin = 32.dp)
+                },
                 text = stringResource(id = textString),
                 fontSize = 16.sp,
                 fontFamily = Roboto,
@@ -58,6 +71,28 @@ fun SetToolBar(
             )
         }
 
+        hasRightIcon?.let {
+            if(it) {
+                Icon(modifier = Modifier.constrainAs(rightIcon) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(parent.end)
+                }
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null
+                    )
+                    //interaction source??
+                    {
+                        if (onRightIconClick != null) {
+                            onRightIconClick()
+                        }
+                    },
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = "close this page"
+                )
+            }
+        }
     }
-
 }

@@ -73,7 +73,7 @@ class ServiceAgreementFragment : Fragment() {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                        }, onClick = {
+                        }, onLeftIconClick = {
                             Log.d("{ServiceAgreementFragment.onCreateView}", "navigate up")
                         }, textString = null)
 

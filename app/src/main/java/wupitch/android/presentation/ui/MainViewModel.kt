@@ -9,13 +9,18 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.Resource
 import wupitch.android.data.remote.dto.DistrictRes
+import wupitch.android.data.remote.dto.SportRes
+import wupitch.android.data.remote.dto.toSportResult
 import wupitch.android.domain.model.DistrictResult
+import wupitch.android.domain.model.SportResult
 import wupitch.android.domain.repository.GetDistrictRepository
+import wupitch.android.domain.repository.GetSportRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getDistrictRepository : GetDistrictRepository
+    private val getDistrictRepository : GetDistrictRepository,
+    private val getSportRepository: GetSportRepository
 ) : ViewModel() {
 
     private var _district = MutableLiveData<Resource<DistrictRes>>()
@@ -38,6 +43,9 @@ class MainViewModel @Inject constructor(
 
     private var _userSportTalent = MutableLiveData<Int?>()
     val userSportTalent : LiveData<Int?> = _userSportTalent
+
+    private var _sports = MutableLiveData<Resource<List<SportResult>>>()
+    val sports : LiveData<Resource<List<SportResult>>> = _sports
 
     private var _userSport = MutableLiveData<Int>()
     val userSport : LiveData<Int> = _userSport
@@ -66,6 +74,19 @@ class MainViewModel @Inject constructor(
         _userDistrictName.value = districtName
         Log.d("{SignupViewModel.getUserRegion}", "id : $districtId name : $districtName")
     }
+
+    fun getSports () = viewModelScope.launch {
+        _sports.value = Resource.Loading<List<SportResult>>()
+
+        val response = getSportRepository.getSport()
+        if(response.isSuccessful) {
+            response.body()?.let { sportRes ->
+                if(sportRes.isSuccess) _sports.value = Resource.Success<List<SportResult>>(sportRes.result.map { it.toSportResult() })
+                else _sports.value = Resource.Error<List<SportResult>>(null, "스포츠 가져오기를 실패했습니다.")
+            }
+        } else _sports.value = Resource.Error<List<SportResult>>(null, "스포츠 가져오기를 실패했습니다.")
+    }
+
 
     fun checkNicknameValidation(nickname : String?) {
         //서버 validation

@@ -6,8 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import wupitch.android.data.repository.GetDistrictRepositoryImpl
+import wupitch.android.data.repository.GetSportRepositoryImpl
 import wupitch.android.data.repository.KakaoLoginRepositoryImpl
 import wupitch.android.domain.repository.GetDistrictRepository
+import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.domain.repository.KakaoLoginRepository
 import javax.inject.Singleton
 
@@ -25,5 +27,11 @@ object RepositoryModule {
     @Singleton //왜 싱클턴??
     fun provideGetDistrictRepository(retrofit: Retrofit) : GetDistrictRepository {
         return GetDistrictRepositoryImpl(retrofit)
+    }
+
+    @Provides
+    @Singleton //왜 싱클턴??
+    fun provideGetSportRepository(retrofit: Retrofit) : GetSportRepository {
+        return GetSportRepositoryImpl(retrofit)
     }
 }

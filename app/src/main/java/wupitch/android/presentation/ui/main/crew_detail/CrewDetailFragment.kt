@@ -92,7 +92,7 @@ class CrewDetailFragment : Fragment() {
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
-                            onClick = {
+                            onLeftIconClick = {
                                 findNavController().navigateUp()
                             },
                             textString = R.string.crew

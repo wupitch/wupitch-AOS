@@ -69,9 +69,13 @@ class RegionFragment
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                        }, onClick = {
+                        }, onLeftIconClick = {
                             findNavController().navigateUp()
-                        }, textString = null)
+                        }, textString = null,
+                        hasRightIcon = true,
+                        onRightIconClick = {
+                            //todo : show stop dialog
+                        })
 
                         Text(
                             modifier = Modifier.constrainAs(title) {
@@ -126,16 +130,7 @@ class RegionFragment
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-
-    }
-
-    //    fun navigateUp() {
-//        view?.findNavController()?.navigateUp()
-//    }
-//
     private fun showRegionBottomSheet() {
         districtBottomSheet = DistrictBottomSheetFragment(viewModel)
         districtBottomSheet.show(childFragmentManager, "region_bottom_sheet")
