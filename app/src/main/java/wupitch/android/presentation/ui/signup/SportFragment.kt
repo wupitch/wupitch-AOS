@@ -45,9 +45,6 @@ import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import wupitch.android.R
-import wupitch.android.common.BaseFragment
-import wupitch.android.data.remote.dto.toSportResult
-import wupitch.android.databinding.FragmentSportBinding
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
