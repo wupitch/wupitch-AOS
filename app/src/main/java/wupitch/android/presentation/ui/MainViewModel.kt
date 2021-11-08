@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.Resource
-import wupitch.android.data.remote.dto.DistrictRes
-import wupitch.android.data.remote.dto.SportRes
 import wupitch.android.data.remote.dto.toSportResult
-import wupitch.android.domain.model.DistrictResult
 import wupitch.android.domain.model.SportResult
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
@@ -23,8 +20,8 @@ class MainViewModel @Inject constructor(
     private val getSportRepository: GetSportRepository
 ) : ViewModel() {
 
-    private var _district = MutableLiveData<Resource<DistrictRes>>()
-    val district : LiveData<Resource<DistrictRes>> = _district
+    private var _district = MutableLiveData<Resource<Array<String>>>()
+    val district : LiveData<Resource<Array<String>>> = _district
 
     private var _userDistrictId = MutableLiveData<Int>()
     val userDistrictId : LiveData<Int> = _userDistrictId
@@ -56,15 +53,15 @@ class MainViewModel @Inject constructor(
 
 
     fun getDistricts () = viewModelScope.launch {
-        _district.value = Resource.Loading<DistrictRes>()
+        _district.value = Resource.Loading<Array<String>>()
 
         val response = getDistrictRepository.getDistricts()
         if(response.isSuccessful) {
-            response.body()?.let {
-                if(it.isSuccess) _district.value = Resource.Success<DistrictRes>(it)
-                else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+            response.body()?.let { districtRes ->
+                if(districtRes.isSuccess) _district.value = Resource.Success<Array<String>>(districtRes.result.map { it.name }.toTypedArray())
+                else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
             }
-        } else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+        } else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
 
     }
 

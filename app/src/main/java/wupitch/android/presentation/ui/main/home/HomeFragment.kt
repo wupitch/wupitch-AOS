@@ -10,6 +10,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,12 +37,6 @@ class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
-    private val districtList = arrayOf<String>(
-        "서울시", "도봉구", "노원구", "강북구", "성북구", "은평구", "종로구", "동대문구",
-        "중랑구", "서대문구", "중구", "성동구", "광진구", "마포구", "용산구", "강서구",
-        "양천구", "구로구", "영등포구", "동작구", "관악구", "금천구", "서초구", "강남구",
-        "송파구", "강동구"
-    )
 
     @OptIn(ExperimentalMaterialApi::class)
     override fun onCreateView(
@@ -53,28 +48,38 @@ class HomeFragment : Fragment() {
 
             setContent {
                 WupitchTheme {
-                    districtBottomSheet = DistrictBottomSheetFragment(viewModel)
 
-                    //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
-                    val crewList = viewModel.crewList.value
-                    val loading = viewModel.loading.value
+                    val districtList = viewModel.district.observeAsState()
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize().background(Color.White)
-                    ) {
-                        HomeAppBar(districtOnClick = {
-                            districtBottomSheet.show(childFragmentManager, "district bottom sheet")
-                        })
-                        CrewList(
-                            loading = loading,
-                            crewList = crewList,
-                            navigationToCrewDetailScreen = {
-                                val bundle = Bundle().apply { putInt("crewId", it) }
-                                activity?.findNavController(R.id.main_nav_container_view)?.navigate(
-                                    R.id.action_mainFragment_to_crewDetailFragment, bundle
+                    districtList.value?.data?.let { list ->
+
+                        districtBottomSheet = DistrictBottomSheetFragment(list, viewModel)
+
+                        //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
+                        val crewList = viewModel.crewList.value
+                        val loading = viewModel.loading.value
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize().background(Color.White)
+                        ) {
+                            HomeAppBar(districtOnClick = {
+                                districtBottomSheet.show(
+                                    childFragmentManager,
+                                    "district bottom sheet"
                                 )
                             })
+                            CrewList(
+                                loading = loading,
+                                crewList = crewList,
+                                navigationToCrewDetailScreen = {
+                                    val bundle = Bundle().apply { putInt("crewId", it) }
+                                    activity?.findNavController(R.id.main_nav_container_view)
+                                        ?.navigate(
+                                            R.id.action_mainFragment_to_crewDetailFragment, bundle
+                                        )
+                                })
+                        }
                     }
                 }
             }
@@ -172,5 +177,11 @@ class HomeFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getDistricts()
     }
 }

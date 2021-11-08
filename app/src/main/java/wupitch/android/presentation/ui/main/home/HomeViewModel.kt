@@ -103,8 +103,8 @@ class HomeViewModel @Inject constructor(
         )
     )
 
-    private var _district = MutableLiveData<Resource<DistrictRes>>()
-    val district : LiveData<Resource<DistrictRes>> = _district
+    private var _district = MutableLiveData<Resource<Array<String>>>()
+    val district : LiveData<Resource<Array<String>>> = _district
 
     private var _userDistrictId = MutableLiveData<Int>()
     val userDistrictId : LiveData<Int> = _userDistrictId
@@ -120,15 +120,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getDistricts () = viewModelScope.launch {
-        _district.value = Resource.Loading<DistrictRes>()
+        _district.value = Resource.Loading<Array<String>>()
 
         val response = getDistrictRepository.getDistricts()
         if(response.isSuccessful) {
-            response.body()?.let {
-                if(it.isSuccess) _district.value = Resource.Success<DistrictRes>(it)
-                else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+            response.body()?.let { districtRes ->
+                if(districtRes.isSuccess) _district.value = Resource.Success<Array<String>>(districtRes.result.map { it.name }.toTypedArray())
+                else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
             }
-        } else _district.value = Resource.Error<DistrictRes>(null, "지역 가져오기를 실패했습니다.")
+        } else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
 
     }
 
