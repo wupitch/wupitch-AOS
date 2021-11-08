@@ -32,8 +32,8 @@ class MainViewModel @Inject constructor(
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
 
-    private var _isNicknameValid = MutableLiveData<Boolean>()
-    val isNicknameValid : LiveData<Boolean> = _isNicknameValid
+    private var _isNicknameValid = MutableLiveData<Boolean?>()
+    val isNicknameValid : LiveData<Boolean?> = _isNicknameValid
 
     private var _userNickname = MutableLiveData<String?>()
 
@@ -92,7 +92,11 @@ class MainViewModel @Inject constructor(
         //서버 validation
         //okay 이면,
         Log.d("{SignupViewModel.checkNicknameValidation}", nickname.toString())
-        _isNicknameValid.value = true
+        if(nickname == null){
+            _isNicknameValid.value = null
+        }else {
+            _isNicknameValid.value = true
+        }
         _userNickname.value = nickname
     }
 

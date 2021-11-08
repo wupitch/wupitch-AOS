@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.Wupitch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="android:windowDisablePreview">true</item>
-        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowDisablePreview">false</item>
+<!--        <item name="android:windowBackground">@drawable/splash</item>-->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>

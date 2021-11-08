@@ -25,7 +25,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             supportFragmentManager.findFragmentById(R.id.main_nav_container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 
         //        supportFragmentManager.beginTransaction().replace(R.id.framelayout,
