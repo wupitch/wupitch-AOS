@@ -58,12 +58,12 @@ import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
 import wupitch.android.presentation.ui.signup.components.SportToggleBtn
+import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
 class SportFragment
     : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private lateinit var stopSignupDialog: StopSignupDialog
 
 
     @ExperimentalFoundationApi
@@ -75,6 +75,19 @@ class SportFragment
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_sportFragment_to_onboardingFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopSignupDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState)
+                    }
 
                     val scrollState = rememberScrollState()
                     val scope = rememberCoroutineScope()
@@ -107,7 +120,7 @@ class SportFragment
                                 }, textString = null,
                                     hasRightIcon = true,
                                     onRightIconClick = {
-                                        //todo stop dialog.
+                                        dialogOpenState.value = true
                                     })
 
 

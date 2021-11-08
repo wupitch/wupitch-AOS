@@ -55,6 +55,11 @@
         <action
             android:id="@+id/action_sportFragment_to_ageFragment"
             app:destination="@id/ageFragment" />
+        <action
+            android:id="@+id/action_sportFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@+id/back_to_onboarding_from_sport"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/regionFragment"
@@ -63,6 +68,12 @@
         <action
             android:id="@+id/action_regionFragment_to_sportFragment"
             app:destination="@id/sportFragment" />
+        <action
+            android:id="@+id/action_regionFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@+id/back_to_onboarding_from_region"
+            app:popUpToInclusive="true"
+            />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -71,6 +82,11 @@
         <action
             android:id="@+id/action_profileFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@+id/back_to_onboarding_from_profile"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementDetailFragment"
@@ -87,6 +103,11 @@
         <action
             android:id="@+id/action_ageFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_ageFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@+id/back_to_onboarding_from_age"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"

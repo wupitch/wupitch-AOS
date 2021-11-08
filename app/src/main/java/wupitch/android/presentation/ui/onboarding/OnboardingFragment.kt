@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.onboarding
 
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,9 +14,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -32,13 +32,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.HorizontalPagerIndicator
-import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.pager.*
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,25 +48,47 @@ import wupitch.android.domain.model.KakaoLoginReq
 import wupitch.android.domain.model.OnboardingContent
 import wupitch.android.presentation.theme.OnboardingTheme
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.MainViewModel
 
 @AndroidEntryPoint
 class OnboardingFragment : Fragment() {
 
     private val viewModel: OnboardingViewModel by viewModels()
+    val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var onboardingList: List<OnboardingContent>
+    @ExperimentalPagerApi
+    private var pagerState : PagerState? = null
 
     @ExperimentalPagerApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setContent {
                 OnboardingTheme {
+
+                    mainViewModel.pagerState?.let {
+                        navToLogin(it)
+                    }
+                    pagerState = if(mainViewModel.pagerState != null){
+                        mainViewModel.pagerState
+                    }else {
+                        rememberPagerState()
+                    }
+
+                    val scope = rememberCoroutineScope()
+
+
+
+
                     val kakaoLoginState by viewModel.kakaoLoginLiveData.observeAsState()
                     when(kakaoLoginState){
-                        is Resource.Success -> findNavController().navigate(R.id.action_onboardingFragment_to_serviceAgreementFragment)
+                        is Resource.Success -> {
+                            findNavController().navigate(R.id.action_onboardingFragment_to_serviceAgreementFragment)
+                            mainViewModel.pagerState = pagerState
+                        }
                         is Resource.Error -> {
                             Log.d("{OnboardingFragment.onCreateView}", "error!")
                         }
@@ -78,8 +99,6 @@ class OnboardingFragment : Fragment() {
                         }
                     }
                     setOnboardingList()
-                    val pagerState = rememberPagerState()
-                    val scope = rememberCoroutineScope()
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -95,7 +114,7 @@ class OnboardingFragment : Fragment() {
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             },
-                            pagerState = pagerState,
+                            pagerState = pagerState!!,
                             inactiveColor = colorResource(id = R.color.gray01),
                             activeColor = colorResource(id = R.color.main_black)
                         )
@@ -105,7 +124,7 @@ class OnboardingFragment : Fragment() {
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                                 bottom.linkTo(parent.bottom, margin = 58.dp)
-                            }, count = 4, state = pagerState
+                            }, count = 4, state = pagerState!!
                         ) { page ->
 
                             Column(
@@ -141,7 +160,7 @@ class OnboardingFragment : Fragment() {
                             }
                         }
 
-                        if(pagerState.currentPage != 3 || pagerState.currentPageOffset != 0f){
+                        if(pagerState!!.currentPage != 3 || pagerState!!.currentPageOffset != 0f){
                             val annotatedString = buildAnnotatedString {
                                 append(
                                     AnnotatedString(
@@ -163,11 +182,11 @@ class OnboardingFragment : Fragment() {
                                 text = annotatedString,
                                 onClick = {
                                     scope.launch {
-                                        pagerState.scrollToPage(3)
+                                        pagerState!!.scrollToPage(3)
                                     }
                                 })
 
-                        }else if(pagerState.currentPage ==3){
+                        }else if(pagerState!!.currentPage ==3){
                            Image(
                                modifier = Modifier
                                    .constrainAs(kakaoBtn) {
@@ -178,7 +197,9 @@ class OnboardingFragment : Fragment() {
                                    }
                                    .clickable {
                                        //todo 카카오 로그인.
-                                       signInWithKakao()
+                                      // signInWithKakao()
+                                       findNavController().navigate(R.id.action_onboardingFragment_to_serviceAgreementFragment)
+                                       mainViewModel.pagerState = pagerState
                                    },
                                painter = painterResource(id = R.drawable.kakao_login),
                                contentDescription = "kakao login button")
@@ -189,6 +210,10 @@ class OnboardingFragment : Fragment() {
                 }
             }
         }
+    }
+    @ExperimentalPagerApi
+    fun navToLogin(pagerState : PagerState) = lifecycleScope.launch {
+        pagerState.scrollToPage(3)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

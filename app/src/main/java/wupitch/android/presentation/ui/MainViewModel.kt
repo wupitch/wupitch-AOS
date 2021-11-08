@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.Resource
@@ -19,6 +21,11 @@ class MainViewModel @Inject constructor(
     private val getDistrictRepository : GetDistrictRepository,
     private val getSportRepository: GetSportRepository
 ) : ViewModel() {
+    @ExperimentalPagerApi
+    var pagerState : PagerState? = null
+
+    private var _userNotiAgreed = MutableLiveData<Boolean>()
+    val userNotiAgreed : LiveData<Boolean> = _userNotiAgreed
 
     private var _district = MutableLiveData<Resource<Array<String>>>()
     val district : LiveData<Resource<Array<String>>> = _district
@@ -53,6 +60,9 @@ class MainViewModel @Inject constructor(
 
 
 
+    fun setUserNotiAgreement (userAgreed : Boolean) {
+        _userNotiAgreed.value = userAgreed
+    }
 
     fun getDistricts () = viewModelScope.launch {
         _district.value = Resource.Loading<Array<String>>()

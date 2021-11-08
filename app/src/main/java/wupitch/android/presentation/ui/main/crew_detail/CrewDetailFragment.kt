@@ -173,7 +173,8 @@ class CrewDetailFragment : Fragment() {
                         .fillMaxHeight(),
                     textString = stringResource(id = R.string.join_as_visitor),
                     fontSize = 16.sp,
-                    color = R.color.main_orange
+                    textColor = R.color.main_orange,
+                    borderColor = R.color.main_orange
                 ) {
                     // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
                     visitorBottomSheet = VisitorBottomSheetFragment(

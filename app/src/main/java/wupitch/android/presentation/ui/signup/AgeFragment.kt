@@ -41,11 +41,11 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
 class AgeFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private lateinit var stopSignupDialog: StopSignupDialog
     private var checkedRadioButton: MutableState<Boolean>? = null
 
 
@@ -87,6 +87,20 @@ class AgeFragment : Fragment() {
                         AgeRadioButton("50대", checkedState5)
                     )
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_ageFragment_to_onboardingFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopSignupDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState)
+                    }
+
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -107,7 +121,7 @@ class AgeFragment : Fragment() {
                         }, textString = null,
                             hasRightIcon = true,
                             onRightIconClick = {
-                                //todo stop dialog.
+                                dialogOpenState.value = true
                             })
 
                         Text(

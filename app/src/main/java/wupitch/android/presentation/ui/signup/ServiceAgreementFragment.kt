@@ -1,11 +1,13 @@
 package wupitch.android.presentation.ui.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -32,13 +34,12 @@ import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
 import wupitch.android.presentation.ui.signup.components.AllToggleIcon
+import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 import wupitch.android.presentation.ui.signup.components.ToggleIcon
 
 @AndroidEntryPoint
 class ServiceAgreementFragment : Fragment() {
 
-    private lateinit var backPressedCallback: OnBackPressedCallback
-    private lateinit var stopSignupDialog: StopSignupDialog
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -49,6 +50,24 @@ class ServiceAgreementFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigateUp()
+                    }
+                    if(dialogOpenState.value){
+                        StopSignupDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState)
+                    }
+                    BackHandler {
+                        if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                        else findNavController().navigateUp()
+                    }
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -74,7 +93,8 @@ class ServiceAgreementFragment : Fragment() {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
-                            Log.d("{ServiceAgreementFragment.onCreateView}", "navigate up")
+                            if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                            else findNavController().navigateUp()
                         }, textString = null)
 
                         Row(modifier = Modifier.constrainAs(titleTop) {
@@ -231,52 +251,13 @@ class ServiceAgreementFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(serviceToggleState.value && privacyToggleState.value){
+                                viewModel.setUserNotiAgreement(pushToggleState.value)
                                 findNavController().navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
                             }
                         }
                     }
-
-
                 }
-
             }
-
         }
-
-
     }
-
-
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        backPressedCallback = object : OnBackPressedCallback(true) {
-//            override fun handleOnBackPressed() {
-//                if(viewModel.userRegion.value != null) showStopSignupDialog()
-////                else return 이때는 왜 아무것도 없지? todo : onboading activity 와 연결되었을 때 확인해볼것!!!
-//            }
-//        }
-//        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
-//    }
-//
-//    fun checkOkayToStopSignup() {
-//        if(viewModel.userRegion.value != null) showStopSignupDialog()
-//        else activity?.finish()
-//    }
-//
-//    private fun showStopSignupDialog() {
-//        stopSignupDialog = StopSignupDialog(requireContext(), this)
-//        stopSignupDialog.show()
-//    }
-//
-//    override fun onStopSignupClick() {
-//        stopSignupDialog.dismiss()
-//        activity?.finish()
-//    }
-//
-//    override fun onDetach() {
-//        super.onDetach()
-//        backPressedCallback.remove()
-//    }
-
 }

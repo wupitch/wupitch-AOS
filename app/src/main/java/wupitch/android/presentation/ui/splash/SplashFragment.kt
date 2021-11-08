@@ -65,7 +65,7 @@ class SplashFragment : Fragment() {
 //                if(jwt != null) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
 //                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
                 //development 용도.
-                findNavController().navigate(R.id.action_splashFragment_to_serviceAgreementFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
             }
         }
 

@@ -1,6 +1,7 @@
 package wupitch.android.presentation.ui.signup
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -24,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -34,13 +38,12 @@ import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
 import wupitch.android.presentation.ui.components.WhiteRoundBtn
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
+import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
 @AndroidEntryPoint
-class RegionFragment
-    : Fragment() {
+class RegionFragment : Fragment() {
 
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
-    private lateinit var stopSignupDialog: StopSignupDialog
     val viewModel: MainViewModel by activityViewModels()
 
 
@@ -53,6 +56,19 @@ class RegionFragment
             setContent {
                 WupitchTheme {
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_regionFragment_to_onboardingFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopSignupDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState)
+                    }
                     val districtList = viewModel.district.observeAsState()
 
                     districtList.value?.data?.let { list ->
@@ -75,7 +91,7 @@ class RegionFragment
                             }, textString = null,
                                 hasRightIcon = true,
                                 onRightIconClick = {
-                                    //todo : show stop dialog
+                                    dialogOpenState.value = true
                                 })
 
                             Text(
@@ -103,7 +119,8 @@ class RegionFragment
                                     id = R.string.select_region_btn
                                 ),
                                 fontSize = 14.sp,
-                                color = if (regionState.value != null) R.color.main_orange else R.color.gray02
+                                textColor = if (regionState.value != null) R.color.main_orange else R.color.gray02,
+                                borderColor = if (regionState.value != null) R.color.main_orange else R.color.gray02
                             ) {
                                 showRegionBottomSheet(list)
                             }
