@@ -72,7 +72,7 @@
     <string name="thirties">30대</string>
     <string name="forties">40대</string>
     <string name="fifties">50대</string>
-    <string name="welcome_title">%s 님, 환영합니다</string>
+    <string name="welcome_title">님, 환영합니다</string>
     <string name="welcome_subtitle">우피치와 함께 신나고 건강하게 땀흘려봐요!</string>
     <string name="checkout_main">크루를 둘러보러 가볼까요?</string>
     <string name="warning_stop_signup">작성한 모든 기입정보가 삭제됩니다.\n회원가입을 그만두시겠습니까?</string>

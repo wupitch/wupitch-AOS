@@ -33,6 +33,7 @@ class MainViewModel @Inject constructor(
     val isNicknameValid : LiveData<Boolean?> = _isNicknameValid
 
     private var _userNickname = MutableLiveData<String?>()
+    val userNickname : LiveData<String?> = _userNickname
 
     private var _userIntroduction = MutableLiveData<String?>()
 //    val userIntroduction : LiveData<String> = _userIntroduction
@@ -49,6 +50,7 @@ class MainViewModel @Inject constructor(
 
     private var _userAge = MutableLiveData<Int>()
     val userAge : LiveData<Int> = _userAge
+
 
 
 
