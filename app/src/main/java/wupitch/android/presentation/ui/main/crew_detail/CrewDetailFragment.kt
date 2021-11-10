@@ -85,7 +85,7 @@ class CrewDetailFragment : Fragment() {
                     ) {
                         val (appbar, crewInfo, joinBtns) = createRefs()
 
-                        SetToolBar(
+                        TitleToolbar(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .constrainAs(appbar) {

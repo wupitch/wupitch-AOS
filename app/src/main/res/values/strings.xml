@@ -136,4 +136,8 @@
     <string name="search_tab_crew">&#160;&#160;크루&#160;&#160;</string>
     <string name="search_tab_impromptu">&#160;&#160;번개&#160;&#160;</string>
 
+<!--    filter-->
+    <string name="filter">필터</string>
+    <string name="apply">적용하기</string>
+    <string name="initialize">초기화</string>
 </resources>

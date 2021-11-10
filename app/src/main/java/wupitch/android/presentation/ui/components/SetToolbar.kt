@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -30,7 +31,7 @@ fun SetToolBar(
     modifier: Modifier,
     onLeftIconClick: () -> Unit,
     onRightIconClick: (() -> Unit)? = null,
-    textString: Int?,
+    @StringRes textString: Int?,
     hasRightIcon: Boolean? = false
 ) {
     ConstraintLayout(
@@ -46,6 +47,7 @@ fun SetToolBar(
                 top.linkTo(parent.top)
                 bottom.linkTo(parent.bottom)
                 start.linkTo(parent.start)
+                end.linkTo(text.start)
             }
             .size(24.dp)
             .clickable(interactionSource = MutableInteractionSource(), indication = null)

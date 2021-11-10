@@ -152,7 +152,7 @@ class HomeFragment : Fragment() {
                                 end.linkTo(icon_notification.start, margin = 16.dp)
                             }
                             .size(24.dp),
-                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click filter!") }
+                        onClick = { activity?.findNavController(R.id.main_nav_container_view)?.navigate(R.id.action_mainFragment_to_filterFragment) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter),
