@@ -133,5 +133,7 @@
 
 <!--    search-->
     <string name="search">검색</string>
+    <string name="search_tab_crew">&#160;&#160;크루&#160;&#160;</string>
+    <string name="search_tab_impromptu">&#160;&#160;번개&#160;&#160;</string>
 
 </resources>
