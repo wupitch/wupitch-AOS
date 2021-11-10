@@ -130,4 +130,8 @@
     <string name="three">3</string>
     <string name="register">가입하기</string>
     <string name="end_sentence">&#160;입니다.</string>
+
+<!--    search-->
+    <string name="search">검색</string>
+
 </resources>

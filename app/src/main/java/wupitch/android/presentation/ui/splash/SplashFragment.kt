@@ -62,10 +62,11 @@ class SplashFragment : Fragment() {
             Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main){
-//                if(jwt != null) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+//                if(jwt != null)
+                findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
 //                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
                 //development 용도.
-                findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+                //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
             }
         }
 

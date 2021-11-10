@@ -10,6 +10,9 @@
         <action
             android:id="@+id/action_mainFragment_to_crewDetailFragment"
             app:destination="@id/crewDetailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -125,4 +128,8 @@
             android:id="@+id/action_onboardingFragment_to_serviceAgreementFragment"
             app:destination="@id/serviceAgreementFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="wupitch.android.presentation.ui.main.search.SearchFragment2"
+        android:label="SearchFragment" />
 </navigation>

@@ -25,6 +25,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
@@ -136,7 +137,7 @@ class HomeFragment : Fragment() {
                                 end.linkTo(icon_filter.start, margin = 16.dp)
                             }
                             .size(24.dp),
-                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click search!") }
+                        onClick = { activity?.findNavController(R.id.main_nav_container_view)?.navigate(R.id.action_mainFragment_to_searchFragment) }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
