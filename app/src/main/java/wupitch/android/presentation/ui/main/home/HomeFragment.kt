@@ -62,7 +62,8 @@ class HomeFragment : Fragment() {
 
                         Column(
                             modifier = Modifier
-                                .fillMaxSize().background(Color.White)
+                                .fillMaxSize()
+                                .background(Color.White)
                         ) {
                             HomeAppBar(districtOnClick = {
                                 districtBottomSheet.show(
@@ -96,7 +97,7 @@ class HomeFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White)
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {

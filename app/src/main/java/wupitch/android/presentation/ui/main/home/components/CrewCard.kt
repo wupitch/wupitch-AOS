@@ -33,6 +33,7 @@ fun CrewCard(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
+        Spacer(modifier = Modifier.height(8.dp).fillMaxWidth())
 
         Row(
             modifier = Modifier
@@ -172,7 +173,7 @@ fun CrewCard(
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
+        Spacer(modifier = Modifier.height(10.dp).fillMaxWidth())
     }
 
 }

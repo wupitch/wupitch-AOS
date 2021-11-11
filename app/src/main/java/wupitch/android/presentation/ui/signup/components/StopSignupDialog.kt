@@ -71,9 +71,9 @@ fun StopSignupDialog (
                     text = stringResource(id = R.string.warning_stop_signup),
                     color = Color.Black,
                     fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
+                    fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                 )
                 Row( modifier = Modifier
                     .fillMaxWidth()

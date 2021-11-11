@@ -97,9 +97,9 @@
     <string name="introduction">소개</string>
     <string name="persons">인원:&#160;</string>
     <string name="age">연령:&#160;</string>
-    <string name="welcome_beginner">초보 환영</string>
-    <string name="semi_expert">중수</string>
-    <string name="expert">고수</string>
+    <string name="beginner_centered">초보 중심</string>
+    <string name="semi_expert_centered">중수 중심</string>
+    <string name="expert_centered">고수</string>
     <string name="beginners_to_experts">초보부터 고수까지</string>
     <string name="has_lesson">레슨 운영</string>
     <string name="train_with_coach">코치님과 훈련</string>
@@ -121,8 +121,8 @@
     <string name="not_enough_info_subtitle">모든 프로필 정보가 기입되어야\n크루에 신청할 수 있습니다.</string>
     <string name="go_fill_profile">프로필 작성하러 가기</string>
     <string name="join_visitor_bottom_sheet_title">손님으로 참여해 가입절차없이\n하루동안 크루에 참여해보세요!</string>
-    <string name="join_visitor_step1">프로필 정보를 동호회장에게 제공합니다.</string>
-    <string name="join_visitor_step2">해당 동호회의 손님비는&#160;</string>
+    <string name="join_visitor_step1">프로필 정보를 크루리더에게 제공합니다.</string>
+    <string name="join_visitor_step2">해당 크루의 손님비는&#160;</string>
     <string name="join_visitor_step2_subtitle">(신청 승인 이후, 별도납부)</string>
     <string name="join_visitor_step3">희망하는 날짜를 선택해주세요.</string>
     <string name="one">1</string>

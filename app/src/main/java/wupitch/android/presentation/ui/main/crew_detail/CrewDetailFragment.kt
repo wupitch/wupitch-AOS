@@ -9,6 +9,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -83,7 +84,7 @@ class CrewDetailFragment : Fragment() {
                     ConstraintLayout(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        val (appbar, crewInfo, joinBtns) = createRefs()
+                        val (appbar, divider, crewInfo, joinBtns) = createRefs()
 
                         TitleToolbar(
                             modifier = Modifier
@@ -97,6 +98,19 @@ class CrewDetailFragment : Fragment() {
                             },
                             textString = R.string.crew
                         )
+                        if(scrollState.value > 202.dpToInt()){
+                            Divider(
+                                Modifier
+                                    .constrainAs(divider){
+                                        top.linkTo(appbar.bottom)
+                                        bottom.linkTo(crewInfo.top)
+                                    }
+                                    .fillMaxWidth()
+                                    .height(1.dp)
+                                    .background(colorResource(id = R.color.gray01))
+                            )
+                        }
+
 
                         Column(
                             modifier = Modifier
@@ -141,6 +155,9 @@ class CrewDetailFragment : Fragment() {
         }
 
     }
+
+    fun Int.dpToInt() = (this *  requireContext().resources.displayMetrics.density).toInt()
+
 
     @Composable
     fun JoinCrewBtns(
@@ -398,7 +415,7 @@ class CrewDetailFragment : Fragment() {
             "크루 키워드",
             "이 부분에",
             "들어갑니다.",
-            "초보 환영",
+            "초보 중심",
             "코치님과 훈련",
             "레슨 운영",
             "훈련 중심",
