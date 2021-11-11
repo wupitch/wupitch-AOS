@@ -140,4 +140,23 @@
     <string name="filter">필터</string>
     <string name="apply">적용하기</string>
     <string name="initialize">초기화</string>
+    <string name="event">종목</string>
+    <string name="day">요일</string>
+    <string name="monday">월</string>
+    <string name="tuesday">화</string>
+    <string name="wednesday">수</string>
+    <string name="thursday">목</string>
+    <string name="friday">금</string>
+    <string name="saturday">토</string>
+    <string name="sunday">일</string>
+    <string name="time">시간</string>
+    <string name="crew_member_num">크루원 수</string>
+    <string name="age_group">연령대</string>
+    <string name="over_fifties">50대 이상</string>
+    <string name="regardless_of_age">연령무관</string>
+    <string name="less_than_ten">10명 이하</string>
+    <string name="more_than_ten_less_than_thirty">11~30명</string>
+    <string name="more_than_thirty_less_than_fifty">31~50명</string>
+    <string name="more_than_fifty_less_than_seventy">31~50명</string>
+    <string name="more_than_seventy">70명 초과</string>
 </resources>

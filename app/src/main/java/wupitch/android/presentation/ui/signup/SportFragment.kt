@@ -6,12 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.CompoundButton
-import android.widget.ToggleButton
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -20,14 +16,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.layout.AlignmentLine
-import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -38,17 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.google.accompanist.insets.navigationBarsPadding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import wupitch.android.R
@@ -57,7 +42,7 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.SetToolBar
-import wupitch.android.presentation.ui.signup.components.SportToggleBtn
+import wupitch.android.presentation.ui.components.ToggleBtn
 import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
 class SportFragment
@@ -163,7 +148,7 @@ class SportFragment
                                         crossAxisSpacing = 16.dp
                                     ) {
                                         result.forEach { sportItem ->
-                                            SportToggleBtn(
+                                            ToggleBtn(
                                                 toggleState = sportItem.state,
                                                 modifier = Modifier
                                                     .width(152.dp)
@@ -325,16 +310,5 @@ class SportFragment
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
     }
-
-
-//    fun showStopSignupDialog() {
-//        stopSignupDialog = StopSignupDialog(requireContext(), this)
-//        stopSignupDialog.show()
-//    }
-//
-//    override fun onStopSignupClick() {
-//        stopSignupDialog.dismiss()
-//        activity?.finish()
-//    }
 
 }

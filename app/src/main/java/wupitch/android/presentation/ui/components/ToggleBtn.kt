@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup.components
+package wupitch.android.presentation.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -26,7 +26,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
-fun SportToggleBtn(
+fun ToggleBtn(
     toggleState: MutableState<Boolean>,
     modifier: Modifier,
     textString: String,

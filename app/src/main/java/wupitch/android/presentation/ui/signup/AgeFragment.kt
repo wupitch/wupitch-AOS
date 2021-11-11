@@ -245,16 +245,5 @@ class AgeFragment : Fragment() {
     }
 
 
-//
-//    fun showStopSignupDialog() {
-//        stopSignupDialog = StopSignupDialog(requireContext(), this)
-//        stopSignupDialog.show()
-//    }
-//
-//    override fun onStopSignupClick() {
-//        stopSignupDialog.dismiss()
-//        activity?.finish()
-//    }
-
 }
 
