@@ -14,11 +14,12 @@ import wupitch.android.domain.model.CrewCardInfo
 
 @Composable
 fun CrewList(
+    modifier: Modifier,
     loading : Boolean,
     crewList : List<CrewCardInfo>,
     navigationToCrewDetailScreen : (Int) -> Unit
 ){
-    Box(modifier = Modifier.fillMaxSize().background(Color.White)){
+    Box(modifier = modifier.background(Color.White)){
         if(loading && crewList.isEmpty()) {
             //todo : show progressbar
         } else if(crewList.isEmpty()) {

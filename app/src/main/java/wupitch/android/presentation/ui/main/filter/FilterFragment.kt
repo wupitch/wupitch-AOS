@@ -5,14 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
-import android.widget.Space
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -21,12 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,52 +36,62 @@ import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.NonRepetitionLayout
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.TitleToolbar
 import wupitch.android.presentation.ui.components.ToggleBtn
 
 class FilterFragment : Fragment() {
 
-    private val sportsList = listOf<FilterItem>(
-        FilterItem(R.string.soccer_football),
-        FilterItem(R.string.badminton),
-        FilterItem(R.string.volleyball),
-        FilterItem(R.string.basketball),
-        FilterItem(R.string.hiking),
-        FilterItem(R.string.running)
-    )
 
-    private val dateList = listOf<FilterItem>(
-        FilterItem(R.string.monday), FilterItem(R.string.tuesday),
-        FilterItem(R.string.wednesday), FilterItem(R.string.thursday), FilterItem(R.string.friday),
-        FilterItem(R.string.saturday), FilterItem(R.string.sunday)
-    )
-    private val ageGroupList = listOf<FilterItem>(
-        FilterItem(R.string.teenager),
-        FilterItem(R.string.twenties),
-        FilterItem(R.string.thirties),
-        FilterItem(R.string.forties),
-        FilterItem(R.string.over_fifties),
-        FilterItem(R.string.regardless_of_age)
-    )
-    private val crewSizeList = listOf<FilterItem>(
-        FilterItem(R.string.less_than_ten),
-        FilterItem(R.string.more_than_ten_less_than_thirty),
-        FilterItem(R.string.more_than_thirty_less_than_fifty),
-        FilterItem(R.string.more_than_fifty_less_than_seventy),
-        FilterItem(R.string.more_than_seventy)
-    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+         val sportsList = listOf<FilterItem>(
+            FilterItem(getString(R.string.soccer_football)),
+            FilterItem(getString(R.string.badminton)),
+            FilterItem(getString(R.string.volleyball)),
+            FilterItem(getString(R.string.basketball)),
+            FilterItem(getString(R.string.hiking)),
+            FilterItem(getString(R.string.running))
+        )
+
+         val dateList = listOf<FilterItem>(
+            FilterItem(getString(R.string.monday)), FilterItem(getString(R.string.tuesday)),
+            FilterItem(getString(R.string.wednesday)), FilterItem(getString(R.string.thursday)), FilterItem(getString(R.string.friday)),
+            FilterItem(getString(R.string.saturday)), FilterItem(getString(R.string.sunday))
+        )
+         val ageGroupList = listOf<FilterItem>(
+            FilterItem(getString(R.string.teenager)),
+            FilterItem(getString(R.string.twenties)),
+            FilterItem(getString(R.string.thirties)),
+            FilterItem(getString(R.string.forties)),
+            FilterItem(getString(R.string.over_fifties)),
+            FilterItem(getString(R.string.regardless_of_age))
+        )
+         val crewSizeList = listOf<FilterItem>(
+            FilterItem(getString(R.string.less_than_ten)),
+            FilterItem(getString(R.string.more_than_ten_less_than_thirty)),
+            FilterItem(getString(R.string.more_than_thirty_less_than_fifty)),
+            FilterItem(getString(R.string.more_than_fifty_less_than_seventy)),
+            FilterItem(getString(R.string.more_than_seventy))
+        )
+
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-                    ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
+                    ConstraintLayout(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.White)) {
                         val scrollState = rememberScrollState(0)
+                        val crewNumSelectedState = remember {
+                            mutableStateOf(-1)
+                        }
 
                         val (toolbar, topDivider, filterContents, bottomDivider, buttons) = createRefs()
                         TitleToolbar(
@@ -146,13 +151,17 @@ class FilterFragment : Fragment() {
                             TimeFilter()
 
                             Spacer(modifier = Modifier.height(32.dp))
-                            NonRepetitionFilter(
+                            NonRepetitionLayout(
                                 text = R.string.crew_member_num,
                                 filterItemList = crewSizeList,
-                                modifier = Modifier
+                                radioBtnModifier = Modifier
                                     .width(96.dp)
-                                    .height(48.dp)
-                            )
+                                    .height(48.dp),
+                                flexBoxModifier = Modifier.padding(top = 12.dp),
+                                selectedState = crewNumSelectedState
+                            ){
+                                Log.d("{FilterFragment.onCreateView}", "크루원 수 : $it")
+                            }
 
                             Spacer(modifier = Modifier.height(32.dp))
                             RepetitionFilter(
@@ -282,88 +291,7 @@ class FilterFragment : Fragment() {
            )
     }
 
-    @Composable
-    fun NonRepetitionFilter(
-        text: Int,
-        filterItemList: List<FilterItem>,
-        modifier: Modifier
-    ) {
-        Column(Modifier.fillMaxWidth()) {
-            Text(
-                modifier = Modifier.align(Alignment.Start),
-                text = stringResource(id = text),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            FlowRow(
-                modifier = Modifier.padding(top = 12.dp),
-                mainAxisSpacing = 16.dp,
-                crossAxisSpacing = 16.dp
-            ) {
-                filterItemList.forEachIndexed { index, item ->
-                    RadioButton(
-                        modifier = modifier,
-                        checkedState = item.state,
-                        text = item.name,
-                        index = index
-                    ) {
-                        Log.d("{FilterFragment.NonRepetitionFilter}", "크루원 수 : $it")
-                    }
-                }
-            }
-        }
-    }
 
-    private var checkedRadioButton: MutableState<Boolean>? = null
-
-    @Composable
-    fun RadioButton(
-        modifier: Modifier,
-        checkedState: MutableState<Boolean>,
-        text: Int,
-        index: Int,
-        onClick: (index: Int) -> Unit
-    ) {
-        Box(
-            modifier = modifier
-                .selectable(
-                    selected = checkedState.value,
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    enabled = true,
-                    role = Role.RadioButton,
-                    onClick = {
-                        checkedRadioButton?.value = false
-                        checkedState.value = true
-                        checkedRadioButton = checkedState
-                        onClick(index)
-                    }
-                )
-                .clip(RoundedCornerShape(8.dp))
-                .background(
-                    if (checkedState.value) colorResource(id = R.color.orange02) else
-                        colorResource(id = R.color.gray01)
-                )
-                .border(
-                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
-                    else Color.Transparent,
-                    width = if (checkedState.value) 1.dp else 0.dp,
-                    shape = RoundedCornerShape(8.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = stringResource(id = text),
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = if (checkedState.value) colorResource(id = R.color.main_orange)
-                else colorResource(id = R.color.gray02)
-            )
-        }
-    }
 
 
     @Composable
@@ -392,7 +320,7 @@ class FilterFragment : Fragment() {
                     ToggleBtn(
                         toggleState = item.state,
                         modifier = modifier,
-                        textString = stringResource(id = item.name)
+                        textString = item.name
                     ) {
                         if (it) {
                             onClick(index)

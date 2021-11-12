@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_mainFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_createCrewSport"
+            app:destination="@id/createCrewSport" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -146,4 +149,8 @@
         android:id="@+id/notificationFragment"
         android:name="wupitch.android.presentation.ui.main.notification.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/createCrewSport"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewSportFragment"
+        android:label="CreateCrewSport" />
 </navigation>

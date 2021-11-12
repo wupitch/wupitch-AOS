@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -22,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -60,18 +62,35 @@ class HomeFragment : Fragment() {
                         val crewList = viewModel.crewList.value
                         val loading = viewModel.loading.value
 
-                        Column(
+                        ConstraintLayout(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.White)
                         ) {
-                            HomeAppBar(districtOnClick = {
-                                districtBottomSheet.show(
-                                    childFragmentManager,
-                                    "district bottom sheet"
-                                )
-                            })
+
+                            val (appbar, homeList, fab) = createRefs()
+
+                            HomeAppBar(
+                                modifier = Modifier.constrainAs(appbar) {
+                                    top.linkTo(parent.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+//                                    height = Dimension.fillToConstraints
+                                },
+                                districtOnClick = {
+                                    districtBottomSheet.show(
+                                        childFragmentManager,
+                                        "district bottom sheet"
+                                    )
+                                })
                             CrewList(
+                                modifier = Modifier.constrainAs(homeList) {
+                                    top.linkTo(appbar.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(parent.bottom)
+                                    height = Dimension.fillToConstraints
+                                },
                                 loading = loading,
                                 crewList = crewList,
                                 navigationToCrewDetailScreen = {
@@ -81,6 +100,23 @@ class HomeFragment : Fragment() {
                                             R.id.action_mainFragment_to_crewDetailFragment, bundle
                                         )
                                 })
+                            FloatingActionButton(
+                                modifier = Modifier
+                                    .constrainAs(fab) {
+                                        end.linkTo(parent.end, margin = 24.dp)
+                                        bottom.linkTo(parent.bottom, margin = 20.dp)
+                                    }
+                                    .size(56.dp),
+                                shape = CircleShape,
+                                backgroundColor = colorResource(id = R.color.main_black),
+                                elevation = FloatingActionButtonDefaults.elevation(10.dp),
+                                onClick = {
+                                    activity?.findNavController(R.id.main_nav_container_view)
+                                        ?.navigate(R.id.action_mainFragment_to_createCrewSport)
+                                }) {
+                                    Icon(painter = painterResource(id = R.drawable.ic_btn_06_add), contentDescription = "fab icon", tint = Color.White)
+
+                            }
                         }
                     }
                 }
@@ -90,9 +126,10 @@ class HomeFragment : Fragment() {
 
     @Composable
     fun HomeAppBar(
+        modifier: Modifier,
         districtOnClick: () -> Unit
     ) {
-        ConstraintLayout {
+        ConstraintLayout(modifier = modifier) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -138,7 +175,10 @@ class HomeFragment : Fragment() {
                                 end.linkTo(icon_filter.start, margin = 16.dp)
                             }
                             .size(24.dp),
-                        onClick = { activity?.findNavController(R.id.main_nav_container_view)?.navigate(R.id.action_mainFragment_to_searchFragment) }
+                        onClick = {
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_searchFragment)
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_search),
@@ -153,7 +193,10 @@ class HomeFragment : Fragment() {
                                 end.linkTo(icon_notification.start, margin = 16.dp)
                             }
                             .size(24.dp),
-                        onClick = { activity?.findNavController(R.id.main_nav_container_view)?.navigate(R.id.action_mainFragment_to_filterFragment) }
+                        onClick = {
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_filterFragment)
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter),
@@ -170,7 +213,7 @@ class HomeFragment : Fragment() {
                             .size(24.dp),
                         onClick = {
                             activity?.findNavController(R.id.main_nav_container_view)
-                                ?.navigate(R.id.action_mainFragment_to_notificationFragment )
+                                ?.navigate(R.id.action_mainFragment_to_notificationFragment)
                         }
                     ) {
                         Icon(

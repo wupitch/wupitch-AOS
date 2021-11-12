@@ -4,6 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 
 data class FilterItem(
-    val name : Int,
+    val name : String,
     val state : MutableState<Boolean> = mutableStateOf(false)
 )

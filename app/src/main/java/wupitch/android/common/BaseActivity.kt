@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding
 import wupitch.android.R
 import wupitch.android.util.LoadingDialog
 
+
 abstract class BaseActivity<B : ViewBinding>(private val inflate: (LayoutInflater) -> B) :
     AppCompatActivity() {
     protected lateinit var binding: B

@@ -163,4 +163,15 @@
 <!--    notification-->
     <string name="notification">알림</string>
     <string name="no_notification">알림이 없어요</string>
+
+<!--    create crew-->
+    <string name="create_crew">크루 만들기</string>
+    <string name="select_crew_sport">크루의 종목을\n선택해주세요.</string>
+    <string name="one_over_seven">다음 (1/7)</string>
+    <string name="two_over_seven">다음 (2/7)</string>
+    <string name="three_over_seven">다음 (3/7)</string>
+    <string name="four_over_seven">다음 (4/7)</string>
+    <string name="five_over_seven">다음 (5/7)</string>
+    <string name="six_over_seven">다음 (6/7)</string>
+
 </resources>
