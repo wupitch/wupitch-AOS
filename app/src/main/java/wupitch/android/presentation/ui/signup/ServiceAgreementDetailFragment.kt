@@ -9,21 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Divider
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import wupitch.android.R
-import wupitch.android.common.BaseFragment
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 
 class ServiceAgreementDetailFragment :Fragment() {
 
@@ -42,13 +38,13 @@ class ServiceAgreementDetailFragment :Fragment() {
                     ) {
                         val (toolbar, divider) = createRefs()
 
-                        SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                        IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
                             findNavController().navigateUp()
-                        }, textString =  R.string.terms_of_service_agreement,
+                        },
                             hasRightIcon = true,
                             onRightIconClick = {
                                 findNavController().navigateUp()

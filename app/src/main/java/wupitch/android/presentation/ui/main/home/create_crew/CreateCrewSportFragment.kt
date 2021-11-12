@@ -47,7 +47,6 @@ class CreateCrewSportFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
 
-            viewModel.getSports()
 
             setContent {
 
@@ -77,6 +76,7 @@ class CreateCrewSportFragment : Fragment() {
                                 top.linkTo(toolbar.bottom)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
+                                width = Dimension.fillToConstraints
                             }
                             .width(1.dp)
                             .background(colorResource(id = R.color.gray01)))
@@ -119,7 +119,7 @@ class CreateCrewSportFragment : Fragment() {
                         }
                     }
 
-                    
+                    //todo 동 state 추가.
                     RoundBtn(
                         modifier = Modifier
                             .constrainAs(nextBtn) {
@@ -138,6 +138,7 @@ class CreateCrewSportFragment : Fragment() {
                         if (sportSelectedState.value != -1) {
                             Log.d("{CreateCrewSport.onCreateView}", "next btn clicked!")
                             //todo viewmodel 에 선택된 sport 보내기.
+                            findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)
                         }
                     }
 
@@ -147,5 +148,11 @@ class CreateCrewSportFragment : Fragment() {
 
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getSports()
     }
 }

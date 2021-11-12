@@ -18,9 +18,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import wupitch.android.R
-import wupitch.android.common.BaseFragment
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 
 class UseOfPersonalInfoDetailFragment : Fragment() {
     override fun onCreateView(
@@ -38,13 +37,13 @@ class UseOfPersonalInfoDetailFragment : Fragment() {
                     ) {
                         val (toolbar, divider) = createRefs()
 
-                        SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                        IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
                             findNavController().navigateUp()
-                        }, textString = R.string.terms_of_privacy_policy,
+                        },
                             hasRightIcon = true,
                             onRightIconClick = {
                                 findNavController().navigateUp()

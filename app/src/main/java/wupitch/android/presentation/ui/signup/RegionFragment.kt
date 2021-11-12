@@ -1,7 +1,6 @@
 package wupitch.android.presentation.ui.signup
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -35,7 +33,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.WhiteRoundBtn
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
 import wupitch.android.presentation.ui.signup.components.StopSignupDialog
@@ -82,13 +80,13 @@ class RegionFragment : Fragment() {
                             val (toolbar, title, districtBtn, nextBtn) = createRefs()
                             val regionState = viewModel.userDistrictName.observeAsState()
 
-                            SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                            IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             }, onLeftIconClick = {
                                 findNavController().navigateUp()
-                            }, textString = null,
+                            },
                                 hasRightIcon = true,
                                 onRightIconClick = {
                                     dialogOpenState.value = true

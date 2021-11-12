@@ -109,7 +109,7 @@ class SearchFragment2 : Fragment() {
 
     @ExperimentalPagerApi
     @Composable
-    fun SearchTextField(
+    fun SearchTextField (
         modifier: Modifier,
         textState: MutableState<String>
     ) {

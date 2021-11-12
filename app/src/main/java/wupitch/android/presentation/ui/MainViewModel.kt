@@ -77,7 +77,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun setUserRegion(districtId : Int, districtName : String) {
+    fun setUserDistrict(districtId : Int, districtName : String) {
         //todo 서버에 보내기
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName

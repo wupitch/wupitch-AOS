@@ -28,10 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.coroutines.Job
@@ -42,7 +40,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
 class ProfileFragment : Fragment() {
@@ -92,13 +90,13 @@ class ProfileFragment : Fragment() {
                         val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
 
 
-                        SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                        IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
                             findNavController().navigateUp()
-                        }, textString = null,
+                        },
                             hasRightIcon = true,
                             onRightIconClick = {
                                 dialogOpenState.value = true

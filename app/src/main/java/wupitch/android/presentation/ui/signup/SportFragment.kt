@@ -41,7 +41,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.ToggleBtn
 import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 
@@ -96,13 +96,13 @@ class SportFragment
 
                             sportsState.value?.data?.let { result ->
 
-                                SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                                IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
                                 }, onLeftIconClick = {
                                     findNavController().navigateUp()
-                                }, textString = null,
+                                },
                                     hasRightIcon = true,
                                     onRightIconClick = {
                                         dialogOpenState.value = true

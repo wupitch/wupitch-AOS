@@ -27,11 +27,10 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
-fun SetToolBar(
+fun IconToolBar(
     modifier: Modifier,
     onLeftIconClick: () -> Unit,
     onRightIconClick: (() -> Unit)? = null,
-    @StringRes textString: Int?,
     hasRightIcon: Boolean? = false
 ) {
     ConstraintLayout(
@@ -58,20 +57,21 @@ fun SetToolBar(
         )
 
 
-        if (textString != null) {
-            Text(
-                modifier = modifier.constrainAs(text) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(leftIcon.end, margin = 32.dp)
-                },
-                text = stringResource(id = textString),
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-            )
-        }
+//        if (textString != null) {
+//            Text(
+//                modifier = modifier.constrainAs(text) {
+//                    top.linkTo(parent.top)
+//                    bottom.linkTo(parent.bottom)
+//                    start.linkTo(leftIcon.end, margin = 32.dp)
+//                    end.linkTo(rightIcon.start)
+//                },
+//                text = stringResource(id = textString),
+//                fontSize = 16.sp,
+//                fontFamily = Roboto,
+//                fontWeight = FontWeight.Bold,
+//                color = Color.Black,
+//            )
+//        }
 
         hasRightIcon?.let {
             if(it) {
@@ -84,9 +84,7 @@ fun SetToolBar(
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null
-                    )
-                    //interaction source??
-                    {
+                    ) {
                         if (onRightIconClick != null) {
                             onRightIconClick()
                         }

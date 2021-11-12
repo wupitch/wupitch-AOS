@@ -37,8 +37,8 @@ import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DistrictBottomSheetFragment @Inject constructor(
-    val districtList : Array<String>,
+class DongBottomSheetFragment @Inject constructor(
+    val dongList : Array<String>,
     val viewModel : ViewModel
 ) : BottomSheetDialogFragment() {
 
@@ -83,7 +83,7 @@ class DistrictBottomSheetFragment @Inject constructor(
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
-                                text = stringResource(id = R.string.select_region_bottom_sheet),
+                                text = stringResource(id = R.string.select_dong_bottom_sheet),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
@@ -116,8 +116,8 @@ class DistrictBottomSheetFragment @Inject constructor(
                                 factory = { context ->
                                     NumberPicker(context).apply {
                                         minValue = 0
-                                        maxValue = districtList.size -1
-                                        displayedValues = districtList
+                                        maxValue = dongList.size -1
+                                        displayedValues = dongList
                                         setOnValueChangedListener { picker, oldVal, newVal ->
                                             //서울시 : 0 에서 바뀌지 않으면 불리지 않음. pickerValueState default : 0
                                             pickerValueState.value =  picker.value
@@ -137,17 +137,11 @@ class DistrictBottomSheetFragment @Inject constructor(
                                     .height(52.dp)
                                     .clip(RoundedCornerShape(8.dp)),
                                 onClick = {
-                                    // todo : viewModel 에 number picker value 보내기. & view model 값 state 로 받아서 crew list 변경.
-                                    Log.d("{DistrictBottomSheetFragment.onCreateView}", pickerValueState.value.toString())
+                                    Log.d("{DongBottomSheetFragment.onCreateView}", pickerValueState.value.toString())
                                     when (viewModel) {
-                                        is MainViewModel -> {
-                                            viewModel.setUserDistrict(pickerValueState.value, districtList[pickerValueState.value])
-                                        }
-                                        is HomeViewModel -> {
-                                            viewModel.setUserRegion(pickerValueState.value, districtList[pickerValueState.value])
-                                        }
                                         is CreateCrewViewModel -> {
-                                            viewModel.setUserDistrict(pickerValueState.value, districtList[pickerValueState.value])
+                                            viewModel.setUserDong(
+                                                pickerValueState.value, dongList[pickerValueState.value])
                                         }
                                     }
                                     dismiss()
@@ -167,12 +161,6 @@ class DistrictBottomSheetFragment @Inject constructor(
                 }
             }
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
     }
 
 }

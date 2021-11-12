@@ -152,5 +152,21 @@
     <fragment
         android:id="@+id/createCrewSport"
         android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewSportFragment"
-        android:label="CreateCrewSport" />
+        android:label="CreateCrewSport" >
+        <action
+            android:id="@+id/action_createCrewSport_to_createCrewLocationFragment"
+            app:destination="@id/createCrewLocationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewLocationFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewLocationFragment"
+        android:label="CreateCrewLocationFragment" >
+        <action
+            android:id="@+id/action_createCrewLocationFragment_to_createCrewInfoFragment"
+            app:destination="@id/createCrewInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewInfoFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewInfoFragment"
+        android:label="CreateCrewInfoFragment" />
 </navigation>

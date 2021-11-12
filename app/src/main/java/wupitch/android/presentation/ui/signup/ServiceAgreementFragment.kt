@@ -1,12 +1,9 @@
 package wupitch.android.presentation.ui.signup
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -32,7 +29,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.SetToolBar
+import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.signup.components.AllToggleIcon
 import wupitch.android.presentation.ui.signup.components.StopSignupDialog
 import wupitch.android.presentation.ui.signup.components.ToggleIcon
@@ -88,14 +85,14 @@ class ServiceAgreementFragment : Fragment() {
                             mutableStateOf(false)
                         }
 
-                        SetToolBar(modifier = Modifier.constrainAs(toolbar) {
+                        IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
                             if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
                             else findNavController().navigateUp()
-                        }, textString = null)
+                        })
 
                         Row(modifier = Modifier.constrainAs(titleTop) {
                             top.linkTo(toolbar.bottom, margin = 32.dp)

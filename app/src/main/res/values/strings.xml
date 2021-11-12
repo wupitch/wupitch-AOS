@@ -173,5 +173,11 @@
     <string name="four_over_seven">다음 (4/7)</string>
     <string name="five_over_seven">다음 (5/7)</string>
     <string name="six_over_seven">다음 (6/7)</string>
+    <string name="location_of_crew">지역과 장소는\n어디인가요?</string>
+    <string name="select_dong">동 선택</string>
+    <string name="location">장소</string>
+    <string name="input_location">장소를 입력해주세요. (선택)</string>
+    <string name="empty_location_warning">* 공란 시 \'장소 미정\' 표기됩니다.</string>
+    <string name="select_dong_bottom_sheet">동을 선택해주세요.</string>
 
 </resources>
