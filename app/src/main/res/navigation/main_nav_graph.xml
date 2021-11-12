@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_mainFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -139,4 +142,8 @@
         android:id="@+id/filterFragment"
         android:name="wupitch.android.presentation.ui.main.filter.FilterFragment"
         android:label="FilterFragment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="wupitch.android.presentation.ui.main.notification.NotificationFragment"
+        android:label="NotificationFragment" />
 </navigation>

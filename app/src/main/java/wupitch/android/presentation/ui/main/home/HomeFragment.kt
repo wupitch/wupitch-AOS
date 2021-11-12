@@ -168,7 +168,10 @@ class HomeFragment : Fragment() {
                                 end.linkTo(parent.end)
                             }
                             .size(24.dp),
-                        onClick = { Log.d("{HomeFragment.MainAppBar}", "on click noti!") }
+                        onClick = {
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_notificationFragment )
+                        }
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_bell),

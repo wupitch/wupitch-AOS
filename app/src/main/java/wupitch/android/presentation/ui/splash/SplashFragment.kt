@@ -56,7 +56,7 @@ class SplashFragment : Fragment() {
 
         lifecycleScope.launch {
 
-            //delay(1000L)
+            delay(1000L)
 
             val jwt = viewModel.readJwt()
             Log.d("{SplashFragment.onViewCreated}", jwt.toString())

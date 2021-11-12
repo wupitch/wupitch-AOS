@@ -4,6 +4,7 @@
         <!-- Primary brand color. -->
         <item name="android:windowDisablePreview">false</item>
 <!--        <item name="android:windowBackground">@drawable/splash</item>-->
+        <item name="android:windowBackground">@color/main_orange</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>

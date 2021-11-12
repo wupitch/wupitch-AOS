@@ -159,4 +159,8 @@
     <string name="more_than_thirty_less_than_fifty">31~50명</string>
     <string name="more_than_fifty_less_than_seventy">31~50명</string>
     <string name="more_than_seventy">70명 초과</string>
+
+<!--    notification-->
+    <string name="notification">알림</string>
+    <string name="no_notification">알림이 없어요</string>
 </resources>

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.Space
+import android.widget.TimePicker
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
@@ -82,7 +85,7 @@ class FilterFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-                    ConstraintLayout(Modifier.fillMaxSize()) {
+                    ConstraintLayout(Modifier.fillMaxSize().background(Color.White)) {
                         val scrollState = rememberScrollState(0)
 
                         val (toolbar, topDivider, filterContents, bottomDivider, buttons) = createRefs()
@@ -222,8 +225,10 @@ class FilterFragment : Fragment() {
                     Modifier
                         .width(8.dp)
                         .height(1.dp)
-                        .background(if(endTimeState.value == "00:00") colorResource(id = R.color.gray02)
-                        else colorResource(id = R.color.main_orange))
+                        .background(
+                            if (endTimeState.value == "00:00") colorResource(id = R.color.gray02)
+                            else colorResource(id = R.color.main_orange)
+                        )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 TimeButton(endTimeState)
@@ -247,7 +252,11 @@ class FilterFragment : Fragment() {
             else colorResource(id = R.color.main_orange)),
             colors = ButtonDefaults.buttonColors(Color.White),
             elevation = null,
-            onClick = {}
+            onClick = {
+                val timeBottomSheet = TimeBottomSheetFragment()
+                timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
+                Toast.makeText(requireContext(), "종료시간이 시작시간보다 늦어야 해요!", Toast.LENGTH_SHORT).show()
+            }
         ) {
             Text(
                 text = timeState.value,
@@ -263,7 +272,14 @@ class FilterFragment : Fragment() {
 
     @Composable
     private fun DatePicker() {
-
+       AndroidView(factory = { TimePicker(it) },
+            Modifier.wrapContentSize(),
+           update = { view ->
+               view.setOnTimeChangedListener { view, hourOfDay, minute ->
+                   Log.d("{FilterFragment.DatePicker}", "$hourOfDay $minute")
+               }
+           }
+           )
     }
 
     @Composable

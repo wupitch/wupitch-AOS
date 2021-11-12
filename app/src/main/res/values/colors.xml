@@ -35,5 +35,8 @@
 
     <color name="black03">#cc222222</color>
 
+<!--    notification-->
+    <color name="black04">#AD222222</color>
+    <color name="gray06">#AD959595</color>
 
 </resources>
