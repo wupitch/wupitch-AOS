@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -22,13 +22,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.FullToolBar
+import wupitch.android.presentation.ui.components.NoToggleLayout
 import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.NumberTextFieldLayout
 
 class CreateCrewFeeFragment : Fragment() {
+    @ExperimentalPagerApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +42,12 @@ class CreateCrewFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val scrollState = rememberScrollState(0)
+                    val feeState = remember {
+                        mutableStateOf("")
+                    }
+                    val noFeeState = remember {
+                        mutableStateOf(false)
+                    }
 
                     ConstraintLayout(
                         Modifier
@@ -77,7 +86,6 @@ class CreateCrewFeeFragment : Fragment() {
                                 height = Dimension.fillToConstraints
                                 width = Dimension.fillToConstraints
                             }
-                            .verticalScroll(scrollState)
                             .padding(horizontal = 20.dp))
                         {
                             Spacer(modifier = Modifier.height(24.dp))
@@ -88,6 +96,17 @@ class CreateCrewFeeFragment : Fragment() {
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
                             )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            NumberTextFieldLayout(
+                                modifier = Modifier
+                                    .width(95.dp)
+                                    .height(44.dp),
+                                textState = feeState,
+                                measureString = stringResource(id = R.string.fee_measure),
+                                thousandIndicator = true
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_fee))
 
                         }
                         RoundBtn(
@@ -100,15 +119,20 @@ class CreateCrewFeeFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = R.color.gray03,
+                            btnColor = if (feeState.value != "" || noFeeState.value) R.color.main_orange else R.color.gray03,
                             textString = R.string.six_over_seven,
                             fontSize = 16.sp
                         ) {
-                            findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
+                            if (feeState.value != "" || noFeeState.value) {
+                                findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
+                                //todo viewmodel set fee.
+                            }
                         }
                     }
                 }
             }
         }
     }
+
+
 }

@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -22,14 +22,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.FullToolBar
-import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.*
 
 class CreateCrewVisitorFeeFragment : Fragment() {
 
+    @ExperimentalPagerApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,14 +40,18 @@ class CreateCrewVisitorFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val scrollState = rememberScrollState(0)
-
+                    val feeState = remember {
+                        mutableStateOf("")
+                    }
+                    val noFeeState = remember {
+                        mutableStateOf(false)
+                    }
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, topDivider, content, nextBtn) = createRefs()
+                        val (toolbar, topDivider, content, visitorDef, nextBtn) = createRefs()
 
                         FullToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -78,7 +83,6 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                 height = Dimension.fillToConstraints
                                 width = Dimension.fillToConstraints
                             }
-                            .verticalScroll(scrollState)
                             .padding(horizontal = 20.dp))
                         {
                             Spacer(modifier = Modifier.height(24.dp))
@@ -89,8 +93,26 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
                             )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            NumberTextFieldLayout(
+                                modifier = Modifier
+                                    .width(95.dp)
+                                    .height(44.dp),
+                                textState = feeState,
+                                measureString = stringResource(id = R.string.fee_measure),
+                                thousandIndicator = true
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_visitor))
 
                         }
+                        VisitorDefLayout(modifier = Modifier
+                            .constrainAs(visitorDef) {
+                                bottom.linkTo(nextBtn.top, margin = 40.dp)
+                                start.linkTo(parent.start, margin = 20.dp)
+                                end.linkTo(parent.end, margin = 20.dp)
+                                width = Dimension.fillToConstraints
+                            })
                         RoundBtn(
                             modifier = Modifier
                                 .constrainAs(nextBtn) {
@@ -101,13 +123,16 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = R.color.gray03,
+                            btnColor = if (feeState.value != "" || noFeeState.value) R.color.main_orange else R.color.gray03,
                             textString = R.string.upload,
                             fontSize = 16.sp
                         ) {
-                            //todo viewmodel 로 업로드 이후 크루 id 받으면 디테일 페이지로 이동.
-                            val bundle = Bundle().apply { putInt("crewId", 0) }
-                            findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)
+                            if (feeState.value != "" || noFeeState.value) {
+                                //todo 크루 아이디 생성 후  디테일 페이지로 이동.
+                                val bundle = Bundle().apply { putInt("crewId", 0) }
+                                findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)
+                            }
+
 
                         }
                     }

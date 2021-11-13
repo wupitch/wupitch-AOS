@@ -38,7 +38,7 @@ import wupitch.android.presentation.theme.Roboto
 fun NumberTextField(
     modifier: Modifier,
     textState: MutableState<String>,
-    hintText: String,
+    thousandIndicator : Boolean = false
 ) {
 
     BasicTextField(
@@ -53,9 +53,17 @@ fun NumberTextField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         maxLines = 1,
         onValueChange = { value ->
-            if(value.length <=3){
-                textState.value = value
+            if(thousandIndicator){
+                //todo 천 단위에 점 찍기.
+                if(value.length <=6){
+                    textState.value = value
+                }
+            }else {
+                if(value.length <=3){
+                    textState.value = value
+                }
             }
+
         },
         cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
         decorationBox = { innerTextField ->

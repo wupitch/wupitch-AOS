@@ -276,35 +276,7 @@ class CrewDetailFragment : Fragment() {
                 fontWeight = FontWeight.Normal,
                 color = colorResource(id = R.color.main_black)
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(colorResource(id = R.color.orange03))
-                    .padding(top = 16.dp, bottom = 28.dp)
-                    .padding(horizontal = 20.dp)
-            ) {
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.what_is_visitors),
-                        color = colorResource(id = R.color.main_orange),
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
-
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 12.dp),
-                        text = stringResource(id = R.string.visitor_explanation),
-                        color = colorResource(id = R.color.main_orange),
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp
-                    )
-                }
-            }
+            VisitorDefLayout(Modifier)
             Text(
                 modifier = Modifier.padding(top = 36.dp),
                 text = stringResource(id = R.string.inquiry),
