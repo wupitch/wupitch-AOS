@@ -58,6 +58,21 @@ class CreateCrewLocationFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createCrewLocationFragment_to_mainFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                    }
+
                     val locationSelectedState = remember {
                         mutableStateOf(-1)
                     }
@@ -83,7 +98,7 @@ class CreateCrewLocationFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { },
+                            onRightIconClick = { dialogOpenState.value = true },
                             textString = R.string.create_crew
                         )
 

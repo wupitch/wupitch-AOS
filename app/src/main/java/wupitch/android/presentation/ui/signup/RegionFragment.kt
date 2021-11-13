@@ -36,7 +36,7 @@ import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.WhiteRoundBtn
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
-import wupitch.android.presentation.ui.signup.components.StopSignupDialog
+import wupitch.android.presentation.ui.components.StopWarningDialog
 
 @AndroidEntryPoint
 class RegionFragment : Fragment() {
@@ -64,8 +64,9 @@ class RegionFragment : Fragment() {
                         findNavController().navigate(R.id.action_regionFragment_to_onboardingFragment)
                     }
                     if(dialogOpenState.value){
-                        StopSignupDialog(dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState)
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.warning_stop_signup))
                     }
                     val districtList = viewModel.district.observeAsState()
 

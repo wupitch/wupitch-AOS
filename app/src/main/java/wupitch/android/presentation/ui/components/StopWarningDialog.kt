@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup.components
+package wupitch.android.presentation.ui.components
 
 
 import androidx.compose.foundation.Image
@@ -27,9 +27,10 @@ import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.WhiteRoundBtn
 
 @Composable
-fun StopSignupDialog (
+fun StopWarningDialog (
     dialogOpenState : MutableState<Boolean>,
-    stopSignupState : MutableState<Boolean>
+    stopSignupState : MutableState<Boolean>,
+    textString : String
 ) {
     Dialog(
         onDismissRequest = { dialogOpenState.value = false },
@@ -68,7 +69,7 @@ fun StopSignupDialog (
                 )
                 Text(
                     modifier = Modifier.padding(top = 20.dp),
-                    text = stringResource(id = R.string.warning_stop_signup),
+                    text = textString,
                     color = Color.Black,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,

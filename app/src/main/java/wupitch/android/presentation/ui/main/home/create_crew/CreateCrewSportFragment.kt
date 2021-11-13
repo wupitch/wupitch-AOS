@@ -31,6 +31,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.NonRepetitionLayout
 import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.StopWarningDialog
 import wupitch.android.presentation.ui.components.TitleToolbar
 
 @AndroidEntryPoint
@@ -50,6 +51,21 @@ class CreateCrewSportFragment : Fragment() {
 
             setContent {
 
+                val stopSignupState = remember {
+                    mutableStateOf(false)
+                }
+                val dialogOpenState = remember {
+                    mutableStateOf(false)
+                }
+                if(stopSignupState.value) {
+                    findNavController().navigateUp()
+                }
+                if(dialogOpenState.value){
+                    StopWarningDialog(dialogOpenState = dialogOpenState,
+                        stopSignupState = stopSignupState,
+                        textString = stringResource(id = R.string.stop_create_crew_warning))
+                }
+
                 val sportSelectedState = remember {
                     mutableStateOf(-1)
                 }
@@ -67,7 +83,11 @@ class CreateCrewSportFragment : Fragment() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
-                        findNavController().navigateUp()
+                        if(viewModel.userDistrictId.value != null){
+                            dialogOpenState.value = true
+                        }else {
+                            findNavController().navigateUp()
+                        }
                     }
 
                     Divider(

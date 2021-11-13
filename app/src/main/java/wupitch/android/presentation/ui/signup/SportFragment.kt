@@ -43,7 +43,7 @@ import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.ToggleBtn
-import wupitch.android.presentation.ui.signup.components.StopSignupDialog
+import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class SportFragment
     : Fragment() {
@@ -70,8 +70,9 @@ class SportFragment
                         findNavController().navigate(R.id.action_sportFragment_to_onboardingFragment)
                     }
                     if(dialogOpenState.value){
-                        StopSignupDialog(dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState)
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.warning_stop_signup))
                     }
 
                     val scrollState = rememberScrollState()

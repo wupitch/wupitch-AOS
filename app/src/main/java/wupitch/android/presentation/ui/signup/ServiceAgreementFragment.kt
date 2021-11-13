@@ -31,7 +31,7 @@ import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.signup.components.AllToggleIcon
-import wupitch.android.presentation.ui.signup.components.StopSignupDialog
+import wupitch.android.presentation.ui.components.StopWarningDialog
 import wupitch.android.presentation.ui.signup.components.ToggleIcon
 
 @AndroidEntryPoint
@@ -58,8 +58,9 @@ class ServiceAgreementFragment : Fragment() {
                         findNavController().navigateUp()
                     }
                     if(dialogOpenState.value){
-                        StopSignupDialog(dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState)
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.warning_stop_signup))
                     }
                     BackHandler {
                         if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true

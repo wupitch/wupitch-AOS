@@ -46,6 +46,24 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                     val noFeeState = remember {
                         mutableStateOf(false)
                     }
+
+                    if(noFeeState.value) feeState.value = ""
+                    if(feeState.value.isNotEmpty()) noFeeState.value = false
+
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_mainFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                    }
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
@@ -59,7 +77,7 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { },
+                            onRightIconClick = { dialogOpenState.value = true},
                             textString = R.string.create_crew
                         )
 

@@ -65,6 +65,21 @@ class CreateCrewInfoFragment : Fragment() {
                         mutableStateOf(-1)
                     }
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createCrewInfoFragment_to_mainFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                    }
+
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
@@ -78,7 +93,7 @@ class CreateCrewInfoFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { },
+                            onRightIconClick = { dialogOpenState.value = true },
                             textString = R.string.create_crew
                         )
 

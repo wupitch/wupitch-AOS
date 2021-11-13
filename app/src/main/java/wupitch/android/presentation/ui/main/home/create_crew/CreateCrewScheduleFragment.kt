@@ -12,6 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -30,6 +32,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.FullToolBar
 import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class CreateCrewScheduleFragment : Fragment() {
 
@@ -44,6 +47,21 @@ class CreateCrewScheduleFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createCrewScheduleFragment_to_mainFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                    }
+
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
@@ -57,7 +75,7 @@ class CreateCrewScheduleFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { },
+                            onRightIconClick = { dialogOpenState.value = true },
                             textString = R.string.create_crew
                         )
 

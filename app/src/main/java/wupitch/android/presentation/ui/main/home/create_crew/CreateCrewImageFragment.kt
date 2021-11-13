@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -23,6 +26,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.FullToolBar
 import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class CreateCrewImageFragment : Fragment() {
 
@@ -37,6 +41,22 @@ class CreateCrewImageFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
 
+                    val stopSignupState = remember {
+                        mutableStateOf(false)
+                    }
+                    val dialogOpenState = remember {
+                        mutableStateOf(false)
+                    }
+                    if(stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createCrewImageFragment_to_mainFragment)
+                    }
+                    if(dialogOpenState.value){
+                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                            stopSignupState = stopSignupState,
+                            textString = stringResource(id = R.string.stop_create_crew_warning)
+                        )
+                    }
+
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
@@ -50,7 +70,7 @@ class CreateCrewImageFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { },
+                            onRightIconClick = { dialogOpenState.value = true },
                             textString = R.string.create_crew
                         )
 
