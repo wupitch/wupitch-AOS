@@ -36,10 +36,7 @@ import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.NonRepetitionLayout
-import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.TitleToolbar
-import wupitch.android.presentation.ui.components.ToggleBtn
+import wupitch.android.presentation.ui.components.*
 
 class FilterFragment : Fragment() {
 
@@ -84,6 +81,16 @@ class FilterFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+
+                    val eventState = remember {
+                        mutableStateOf<MutableList<Int>>(mutableListOf())
+                    }
+                    val dayState = remember {
+                        mutableStateOf<MutableList<Int>>(mutableListOf())
+                    }
+                    val ageGroupState = remember {
+                        mutableStateOf<MutableList<Int>>(mutableListOf())
+                    }
                     ConstraintLayout(
                         Modifier
                             .fillMaxSize()
@@ -122,31 +129,28 @@ class FilterFragment : Fragment() {
                                     bottom.linkTo(buttons.top)
                                     height = Dimension.fillToConstraints
                                 }
-                                .padding(horizontal = 20.dp)
-                                .verticalScroll(scrollState),
+                                .verticalScroll(scrollState)
+                                .padding(horizontal = 20.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(24.dp))
-                            RepetitionFilter(
+                            RepetitionLayout(
                                 text = R.string.event,
                                 filterItemList = sportsList,
                                 modifier = Modifier
                                     .width(96.dp)
-                                    .height(48.dp)
-                            ) {
-                                Log.d("{FilterFragment.onCreateView}", "종목 : $it")
-                            }
-
+                                    .height(48.dp),
+                                checkedListState = eventState
+                            )
                             Spacer(modifier = Modifier.height(32.dp))
-                            RepetitionFilter(
+                            RepetitionLayout(
                                 text = R.string.day,
                                 filterItemList = dateList,
                                 modifier = Modifier
                                     .width(48.dp)
-                                    .height(48.dp)
-                            ) {
-                                Log.d("{FilterFragment.onCreateView}", "요일 : $it")
-                            }
+                                    .height(48.dp),
+                                checkedListState = dayState
+                            )
                             Spacer(modifier = Modifier.height(32.dp))
                             TimeFilter()
 
@@ -164,15 +168,14 @@ class FilterFragment : Fragment() {
                             }
 
                             Spacer(modifier = Modifier.height(32.dp))
-                            RepetitionFilter(
+                            RepetitionLayout(
                                 text = R.string.age_group,
                                 filterItemList = ageGroupList,
                                 modifier = Modifier
                                     .width(96.dp)
-                                    .height(48.dp)
-                            ) {
-                                Log.d("{FilterFragment.onCreateView}", "연령 : $it")
-                            }
+                                    .height(48.dp),
+                                checkedListState = ageGroupState
+                            )
 
                             Spacer(modifier = Modifier.height(60.dp))
 
@@ -294,44 +297,7 @@ class FilterFragment : Fragment() {
 
 
 
-    @Composable
-    private fun RepetitionFilter(
-        text: Int,
-        filterItemList: List<FilterItem>,
-        modifier: Modifier,
-        onClick: (index: Int) -> Unit
-    ) {
 
-        Column(Modifier.fillMaxWidth()) {
-            Text(
-                modifier = Modifier.align(Alignment.Start),
-                text = stringResource(id = text),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            FlowRow(
-                modifier = Modifier
-                    .padding(top = 12.dp),
-                mainAxisSpacing = 16.dp,
-                crossAxisSpacing = 16.dp
-            ) {
-                filterItemList.forEachIndexed { index, item ->
-                    ToggleBtn(
-                        toggleState = item.state,
-                        modifier = modifier,
-                        textString = item.name
-                    ) {
-                        if (it) {
-                            onClick(index)
-                        }
-                    }
-                }
-            }
-
-        }
-
-    }
 
 
     @Composable

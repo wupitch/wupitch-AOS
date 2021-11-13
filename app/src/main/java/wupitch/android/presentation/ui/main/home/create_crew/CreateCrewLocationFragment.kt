@@ -169,7 +169,10 @@ class CreateCrewLocationFragment : Fragment() {
                                 )
 
                                 Spacer(modifier = Modifier.height(12.dp))
-                                LocationTextField(textState)
+                                SimpleTextField(
+                                    textState = textState,
+                                    hintText = stringResource(id = R.string.input_location)
+                                )
 
 
 
@@ -217,62 +220,7 @@ class CreateCrewLocationFragment : Fragment() {
         }
     }
 
-    @ExperimentalPagerApi
-    @Composable
-    private fun LocationTextField(
-        textState: MutableState<String>
-    ) {
-        BasicTextField(
-            value = textState.value,
-            textStyle = TextStyle(
-                color = Color.Black,
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal
-            ),
-            maxLines = 1,
-            onValueChange = { value ->
-                textState.value = value
-            },
-            cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
-            decorationBox = { innerTextField ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(colorResource(id = R.color.gray04))
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 11.dp, bottom = 9.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
 
-                    ConstraintLayout(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Transparent)
-                    ) {
-                        val (hint) = createRefs()
-
-                        innerTextField()
-                        if (textState.value.isEmpty()) {
-                            Text(
-                                modifier = Modifier.constrainAs(hint) {
-                                    start.linkTo(parent.start)
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
-                                },
-                                text = stringResource(id = R.string.input_location),
-                                color = colorResource(id = R.color.gray03),
-                                fontSize = 16.sp,
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
-                    }
-                }
-            }
-        )
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
