@@ -187,5 +187,12 @@
     <string name="people_count_measure">명</string>
     <string name="repetition_possible">(중복 선택 가능)</string>
     <string name="extra_info">추가정보(선택)</string>
-
+    <string name="crew_schedule">크루의 정기일정을\n알려주세요.</string>
+    <string name="every_other_week">격주</string>
+    <string name="crew_fee">회비는 얼마인가요?</string>
+    <string name="fee_measure">원</string>
+    <string name="no_fee">회비 없어요!</string>
+    <string name="crew_visitor_fee">일일 손님비는 얼마인가요?</string>
+    <string name="no_visitor">손님은 받지 않아요.</string>
+    <string name="upload">게시하기</string>
 </resources>

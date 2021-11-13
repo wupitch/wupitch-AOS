@@ -118,8 +118,8 @@
         <action
             android:id="@+id/action_ageFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment"
-            app:popUpTo="@+id/back_to_onboarding_from_age"
-            app:popUpToInclusive="true"/>
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
@@ -168,5 +168,43 @@
     <fragment
         android:id="@+id/createCrewInfoFragment"
         android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewInfoFragment"
-        android:label="CreateCrewInfoFragment" />
+        android:label="CreateCrewInfoFragment" >
+        <action
+            android:id="@+id/action_createCrewInfoFragment_to_createCrewScheduleFragment"
+            app:destination="@id/createCrewScheduleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewScheduleFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewScheduleFragment"
+        android:label="CreateCrewScheduleFragment" >
+        <action
+            android:id="@+id/action_createCrewScheduleFragment_to_createCrewImageFragment"
+            app:destination="@id/createCrewImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewImageFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewImageFragment"
+        android:label="CreateCrewImageFragment" >
+        <action
+            android:id="@+id/action_createCrewImageFragment_to_createCrewFeeFragment"
+            app:destination="@id/createCrewFeeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewFeeFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewFeeFragment"
+        android:label="CreateCrewFeeFragment" >
+        <action
+            android:id="@+id/action_createCrewFeeFragment_to_createCrewVisitorFeeFragment"
+            app:destination="@id/createCrewVisitorFeeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createCrewVisitorFeeFragment"
+        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewVisitorFeeFragment"
+        android:label="CreateCrewVisitorFeeFragment" >
+        <action
+            android:id="@+id/action_createCrewVisitorFeeFragment_to_crewDetailFragment"
+            app:destination="@id/crewDetailFragment"
+            app:popUpTo="@id/createCrewSport"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

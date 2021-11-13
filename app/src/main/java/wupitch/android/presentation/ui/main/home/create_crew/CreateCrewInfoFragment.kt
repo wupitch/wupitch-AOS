@@ -159,7 +159,10 @@ class CreateCrewInfoFragment : Fragment() {
                         ) {
                             if(crewNameState.value != "" && crewSizeState.value != ""
                                 && crewAgeGroupState.value != emptyList<Int>().toMutableList()){
-                                    Log.d("{CreateCrewInfoFragment.onCreateView}", crewAgeGroupState.value.toString())
+
+                                findNavController().navigate(R.id.action_createCrewInfoFragment_to_createCrewScheduleFragment)
+
+                                Log.d("{CreateCrewInfoFragment.onCreateView}", crewAgeGroupState.value.toString())
                                 Log.d("{CreateCrewInfoFragment.onCreateView}", "next btn clicked!")
                             }
                             Log.d("{CreateCrewInfoFragment.onCreateView}", crewAgeGroupState.value.toString())
