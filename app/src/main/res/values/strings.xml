@@ -196,4 +196,14 @@
     <string name="no_visitor">손님은 받지 않아요.</string>
     <string name="upload">게시하기</string>
     <string name="stop_create_crew_warning">작성한 모든 기입정보가 삭제됩니다.\n크루만들기를 그만두시겠습니까?</string>
+    <string name="representation_image">대표 이미지 추가</string>
+    <string name="input_title">제목을 입력해주세요.</string>
+    <string name="input_introduce_crew">어떤 크루인지 소개해주세요.</string>
+    <string name="create_supply">준비물(선택)</string>
+    <string name="input_supplies">활동에 곡 필요한 준비물을 입력해주세요.</string>
+    <string name="create_inquiry">문의처</string>
+    <string name="inquiry_hint">문의할 수 있는 연락수단을 입력해주세요. (예: 카카오톡 아이디, 인스타그램 아이디, 휴대폰번호 등)</string>
+    <string name="from_gallery">갤러리에서 고르기</string>
+    <string name="use_default_image">기본 이미지 사용</string>
+
 </resources>

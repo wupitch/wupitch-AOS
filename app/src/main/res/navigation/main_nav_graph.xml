@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
             app:destination="@id/serviceAgreementFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_createCrewImageFragment"
+            app:destination="@id/createCrewImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"

@@ -38,6 +38,11 @@ class CreateCrewViewModel @Inject constructor(
     private var _userDongName = MutableLiveData<String>()
     val userDongName : LiveData<String> = _userDongName
 
+    private var _isUsingDefaultImage = mutableStateOf<Boolean>(false)
+    val isUsingDefaultImage : State<Boolean> = _isUsingDefaultImage
+
+    var imageChosenState = mutableStateOf(false)
+
 
     fun getSports() = viewModelScope.launch {
         _sportsList.value = SportState(isLoading = true)
@@ -78,5 +83,13 @@ class CreateCrewViewModel @Inject constructor(
         _userDongId.value = dongId
         _userDongName.value = dongName
         Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $dongId name : $dongName")
+    }
+
+    fun setImageSource(isUsingDefaultImage : Boolean) {
+        _isUsingDefaultImage.value = isUsingDefaultImage
+    }
+
+    fun setImageChosenState(attemptedToChoose : Boolean) {
+        imageChosenState.value = attemptedToChoose
     }
 }
