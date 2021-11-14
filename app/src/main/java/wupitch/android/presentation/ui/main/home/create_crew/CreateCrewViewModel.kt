@@ -51,7 +51,7 @@ class CreateCrewViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let { sportRes ->
                 if (sportRes.isSuccess) _sportsList.value =
-                    SportState(data = sportRes.result.map { it.toFilterItem() })
+                    SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }.map { it.toFilterItem() })
                 else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
             }
         } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")

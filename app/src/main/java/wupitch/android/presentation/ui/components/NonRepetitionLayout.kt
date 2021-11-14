@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -40,6 +41,8 @@ fun NonRepetitionLayout(
     onClick: (index: Int) -> Unit
 ) {
     var checkedRadioButton: MutableState<Boolean>? = null
+
+
 
     Column(Modifier.fillMaxWidth()) {
         if(text != null){

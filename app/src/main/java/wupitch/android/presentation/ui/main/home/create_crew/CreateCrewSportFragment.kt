@@ -5,18 +5,28 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,10 +36,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.components.NonRepetitionLayout
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.StopWarningDialog
 import wupitch.android.presentation.ui.components.TitleToolbar
@@ -38,7 +49,8 @@ import wupitch.android.presentation.ui.components.TitleToolbar
 class CreateCrewSportFragment : Fragment() {
 
 
-    private val viewModel : CreateCrewViewModel by viewModels()
+    private val viewModel: CreateCrewViewModel by viewModels()
+    private var checkedRadioButton: MutableState<Boolean>? = null
 
 
     override fun onCreateView(
@@ -57,17 +69,24 @@ class CreateCrewSportFragment : Fragment() {
                 val dialogOpenState = remember {
                     mutableStateOf(false)
                 }
-                if(stopSignupState.value) {
+                if (stopSignupState.value) {
                     findNavController().navigateUp()
                 }
-                if(dialogOpenState.value){
-                    StopWarningDialog(dialogOpenState = dialogOpenState,
+                if (dialogOpenState.value) {
+                    StopWarningDialog(
+                        dialogOpenState = dialogOpenState,
                         stopSignupState = stopSignupState,
-                        textString = stringResource(id = R.string.stop_create_crew_warning))
+                        textString = stringResource(id = R.string.stop_create_crew_warning)
+                    )
                 }
 
                 val sportSelectedState = remember {
                     mutableStateOf(-1)
+                }
+
+                BackHandler {
+                    if (viewModel.userDistrictId.value != null) dialogOpenState.value = true
+                    else findNavController().navigateUp()
                 }
 
                 val sportsList = viewModel.sportsList.value
@@ -75,17 +94,18 @@ class CreateCrewSportFragment : Fragment() {
                 ConstraintLayout(
                     Modifier
                         .background(Color.White)
-                        .fillMaxSize()) {
-                    val (toolbar, divider, content, nextBtn, progressBar) =  createRefs()
+                        .fillMaxSize()
+                ) {
+                    val (toolbar, divider, content, nextBtn, progressBar) = createRefs()
 
                     TitleToolbar(modifier = Modifier.constrainAs(toolbar) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
-                        if(viewModel.userDistrictId.value != null){
+                        if (viewModel.userDistrictId.value != null) {
                             dialogOpenState.value = true
-                        }else {
+                        } else {
                             findNavController().navigateUp()
                         }
                     }
@@ -101,20 +121,31 @@ class CreateCrewSportFragment : Fragment() {
                             .width(1.dp)
                             .background(colorResource(id = R.color.gray01)))
 
-                    if(sportsList.isLoading){
+                    if (sportsList.isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.constrainAs(progressBar){
+                            modifier = Modifier.constrainAs(progressBar) {
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                                 top.linkTo(toolbar.bottom)
                                 bottom.linkTo(nextBtn.top)
                             },
-                            color = colorResource(id = R.color.main_orange))
+                            color = colorResource(id = R.color.main_orange)
+                        )
                     }
 
-                    if(sportsList.data.isNotEmpty()){
-                        Log.d("{CreateCrewSportFragment.onCreateView}", sportsList.data.toString())
-                        Column(Modifier.constrainAs(content){
+                    if (sportsList.data.isNotEmpty()) {
+                        //아래가 여러번 불림. 왜???  sportsList.data 가 변하는 것도 아닌데...
+                        // 아마도 sportsList 에 state 가 있고, 그 state 가
+                        //클릭에 따라 변하기 때문에 여러번 invoke 되는 것이 아닐까 싶은데...
+
+                        //그런데 다른 파일에 있을 때와 위와 같은데, 한 파일에 있을 때는 여러번 불리지 않는다..
+                        //state 가 바뀌는 건 같은데... 도대체 무슨 일일까.,,???
+                        Log.d(
+                            "{CreateCrewSportFragment.onCreateView}",
+                            sportsList.data.map { it.state }.toString()
+                        )
+
+                        Column(Modifier.constrainAs(content) {
                             top.linkTo(divider.bottom, margin = 24.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }) {
@@ -125,16 +156,18 @@ class CreateCrewSportFragment : Fragment() {
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
                             )
-//                            Spacer(modifier = Modifier.height(32.dp))
                             NonRepetitionLayout(
                                 filterItemList = sportsList.data,
                                 flexBoxModifier = Modifier.padding(top = 32.dp),
                                 radioBtnModifier = Modifier
                                     .width(96.dp)
                                     .height(48.dp),
-                                selectedState = sportSelectedState
-                            ){
+                            ) {
                                 Log.d("{CreateCrewSport.onCreateView}", "스포츠 : $it")
+                                //한 파일안 에 있고 아래 state 코드가 없으면 이 if문 이 여러번 불리지 않는다.
+                                //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
+                                //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
+                                sportSelectedState.value = it
                             }
                         }
                     }
@@ -161,12 +194,95 @@ class CreateCrewSportFragment : Fragment() {
                             findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)
                         }
                     }
-
-
                 }
-
-
             }
+        }
+    }
+
+    @Composable
+    fun NonRepetitionLayout(
+        text: Int? = null,
+        filterItemList: List<FilterItem>,
+        flexBoxModifier: Modifier,
+        radioBtnModifier: Modifier,
+        onClick: (index: Int) -> Unit
+    ) {
+
+        Column(Modifier.fillMaxWidth()) {
+            if (text != null) {
+                Text(
+                    modifier = Modifier.align(Alignment.Start),
+                    text = stringResource(id = text),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
+
+            FlowRow(
+                modifier = flexBoxModifier,
+                mainAxisSpacing = 16.dp,
+                crossAxisSpacing = 16.dp
+            ) {
+                filterItemList.forEachIndexed { index, item ->
+                    RadioButton(
+                        modifier = radioBtnModifier,
+                        checkedState = item.state,
+                        text = item.name,
+                        index = index,
+                    ) {
+                        onClick(it)
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun RadioButton(
+        modifier: Modifier,
+        checkedState: MutableState<Boolean>,
+        text: String,
+        index: Int,
+        onClick: (index: Int) -> Unit
+    ) {
+        Box(
+            modifier = modifier
+                .selectable(
+                    selected = checkedState.value,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = true,
+                    role = Role.RadioButton,
+                    onClick = {
+                        checkedRadioButton?.value = false
+                        checkedState.value = true
+                        checkedRadioButton = checkedState
+                        onClick(index)
+                    }
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (checkedState.value) colorResource(id = R.color.orange02) else
+                        colorResource(id = R.color.gray01)
+                )
+                .border(
+                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                    else Color.Transparent,
+                    width = if (checkedState.value) 1.dp else 0.dp,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            )
         }
     }
 
