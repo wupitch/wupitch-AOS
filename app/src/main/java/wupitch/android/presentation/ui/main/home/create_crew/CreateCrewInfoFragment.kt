@@ -113,6 +113,7 @@ class CreateCrewInfoFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
+                                lineHeight = 28.sp
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))

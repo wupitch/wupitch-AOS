@@ -33,12 +33,14 @@ fun CrewCard(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Spacer(modifier = Modifier.height(8.dp).fillMaxWidth())
+        Spacer(modifier = Modifier
+            .height(8.dp)
+            .fillMaxWidth())
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(128.dp)
+                .height(126.dp)
                 .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(color = colorResource(id = R.color.gray04))
@@ -70,7 +72,7 @@ fun CrewCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 12.dp, start = 12.dp, end = 10.dp, bottom = 14.dp)
+                    .padding(top = 12.dp, start = 12.dp, end = 10.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
                     val (keyword, location, pin) = createRefs()
@@ -93,16 +95,16 @@ fun CrewCard(
                             .constrainAs(location) {
                                 top.linkTo(pin.top)
                                 bottom.linkTo(pin.bottom)
-                                start.linkTo(keyword.end)
-                            }
-                            .padding(start = 8.dp),
+                                start.linkTo(keyword.end, margin = 8.dp)
+                            },
                         text = crewCard.location,
                         color = Color.Black,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        lineHeight = 22.sp
                     )
                     if (crewCard.isPinned) {
                         Image(
@@ -117,25 +119,28 @@ fun CrewCard(
                     }
 
                 }
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
                     text = crewCard.name,
                     color = Color.Black,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 22.sp
                 )
 
-                Row(modifier = Modifier.padding(top = 4.dp)) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row {
                     if (crewCard.isBiweekly) {
                         Text(
                             text = stringResource(id = R.string.biweekly),
                             color = colorResource(id = R.color.gray05),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            lineHeight = 22.sp
                         )
                     }
 
@@ -144,7 +149,8 @@ fun CrewCard(
                         color = colorResource(id = R.color.gray05),
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        lineHeight = 22.sp
                     )
 
                     if (crewCard.isMoreThanOnceAWeek) {
@@ -153,27 +159,33 @@ fun CrewCard(
                             color = colorResource(id = R.color.gray05),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            lineHeight = 22.sp
                         )
                     }
                 }
 
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    modifier = Modifier.padding(top = 2.dp),
                     text = crewCard.detailAddress,
                     color = colorResource(id = R.color.gray05),
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 22.sp
                 )
+                Spacer(modifier = Modifier.height(14.dp))
+
 
 
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp).fillMaxWidth())
+        Spacer(modifier = Modifier
+            .height(10.dp)
+            .fillMaxWidth())
     }
 
 }

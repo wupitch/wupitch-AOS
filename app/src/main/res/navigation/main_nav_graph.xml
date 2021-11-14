@@ -46,8 +46,8 @@
             android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
             app:destination="@id/serviceAgreementFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_createCrewInfoFragment"
-            app:destination="@id/createCrewInfoFragment" />
+            android:id="@+id/action_splashFragment_to_createCrewScheduleFragment"
+            app:destination="@id/createCrewScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"

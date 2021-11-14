@@ -28,7 +28,7 @@ class HomeViewModel @Inject constructor(
                 "축구",
                 "법정동",
                 true,
-                "크루이름",
+                "가나다라마바사아자차...",
                 true,
                 "월요일 23:00 - 24:00",
                 true,

@@ -81,9 +81,7 @@ class CreateCrewSportFragment : Fragment() {
                     )
                 }
 
-                val sportSelectedState = remember {
-                    mutableStateOf(-1)
-                }
+                val sportSelectedState = remember { mutableStateOf(-1) }
 
                 BackHandler {
                     if (viewModel.userDistrictId.value != null) dialogOpenState.value = true
@@ -135,7 +133,15 @@ class CreateCrewSportFragment : Fragment() {
                         )
                     }
 
-                    if (sportsList.data.isNotEmpty()) {
+                    if(sportsList.data.isNotEmpty()) {
+                        val sportRememberList = mutableListOf<FilterItem>()
+
+                            sportsList.data.forEach {
+                                sportRememberList.add(FilterItem(it.name, remember {
+                                    mutableStateOf(false)
+                                }))
+                            }
+
                         //아래가 여러번 불림. 왜???  sportsList.data 가 변하는 것도 아닌데...
                         // 아마도 sportsList 에 state 가 있고, 그 state 가
                         //클릭에 따라 변하기 때문에 여러번 invoke 되는 것이 아닐까 싶은데...
@@ -157,19 +163,20 @@ class CreateCrewSportFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
+                                lineHeight = 28.sp
                             )
                             NonRepetitionLayout(
-                                filterItemList = sportsList.data,
+                                filterItemList = sportRememberList.toList(),
                                 flexBoxModifier = Modifier.padding(top = 32.dp),
                                 radioBtnModifier = Modifier
                                     .width(96.dp)
                                     .height(48.dp),
                             ) {
-                                Log.d("{CreateCrewSport.onCreateView}", "스포츠 : $it")
                                 //한 파일안 에 있고 아래 state 코드가 없으면 이 if문 이 여러번 불리지 않는다.
                                 //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
                                 //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
                                 sportSelectedState.value = it
+                                Log.d("{CreateCrewSport.onCreateView}", "스포츠 : ${sportSelectedState.value} ")
                             }
                         }
                     }
@@ -231,9 +238,8 @@ class CreateCrewSportFragment : Fragment() {
                         modifier = radioBtnModifier,
                         checkedState = item.state,
                         text = item.name,
-                        index = index,
                     ) {
-                        onClick(it)
+                        onClick(index)
                     }
                 }
             }
@@ -245,8 +251,7 @@ class CreateCrewSportFragment : Fragment() {
         modifier: Modifier,
         checkedState: MutableState<Boolean>,
         text: String,
-        index: Int,
-        onClick: (index: Int) -> Unit
+        onClick: () -> Unit
     ) {
         Box(
             modifier = modifier
@@ -260,7 +265,7 @@ class CreateCrewSportFragment : Fragment() {
                         checkedRadioButton?.value = false
                         checkedState.value = true
                         checkedRadioButton = checkedState
-                        onClick(index)
+                        onClick()
                     }
                 )
                 .clip(RoundedCornerShape(8.dp))

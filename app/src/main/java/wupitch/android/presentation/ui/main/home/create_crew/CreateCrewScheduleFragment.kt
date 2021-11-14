@@ -109,6 +109,7 @@ class CreateCrewScheduleFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
+                                lineHeight = 28.sp
                             )
 
                             ScheduleLayout()
