@@ -22,7 +22,6 @@ import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 @ExperimentalPermissionsApi
 @Composable
 fun GallerySelect(
-    imageChosenState: MutableState<Boolean>,
     onImageUri: (Uri) -> Unit = { }
 ) {
     val context = LocalContext.current
@@ -43,7 +42,6 @@ fun GallerySelect(
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         Permission(
-            imageChosenState = imageChosenState,
             permissionNotAvailableContent = {
 
                 //imageChosenState.value = false

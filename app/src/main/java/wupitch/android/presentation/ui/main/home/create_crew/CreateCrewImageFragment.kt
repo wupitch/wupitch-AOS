@@ -142,7 +142,7 @@ class CreateCrewImageFragment : Fragment() {
                             .verticalScroll(scrollState)
                             .padding(horizontal = 20.dp))
                         {
-                            IntroImageLayout()
+                            IntroImageLayout(imageChosenState)
 
                             IntroTextLayout(titleTextState, introTextState)
 
@@ -177,11 +177,15 @@ class CreateCrewImageFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = R.color.gray03,
+                            btnColor = if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" )
+                                R.color.main_orange else R.color.gray03,
                             textString = R.string.five_over_seven,
                             fontSize = 16.sp
                         ) {
-                            findNavController().navigate(R.id.action_createCrewImageFragment_to_createCrewFeeFragment)
+                            if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" ){
+                                //todo save to viewModel.
+                                findNavController().navigate(R.id.action_createCrewImageFragment_to_createCrewFeeFragment)
+                            }
 
                         }
                     }
@@ -255,10 +259,10 @@ class CreateCrewImageFragment : Fragment() {
 
     @Composable
     fun IntroImageLayout(
+        imageChosenState : MutableState<Boolean>
     ) {
 
         val isUsingDefaultImage = viewModel.isUsingDefaultImage.value
-        val imageChosenState = viewModel.imageChosenState
 
         val imageUri = remember {
             mutableStateOf<Uri?>(EMPTY_IMAGE_URI)
@@ -296,30 +300,32 @@ class CreateCrewImageFragment : Fragment() {
                         fontWeight = FontWeight.Normal
                     )
                 }
-            } else {
-
-                if (isUsingDefaultImage) {
-                    //todo sports id 별로 drawable 이미지 업로드.
-                    Toast.makeText(requireContext(), "default image", Toast.LENGTH_SHORT).show()
-
-                } else {
-                    //todo 사진 firebase 로?!
-                    GallerySelect(
-                        imageChosenState = imageChosenState,
-                        onImageUri = { uri ->
-                            imageUri.value = uri
-                            Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())
-                        }
-                    )
-                }
-            }
-
-            if(imageUri.value != EMPTY_IMAGE_URI) {
+            } else if( imageChosenState.value && imageUri.value != EMPTY_IMAGE_URI) {
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     painter = rememberImagePainter(data = imageUri.value),
                     contentDescription = "crew image from gallery"
+                )
+                //todo finish loading dialog.
+            }
+
+            if (isUsingDefaultImage == true) {
+                //todo sports id 별로 drawable 이미지 업로드.
+                Toast.makeText(requireContext(), "default image", Toast.LENGTH_SHORT).show()
+
+            } else if (isUsingDefaultImage == false) {
+                //todo 사진 firebase 로?!
+                GallerySelect(
+                    onImageUri = { uri ->
+                        if(uri != EMPTY_IMAGE_URI){
+                            //todo start loading dialog.
+                            imageUri.value = uri
+                            imageChosenState.value = true
+                            viewModel.setImageSource(null)
+                        }
+                        Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())
+                    }
                 )
             }
         }

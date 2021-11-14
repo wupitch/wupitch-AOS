@@ -17,7 +17,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 @ExperimentalPermissionsApi
 @Composable
 fun Permission(
-    imageChosenState: MutableState<Boolean>,
     permission: String = android.Manifest.permission.ACCESS_MEDIA_LOCATION,
     permissionNotAvailableContent: @Composable () -> Unit = { },
     content: @Composable () -> Unit = { }
@@ -33,7 +32,6 @@ fun Permission(
         },
         permissionNotAvailableContent = { //처음에 거부 버튼 눌렀을 때. & 거부된 상태일 때.
             Log.d("{Permission}", "not available")
-            imageChosenState.value = false
             SideEffect {
                 permissionState.launchPermissionRequest() //거부할 때든, 되어있든 하면 다시 리퀘스트 하지 않는다. 세팅으로 가게 해야 하는 듯.
             }

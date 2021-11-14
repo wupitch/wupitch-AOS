@@ -62,7 +62,6 @@ class UploadImageBottomSheetFragment(
                             .clickable {
                                 if(viewModel is CreateCrewViewModel) {
                                     viewModel.setImageSource(false)
-                                    viewModel.setImageChosenState(true)
                                 }
                                 dismiss()
                             }){
@@ -80,7 +79,6 @@ class UploadImageBottomSheetFragment(
                             .clickable {
                                 if(viewModel is CreateCrewViewModel) {
                                     viewModel.setImageSource(true)
-                                    viewModel.setImageChosenState(true)
                                 }
                                 dismiss()
 
