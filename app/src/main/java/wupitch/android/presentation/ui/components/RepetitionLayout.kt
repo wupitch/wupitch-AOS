@@ -29,7 +29,7 @@ fun RepetitionLayout(
 
     Log.d("{RepetitionLayout}", "repetition layout")
     Column(Modifier.fillMaxWidth()) {
-        if(text != null){
+        if(text != null) {
             Text(
                 modifier = Modifier.align(Alignment.Start),
                 text = stringResource(id = text),
@@ -47,22 +47,27 @@ fun RepetitionLayout(
         ) {
             filterItemList.forEachIndexed { index, item ->
                 ToggleBtn(
+                    index = index,
                     toggleState = item.state,
                     modifier = modifier,
-                    textString = item.name
+                    textString = item.name,
+                    checkedListState = checkedListState
                 ) {
 
-                    if (it) {
-                        if(!checkedListState.contains(index)) {
-                            checkedListState.add(index)
-                        }
-                    }else {
-                        if(checkedListState.contains(index)) {
-                            checkedListState.remove(index)
-                        }
-                    }
-                    if(it) checkedListState.add(index)
-                    Log.d("{RepetitionLayout}", checkedListState.toString())
+//                    if (it) {
+//                        if(!checkedListState.contains(index)) {
+//                            checkedListState.add(index)
+//                        }
+//                    }else {
+//                        if(checkedListState.contains(index)) {
+//                            checkedListState.remove(index)
+//                        }
+//                    }
+//                    if(it) checkedListState.add(index)
+//                    checkedListState.forEach{ item ->
+//                        Log.d("RepetitionLayout", item.toString())
+//
+//                    }
                 }
             }
         }

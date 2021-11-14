@@ -1,5 +1,7 @@
 package wupitch.android.presentation.ui.components
 
+import android.util.Log
+import android.view.WindowInsets
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,9 +10,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,9 +28,11 @@ import wupitch.android.presentation.theme.Roboto
 
 @Composable
 fun ToggleBtn(
+    index : Int = 0,
     toggleState: MutableState<Boolean>,
     modifier: Modifier,
     textString: String,
+    checkedListState : SnapshotStateList<Int> = mutableStateListOf<Int>(),
     onCheckedChange: (Boolean) -> Unit
 ) {
 
@@ -54,8 +57,22 @@ fun ToggleBtn(
                 enabled = true,
                 role = Role.Checkbox,
                 onValueChange = {
+                    
                     toggleState.value = it
-                    onCheckedChange(it)
+//                    onCheckedChange(it)
+                    if (it) {
+                        if(!checkedListState.contains(index)) {
+                            checkedListState.add(index)
+                        }
+                    }else {
+                        if(checkedListState.contains(index)) {
+                            checkedListState.remove(index)
+                        }
+                    }
+                    checkedListState.forEach{ item ->
+                        Log.d("CreateCrewInfoFragment", item.toString())
+                    }
+                    Log.d("CreateCrewInfoFragment", toggleState.value.toString())
                 }
             ),
         contentAlignment = Alignment.Center
