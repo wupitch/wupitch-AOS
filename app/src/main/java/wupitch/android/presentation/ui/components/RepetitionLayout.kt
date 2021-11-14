@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,10 +23,11 @@ import wupitch.android.presentation.theme.Roboto
 fun RepetitionLayout(
     text: Int? = null,
     filterItemList: List<FilterItem>,
-    checkedListState : MutableState<MutableList<Int>>,
+    checkedListState : SnapshotStateList<Int>,
     modifier: Modifier,
 ) {
 
+    Log.d("{RepetitionLayout}", "repetition layout")
     Column(Modifier.fillMaxWidth()) {
         if(text != null){
             Text(
@@ -50,15 +53,16 @@ fun RepetitionLayout(
                 ) {
 
                     if (it) {
-                        if(!checkedListState.value.contains(index)) {
-                            checkedListState.value.add(index)
+                        if(!checkedListState.contains(index)) {
+                            checkedListState.add(index)
                         }
                     }else {
-                        if(checkedListState.value.contains(index)) {
-                            checkedListState.value.remove(index)
+                        if(checkedListState.contains(index)) {
+                            checkedListState.remove(index)
                         }
                     }
-                    Log.d("{RepetitionLayout}", checkedListState.value.toString())
+                    if(it) checkedListState.add(index)
+                    Log.d("{RepetitionLayout}", checkedListState.toString())
                 }
             }
         }

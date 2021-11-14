@@ -134,50 +134,50 @@ class FilterFragment : Fragment() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(24.dp))
-                            RepetitionLayout(
-                                text = R.string.event,
-                                filterItemList = sportsList,
-                                modifier = Modifier
-                                    .width(96.dp)
-                                    .height(48.dp),
-                                checkedListState = eventState
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            RepetitionLayout(
-                                text = R.string.day,
-                                filterItemList = dateList,
-                                modifier = Modifier
-                                    .width(48.dp)
-                                    .height(48.dp),
-                                checkedListState = dayState
-                            )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            TimeFilter()
-
-                            Spacer(modifier = Modifier.height(32.dp))
-                            NonRepetitionLayout(
-                                text = R.string.crew_member_num,
-                                filterItemList = crewSizeList,
-                                radioBtnModifier = Modifier
-                                    .width(96.dp)
-                                    .height(48.dp),
-                                flexBoxModifier = Modifier.padding(top = 12.dp),
-                                selectedState = crewNumSelectedState
-                            ){
-                                Log.d("{FilterFragment.onCreateView}", "크루원 수 : $it")
-                            }
-
-                            Spacer(modifier = Modifier.height(32.dp))
-                            RepetitionLayout(
-                                text = R.string.age_group,
-                                filterItemList = ageGroupList,
-                                modifier = Modifier
-                                    .width(96.dp)
-                                    .height(48.dp),
-                                checkedListState = ageGroupState
-                            )
-
-                            Spacer(modifier = Modifier.height(60.dp))
+//                            RepetitionLayout(
+//                                text = R.string.event,
+//                                filterItemList = sportsList,
+//                                modifier = Modifier
+//                                    .width(96.dp)
+//                                    .height(48.dp),
+//                                checkedListState = eventState
+//                            )
+//                            Spacer(modifier = Modifier.height(32.dp))
+//                            RepetitionLayout(
+//                                text = R.string.day,
+//                                filterItemList = dateList,
+//                                modifier = Modifier
+//                                    .width(48.dp)
+//                                    .height(48.dp),
+//                                checkedListState = dayState
+//                            )
+//                            Spacer(modifier = Modifier.height(32.dp))
+//                            TimeFilter()
+//
+//                            Spacer(modifier = Modifier.height(32.dp))
+//                            NonRepetitionLayout(
+//                                text = R.string.crew_member_num,
+//                                filterItemList = crewSizeList,
+//                                radioBtnModifier = Modifier
+//                                    .width(96.dp)
+//                                    .height(48.dp),
+//                                flexBoxModifier = Modifier.padding(top = 12.dp),
+//                                selectedState = crewNumSelectedState
+//                            ){
+//                                Log.d("{FilterFragment.onCreateView}", "크루원 수 : $it")
+//                            }
+//
+//                            Spacer(modifier = Modifier.height(32.dp))
+//                            RepetitionLayout(
+//                                text = R.string.age_group,
+//                                filterItemList = ageGroupList,
+//                                modifier = Modifier
+//                                    .width(96.dp)
+//                                    .height(48.dp),
+//                                checkedListState = ageGroupState
+//                            )
+//
+//                            Spacer(modifier = Modifier.height(60.dp))
 
 
 

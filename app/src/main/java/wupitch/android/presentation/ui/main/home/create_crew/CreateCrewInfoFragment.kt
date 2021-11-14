@@ -5,17 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -58,8 +57,11 @@ class CreateCrewInfoFragment : Fragment() {
                     val crewSizeState = remember {
                         mutableStateOf("")
                     }
-                    val crewAgeGroupState = rememberSaveable {
-                        mutableStateOf<MutableList<Int>>(mutableListOf())
+//                    val crewAgeGroupState = rememberSaveable {
+//                        mutableStateOf<MutableList<Int>>(mutableListOf())
+//                    }
+                    val crewAgeGroupState = remember {
+                        mutableStateListOf<Int>()
                     }
                     val crewExtraInfoState = remember {
                         mutableStateOf(-1)
@@ -166,25 +168,25 @@ class CreateCrewInfoFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             //todo update 가 안 됌.
-                            btnColor = if (crewAgeGroupState.value.isNotEmpty() && crewNameState.value != "" && crewSizeState.value != "") R.color.main_orange else R.color.gray03,
+                            btnColor = if (crewAgeGroupState.isNotEmpty() && crewNameState.value != "" && crewSizeState.value != "") R.color.main_orange else R.color.gray03,
                             textString = R.string.three_over_seven,
                             fontSize = 16.sp
                         ) {
                             if (crewNameState.value != "" && crewSizeState.value != ""
-                                && crewAgeGroupState.value != emptyList<Int>().toMutableList()
+                                && crewAgeGroupState != emptyList<Int>().toMutableList()
                             ) {
 
                                 findNavController().navigate(R.id.action_createCrewInfoFragment_to_createCrewScheduleFragment)
 
                                 Log.d(
                                     "{CreateCrewInfoFragment.onCreateView}",
-                                    crewAgeGroupState.value.toString()
+                                    crewAgeGroupState.toString()
                                 )
                                 Log.d("{CreateCrewInfoFragment.onCreateView}", "next btn clicked!")
                             }
                             Log.d(
                                 "{CreateCrewInfoFragment.onCreateView}",
-                                crewAgeGroupState.value.toString()
+                                crewAgeGroupState.toString()
                             )
 
                             //todo extra info state value 와 함께 viewModel 로!!!
@@ -236,8 +238,16 @@ class CreateCrewInfoFragment : Fragment() {
 
     @Composable
     private fun CrewAgeGroup(
-        crewAgeGroupState: MutableState<MutableList<Int>>
+        crewAgeGroupState: SnapshotStateList<Int>
     ) {
+
+        if(crewAgeGroupState.isNotEmpty() ){
+            Log.d("{CreateCrewInfoFragment.CrewAgeGroup}", crewAgeGroupState.toString())
+                    Toast.makeText(requireContext(), "not empty!", Toast.LENGTH_SHORT).show()
+        }else{
+            Log.d("{CreateCrewInfoFragment.CrewAgeGroup}", crewAgeGroupState.toString())
+
+        }
 
         val ageGroupList = listOf<FilterItem>(
             FilterItem(getString(R.string.teenager)),

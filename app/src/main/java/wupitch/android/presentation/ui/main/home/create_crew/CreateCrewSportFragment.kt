@@ -49,6 +49,7 @@ import wupitch.android.presentation.ui.components.TitleToolbar
 class CreateCrewSportFragment : Fragment() {
 
 
+    //todo change to shared viewmodel!!!
     private val viewModel: CreateCrewViewModel by viewModels()
     private var checkedRadioButton: MutableState<Boolean>? = null
 
@@ -103,6 +104,7 @@ class CreateCrewSportFragment : Fragment() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
+                        Log.d("{CreateCrewSportFragment.onCreateView}", viewModel.userDistrictId.value.toString())
                         if (viewModel.userDistrictId.value != null) {
                             dialogOpenState.value = true
                         } else {
