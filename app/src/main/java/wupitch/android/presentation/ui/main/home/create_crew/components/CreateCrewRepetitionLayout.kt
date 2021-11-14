@@ -3,6 +3,7 @@ package wupitch.android.presentation.ui.main.home.create_crew.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,7 +18,7 @@ import wupitch.android.presentation.ui.components.ToggleBtn
 @Composable
 fun CreateCrewRepetitionLayout(
     filterItemList: List<FilterItem>,
-    onClick: (index: Int) -> Unit
+    extraInfoListState : SnapshotStateList<Int>,
 ) {
 
     Column(Modifier.fillMaxWidth()) {
@@ -38,7 +39,13 @@ fun CreateCrewRepetitionLayout(
                         textString = item.name
                     ) {
                         if (it) {
-                            onClick(index)
+                            if(!extraInfoListState.contains(index)) {
+                                extraInfoListState.add(index)
+                            }
+                        }else {
+                            if(extraInfoListState.contains(index)) {
+                                extraInfoListState.remove(index)
+                            }
                         }
                     }
                 }else {
@@ -50,7 +57,13 @@ fun CreateCrewRepetitionLayout(
                         textString = item.name
                     ) {
                         if (it) {
-                            onClick(index)
+                            if(!extraInfoListState.contains(index)) {
+                                extraInfoListState.add(index)
+                            }
+                        }else {
+                            if(extraInfoListState.contains(index)) {
+                                extraInfoListState.remove(index)
+                            }
                         }
                     }
                 }

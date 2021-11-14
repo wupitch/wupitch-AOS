@@ -28,11 +28,9 @@ import wupitch.android.presentation.theme.Roboto
 
 @Composable
 fun ToggleBtn(
-    index : Int = 0,
     toggleState: MutableState<Boolean>,
     modifier: Modifier,
     textString: String,
-    checkedListState : SnapshotStateList<Int> = mutableStateListOf<Int>(),
     onCheckedChange: (Boolean) -> Unit
 ) {
 
@@ -57,22 +55,8 @@ fun ToggleBtn(
                 enabled = true,
                 role = Role.Checkbox,
                 onValueChange = {
-                    
                     toggleState.value = it
-//                    onCheckedChange(it)
-                    if (it) {
-                        if(!checkedListState.contains(index)) {
-                            checkedListState.add(index)
-                        }
-                    }else {
-                        if(checkedListState.contains(index)) {
-                            checkedListState.remove(index)
-                        }
-                    }
-                    checkedListState.forEach{ item ->
-                        Log.d("CreateCrewInfoFragment", item.toString())
-                    }
-                    Log.d("CreateCrewInfoFragment", toggleState.value.toString())
+                    onCheckedChange(it)
                 }
             ),
         contentAlignment = Alignment.Center
