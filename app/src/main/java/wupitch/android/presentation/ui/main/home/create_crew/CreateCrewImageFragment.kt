@@ -317,7 +317,7 @@ class CreateCrewImageFragment : Fragment() {
         }
     }
 
-    fun getSportThumbnail(sportId : Int) : Int {
+    private fun getSportThumbnail(sportId : Int) : Int {
         return when(sportId){
             0 -> R.drawable.img_foot_thumb
             1 -> R.drawable.img_bad_thumb

@@ -61,7 +61,7 @@ class RegionFragment : Fragment() {
                         mutableStateOf(false)
                     }
                     if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_regionFragment_to_onboardingFragment)
+//                        findNavController().navigate(R.id.action_regionFragment_to_onboardingFragment)
                     }
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
@@ -135,10 +135,10 @@ class RegionFragment : Fragment() {
                                     .fillMaxWidth()
                                     .height(52.dp),
                                 btnColor = if (regionState.value != null) R.color.main_orange else R.color.gray03,
-                                textString = R.string.next_two_over_five,
+                                textString = R.string.next_two_over_four,
                                 fontSize = 16.sp
                             ) {
-                                findNavController().navigate(R.id.action_regionFragment_to_sportFragment)
+//                                findNavController().navigate(R.id.action_regionFragment_to_sportFragment)
                             }
 
                         }

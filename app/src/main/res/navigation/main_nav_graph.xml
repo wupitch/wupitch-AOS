@@ -48,47 +48,23 @@
         <action
             android:id="@+id/action_splashFragment_to_createCrewScheduleFragment"
             app:destination="@id/createCrewScheduleFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_emailPwFragment"
+            app:destination="@id/emailPwFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
         android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
         android:label="ServiceAgreementFragment">
         <action
-            android:id="@+id/action_serviceAgreementFragment_to_regionFragment"
-            app:destination="@id/regionFragment" />
-        <action
             android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
             app:destination="@id/serviceAgreementDetailFragment" />
         <action
             android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
             app:destination="@id/useOfPersonalInfoDetailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/sportFragment"
-        android:name="wupitch.android.presentation.ui.signup.SportFragment"
-        android:label="SportFragment" >
         <action
-            android:id="@+id/action_sportFragment_to_ageFragment"
-            app:destination="@id/ageFragment" />
-        <action
-            android:id="@+id/action_sportFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/regionFragment"
-        android:name="wupitch.android.presentation.ui.signup.RegionFragment"
-        android:label="RegionFragment" >
-        <action
-            android:id="@+id/action_regionFragment_to_sportFragment"
-            app:destination="@id/sportFragment" />
-        <action
-            android:id="@+id/action_regionFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true"
-            />
+            android:id="@+id/action_serviceAgreementFragment_to_emailPwFragment"
+            app:destination="@id/emailPwFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -111,19 +87,6 @@
         android:id="@+id/useOfPersonalInfoDetailFragment"
         android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
         android:label="UseOfPersonalInfoDetailFragment" />
-    <fragment
-        android:id="@+id/ageFragment"
-        android:name="wupitch.android.presentation.ui.signup.AgeFragment"
-        android:label="AgeFragment" >
-        <action
-            android:id="@+id/action_ageFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_ageFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="false"/>
-    </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="wupitch.android.presentation.ui.signup.WelcomeFragment"
@@ -240,5 +203,13 @@
             app:destination="@id/mainFragment"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/emailPwFragment"
+        android:name="wupitch.android.presentation.ui.signup.EmailPwFragment"
+        android:label="EmailPwFragment" >
+        <action
+            android:id="@+id/action_emailPwFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
 </navigation>

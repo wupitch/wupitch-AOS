@@ -63,7 +63,7 @@ class SplashFragment : Fragment() {
 
             withContext(Dispatchers.Main){
 //                if(jwt != null)
-               findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+               //findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
 //                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
                 //development 용도.
@@ -71,6 +71,7 @@ class SplashFragment : Fragment() {
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewImageFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewInfoFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewScheduleFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_emailPwFragment)
             }
         }
 

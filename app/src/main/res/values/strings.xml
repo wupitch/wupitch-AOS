@@ -36,10 +36,18 @@
     <string name="terms_of_privacy_policy">개인정보 수집 및 이용</string>
     <string name="push_notification_agreement">푸시 알람 동의 (선택)</string>
     <string name="detail_agreement">보기</string>
-    <string name="next_one_over_five">다음 (1/5)</string>
-    <string name="next_two_over_five">다음 (2/5)</string>
-    <string name="next_three_over_five">다음 (3/5)</string>
+    <string name="next_one_over_four">다음 (1/4)</string>
+    <string name="next_two_over_four">다음 (2/4)</string>
+    <string name="next_three_over_four">다음 (3/4)</string>
     <string name="next_four_over_five">다음 (4/5)</string>
+    <string name="input_email_pw">이메일과 비밀번호\n입력해주세요.</string>
+    <string name="email">이메일</string>
+    <string name="allowed_email">사용 가능한 이메일입니다.</string>
+    <string name="not_allowed_email">사용 불가능한 이메일입니다.</string>
+    <string name="pw">비밀번호 (8자 이상 영문/숫자)</string>
+    <string name="not_allowed_pw">사용하실 수 없는 비밀번호입니다.</string>
+
+
     <string name="done">완료</string>
     <string name="select_region">지역을\n선택해주세요.</string>
     <string name="select_region_btn">지역구 선택</string>

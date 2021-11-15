@@ -67,7 +67,7 @@ class SportFragment
                         mutableStateOf(false)
                     }
                     if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_sportFragment_to_onboardingFragment)
+//                        findNavController().navigate(R.id.action_sportFragment_to_onboardingFragment)
                     }
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
@@ -187,11 +187,11 @@ class SportFragment
                                         .height(52.dp),
                                     btnColor = if (result.any { it.state.value }) R.color.main_orange
                                     else R.color.gray03,
-                                    textString = R.string.next_three_over_five,
+                                    textString = R.string.next_three_over_four,
                                     fontSize = 16.sp
                                 ) {
                                     if (result.any { it.state.value }) {
-                                        findNavController().navigate(R.id.action_sportFragment_to_ageFragment)
+//                                        findNavController().navigate(R.id.action_sportFragment_to_ageFragment)
                                         //todo : viewmodel 로 선택된 값 보내기. ex... result.filter { it.state.value }
                                     }
                                 }

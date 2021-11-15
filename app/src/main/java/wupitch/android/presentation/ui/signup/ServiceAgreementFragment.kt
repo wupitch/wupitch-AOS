@@ -245,12 +245,12 @@ class ServiceAgreementFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if(serviceToggleState.value && privacyToggleState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.next_one_over_five,
+                            textString = R.string.next_one_over_four,
                             fontSize = 16.sp
                         ) {
                             if(serviceToggleState.value && privacyToggleState.value){
                                 viewModel.setUserNotiAgreement(pushToggleState.value)
-                                findNavController().navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
+                                findNavController().navigate(R.id.action_serviceAgreementFragment_to_emailPwFragment)
                             }
                         }
                     }
