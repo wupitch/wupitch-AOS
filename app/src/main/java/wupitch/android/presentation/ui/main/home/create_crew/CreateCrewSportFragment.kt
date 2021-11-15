@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
@@ -49,8 +50,7 @@ import wupitch.android.presentation.ui.components.TitleToolbar
 class CreateCrewSportFragment : Fragment() {
 
 
-    //todo change to shared viewmodel!!!
-    private val viewModel: CreateCrewViewModel by viewModels()
+    private val viewModel: CreateCrewViewModel by activityViewModels()
     private var checkedRadioButton: MutableState<Boolean>? = null
 
 
@@ -208,6 +208,7 @@ class CreateCrewSportFragment : Fragment() {
                         if (sportSelectedState.value != -1) {
                             Log.d("{CreateCrewSport.onCreateView}", "next btn clicked!")
                             //todo viewmodel 에 선택된 sport 보내기.
+                            viewModel.setCrewSport(sportSelectedState.value)
                             findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)
                         }
                     }

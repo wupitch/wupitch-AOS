@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -46,7 +47,7 @@ class CreateCrewLocationFragment : Fragment() {
 
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
     private lateinit var dongBottomSheet: DongBottomSheetFragment
-    private val viewModel: CreateCrewViewModel by viewModels()
+    private val viewModel: CreateCrewViewModel by activityViewModels()
 
     @ExperimentalPagerApi
     override fun onCreateView(

@@ -1,18 +1,12 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,10 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -57,7 +49,7 @@ import wupitch.android.presentation.ui.components.*
 class CreateCrewImageFragment : Fragment() {
 
     private lateinit var uploadImageBottomSheet: UploadImageBottomSheetFragment
-    private val viewModel: CreateCrewViewModel by viewModels()
+    private val viewModel: CreateCrewViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,25 +61,14 @@ class CreateCrewImageFragment : Fragment() {
                 WupitchTheme {
 
                     val scrollState = rememberScrollState(0)
-                    val titleTextState = remember {
-                        mutableStateOf("")
-                    }
-                    val introTextState = remember {
-                        mutableStateOf("")
-                    }
-                    val supplyTextState = remember {
-                        mutableStateOf("")
-                    }
-                    val inquiryTextState = remember {
-                        mutableStateOf("")
-                    }
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val titleTextState = remember { mutableStateOf("") }
+                    val introTextState = remember { mutableStateOf("") }
+                    val supplyTextState = remember { mutableStateOf("") }
+                    val inquiryTextState = remember { mutableStateOf("") }
+
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
                         findNavController().navigate(R.id.action_createCrewImageFragment_to_mainFragment)
                     }
@@ -98,9 +79,7 @@ class CreateCrewImageFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning)
                         )
                     }
-                    val imageChosenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val imageChosenState = remember { mutableStateOf(false) }
 
                     ConstraintLayout(
                         Modifier
@@ -263,11 +242,7 @@ class CreateCrewImageFragment : Fragment() {
     ) {
 
         val isUsingDefaultImage = viewModel.isUsingDefaultImage.value
-
-        val imageUri = remember {
-            mutableStateOf<Uri?>(EMPTY_IMAGE_URI)
-        }
-
+        val imageUri = remember { mutableStateOf<Uri?>(EMPTY_IMAGE_URI) }
 
         Spacer(modifier = Modifier.height(24.dp))
         Box(
@@ -300,7 +275,8 @@ class CreateCrewImageFragment : Fragment() {
                         fontWeight = FontWeight.Normal
                     )
                 }
-            } else if( imageChosenState.value && imageUri.value != EMPTY_IMAGE_URI) {
+            }
+            if( imageChosenState.value && imageUri.value != EMPTY_IMAGE_URI) {
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
@@ -309,12 +285,22 @@ class CreateCrewImageFragment : Fragment() {
                 )
                 //todo finish loading dialog.
             }
+            if(isUsingDefaultImage == true) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop,
+                    painter = painterResource(id = getSportThumbnail(viewModel.crewSportId.value)),
+                    contentDescription = "crew image from gallery"
+                )
+                imageChosenState.value = true
 
-            if (isUsingDefaultImage == true) {
-                //todo sports id 별로 drawable 이미지 업로드.
-                Toast.makeText(requireContext(), "default image", Toast.LENGTH_SHORT).show()
+                DisposableEffect(key1 = viewModel, effect = {
+                    onDispose {
+                        viewModel.setImageSource(null)
+                    }
+                })
 
-            } else if (isUsingDefaultImage == false) {
+            }else if (isUsingDefaultImage == false) {
                 //todo 사진 firebase 로?!
                 GallerySelect(
                     onImageUri = { uri ->
@@ -328,6 +314,17 @@ class CreateCrewImageFragment : Fragment() {
                     }
                 )
             }
+        }
+    }
+
+    fun getSportThumbnail(sportId : Int) : Int {
+        return when(sportId){
+            0 -> R.drawable.img_foot_thumb
+            1 -> R.drawable.img_bad_thumb
+            2 -> R.drawable.img_voll_thumb
+            3 -> R.drawable.img_bask_thumb
+            4 -> R.drawable.img_hike_thumb
+            else -> R.drawable.img_run_thumb
         }
     }
 }

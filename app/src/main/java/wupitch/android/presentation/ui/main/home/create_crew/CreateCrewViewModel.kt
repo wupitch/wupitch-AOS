@@ -26,6 +26,9 @@ class CreateCrewViewModel @Inject constructor(
     private var _districtList = mutableStateOf(DistrictState())
     val districtList : State<DistrictState> = _districtList
 
+    private var _crewSportId = mutableStateOf(-1)
+    val crewSportId : State<Int> = _crewSportId
+
     private var _userDistrictId = MutableLiveData<Int>()
     val userDistrictId : LiveData<Int> = _userDistrictId
 
@@ -69,6 +72,11 @@ class CreateCrewViewModel @Inject constructor(
             }
         } else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
 
+    }
+
+    fun setCrewSport(sportId : Int) {
+        _crewSportId.value = sportId
+        Log.d("{CreateCrewViewModel.setCrewSport}", _crewSportId.value.toString())
     }
 
     fun setUserDistrict(districtId : Int, districtName : String) {
