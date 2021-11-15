@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.main.filter
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,18 +11,19 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -30,17 +32,27 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.*
+import wupitch.android.presentation.ui.components.RepetitionLayout
+import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.presentation.ui.components.TitleToolbar
+import wupitch.android.presentation.ui.main.home.HomeViewModel
+import wupitch.android.util.TimeType
 
+@AndroidEntryPoint
 class FilterFragment : Fragment() {
 
-
+    private var checkedRadioButton: MutableState<Boolean>? = null
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,59 +60,119 @@ class FilterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-         val sportsList = listOf<FilterItem>(
-            FilterItem(getString(R.string.soccer_football)),
-            FilterItem(getString(R.string.badminton)),
-            FilterItem(getString(R.string.volleyball)),
-            FilterItem(getString(R.string.basketball)),
-            FilterItem(getString(R.string.hiking)),
-            FilterItem(getString(R.string.running))
-        )
-
-         val dateList = listOf<FilterItem>(
-            FilterItem(getString(R.string.monday)), FilterItem(getString(R.string.tuesday)),
-            FilterItem(getString(R.string.wednesday)), FilterItem(getString(R.string.thursday)), FilterItem(getString(R.string.friday)),
-            FilterItem(getString(R.string.saturday)), FilterItem(getString(R.string.sunday))
-        )
-         val ageGroupList = listOf<FilterItem>(
-            FilterItem(getString(R.string.teenager)),
-            FilterItem(getString(R.string.twenties)),
-            FilterItem(getString(R.string.thirties)),
-            FilterItem(getString(R.string.forties)),
-            FilterItem(getString(R.string.over_fifties)),
-            FilterItem(getString(R.string.regardless_of_age))
-        )
-         val crewSizeList = listOf<FilterItem>(
-            FilterItem(getString(R.string.less_than_ten)),
-            FilterItem(getString(R.string.more_than_ten_less_than_thirty)),
-            FilterItem(getString(R.string.more_than_thirty_less_than_fifty)),
-            FilterItem(getString(R.string.more_than_fifty_less_than_seventy)),
-            FilterItem(getString(R.string.more_than_seventy))
-        )
-
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+                    val sportsList = listOf<FilterItem>(
+                        FilterItem(
+                            getString(R.string.soccer_football),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.badminton),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.volleyball),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.basketball),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(getString(R.string.hiking), remember { mutableStateOf(false) }),
+                        FilterItem(getString(R.string.running), remember { mutableStateOf(false) })
+                    )
 
-                    val eventState = remember {
-                        mutableStateOf<MutableList<Int>>(mutableListOf())
+                    val dayList = listOf<FilterItem>(
+                        FilterItem(
+                            stringResource(id = R.string.monday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.tuesday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.wednesday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.thursday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.friday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.saturday),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            stringResource(id = R.string.sunday),
+                            remember { mutableStateOf(false) })
+                    )
+                    val ageGroupList = listOf<FilterItem>(
+                        FilterItem(
+                            getString(R.string.teenager),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.twenties),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.thirties),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(getString(R.string.forties), remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.over_fifties),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.regardless_of_age),
+                            remember { mutableStateOf(false) })
+                    )
+                    val crewSizeList = listOf<FilterItem>(
+                        FilterItem(
+                            getString(R.string.less_than_ten),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.more_than_ten_less_than_thirty),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.more_than_thirty_less_than_fifty),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.more_than_fifty_less_than_seventy),
+                            remember { mutableStateOf(false) }),
+                        FilterItem(
+                            getString(R.string.more_than_seventy),
+                            remember { mutableStateOf(false) })
+                    )
+
+                    val eventState = remember { mutableStateListOf<Int>() }
+                    val dayState = remember { mutableStateListOf<Int>() }
+                    val ageGroupState = remember { mutableStateListOf<Int>() }
+
+                    val startTimeState = remember { viewModel.startTime }
+                    val endTimeState = remember { viewModel.endTime }
+                    val hasStartTimeSet = remember { viewModel.hasStartTimeSet }
+                    val hasEndTimeSet = remember { viewModel.hasEndTimeSet }
+
+                    val snackbarHostState = remember { SnackbarHostState() }
+
+                    if (hasStartTimeSet.value == null || hasEndTimeSet.value == null) {
+
+                        LaunchedEffect(key1 = snackbarHostState, block = {
+                            snackbarHostState.showSnackbar(
+                                message = getString(R.string.time_warning),
+                                duration = SnackbarDuration.Short
+                            )
+                            if(hasEndTimeSet.value == null) hasEndTimeSet.value = false
+                            if(hasStartTimeSet.value == null) hasStartTimeSet.value = false
+                        })
                     }
-                    val dayState = remember {
-                        mutableStateOf<MutableList<Int>>(mutableListOf())
-                    }
-                    val ageGroupState = remember {
-                        mutableStateOf<MutableList<Int>>(mutableListOf())
-                    }
+
+                    val crewNumSelectedState = remember { mutableStateOf(-1) }
+
                     ConstraintLayout(
                         Modifier
                             .fillMaxSize()
-                            .background(Color.White)) {
+                            .background(Color.White)
+                    ) {
                         val scrollState = rememberScrollState(0)
-                        val crewNumSelectedState = remember {
-                            mutableStateOf(-1)
-                        }
 
-                        val (toolbar, topDivider, filterContents, bottomDivider, buttons) = createRefs()
+
+                        val (toolbar, topDivider, filterContents, bottomDivider, buttons, snackbar) = createRefs()
                         TitleToolbar(
                             modifier = Modifier.constrainAs(toolbar) {
                                 top.linkTo(parent.top)
@@ -134,54 +206,50 @@ class FilterFragment : Fragment() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(24.dp))
-//                            RepetitionLayout(
-//                                text = R.string.event,
-//                                filterItemList = sportsList,
-//                                modifier = Modifier
-//                                    .width(96.dp)
-//                                    .height(48.dp),
-//                                checkedListState = eventState
-//                            )
-//                            Spacer(modifier = Modifier.height(32.dp))
-//                            RepetitionLayout(
-//                                text = R.string.day,
-//                                filterItemList = dateList,
-//                                modifier = Modifier
-//                                    .width(48.dp)
-//                                    .height(48.dp),
-//                                checkedListState = dayState
-//                            )
-//                            Spacer(modifier = Modifier.height(32.dp))
-//                            TimeFilter()
-//
-//                            Spacer(modifier = Modifier.height(32.dp))
-//                            NonRepetitionLayout(
-//                                text = R.string.crew_member_num,
-//                                filterItemList = crewSizeList,
-//                                radioBtnModifier = Modifier
-//                                    .width(96.dp)
-//                                    .height(48.dp),
-//                                flexBoxModifier = Modifier.padding(top = 12.dp),
-//                                selectedState = crewNumSelectedState
-//                            ){
-//                                Log.d("{FilterFragment.onCreateView}", "크루원 수 : $it")
-//                            }
-//
-//                            Spacer(modifier = Modifier.height(32.dp))
-//                            RepetitionLayout(
-//                                text = R.string.age_group,
-//                                filterItemList = ageGroupList,
-//                                modifier = Modifier
-//                                    .width(96.dp)
-//                                    .height(48.dp),
-//                                checkedListState = ageGroupState
-//                            )
-//
-//                            Spacer(modifier = Modifier.height(60.dp))
+                            RepetitionLayout(
+                                text = R.string.event,
+                                filterItemList = sportsList,
+                                modifier = Modifier
+                                    .width(96.dp)
+                                    .height(48.dp),
+                                checkedListState = eventState
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            RepetitionLayout(
+                                text = R.string.day,
+                                filterItemList = dayList,
+                                modifier = Modifier
+                                    .width(48.dp)
+                                    .height(48.dp),
+                                checkedListState = dayState
+                            )
+                            Spacer(modifier = Modifier.height(32.dp))
+                            TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet)
 
+                            Spacer(modifier = Modifier.height(32.dp))
+                            NonRepetitionLayout(
+                                itemList = crewSizeList
+                            ) {
+                                crewNumSelectedState.value = it
+                                Log.d(
+                                    "{FilterFragment.onCreateView}",
+                                    "크루원 수 : ${crewNumSelectedState.value}"
+                                )
+                            }
 
+                            Spacer(modifier = Modifier.height(32.dp))
+                            RepetitionLayout(
+                                text = R.string.age_group,
+                                filterItemList = ageGroupList,
+                                modifier = Modifier
+                                    .width(96.dp)
+                                    .height(48.dp),
+                                checkedListState = ageGroupState
+                            )
 
+                            Spacer(modifier = Modifier.height(60.dp))
                         }
+
                         Divider(
                             Modifier
                                 .constrainAs(bottomDivider) {
@@ -200,23 +268,149 @@ class FilterFragment : Fragment() {
                             }
                         )
 
+                        ShowSnackbar(
+                            snackbarHostState = snackbarHostState,
+                            modifier = Modifier.constrainAs(snackbar) {
+                                start.linkTo(parent.start, margin = 24.dp)
+                                end.linkTo(parent.end, margin = 24.dp)
+                                bottom.linkTo(buttons.top, margin = 16.dp)
+                                width = Dimension.fillToConstraints
+                            })
 
                     }
-
-
                 }
             }
         }
     }
 
     @Composable
-    fun TimeFilter() {
-        val startTimeState = remember {
-            mutableStateOf("12:00")
+    fun ShowSnackbar(
+        snackbarHostState: SnackbarHostState,
+        modifier: Modifier
+    ) {
+
+        SnackbarHost(
+            modifier = modifier,
+            hostState = snackbarHostState,
+            snackbar = {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(colorResource(id = R.color.main_black))
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.image_79),
+                        contentDescription = null
+                    )
+                    Text(
+                        modifier = Modifier.padding(start = 8.dp),
+                        text = snackbarHostState.currentSnackbarData?.message ?: "",
+                        color = Color.White,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp
+                    )
+                }
+            })
+
+    }
+
+    @Composable
+    fun NonRepetitionLayout(
+        itemList: List<FilterItem>,
+        onClick: (index: Int) -> Unit
+    ) {
+        Column(Modifier.fillMaxWidth()) {
+
+            Text(
+                modifier = Modifier.align(Alignment.Start),
+                text = stringResource(id = R.string.crew_member_num),
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+
+            FlowRow(
+                modifier = Modifier.padding(top = 12.dp),
+                mainAxisSpacing = 16.dp,
+                crossAxisSpacing = 16.dp
+            ) {
+                itemList.forEachIndexed { index, item ->
+                    RadioButton(
+                        modifier = Modifier
+                            .width(96.dp)
+                            .height(48.dp),
+                        checkedState = item.state,
+                        text = item.name,
+                    ) {
+                        onClick(index)
+                    }
+                }
+            }
         }
-        val endTimeState = remember {
-            mutableStateOf("12:00")
+    }
+
+    @Composable
+    fun RadioButton(
+        modifier: Modifier,
+        checkedState: MutableState<Boolean>,
+        text: String,
+        onClick: () -> Unit
+    ) {
+        Box(
+            modifier = modifier
+                .selectable(
+                    selected = checkedState.value,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = true,
+                    role = Role.RadioButton,
+                    onClick = {
+                        checkedRadioButton?.value = false
+                        checkedState.value = true
+                        checkedRadioButton = checkedState
+                        onClick()
+                    }
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (checkedState.value) colorResource(id = R.color.orange02) else
+                        colorResource(id = R.color.gray01)
+                )
+                .border(
+                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                    else Color.Transparent,
+                    width = if (checkedState.value) 1.dp else 0.dp,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            )
         }
+    }
+
+
+    @Composable
+    fun TimeFilter(
+        startTimeState: State<String>,
+        endTimeState: State<String>,
+        hasStartTimeSet: State<Boolean?>,
+        hasEndTimeSet: State<Boolean?>
+    ) {
+
+
         Column(Modifier.fillMaxWidth()) {
             Text(
                 modifier = Modifier.align(Alignment.Start),
@@ -231,43 +425,46 @@ class FilterFragment : Fragment() {
                     .padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TimeButton(startTimeState)
+                TimeButton(startTimeState, TimeType.START, hasStartTimeSet)
                 Spacer(modifier = Modifier.width(4.dp))
                 Divider(
                     Modifier
                         .width(8.dp)
                         .height(1.dp)
                         .background(
-                            if (endTimeState.value == "00:00") colorResource(id = R.color.gray02)
-                            else colorResource(id = R.color.main_orange)
+                            if (hasEndTimeSet.value == true) colorResource(id = R.color.main_orange)
+                            else colorResource(id = R.color.gray02)
                         )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                TimeButton(endTimeState)
+                TimeButton(endTimeState, TimeType.END, hasEndTimeSet)
             }
-
         }
-
     }
 
 
     @Composable
     private fun TimeButton(
-        timeState: MutableState<String>
+        timeState: State<String>,
+        timeType: TimeType,
+        hasSetTimeState: State<Boolean?>
     ) {
+
         Button(
             modifier = Modifier
                 .width(96.dp)
                 .height(48.dp),
             shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(width = 1.dp, color = if (timeState.value == "00:00") colorResource(id = R.color.gray02)
-            else colorResource(id = R.color.main_orange)),
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (hasSetTimeState.value == true) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            ),
             colors = ButtonDefaults.buttonColors(Color.White),
             elevation = null,
             onClick = {
-                val timeBottomSheet = TimeBottomSheetFragment()
+                val timeBottomSheet = TimeBottomSheetFragment(timeType, viewModel)
                 timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
-                Toast.makeText(requireContext(), "종료시간이 시작시간보다 늦어야 해요!", Toast.LENGTH_SHORT).show()
             }
         ) {
             Text(
@@ -276,28 +473,11 @@ class FilterFragment : Fragment() {
                 fontSize = 14.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
-                color = if (timeState.value != "00:00") colorResource(id = R.color.main_orange)
+                color = if (hasSetTimeState.value == true) colorResource(id = R.color.main_orange)
                 else colorResource(id = R.color.gray02)
             )
         }
     }
-
-    @Composable
-    private fun DatePicker() {
-       AndroidView(factory = { TimePicker(it) },
-            Modifier.wrapContentSize(),
-           update = { view ->
-               view.setOnTimeChangedListener { view, hourOfDay, minute ->
-                   Log.d("{FilterFragment.DatePicker}", "$hourOfDay $minute")
-               }
-           }
-           )
-    }
-
-
-
-
-
 
 
     @Composable
@@ -357,8 +537,6 @@ class FilterFragment : Fragment() {
             ) {
                 //todo apply button function.
             }
-
-
         }
     }
 }

@@ -205,5 +205,6 @@
     <string name="inquiry_hint">문의할 수 있는 연락수단을 입력해주세요. (예: 카카오톡 아이디, 인스타그램 아이디, 휴대폰번호 등)</string>
     <string name="from_gallery">갤러리에서 고르기</string>
     <string name="use_default_image">기본 이미지 사용</string>
+    <string name="time_warning">종료시간이 시작시간보다 늦어야 해요!</string>
 
 </resources>

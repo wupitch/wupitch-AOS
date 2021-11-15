@@ -102,7 +102,10 @@ class CreateCrewSportFragment : Fragment() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
-                        Log.d("{CreateCrewSportFragment.onCreateView}", viewModel.userDistrictId.value.toString())
+                        Log.d(
+                            "{CreateCrewSportFragment.onCreateView}",
+                            viewModel.userDistrictId.value.toString()
+                        )
                         if (viewModel.userDistrictId.value != null) {
                             dialogOpenState.value = true
                         } else {
@@ -133,14 +136,14 @@ class CreateCrewSportFragment : Fragment() {
                         )
                     }
 
-                    if(sportsList.data.isNotEmpty()) {
+                    if (sportsList.data.isNotEmpty()) {
                         val sportRememberList = mutableListOf<FilterItem>()
 
-                            sportsList.data.forEach {
-                                sportRememberList.add(FilterItem(it.name, remember {
-                                    mutableStateOf(false)
-                                }))
-                            }
+                        sportsList.data.forEach {
+                            sportRememberList.add(FilterItem(it.name, remember {
+                                mutableStateOf(false)
+                            }))
+                        }
 
                         //아래가 여러번 불림. 왜???  sportsList.data 가 변하는 것도 아닌데...
                         // 아마도 sportsList 에 state 가 있고, 그 state 가
@@ -167,7 +170,9 @@ class CreateCrewSportFragment : Fragment() {
                             )
                             NonRepetitionLayout(
                                 filterItemList = sportRememberList.toList(),
-                                flexBoxModifier = Modifier.padding(top = 32.dp),
+                                flexBoxModifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 32.dp),
                                 radioBtnModifier = Modifier
                                     .width(96.dp)
                                     .height(48.dp),
@@ -176,7 +181,10 @@ class CreateCrewSportFragment : Fragment() {
                                 //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
                                 //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
                                 sportSelectedState.value = it
-                                Log.d("{CreateCrewSport.onCreateView}", "스포츠 : ${sportSelectedState.value} ")
+                                Log.d(
+                                    "{CreateCrewSport.onCreateView}",
+                                    "스포츠 : ${sportSelectedState.value} "
+                                )
                             }
                         }
                     }
@@ -210,37 +218,24 @@ class CreateCrewSportFragment : Fragment() {
 
     @Composable
     fun NonRepetitionLayout(
-        text: Int? = null,
         filterItemList: List<FilterItem>,
         flexBoxModifier: Modifier,
         radioBtnModifier: Modifier,
         onClick: (index: Int) -> Unit
     ) {
 
-        Column(Modifier.fillMaxWidth()) {
-            if (text != null) {
-                Text(
-                    modifier = Modifier.align(Alignment.Start),
-                    text = stringResource(id = text),
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-            }
-
-            FlowRow(
-                modifier = flexBoxModifier,
-                mainAxisSpacing = 16.dp,
-                crossAxisSpacing = 16.dp
-            ) {
-                filterItemList.forEachIndexed { index, item ->
-                    RadioButton(
-                        modifier = radioBtnModifier,
-                        checkedState = item.state,
-                        text = item.name,
-                    ) {
-                        onClick(index)
-                    }
+        FlowRow(
+            modifier = flexBoxModifier,
+            mainAxisSpacing = 16.dp,
+            crossAxisSpacing = 16.dp
+        ) {
+            filterItemList.forEachIndexed { index, item ->
+                RadioButton(
+                    modifier = radioBtnModifier,
+                    checkedState = item.state,
+                    text = item.name,
+                ) {
+                    onClick(index)
                 }
             }
         }
