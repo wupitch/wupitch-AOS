@@ -46,6 +46,12 @@
     <string name="not_allowed_email">사용 불가능한 이메일입니다.</string>
     <string name="pw">비밀번호 (8자 이상 영문/숫자)</string>
     <string name="not_allowed_pw">사용하실 수 없는 비밀번호입니다.</string>
+    <string name="certify_idcard">신분증을\n인증해주세요.</string>
+    <string name="certify_idcard_subtitle">(주민등록증 원본을 이용해 촬영해주세요.)</string>
+    <string name="certify_idcard_guide1">이름과 생년월일, 성별숫자가 꼭 보여야합니다.</string>
+    <string name="certify_idcard_guide2">식별이 불가능할 경우 승인이 거부될 수 있습니다.</string>
+    <string name="certify_idcard_guide3">신분증 정보는 성별 확인 후 즉시 폐기됩니다.</string>
+    <string name="take_idcard_photo">신분증 촬영</string>
 
 
     <string name="done">완료</string>

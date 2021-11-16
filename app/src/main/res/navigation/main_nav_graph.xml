@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_splashFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_idCardFragment"
+            app:destination="@id/idCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
@@ -74,13 +77,13 @@
         android:name="wupitch.android.presentation.ui.signup.ProfileFragment"
         android:label="ProfileFragment" >
         <action
-            android:id="@+id/action_profileFragment_to_welcomeFragment"
-            app:destination="@id/welcomeFragment" />
-        <action
             android:id="@+id/action_profileFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment"
             app:popUpTo="@id/onboardingFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_profileFragment_to_idCardFragment"
+            app:destination="@id/idCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementDetailFragment"
@@ -215,4 +218,8 @@
             android:id="@+id/action_emailPwFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/idCardFragment"
+        android:name="wupitch.android.presentation.ui.signup.IdCardFragment"
+        android:label="IdCardFragment" />
 </navigation>

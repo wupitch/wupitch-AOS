@@ -186,13 +186,13 @@ class ProfileFragment : Fragment() {
                             btnColor = if (introState.value.isNotEmpty() &&
                                 isNicknameValidState.value == true && nicknameState.value.isNotEmpty()
                             ) R.color.main_orange else R.color.gray03,
-                            textString = R.string.done,
+                            textString = R.string.next_three_over_four,
                             fontSize = 16.sp
                         ) {
                             if (introState.value.isNotEmpty() &&
                                 isNicknameValidState.value == true
                             ) {
-                                findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
+                                findNavController().navigate(R.id.action_profileFragment_to_idCardFragment)
                                 //todo : viewmodel 에 닉네임, 소개글 보내기.
                             }
                         }
