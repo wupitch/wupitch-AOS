@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +47,7 @@ import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
     private var job: Job? = null
 
     override fun onCreateView(
@@ -57,12 +59,8 @@ class ProfileFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
                     if(stopSignupState.value) {
                         findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
                     }
@@ -80,13 +78,8 @@ class ProfileFragment : Fragment() {
                     ) {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
-                        val nicknameState = remember {
-                            mutableStateOf("")
-                        }
-
-                        val introState = remember {
-                            mutableStateOf("")
-                        }
+                        val nicknameState = remember { mutableStateOf("") }
+                        val introState = remember { mutableStateOf("") }
 
                         val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
 
@@ -220,8 +213,8 @@ class ProfileFragment : Fragment() {
     ) {
 
         val customTextSelectionColors = TextSelectionColors(
-            handleColor = colorResource(id = R.color.main_orange),
-            backgroundColor = colorResource(id = R.color.orange02)
+            handleColor = colorResource(id = R.color.gray03),
+            backgroundColor = colorResource(id = R.color.gray03)
         )
 
         CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
@@ -236,15 +229,14 @@ class ProfileFragment : Fragment() {
                             if (value.isNotEmpty()) {
                                 job?.cancel()
                                 job = lifecycleScope.launch {
-                                    delay(1500L)
-                                    viewModel.checkNicknameValidation(value)
+                                    delay(1200L)
+                                    viewModel.checkNicknameValid(value)
                                 }
-                            } else {
-                                viewModel.checkNicknameValidation(null)
-                            }
+                            }else viewModel.checkNicknameValid(null)
                         }
                     }
                 },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = modifier
                     .clip(RoundedCornerShape(8.dp))
                     .background(colorResource(id = R.color.gray04))
@@ -276,7 +268,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 },
-                cursorBrush = SolidColor(colorResource(id = R.color.main_orange)),
+                cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = Roboto,

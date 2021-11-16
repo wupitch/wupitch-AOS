@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_splashFragment_to_emailPwFragment"
             app:destination="@id/emailPwFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
