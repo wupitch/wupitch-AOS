@@ -52,6 +52,10 @@
     <string name="certify_idcard_guide2">식별이 불가능할 경우 승인이 거부될 수 있습니다.</string>
     <string name="certify_idcard_guide3">신분증 정보는 성별 확인 후 즉시 폐기됩니다.</string>
     <string name="take_idcard_photo">신분증 촬영</string>
+    <string name="retake">다시 찍기</string>
+    <string name="use_photo">사진 사용</string>
+    <string name="requested_id_certification">인증 요청이\n완료됐어요.</string>
+    <string name="id_certification_process_guide">신분증 인증 승인은 24시간 이내 처리되며,\n푸쉬알림을 통해 확인할 수 있습니다.</string>
 
 
     <string name="done">완료</string>

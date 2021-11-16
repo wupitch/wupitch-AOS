@@ -94,12 +94,9 @@
         android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
         android:label="UseOfPersonalInfoDetailFragment" />
     <fragment
-        android:id="@+id/welcomeFragment"
-        android:name="wupitch.android.presentation.ui.signup.WelcomeFragment"
-        android:label="WelcomeFragment" >
-        <action
-            android:id="@+id/action_welcomeFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+        android:id="@+id/reqIdCertiFragment"
+        android:name="wupitch.android.presentation.ui.signup.ReqIdCertiFragment"
+        android:label="ReqIdCertiFragment" >
     </fragment>
     <fragment
         android:id="@+id/onboardingFragment"
