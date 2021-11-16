@@ -61,13 +61,15 @@ class ProfileFragment : Fragment() {
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
-                    if(stopSignupState.value) {
+                    if (stopSignupState.value) {
                         findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
                     }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                    if (dialogOpenState.value) {
+                        StopWarningDialog(
+                            dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                        textString = stringResource(id = R.string.warning_stop_signup))
+                            textString = stringResource(id = R.string.warning_stop_signup)
+                        )
                     }
 
                     ConstraintLayout(
@@ -226,13 +228,12 @@ class ProfileFragment : Fragment() {
                     if (value.length in 0..maxLength) {
                         stringState.value = value
                         if (validateNickname) {
-                            if (value.isNotEmpty()) {
-                                job?.cancel()
-                                job = lifecycleScope.launch {
-                                    delay(1200L)
-                                    viewModel.checkNicknameValid(value)
-                                }
-                            }else viewModel.checkNicknameValid(null)
+
+                            job?.cancel()
+                            job = lifecycleScope.launch {
+                                delay(1200L)
+                                viewModel.checkNicknameValid(value)
+                            }
                         }
                     }
                 },

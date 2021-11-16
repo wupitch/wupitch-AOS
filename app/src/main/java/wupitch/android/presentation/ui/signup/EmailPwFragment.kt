@@ -15,6 +15,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -38,8 +39,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
@@ -49,6 +55,9 @@ import wupitch.android.presentation.ui.components.SimpleTextField
 import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class EmailPwFragment : Fragment() {
+
+    private val viewModel: SignupViewModel by activityViewModels()
+    private var job: Job? = null
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -75,6 +84,9 @@ class EmailPwFragment : Fragment() {
                     }
                     val emailTextState = remember { mutableStateOf("") }
                     val pwTextState = remember { mutableStateOf("") }
+
+                    val isEmailValid = viewModel.isEmailValid.value
+                    val isPwValid = viewModel.isPwValid.observeAsState().value
 
 
                     ConstraintLayout(
@@ -128,24 +140,31 @@ class EmailPwFragment : Fragment() {
                                 hintText = stringResource(id = R.string.email)
                             )
                             Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = stringResource(id = R.string.allowed_email),
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 12.sp,
-                                color = colorResource(id = R.color.green)
-                            )
+
+                            if (emailTextState.value.isNotEmpty() && isEmailValid != null) {
+                                Text(
+                                    text = stringResource(id = R.string.allowed_email),
+                                    fontFamily = Roboto,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 12.sp,
+                                    color = colorResource(id = R.color.green)
+                                )
+                            }
                             Spacer(modifier = Modifier.height(10.dp))
 
                             PasswordTextField(pwTextState)
                             Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = stringResource(id = R.string.not_allowed_pw),
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 12.sp,
-                                color = colorResource(id = R.color.red)
-                            )
+
+                            if (pwTextState.value.isNotEmpty() && isPwValid == false) {
+                                Text(
+                                    text = stringResource(id = R.string.not_allowed_pw),
+                                    fontFamily = Roboto,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 12.sp,
+                                    color = colorResource(id = R.color.red)
+                                )
+                            }
+
 
                         }
 
@@ -180,18 +199,21 @@ class EmailPwFragment : Fragment() {
     fun PasswordTextField(
         textState: MutableState<String>
     ) {
+
         val pwViewToggleState = remember { mutableStateOf(false) }
 
         ConstraintLayout(Modifier.fillMaxWidth()) {
             val (textField, icon) = createRefs()
 
             BasicTextField(
-                modifier = Modifier.fillMaxWidth().constrainAs(textField){
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .constrainAs(textField) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
                 visualTransformation = if (pwViewToggleState.value) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 value = textState.value,
@@ -204,6 +226,13 @@ class EmailPwFragment : Fragment() {
                 maxLines = 1,
                 onValueChange = { value ->
                     textState.value = value
+
+                    job?.cancel()
+                    job = lifecycleScope.launch {
+                        delay(1200L)
+                        viewModel.isPwValid(value)
+                    }
+
                 },
                 cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
                 decorationBox = { innerTextField ->
@@ -263,8 +292,8 @@ class EmailPwFragment : Fragment() {
                             pwViewToggleState.value = it
                         }
                     ),
-                painter = if(pwViewToggleState.value) painterResource(id = R.drawable.view)
-                else  painterResource(id = R.drawable.view_hide),
+                painter = if (pwViewToggleState.value) painterResource(id = R.drawable.view)
+                else painterResource(id = R.drawable.view_hide),
                 contentDescription = "delete search text",
             )
 
