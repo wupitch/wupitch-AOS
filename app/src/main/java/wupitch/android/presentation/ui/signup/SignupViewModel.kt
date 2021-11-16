@@ -1,17 +1,15 @@
 package wupitch.android.presentation.ui.signup
 
 import android.util.Log
-import android.util.Patterns
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import wupitch.android.data.remote.dto.ValidReq
+import wupitch.android.data.remote.dto.EmailValidReq
+import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.domain.repository.CheckValidRepository
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +42,7 @@ class SignupViewModel @Inject constructor(
             return@launch
         }
 
-        val response = checkValidRepo.checkValidation(ValidReq(nickname))
+        val response = checkValidRepo.checkNicknameValidation(NicknameValidReq(nickname))
         if (response.isSuccessful) {
             response.body()?.let { validRes ->
                 if (validRes.isSuccess) {
@@ -58,26 +56,28 @@ class SignupViewModel @Inject constructor(
 
     }
 
-    fun checkEmailValid(email: String?) = viewModelScope.launch {
-        Log.d("{SignupViewModel.checkEmailValid}", email.toString())
-        if (email == null) _isNicknameValid.value = null
-        email?.let {
-//            val response = checkValidRepo.checkValidation(ValidReq(email))
-//            if(response.isSuccessful) {
-//                response.body()?.let { validRes ->
-//                    if(validRes.isSuccess) {
-//                        _isNicknameValid.value = true
-//                        _userNickname.value = email
-//                    }else {
-//                        _isNicknameValid.value = false
-//                    }
-//                }
-//            }else _isNicknameValid.value = false
-//        }
+    fun checkEmailValid(email: String) = viewModelScope.launch {
+        Log.d("{SignupViewModel.checkEmailValid}", email)
+        if (email.isEmpty()) {
+            _isEmailValid.value = null
+            return@launch
         }
+
+        val response = checkValidRepo.checkEmailValidation(EmailValidReq(email))
+        if (response.isSuccessful) {
+            response.body()?.let { validRes ->
+                if (validRes.isSuccess) {
+                    _isEmailValid.value = true
+                    _userEmail.value = email
+                } else {
+                    _isEmailValid.value = false
+                }
+            }
+        } else _isEmailValid.value = false
     }
 
-    fun isPwValid(pw: String) {
+
+    fun checkPwValid(pw: String) {
 
         Log.d("{SignupViewModel.isPwValid}", pw)
         if (pw.isEmpty()) {

@@ -51,13 +51,13 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.SimpleTextField
 import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class EmailPwFragment : Fragment() {
 
     private val viewModel: SignupViewModel by activityViewModels()
-    private var job: Job? = null
+    private var pwJob: Job? = null
+    private var emailJob: Job? = null
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -85,7 +85,7 @@ class EmailPwFragment : Fragment() {
                     val emailTextState = remember { mutableStateOf("") }
                     val pwTextState = remember { mutableStateOf("") }
 
-                    val isEmailValid = viewModel.isEmailValid.value
+                    val isEmailValid = viewModel.isEmailValid.observeAsState().value
                     val isPwValid = viewModel.isPwValid.observeAsState().value
 
 
@@ -135,19 +135,28 @@ class EmailPwFragment : Fragment() {
                                     end.linkTo(parent.end, margin = 20.dp)
                                     width = Dimension.fillToConstraints
                                 }) {
-                            SimpleTextField(
+                            EmailTextField(
                                 textState = emailTextState,
-                                hintText = stringResource(id = R.string.email)
                             )
                             Spacer(modifier = Modifier.height(6.dp))
 
                             if (emailTextState.value.isNotEmpty() && isEmailValid != null) {
                                 Text(
-                                    text = stringResource(id = R.string.allowed_email),
+                                    text = if(isEmailValid == true) stringResource(id = R.string.allowed_email)
+                                        else stringResource(id = R.string.not_allowed_email),
                                     fontFamily = Roboto,
                                     fontWeight = FontWeight.Normal,
                                     fontSize = 12.sp,
-                                    color = colorResource(id = R.color.green)
+                                    color = if(isEmailValid == true) colorResource(id = R.color.green)
+                                        else colorResource(id = R.color.red)
+                                )
+                            }else {
+                                Text(
+                                    text = "",
+                                    fontFamily = Roboto,
+                                    fontWeight = FontWeight.Normal,
+                                    fontSize = 12.sp,
+                                    color = Color.Transparent
                                 )
                             }
                             Spacer(modifier = Modifier.height(10.dp))
@@ -164,8 +173,6 @@ class EmailPwFragment : Fragment() {
                                     color = colorResource(id = R.color.red)
                                 )
                             }
-
-
                         }
 
                         RoundBtn(
@@ -178,13 +185,15 @@ class EmailPwFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = R.color.gray03,
+                            btnColor = if(isEmailValid == true && isPwValid == true) R.color.main_orange
+                            else R.color.gray03,
                             textString = R.string.next_two_over_four,
                             fontSize = 16.sp
                         ) {
 
-                            findNavController().navigate(R.id.action_emailPwFragment_to_profileFragment)
-                            //todo : viewmodel 에 이메일, 비밀번호 보내기
+                            if(isEmailValid == true && isPwValid == true){
+                                findNavController().navigate(R.id.action_emailPwFragment_to_profileFragment)
+                            }
 
                         }
 
@@ -192,6 +201,69 @@ class EmailPwFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @ExperimentalPagerApi
+    @Composable
+    fun EmailTextField(
+        textState: MutableState<String>,
+    ) {
+        BasicTextField(
+            value = textState.value,
+            textStyle = TextStyle(
+                color = Color.Black,
+                fontSize = 16.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal
+            ),
+            maxLines = 1,
+            onValueChange = { value ->
+                textState.value = value
+
+                emailJob?.cancel()
+                emailJob = lifecycleScope.launch {
+                    delay(1200L)
+                    viewModel.checkEmailValid(value)
+                }
+            },
+            cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colorResource(id = R.color.gray04))
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 11.dp, bottom = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Transparent)
+                    ) {
+                        val (hint) = createRefs()
+
+                        innerTextField()
+                        if (textState.value.isEmpty()) {
+                            Text(
+                                modifier = Modifier.constrainAs(hint) {
+                                    start.linkTo(parent.start)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                text = stringResource(id = R.string.email),
+                                color = colorResource(id = R.color.gray03),
+                                fontSize = 16.sp,
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            }
+        )
     }
 
     @ExperimentalPagerApi
@@ -227,10 +299,10 @@ class EmailPwFragment : Fragment() {
                 onValueChange = { value ->
                     textState.value = value
 
-                    job?.cancel()
-                    job = lifecycleScope.launch {
+                    pwJob?.cancel()
+                    pwJob = lifecycleScope.launch {
                         delay(1200L)
-                        viewModel.isPwValid(value)
+                        viewModel.checkPwValid(value)
                     }
 
                 },
