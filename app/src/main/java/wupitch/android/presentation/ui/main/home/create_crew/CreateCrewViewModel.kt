@@ -35,12 +35,6 @@ class CreateCrewViewModel @Inject constructor(
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
 
-    private var _userDongId = MutableLiveData<Int>()
-    val userDongId : LiveData<Int> = _userDongId
-
-    private var _userDongName = MutableLiveData<String>()
-    val userDongName : LiveData<String> = _userDongName
-
     private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
     val isUsingDefaultImage : State<Boolean?> = _isUsingDefaultImage
 
@@ -84,13 +78,6 @@ class CreateCrewViewModel @Inject constructor(
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
         Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $districtId name : $districtName")
-    }
-
-    fun setUserDong(dongId : Int, dongName : String) {
-        //todo 서버에 보내기
-        _userDongId.value = dongId
-        _userDongName.value = dongName
-        Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $dongId name : $dongName")
     }
 
     fun setImageSource(isUsingDefaultImage : Boolean?) {

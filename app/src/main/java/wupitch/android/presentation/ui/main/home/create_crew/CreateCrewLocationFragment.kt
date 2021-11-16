@@ -46,7 +46,6 @@ import wupitch.android.presentation.ui.components.*
 class CreateCrewLocationFragment : Fragment() {
 
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
-    private lateinit var dongBottomSheet: DongBottomSheetFragment
     private val viewModel: CreateCrewViewModel by activityViewModels()
 
     @ExperimentalPagerApi
@@ -59,12 +58,8 @@ class CreateCrewLocationFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
                     if(stopSignupState.value) {
                         findNavController().navigate(R.id.action_createCrewLocationFragment_to_mainFragment)
                     }
@@ -74,16 +69,11 @@ class CreateCrewLocationFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning))
                     }
 
-                    val locationSelectedState = remember {
-                        mutableStateOf(-1)
-                    }
+                    val locationSelectedState = remember { mutableStateOf(-1) }
 
-                    val textState = remember {
-                        mutableStateOf("")
-                    }
+                    val textState = remember { mutableStateOf("") }
                     val districtList = viewModel.districtList.value
                     val districtState = viewModel.userDistrictName.observeAsState()
-                    //todo 동 추가.
 
 
                     ConstraintLayout(
@@ -147,10 +137,7 @@ class CreateCrewLocationFragment : Fragment() {
                                     lineHeight = 28.sp
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
-                                Row(
-                                    Modifier.fillMaxWidth(),
-                                ) {
-                                    WhiteRoundBtn(
+                                 WhiteRoundBtn(
                                         modifier = Modifier
                                             .height(48.dp)
                                             .width(152.dp),
@@ -161,20 +148,6 @@ class CreateCrewLocationFragment : Fragment() {
                                     ) {
                                         showDistrictBottomSheet(districtList.data)
                                     }
-                                    Spacer(modifier = Modifier.width(16.dp))
-
-                                    WhiteRoundBtn(
-                                        modifier = Modifier
-                                            .height(48.dp)
-                                            .width(152.dp),
-                                        textString = stringResource(id = R.string.select_dong),
-                                        fontSize = 14.sp,
-                                        textColor = R.color.gray02,
-                                        borderColor = R.color.gray02
-                                    ) {
-//                                        showRegionBottomSheet(list)
-                                    }
-                                }
 
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Text(
@@ -248,11 +221,5 @@ class CreateCrewLocationFragment : Fragment() {
     private fun showDistrictBottomSheet(districtList: Array<String>) {
         districtBottomSheet = DistrictBottomSheetFragment(districtList, viewModel)
         districtBottomSheet.show(childFragmentManager, "district_bottom_sheet")
-    }
-
-    private fun showDongBottomSheet(districtList: Array<String>) {
-        //todo district list -> dong list.
-       dongBottomSheet = DongBottomSheetFragment(districtList, viewModel)
-       dongBottomSheet.show(childFragmentManager, "dong_bottom_sheet")
     }
 }

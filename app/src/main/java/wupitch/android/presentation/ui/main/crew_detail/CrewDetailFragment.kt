@@ -61,15 +61,9 @@ class CrewDetailFragment : Fragment() {
             setContent {
                 WupitchTheme {
                     val scrollState = rememberScrollState(0)
-                    val joinVisitorDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    val joinDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    val notEnoughInfoDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
+                    val joinDialogOpenState = remember { mutableStateOf(false) }
+                    val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
                     if (joinVisitorDialogOpenState.value)
                         JoinCrewDialog(
@@ -98,10 +92,10 @@ class CrewDetailFragment : Fragment() {
                             },
                             textString = R.string.crew
                         )
-                        if(scrollState.value > 202.dpToInt()){
+                        if (scrollState.value > 202.dpToInt()) {
                             Divider(
                                 Modifier
-                                    .constrainAs(divider){
+                                    .constrainAs(divider) {
                                         top.linkTo(appbar.bottom)
                                         bottom.linkTo(crewInfo.top)
                                     }
@@ -156,7 +150,7 @@ class CrewDetailFragment : Fragment() {
 
     }
 
-    fun Int.dpToInt() = (this *  requireContext().resources.displayMetrics.density).toInt()
+    fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
     @Composable
@@ -433,33 +427,13 @@ class CrewDetailFragment : Fragment() {
                     vertical = 22.dp
                 )
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SportKeyword(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(colorResource(id = Sport.getNumOf(0).color))
-                        .padding(horizontal = 13.dp, vertical = 4.dp),
-                    sportName = Sport.getNumOf(0).sportName
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(colorResource(id = Sport.getNumOf(0).color))
-                        .size(6.dp)
-                )
-                Text(
-                    modifier = Modifier.padding(start = 8.dp),
-                    text = "법정동",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                    fontSize = 14.sp
-                )
-            }
+            SportKeyword(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(colorResource(id = Sport.getNumOf(0).color))
+                    .padding(horizontal = 13.dp, vertical = 4.dp),
+                sportName = Sport.getNumOf(0).sportName
+            )
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),

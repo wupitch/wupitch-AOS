@@ -28,7 +28,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 0,
                 "축구",
-                "법정동",
                 true,
                 "가나다라마바사아자차...",
                 true,
@@ -39,7 +38,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 1,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽",
                 false,
@@ -50,7 +48,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 23,
                 "농구",
-                "이매동",
                 false,
                 "아무이름이지롱",
                 false,
@@ -61,7 +58,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 44,
                 "농구",
-                "이매동",
                 false,
                 "농구하자히히",
                 false,
@@ -72,7 +68,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 54,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽하하",
                 false,
@@ -83,7 +78,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 56,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽호호",
                 false,
@@ -94,7 +88,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 77,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽ㅇㅇㅇ",
                 false,

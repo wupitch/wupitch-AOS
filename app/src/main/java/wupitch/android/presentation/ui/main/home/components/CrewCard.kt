@@ -75,36 +75,19 @@ fun CrewCard(
                     .padding(top = 12.dp, start = 12.dp, end = 10.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                    val (keyword, location, pin) = createRefs()
+                    val (keyword, pin) = createRefs()
 
                     SportKeyword(
                         modifier = Modifier
                             .constrainAs(keyword) {
-                                top.linkTo(pin.top)
+                                top.linkTo(parent.top)
                                 start.linkTo(parent.start)
-                                bottom.linkTo(pin.bottom)
+                                bottom.linkTo(parent.bottom)
                             }
                             .clip(RoundedCornerShape(12.dp))
                             .background(colorResource(id = Sport.BASKETBALL.color))
                             .padding(horizontal = 8.dp, vertical = 1.dp),
                         sportName = Sport.BASKETBALL.sportName
-                    )
-                    Text(
-                        modifier = Modifier
-                            .width(59.dp) //todo : maxLength 함수 만들기.
-                            .constrainAs(location) {
-                                top.linkTo(pin.top)
-                                bottom.linkTo(pin.bottom)
-                                start.linkTo(keyword.end, margin = 8.dp)
-                            },
-                        text = crewCard.location,
-                        color = Color.Black,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        lineHeight = 22.sp
                     )
                     if (crewCard.isPinned) {
                         Image(
@@ -117,7 +100,6 @@ fun CrewCard(
                             contentDescription = "pin"
                         )
                     }
-
                 }
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
