@@ -48,7 +48,7 @@ class IdCardFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
+                        findNavController().navigate(R.id.action_idCardFragment_to_onboardingFragment)
                     }
                     if (dialogOpenState.value) {
                         StopWarningDialog(
@@ -129,10 +129,8 @@ class IdCardFragment : Fragment() {
                             textString = R.string.take_idcard_photo,
                             fontSize = 16.sp
                         ) {
-                            //todo open camera.
+                            findNavController().navigate(R.id.action_idCardFragment_to_idCardCameraFragment)
                         }
-
-
                     }
                 }
             }

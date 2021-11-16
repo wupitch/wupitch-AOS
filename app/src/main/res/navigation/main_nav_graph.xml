@@ -49,9 +49,6 @@
             android:id="@+id/action_splashFragment_to_createCrewScheduleFragment"
             app:destination="@id/createCrewScheduleFragment" />
         <action
-            android:id="@+id/action_splashFragment_to_emailPwFragment"
-            app:destination="@id/emailPwFragment" />
-        <action
             android:id="@+id/action_splashFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
         <action
@@ -96,8 +93,7 @@
     <fragment
         android:id="@+id/reqIdCertiFragment"
         android:name="wupitch.android.presentation.ui.signup.ReqIdCertiFragment"
-        android:label="ReqIdCertiFragment" >
-    </fragment>
+        android:label="ReqIdCertiFragment" />
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="wupitch.android.presentation.ui.onboarding.OnboardingFragment"
@@ -214,9 +210,31 @@
         <action
             android:id="@+id/action_emailPwFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_emailPwFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/idCardFragment"
         android:name="wupitch.android.presentation.ui.signup.IdCardFragment"
-        android:label="IdCardFragment" />
+        android:label="IdCardFragment" >
+        <action
+            android:id="@+id/action_idCardFragment_to_idCardCameraFragment"
+            app:destination="@id/idCardCameraFragment" />
+        <action
+            android:id="@+id/action_idCardFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/idCardCameraFragment"
+        android:name="wupitch.android.presentation.ui.signup.IdCardCameraFragment"
+        android:label="idCardCameraFragment" >
+        <action
+            android:id="@+id/action_idCardCameraFragment_to_reqIdCertiFragment"
+            app:destination="@id/reqIdCertiFragment" />
+    </fragment>
 </navigation>

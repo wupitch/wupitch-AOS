@@ -73,7 +73,7 @@ class EmailPwFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
+                        findNavController().navigate(R.id.action_emailPwFragment_to_onboardingFragment)
                     }
                     if (dialogOpenState.value) {
                         StopWarningDialog(

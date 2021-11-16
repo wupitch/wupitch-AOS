@@ -71,9 +71,8 @@ class SplashFragment : Fragment() {
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewImageFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewInfoFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewScheduleFragment)
-                findNavController().navigate(R.id.action_splashFragment_to_emailPwFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_profileFragment)
-                //findNavController().navigate(R.id.action_splashFragment_to_idCardFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_idCardFragment)
 
             }
         }
