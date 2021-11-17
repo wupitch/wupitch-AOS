@@ -13,6 +13,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,9 +30,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import wupitch.android.R
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
@@ -39,7 +43,10 @@ import wupitch.android.presentation.theme.CameraTheme
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.signup.components.CameraCapture
 
+@AndroidEntryPoint
 class IdCardCameraFragment : Fragment() {
+
+    private val viewModel : SignupViewModel by activityViewModels()
 
     @ExperimentalCoroutinesApi
     @ExperimentalPermissionsApi
@@ -53,7 +60,11 @@ class IdCardCameraFragment : Fragment() {
             setContent {
                 CameraTheme {
 
+
+
                     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
+                    val signupState = viewModel.signupState.observeAsState()
+                    if(signupState.value == true) findNavController().navigate(R.id.action_idCardCameraFragment_to_reqIdCertiFragment)
 
                     ConstraintLayout(
                         Modifier
@@ -110,8 +121,9 @@ class IdCardCameraFragment : Fragment() {
                                 colors = ButtonDefaults.buttonColors(Color.Transparent),
                                 elevation = null,
                                 onClick = {
-                                    //todo save image!!
-                                    findNavController().navigate(R.id.action_idCardCameraFragment_to_reqIdCertiFragment)
+                                    viewModel.postSignup()
+                                    //todo save image!!  + loading state.
+
                                 }
                             ) {
                                 Text(

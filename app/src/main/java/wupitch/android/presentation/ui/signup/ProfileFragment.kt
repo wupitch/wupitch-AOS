@@ -183,17 +183,17 @@ class ProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (introState.value.isNotEmpty() &&
-                                isNicknameValidState.value == true && nicknameState.value.isNotEmpty()
-                            ) R.color.main_orange else R.color.gray03,
+                            btnColor = if (introState.value.isNotEmpty() && isNicknameValidState.value == true) R.color.main_orange
+                            else R.color.gray03,
                             textString = R.string.next_three_over_four,
                             fontSize = 16.sp
                         ) {
                             if (introState.value.isNotEmpty() &&
                                 isNicknameValidState.value == true
                             ) {
+                                viewModel.setUserIntroduce(introState.value)
                                 findNavController().navigate(R.id.action_profileFragment_to_idCardFragment)
-                                //todo : viewmodel 에 닉네임, 소개글 보내기.
+
                             }
                         }
 

@@ -72,7 +72,7 @@ fun CrewCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 12.dp, start = 12.dp, end = 10.dp)
+                    .padding(top = 11.dp, start = 12.dp, end = 12.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
                     val (keyword, pin) = createRefs()
@@ -101,7 +101,7 @@ fun CrewCard(
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(7.dp))
                 Text(
                     text = crewCard.name,
                     color = Color.Black,
@@ -110,11 +110,10 @@ fun CrewCard(
                     fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    lineHeight = 22.sp
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
-                Row {
+                Row(Modifier.padding(vertical = 3.dp)) {
                     if (crewCard.isBiweekly) {
                         Text(
                             text = stringResource(id = R.string.biweekly),
@@ -122,7 +121,6 @@ fun CrewCard(
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
-                            lineHeight = 22.sp
                         )
                     }
 
@@ -132,7 +130,6 @@ fun CrewCard(
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,
-                        lineHeight = 22.sp
                     )
 
                     if (crewCard.isMoreThanOnceAWeek) {
@@ -142,7 +139,6 @@ fun CrewCard(
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
-                            lineHeight = 22.sp
                         )
                     }
                 }
@@ -158,7 +154,7 @@ fun CrewCard(
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 22.sp
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+//                Spacer(modifier = Modifier.height(17.dp))
 
 
 

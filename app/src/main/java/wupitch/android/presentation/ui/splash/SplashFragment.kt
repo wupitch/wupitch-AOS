@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +21,8 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import wupitch.android.R
+import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import wupitch.android.presentation.theme.SplashTheme
 
 @AndroidEntryPoint
@@ -58,13 +61,17 @@ class SplashFragment : Fragment() {
 
             //delay(1000L)
 
+
+
             val jwt = viewModel.readJwt()
             Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main){
-//                if(jwt != null)
-               findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
-//                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+
+
+
+                if(jwt != null && jwt.isNotEmpty()) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
                 //development 용도.
                 //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)

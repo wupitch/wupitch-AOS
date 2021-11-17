@@ -5,14 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import wupitch.android.data.repository.CheckValidRepositoryImpl
-import wupitch.android.data.repository.GetDistrictRepositoryImpl
-import wupitch.android.data.repository.GetSportRepositoryImpl
-import wupitch.android.data.repository.KakaoLoginRepositoryImpl
-import wupitch.android.domain.repository.CheckValidRepository
-import wupitch.android.domain.repository.GetDistrictRepository
-import wupitch.android.domain.repository.GetSportRepository
-import wupitch.android.domain.repository.KakaoLoginRepository
+import wupitch.android.data.repository.*
+import wupitch.android.domain.repository.*
 import javax.inject.Singleton
 
 @Module
@@ -41,5 +35,11 @@ object RepositoryModule {
     @Singleton
     fun provideCheckValidRepository(retrofit: Retrofit) : CheckValidRepository {
         return CheckValidRepositoryImpl(retrofit)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignupRepository(retrofit: Retrofit) : SignupRepository {
+        return SignupRepositoryImpl(retrofit)
     }
 }

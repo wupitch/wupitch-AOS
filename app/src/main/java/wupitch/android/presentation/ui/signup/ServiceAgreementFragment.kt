@@ -37,7 +37,7 @@ import wupitch.android.presentation.ui.signup.components.ToggleIcon
 @AndroidEntryPoint
 class ServiceAgreementFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,22 +48,17 @@ class ServiceAgreementFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    if(stopSignupState.value) {
-                        findNavController().navigateUp()
-                    }
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
+                    if(stopSignupState.value) { findNavController().navigateUp() }
+
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
                             textString = stringResource(id = R.string.warning_stop_signup))
                     }
                     BackHandler {
-                        if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                        if(viewModel.userPushAgreed.value != null) dialogOpenState.value = true
                         else findNavController().navigateUp()
                     }
                     ConstraintLayout(
@@ -73,25 +68,17 @@ class ServiceAgreementFragment : Fragment() {
                     ) {
                         val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, nextBtn)  = createRefs()
 
-                        val allToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val serviceToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val privacyToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val pushToggleState = remember {
-                            mutableStateOf(false)
-                        }
+                        val allToggleState = remember { mutableStateOf(false) }
+                        val serviceToggleState = remember { mutableStateOf(false) }
+                        val privacyToggleState = remember { mutableStateOf(false) }
+                        val pushToggleState = remember { mutableStateOf(false) }
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
-                            if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                            if(viewModel.userPushAgreed.value != null) dialogOpenState.value = true
                             else findNavController().navigateUp()
                         })
 
@@ -249,7 +236,7 @@ class ServiceAgreementFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(serviceToggleState.value && privacyToggleState.value){
-                                viewModel.setUserNotiAgreement(pushToggleState.value)
+                                viewModel.setUserPushAgreement(pushToggleState.value)
                                 findNavController().navigate(R.id.action_serviceAgreementFragment_to_emailPwFragment)
                             }
                         }
