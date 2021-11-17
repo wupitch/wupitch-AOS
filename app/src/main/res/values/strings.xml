@@ -15,6 +15,12 @@
     <string name="onboarding_subtitle4">서로의 스포츠 활동 사진을 공유하세요.</string>
     <string name="skip_onboarding">건너뛰기</string>
 
+<!--    login-->
+    <string name="not_member_yet">아직 회원이 아니신가요?</string>
+    <string name="signup_with_email">이메일로 회원가입</string>
+    <string name="login">로그인</string>
+    <string name="login_pw">비밀번호</string>
+
     <!--    카카오 로그인-->
     <string name="kakao_native_app_key">b587874a0a178d33f63d9dd3a38b35b9</string>
     <string name="login_kakao_access_denied_toast_message">접근이 거부 됨(동의 취소)</string>

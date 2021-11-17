@@ -14,6 +14,7 @@ object Constants {
     )
     val JWT_PREFERENCE_KEY = stringPreferencesKey("jwt_token")
     val USER_NICKNAME = stringPreferencesKey("user_nickname")
+    val USER_EMAIL = stringPreferencesKey("user_email")
     val USER_ID = intPreferencesKey("user_id")
 
     const val SEARCH_PAGE_NUM = 2

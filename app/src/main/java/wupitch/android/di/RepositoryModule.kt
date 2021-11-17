@@ -42,4 +42,10 @@ object RepositoryModule {
     fun provideSignupRepository(retrofit: Retrofit) : SignupRepository {
         return SignupRepositoryImpl(retrofit)
     }
+
+    @Provides
+    @Singleton
+    fun provideLoginRepository(retrofit: Retrofit) : LoginRepository {
+        return LoginRepositoryImpl(retrofit)
+    }
 }

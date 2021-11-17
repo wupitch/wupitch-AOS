@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_splashFragment_to_idCardFragment"
             app:destination="@id/idCardFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
@@ -101,6 +104,9 @@
         <action
             android:id="@+id/action_onboardingFragment_to_serviceAgreementFragment"
             app:destination="@id/serviceAgreementFragment" />
+        <action
+            android:id="@+id/action_onboardingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -236,5 +242,16 @@
         <action
             android:id="@+id/action_idCardCameraFragment_to_reqIdCertiFragment"
             app:destination="@id/reqIdCertiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="wupitch.android.presentation.ui.onboarding.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_serviceAgreementFragment"
+            app:destination="@id/serviceAgreementFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>
