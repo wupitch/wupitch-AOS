@@ -33,7 +33,10 @@ class SignupViewModel @Inject constructor(
     val isNicknameValid: LiveData<Boolean?> = _isNicknameValid
 
     private var _userNickname = MutableLiveData<String?>()
+    val userNickname: LiveData<String?> = _userNickname
+
     private var _userIntroduce = MutableLiveData<String>()
+    val userIntroduce: LiveData<String> = _userIntroduce
 
     private var _isEmailValid = MutableLiveData<Boolean?>()
     val isEmailValid: LiveData<Boolean?> = _isEmailValid

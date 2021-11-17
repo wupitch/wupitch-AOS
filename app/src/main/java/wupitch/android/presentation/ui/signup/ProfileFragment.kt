@@ -1,14 +1,17 @@
 package wupitch.android.presentation.ui.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -80,8 +83,8 @@ class ProfileFragment : Fragment() {
                     ) {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
-                        val nicknameState = remember { mutableStateOf("") }
-                        val introState = remember { mutableStateOf("") }
+                        val nicknameState = remember { mutableStateOf(viewModel.userNickname.value ?: "") }
+                        val introState = remember { mutableStateOf(viewModel.userIntroduce.value?: "") }
 
                         val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
 
@@ -237,7 +240,10 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardOptions = KeyboardOptions(imeAction = if(validateNickname) ImeAction.Next else ImeAction.Done),
+                 keyboardActions = KeyboardActions (onDone = {
+                        setKeyboardDown()
+                    }),
                 modifier = modifier
                     .clip(RoundedCornerShape(8.dp))
                     .background(colorResource(id = R.color.gray04))
@@ -277,5 +283,10 @@ class ProfileFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun setKeyboardDown() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }
