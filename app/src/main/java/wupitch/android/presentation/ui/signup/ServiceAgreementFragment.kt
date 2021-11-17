@@ -58,7 +58,7 @@ class ServiceAgreementFragment : Fragment() {
                             textString = stringResource(id = R.string.warning_stop_signup))
                     }
                     BackHandler {
-                        if(viewModel.userPushAgreed.value != null) dialogOpenState.value = true
+                        if(viewModel.pushToggleState.value != null) dialogOpenState.value = true
                         else findNavController().navigateUp()
                     }
                     ConstraintLayout(
@@ -68,17 +68,17 @@ class ServiceAgreementFragment : Fragment() {
                     ) {
                         val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, nextBtn)  = createRefs()
 
-                        val allToggleState = remember { mutableStateOf(false) }
-                        val serviceToggleState = remember { mutableStateOf(false) }
-                        val privacyToggleState = remember { mutableStateOf(false) }
-                        val pushToggleState = remember { mutableStateOf(false) }
+                        val allToggleState = remember { mutableStateOf(viewModel.allToggleState.value) }
+                        val serviceToggleState = remember { mutableStateOf(viewModel.serviceToggleState.value) }
+                        val privacyToggleState = remember { mutableStateOf(viewModel.privacyToggleState.value) }
+                        val pushToggleState = remember { mutableStateOf(viewModel.pushToggleState.value ?: false) }
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
-                            if(viewModel.userPushAgreed.value != null) dialogOpenState.value = true
+                            if(viewModel.pushToggleState.value != null) dialogOpenState.value = true
                             else findNavController().navigateUp()
                         })
 
@@ -236,7 +236,11 @@ class ServiceAgreementFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(serviceToggleState.value && privacyToggleState.value){
-                                viewModel.setUserPushAgreement(pushToggleState.value)
+                                viewModel.setPushToggleState(pushToggleState.value)
+                                viewModel.setAllToggleState(allToggleState.value)
+                                viewModel.setServiceToggleState(serviceToggleState.value)
+                                viewModel.setPrivacyToggleState(privacyToggleState.value)
+
                                 findNavController().navigate(R.id.action_serviceAgreementFragment_to_emailPwFragment)
                             }
                         }

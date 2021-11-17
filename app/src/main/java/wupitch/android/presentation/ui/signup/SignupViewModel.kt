@@ -2,6 +2,9 @@ package wupitch.android.presentation.ui.signup
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -26,8 +29,18 @@ class SignupViewModel @Inject constructor(
     @ApplicationContext val context : Context
 ) : ViewModel() {
 
-    private var _userPushAgreed = MutableLiveData<Boolean>()
-    val userPushAgreed : LiveData<Boolean> = _userPushAgreed
+    private var _allToggleState = mutableStateOf<Boolean>(false)
+    val allToggleState : State<Boolean> = _allToggleState
+
+    private var _serviceToggleState = mutableStateOf<Boolean>(false)
+    val serviceToggleState : State<Boolean> = _serviceToggleState
+
+    private var _privacyToggleState = mutableStateOf<Boolean>(false)
+    val privacyToggleState : State<Boolean> = _privacyToggleState
+
+    private var _pushToggleState = MutableLiveData<Boolean>()
+    val pushToggleState : LiveData<Boolean> = _pushToggleState
+
 
     private var _isNicknameValid = MutableLiveData<Boolean?>()
     val isNicknameValid: LiveData<Boolean?> = _isNicknameValid
@@ -53,8 +66,17 @@ class SignupViewModel @Inject constructor(
     private var _signupState = MutableLiveData<Boolean>()
     val signupState : LiveData<Boolean> = _signupState
 
-    fun setUserPushAgreement (userAgreed : Boolean) {
-        _userPushAgreed.value = userAgreed
+    fun setAllToggleState (state : Boolean) {
+        _allToggleState.value = state
+    }
+    fun setServiceToggleState (state : Boolean) {
+        _serviceToggleState.value = state
+    }
+    fun setPrivacyToggleState (state : Boolean) {
+        _privacyToggleState.value = state
+    }
+    fun setPushToggleState (state : Boolean) {
+        _pushToggleState.value = state
     }
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
@@ -105,15 +127,11 @@ class SignupViewModel @Inject constructor(
 
     fun checkPwValid(pw: String) {
 
-        Log.d("{SignupViewModel.isPwValid}", pw)
         if (pw.isEmpty()) {
             _isPwValid.value = null
             return
         }
-
         val isPwValid = pw.matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$".toRegex())
-        Log.d("{SignupViewModel.isPwValid}", isPwValid.toString())
-
         if (isPwValid) {
             _isPwValid.value = true
             _userPw.value = pw
@@ -127,7 +145,7 @@ class SignupViewModel @Inject constructor(
         val signupReq = SignupReq(
             email = _userEmail.value!!,
             introduce = _userIntroduce.value!!,
-            isPushAgree = _userPushAgreed.value!!,
+            isPushAgree = _pushToggleState.value!!,
             nickname = _userNickname.value!!,
             password = _userPw.value!!
         )
