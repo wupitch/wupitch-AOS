@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_mainFragment_to_createCrewSport"
             app:destination="@id/createCrewSport" />
+        <action
+            android:id="@+id/action_mainFragment_to_impromptuDetailFragment"
+            app:destination="@id/impromptuDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -254,4 +257,8 @@
             android:id="@+id/action_loginFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/impromptuDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.ImpromptuDetailFragment"
+        android:label="ImpromptuDetailFragment" />
 </navigation>

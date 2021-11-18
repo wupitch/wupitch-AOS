@@ -32,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.CreateFab
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
 import wupitch.android.presentation.ui.main.home.components.CrewList
 
@@ -100,23 +101,16 @@ class HomeFragment : Fragment() {
                                             R.id.action_mainFragment_to_crewDetailFragment, bundle
                                         )
                                 })
-                            FloatingActionButton(
+                            CreateFab(
                                 modifier = Modifier
                                     .constrainAs(fab) {
                                         end.linkTo(parent.end, margin = 24.dp)
                                         bottom.linkTo(parent.bottom, margin = 20.dp)
-                                    }
-                                    .size(56.dp),
-                                shape = CircleShape,
-                                backgroundColor = colorResource(id = R.color.main_black),
-                                elevation = FloatingActionButtonDefaults.elevation(10.dp),
+                                    },
                                 onClick = {
                                     activity?.findNavController(R.id.main_nav_container_view)
                                         ?.navigate(R.id.action_mainFragment_to_createCrewSport)
-                                }) {
-                                    Icon(painter = painterResource(id = R.drawable.ic_btn_06_add), contentDescription = "fab icon", tint = Color.White)
-
-                            }
+                                })
                         }
                     }
                 }

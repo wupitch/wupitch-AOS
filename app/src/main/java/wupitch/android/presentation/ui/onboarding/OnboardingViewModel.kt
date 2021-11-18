@@ -11,6 +11,8 @@ import com.google.accompanist.pager.PagerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.Retrofit
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
 import wupitch.android.common.Resource
@@ -19,13 +21,15 @@ import wupitch.android.data.remote.dto.KakaoLoginRes
 import wupitch.android.domain.model.LoginReq
 import wupitch.android.domain.repository.KakaoLoginRepository
 import wupitch.android.domain.repository.LoginRepository
+import wupitch.android.util.NetworkUtil
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     @ApplicationContext val context: Context,
     private val loginRepository: LoginRepository,
-    private val kakaoLoginRepository: KakaoLoginRepository
+    private val kakaoLoginRepository: KakaoLoginRepository,
+    private val retrofit: Retrofit
 ) : ViewModel() {
 
 
@@ -46,6 +50,7 @@ class OnboardingViewModel @Inject constructor(
             password = userPw.value
         )
         val response = loginRepository.login(loginReq)
+
         if(response.isSuccessful) {
             response.body()?.let { loginRes ->
                 if(loginRes.isSuccess) {
@@ -58,7 +63,13 @@ class OnboardingViewModel @Inject constructor(
                 }
                 else _loginState.value = LoginState(error = loginRes.message)
             }
-        }else _loginState.value = LoginState(error = "로그인에 실패하였습니다.")
+        }else{
+            val error = response.errorBody()?.let { NetworkUtil(retrofit).getErrorResponse(it) }
+            Log.d("{OnboardingViewModel.tryLogin}", "error : ${error?.message}")
+            Log.d("{OnboardingViewModel.tryLogin}", response.raw().message)
+            Log.d("{OnboardingViewModel.tryLogin}", response.message())
+            _loginState.value = LoginState(error = error?.message ?: "")
+        }
     }
 
     fun postKakaoLogin(kakaoUserInfo: KakaoLoginReq) = viewModelScope.launch {

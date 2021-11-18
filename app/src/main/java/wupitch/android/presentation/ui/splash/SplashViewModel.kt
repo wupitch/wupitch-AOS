@@ -19,11 +19,11 @@ class SplashViewModel @Inject constructor(
     suspend fun readJwt() : String? {
 
         //development 용도
-        context.dataStore.edit { settings ->
-            settings[Constants.JWT_PREFERENCE_KEY] = ""
-            settings[Constants.USER_ID] = -1
-            settings[Constants.USER_NICKNAME] = ""
-        }
+//        context.dataStore.edit { settings ->
+//            settings[Constants.JWT_PREFERENCE_KEY] = ""
+//            settings[Constants.USER_ID] = -1
+//            settings[Constants.USER_NICKNAME] = ""
+//        }
 
         val jwtPreferenceFlow = context.dataStore.data.first()
         return jwtPreferenceFlow[Constants.JWT_PREFERENCE_KEY]
