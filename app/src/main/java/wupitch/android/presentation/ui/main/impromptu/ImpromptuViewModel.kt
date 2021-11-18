@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.Resource
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.domain.repository.GetDistrictRepository
+import wupitch.android.presentation.ui.main.impromptu_detail.JoinImpromptuState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -109,12 +110,15 @@ class ImpromptuViewModel @Inject constructor(
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
 
+    private var _joinImpromptuState = mutableStateOf(JoinImpromptuState())
+    val joinImpromptuState : State<JoinImpromptuState> = _joinImpromptuState
+
 
     //todo get list from server.
     fun getImpromptuList () = viewModelScope.launch {
         _impromptuListState.value = ImpromptuListState(isLoading = true)
 
-        delay(1200L)
+        delay(500L)
 
         _impromptuListState.value = ImpromptuListState(data = impromptuList.value)
     }
@@ -130,6 +134,17 @@ class ImpromptuViewModel @Inject constructor(
             }
         } else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
 
+    }
+
+    fun initJoinImpromptuState() {
+        _joinImpromptuState.value = JoinImpromptuState()
+    }
+
+    fun joinImpromptu() = viewModelScope.launch {
+        _joinImpromptuState.value = JoinImpromptuState(isLoading = true)
+        delay(1200L)
+        //todo
+        _joinImpromptuState.value = JoinImpromptuState(isSuccess = true)
     }
 
 }

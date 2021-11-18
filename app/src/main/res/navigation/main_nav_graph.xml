@@ -259,6 +259,11 @@
     </fragment>
     <fragment
         android:id="@+id/impromptuDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.ImpromptuDetailFragment"
-        android:label="ImpromptuDetailFragment" />
+        android:name="wupitch.android.presentation.ui.main.impromptu_detail.ImpromptuDetailFragment"
+        android:label="ImpromptuDetailFragment" >
+        <argument
+            android:name="impromptu_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>

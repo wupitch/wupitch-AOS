@@ -90,7 +90,7 @@ class ImpromptuFragment : Fragment() {
                                     },
                                     list = list,
                                     navigationToCrewDetailScreen = {
-                                        val bundle = Bundle().apply { putInt("crewId", it) }
+                                        val bundle = Bundle().apply { putInt("impromptu_id", it) }
                                         activity?.findNavController(R.id.main_nav_container_view)
                                             ?.navigate(
                                                 R.id.action_mainFragment_to_impromptuDetailFragment, bundle)

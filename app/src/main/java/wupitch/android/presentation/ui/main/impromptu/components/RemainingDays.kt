@@ -20,12 +20,13 @@ import wupitch.android.presentation.theme.Roboto
 @Composable
 fun RemainingDays (
     modifier: Modifier,
-    remainingDays : Int
+    remainingDays : Int,
+    isDetail : Boolean = false
 ){
     Box(modifier = modifier
-        .clip(RoundedCornerShape(12.dp))
+        .clip(RoundedCornerShape(if(isDetail) 14.dp else 12.dp))
         .background(if (remainingDays < 4) Color.Black else colorResource(id = R.color.gray03))
-        .padding(horizontal = 8.dp, vertical = 1.dp)
+        .padding(horizontal = if(isDetail)15.dp else 8.dp, vertical = if(isDetail) 4.dp else 2.dp)
     ) {
         Text(
             text = "D-$remainingDays",
@@ -33,7 +34,6 @@ fun RemainingDays (
             fontFamily = Roboto,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
-            lineHeight = 22.sp
         )
     }
 }

@@ -154,6 +154,9 @@
     <string name="three">3</string>
     <string name="register">가입하기</string>
     <string name="end_sentence">&#160;입니다.</string>
+    <string name="crew_guide1">크루 가입 및 손님 신청 시\, 빠른 시일 이내에 크루 리더로부터의 개별 연락이 취해질 예정입니다.</string>
+    <string name="crew_guide2">크루 가입 신청 승인 시, \'내 활동\' 에서 크루 소식 확인이 가능합니다.</string>
+    <string name="crew_guide3">크루 가입 및 손님 신청 취소는 \'프로필\' 에서 가능합니다. </string>
 
 <!--    search-->
     <string name="search">검색</string>
@@ -230,5 +233,17 @@
     <string name="from_gallery">갤러리에서 고르기</string>
     <string name="use_default_image">기본 이미지 사용</string>
     <string name="time_warning">종료시간이 시작시간보다 늦어야 해요!</string>
+
+<!--    impromptu detail-->
+    <string name="join_success_impromptu">참여 신청이 완료됐습니다!\n문의를 통해 번개 리더와 연락할 수 있어요.</string>
+    <string name="info_transferred_to_impromptu_leader">(번개리더에게 프로필이 전달됩니다.)</string>
+    <string name="not_enough_info_impromptu">모든 프로필 정보가 기입되어야\n번개에 신청할 수 있습니다.</string>
+    <string name="join_impromptu">참여하기</string>
+    <string name="impromptu_guide_dot">&#160;&#160;&#8226;&#160;&#160;</string>
+    <string name="impromptu_guide1">번개 참여 혹은 모집 마감 시\, 빠른 시일 이내에 번개 리더로부터의 개별 연락이 취해질 예정입니다.</string>
+    <string name="impromptu_guide2">별도의 승인 절차 없이 번개 참여가 가능합니다.</string>
+    <string name="impromptu_guide3">목표 모집인원의 2\/3 이상의 참여자가 모였을 시\, 번개 리더에 의해 번개 모집이 조기 마감될 수 있습니다.</string>
+    <string name="impromptu_guide4">번개 참여 취소는 \'프로필\' 에서 가능합니다.</string>
+
 
 </resources>
