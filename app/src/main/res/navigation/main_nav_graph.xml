@@ -113,8 +113,13 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="wupitch.android.presentation.ui.main.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:name="wupitch.android.presentation.ui.main.search.components.SearchFragment"
+        android:label="SearchFragment" >
+        <argument
+            android:name="selected_tab"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
     <fragment
         android:id="@+id/filterFragment"
         android:name="wupitch.android.presentation.ui.main.filter.FilterFragment"

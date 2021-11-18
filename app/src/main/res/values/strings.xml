@@ -35,8 +35,8 @@
 
 <!--    회원가입-->
     <string name="service_agreement_title_top">에 오신 것을</string>
-    <string name="service_agreement_title_bottom">환영합니다.</string>
-    <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 즐겨주세요.</string>
+    <string name="service_agreement_title_bottom">환영해요</string>
+    <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 이용해주세요.</string>
     <string name="agree_all">전체동의</string>
     <string name="terms_of_service_agreement">이용약관</string>
     <string name="terms_of_privacy_policy">개인정보 수집 및 이용</string>
@@ -160,8 +160,9 @@
 
 <!--    search-->
     <string name="search">검색</string>
-    <string name="search_tab_crew">&#160;&#160;크루&#160;&#160;</string>
-    <string name="search_tab_impromptu">&#160;&#160;번개&#160;&#160;</string>
+    <string name="search_tab_crew">크루</string>
+    <string name="search_tab_impromptu">번개</string>
+    <string name="no_search_result">\‘%s\’에 대한 결과가 없어요</string>
 
 <!--    filter-->
     <string name="filter">필터</string>
