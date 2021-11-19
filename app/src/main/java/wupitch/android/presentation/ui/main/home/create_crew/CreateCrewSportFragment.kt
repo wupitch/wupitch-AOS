@@ -64,15 +64,10 @@ class CreateCrewSportFragment : Fragment() {
 
             setContent {
 
-                val stopSignupState = remember {
-                    mutableStateOf(false)
-                }
-                val dialogOpenState = remember {
-                    mutableStateOf(false)
-                }
-                if (stopSignupState.value) {
-                    findNavController().navigateUp()
-                }
+                val stopSignupState = remember { mutableStateOf(false) }
+                val dialogOpenState = remember { mutableStateOf(false) }
+
+                if (stopSignupState.value) { findNavController().navigateUp() }
                 if (dialogOpenState.value) {
                     StopWarningDialog(
                         dialogOpenState = dialogOpenState,
@@ -81,7 +76,7 @@ class CreateCrewSportFragment : Fragment() {
                     )
                 }
 
-                val sportSelectedState = remember { mutableStateOf(-1) }
+                val sportSelectedState = remember { viewModel.crewSportId }
 
                 BackHandler {
                     if (viewModel.userDistrictId.value != null) dialogOpenState.value = true
@@ -140,9 +135,15 @@ class CreateCrewSportFragment : Fragment() {
                         val sportRememberList = mutableListOf<FilterItem>()
 
                         sportsList.data.forEach {
-                            sportRememberList.add(FilterItem(it.name, remember {
+                            if(it.state.value){
+                                sportRememberList.add(FilterItem(it.name, remember {
+                                    mutableStateOf(true)
+                                }))
+                            }else {
+                                 sportRememberList.add(FilterItem(it.name, remember {
                                 mutableStateOf(false)
                             }))
+                            }
                         }
 
                         //아래가 여러번 불림. 왜???  sportsList.data 가 변하는 것도 아닌데...
@@ -180,7 +181,7 @@ class CreateCrewSportFragment : Fragment() {
                                 //한 파일안 에 있고 아래 state 코드가 없으면 이 if문 이 여러번 불리지 않는다.
                                 //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
                                 //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
-                                sportSelectedState.value = it
+                                viewModel.setCrewSport(it)
                                 Log.d(
                                     "{CreateCrewSport.onCreateView}",
                                     "스포츠 : ${sportSelectedState.value} "
@@ -207,7 +208,7 @@ class CreateCrewSportFragment : Fragment() {
                     ) {
                         if (sportSelectedState.value != -1) {
                             Log.d("{CreateCrewSport.onCreateView}", "next btn clicked!")
-                            //todo viewmodel 에 선택된 sport 보내기.
+
                             viewModel.setCrewSport(sportSelectedState.value)
                             findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)
                         }

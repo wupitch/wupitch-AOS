@@ -25,11 +25,11 @@ class CreateCrewViewModel @Inject constructor(
     private var _sportsList = mutableStateOf(SportState())
     val sportsList: State<SportState> = _sportsList
 
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList : State<DistrictState> = _districtList
-
     private var _crewSportId = mutableStateOf(-1)
     val crewSportId : State<Int> = _crewSportId
+
+    private var _districtList = mutableStateOf(DistrictState())
+    val districtList : State<DistrictState> = _districtList
 
     private var _userDistrictId = MutableLiveData<Int>()
     val userDistrictId : LiveData<Int> = _userDistrictId
@@ -60,13 +60,22 @@ class CreateCrewViewModel @Inject constructor(
         val response = getSportRepository.getSport()
         if (response.isSuccessful) {
             response.body()?.let { sportRes ->
-                if (sportRes.isSuccess) _sportsList.value =
-                    SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }.map { it.toFilterItem() })
+                if (sportRes.isSuccess) {
+                    _sportsList.value =
+                        SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }.map { it.toFilterItem() })
+                    _sportsList.value.data.forEachIndexed { index, filterItem ->
+                        if(_crewSportId.value == index){
+                            filterItem.state.value = true
+                        }
+                    }
+                }
+
                 else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
             }
         } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
 
     }
+
 
     fun getDistricts() = viewModelScope.launch {
         _districtList.value = DistrictState(isLoading = true)

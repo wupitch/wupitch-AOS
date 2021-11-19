@@ -49,7 +49,7 @@ fun NumberTextField(
             fontSize = 16.sp,
             fontFamily = Roboto,
             fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.End
+            textAlign = TextAlign.Start
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         maxLines = 1,
