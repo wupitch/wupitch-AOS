@@ -197,8 +197,8 @@ class ImpromptuFragment : Fragment() {
                             }
                             .size(24.dp),
                         onClick = {
-//                            activity?.findNavController(R.id.main_nav_container_view)
-//                                ?.navigate(R.id.action_mainFragment_to_filterFragment)
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_impromptuFilterFragment)
                         }
                     ) {
                         Icon(

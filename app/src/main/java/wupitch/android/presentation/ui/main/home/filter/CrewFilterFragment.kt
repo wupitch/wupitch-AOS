@@ -1,13 +1,10 @@
-package wupitch.android.presentation.ui.main.filter
+package wupitch.android.presentation.ui.main.home.filter
 
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -28,28 +25,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.RepetitionLayout
-import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.TitleToolbar
+import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.HomeViewModel
 import wupitch.android.util.TimeType
 
 @AndroidEntryPoint
-class FilterFragment : Fragment() {
+class CrewFilterFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
     private val viewModel: HomeViewModel by viewModels()
@@ -224,7 +216,10 @@ class FilterFragment : Fragment() {
                                 checkedListState = dayState
                             )
                             Spacer(modifier = Modifier.height(32.dp))
-                            TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet)
+                            TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet){
+                                val timeBottomSheet = TimeBottomSheetFragment(it, viewModel)
+                                timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
+                            }
 
                             Spacer(modifier = Modifier.height(32.dp))
                             NonRepetitionLayout(
@@ -281,42 +276,6 @@ class FilterFragment : Fragment() {
                 }
             }
         }
-    }
-
-    @Composable
-    fun ShowSnackbar(
-        snackbarHostState: SnackbarHostState,
-        modifier: Modifier
-    ) {
-
-        SnackbarHost(
-            modifier = modifier,
-            hostState = snackbarHostState,
-            snackbar = {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(colorResource(id = R.color.main_black))
-                        .padding(horizontal = 16.dp, vertical = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        modifier = Modifier.size(24.dp),
-                        painter = painterResource(id = R.drawable.image_79),
-                        contentDescription = null
-                    )
-                    Text(
-                        modifier = Modifier.padding(start = 8.dp),
-                        text = snackbarHostState.currentSnackbarData?.message ?: "",
-                        color = Color.White,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                }
-            })
-
     }
 
     @Composable
@@ -402,82 +361,7 @@ class FilterFragment : Fragment() {
     }
 
 
-    @Composable
-    fun TimeFilter(
-        startTimeState: State<String>,
-        endTimeState: State<String>,
-        hasStartTimeSet: State<Boolean?>,
-        hasEndTimeSet: State<Boolean?>
-    ) {
 
-
-        Column(Modifier.fillMaxWidth()) {
-            Text(
-                modifier = Modifier.align(Alignment.Start),
-                text = stringResource(id = R.string.time),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-            )
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TimeButton(startTimeState, TimeType.START, hasStartTimeSet)
-                Spacer(modifier = Modifier.width(4.dp))
-                Divider(
-                    Modifier
-                        .width(8.dp)
-                        .height(1.dp)
-                        .background(
-                            if (hasEndTimeSet.value == true) colorResource(id = R.color.main_orange)
-                            else colorResource(id = R.color.gray02)
-                        )
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                TimeButton(endTimeState, TimeType.END, hasEndTimeSet)
-            }
-        }
-    }
-
-
-    @Composable
-    private fun TimeButton(
-        timeState: State<String>,
-        timeType: TimeType,
-        hasSetTimeState: State<Boolean?>
-    ) {
-
-        Button(
-            modifier = Modifier
-                .width(96.dp)
-                .height(48.dp),
-            shape = RoundedCornerShape(8.dp),
-            border = BorderStroke(
-                width = 1.dp,
-                color = if (hasSetTimeState.value == true) colorResource(id = R.color.main_orange)
-                else colorResource(id = R.color.gray02)
-            ),
-            colors = ButtonDefaults.buttonColors(Color.White),
-            elevation = null,
-            onClick = {
-                val timeBottomSheet = TimeBottomSheetFragment(timeType, viewModel)
-                timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
-            }
-        ) {
-            Text(
-                text = timeState.value,
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = if (hasSetTimeState.value == true) colorResource(id = R.color.main_orange)
-                else colorResource(id = R.color.gray02)
-            )
-        }
-    }
 
 
     @Composable

@@ -14,8 +14,8 @@
             android:id="@+id/action_mainFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
         <action
-            android:id="@+id/action_mainFragment_to_filterFragment"
-            app:destination="@id/filterFragment" />
+            android:id="@+id/action_mainFragment_to_crewFilterFragment"
+            app:destination="@id/crewFilterFragment" />
         <action
             android:id="@+id/action_mainFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_mainFragment_to_impromptuDetailFragment"
             app:destination="@id/impromptuDetailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_impromptuFilterFragment"
+            app:destination="@id/impromptuFilterFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -121,9 +124,9 @@
             android:defaultValue="0" />
     </fragment>
     <fragment
-        android:id="@+id/filterFragment"
-        android:name="wupitch.android.presentation.ui.main.filter.FilterFragment"
-        android:label="FilterFragment" />
+        android:id="@+id/crewFilterFragment"
+        android:name="wupitch.android.presentation.ui.main.home.filter.CrewFilterFragment"
+        android:label="CrewFilterFragment" />
     <fragment
         android:id="@+id/notificationFragment"
         android:name="wupitch.android.presentation.ui.main.notification.NotificationFragment"
@@ -271,4 +274,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/impromptuFilterFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.filter.ImpromptuFilterFragment"
+        android:label="ImpromptuFilterFragment" />
 </navigation>

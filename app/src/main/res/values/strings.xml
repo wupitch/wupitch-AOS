@@ -164,7 +164,7 @@
     <string name="search_tab_impromptu">번개</string>
     <string name="no_search_result">\‘%s\’에 대한 결과가 없어요</string>
 
-<!--    filter-->
+<!--   crew filter-->
     <string name="filter">필터</string>
     <string name="apply">적용하기</string>
     <string name="initialize">초기화</string>
@@ -245,6 +245,17 @@
     <string name="impromptu_guide2">별도의 승인 절차 없이 번개 참여가 가능합니다.</string>
     <string name="impromptu_guide3">목표 모집인원의 2\/3 이상의 참여자가 모였을 시\, 번개 리더에 의해 번개 모집이 조기 마감될 수 있습니다.</string>
     <string name="impromptu_guide4">번개 참여 취소는 \'프로필\' 에서 가능합니다.</string>
-
+    
+<!--    impromptu filter-->
+    <string name="schedule">일정</string>
+    <string name="in_one_week">1주 이내</string>
+    <string name="in_two_weeks">2주 이내</string>
+    <string name="in_three_weeks">3주 이내</string>
+    <string name="in_four_weeks">4주 이내</string>
+    <string name="num_of_recruitment">모집인원</string>
+    <string name="less_than_five">5명 이하</string>
+    <string name="six_to_ten">6~10명</string>
+    <string name="eleven_to_fifteen">11명~15명</string>
+    <string name="sixteen_to_twenty">16명~20명</string>
 
 </resources>
