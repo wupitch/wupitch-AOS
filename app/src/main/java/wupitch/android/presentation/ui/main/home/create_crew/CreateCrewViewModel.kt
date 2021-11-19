@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
+import wupitch.android.util.TimeType
+import wupitch.android.util.isEndTimeFasterThanStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,6 +41,17 @@ class CreateCrewViewModel @Inject constructor(
     val isUsingDefaultImage : State<Boolean?> = _isUsingDefaultImage
 
     var imageChosenState = mutableStateOf(false)
+
+    private var _startTime = mutableStateOf("00:00")
+    val startTime : State<String> = _startTime
+
+    private var _endTime = mutableStateOf("00:00")
+    val endTime : State<String> = _endTime
+
+    val hasStartTimeSet = mutableStateOf<Boolean?>(false)
+
+    var hasEndTimeSet = mutableStateOf<Boolean?>(false)
+
 
 
     fun getSports() = viewModelScope.launch {
@@ -86,5 +99,41 @@ class CreateCrewViewModel @Inject constructor(
 
     fun setImageChosenState(attemptedToChoose : Boolean) {
         imageChosenState.value = attemptedToChoose
+    }
+
+    fun setTimeFilter(type : TimeType, hour : Int, min : Int) {
+        var hourString = hour.toString()
+        var minString = min.toString()
+        if(hour < 10) hourString = "0$hour"
+        if(min < 10) minString = "0$min"
+        val timeString = "$hourString:$minString"
+
+        when(type){
+            TimeType.START -> {
+                if(hasEndTimeSet.value == true){
+                    if(isEndTimeFasterThanStart(timeString, _endTime.value)) {
+                        _startTime.value = "00:00"
+                        hasStartTimeSet.value = null
+                    }else {
+                        _startTime.value = timeString
+                        hasStartTimeSet.value = true
+                    }
+                }else {
+                    _startTime.value = timeString
+                    hasStartTimeSet.value = true
+                }
+            }
+            TimeType.END -> {
+
+                if(isEndTimeFasterThanStart(_startTime.value, timeString)) {
+                    _endTime.value = "00:00"
+                    hasEndTimeSet.value = null
+                }
+                else {
+                    _endTime.value = timeString
+                    hasEndTimeSet.value = true
+                }
+            }
+        }
     }
 }

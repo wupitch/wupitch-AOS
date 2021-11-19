@@ -1,7 +1,6 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

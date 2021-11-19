@@ -135,24 +135,8 @@ class CrewFilterFragment : Fragment() {
                     val dayState = remember { mutableStateListOf<Int>() }
                     val ageGroupState = remember { mutableStateListOf<Int>() }
 
-                    val startTimeState = remember { viewModel.startTime }
-                    val endTimeState = remember { viewModel.endTime }
-                    val hasStartTimeSet = remember { viewModel.hasStartTimeSet }
-                    val hasEndTimeSet = remember { viewModel.hasEndTimeSet }
 
-                    val snackbarHostState = remember { SnackbarHostState() }
 
-                    if (hasStartTimeSet.value == null || hasEndTimeSet.value == null) {
-
-                        LaunchedEffect(key1 = snackbarHostState, block = {
-                            snackbarHostState.showSnackbar(
-                                message = getString(R.string.time_warning),
-                                duration = SnackbarDuration.Short
-                            )
-                            if(hasEndTimeSet.value == null) hasEndTimeSet.value = false
-                            if(hasStartTimeSet.value == null) hasStartTimeSet.value = false
-                        })
-                    }
 
                     val crewNumSelectedState = remember { mutableStateOf(-1) }
 
@@ -215,11 +199,6 @@ class CrewFilterFragment : Fragment() {
                                     .height(48.dp),
                                 checkedListState = dayState
                             )
-                            Spacer(modifier = Modifier.height(32.dp))
-                            TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet){
-                                val timeBottomSheet = TimeBottomSheetFragment(it, viewModel)
-                                timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
-                            }
 
                             Spacer(modifier = Modifier.height(32.dp))
                             NonRepetitionLayout(
@@ -262,16 +241,6 @@ class CrewFilterFragment : Fragment() {
                                 end.linkTo(parent.end)
                             }
                         )
-
-                        ShowSnackbar(
-                            snackbarHostState = snackbarHostState,
-                            modifier = Modifier.constrainAs(snackbar) {
-                                start.linkTo(parent.start, margin = 24.dp)
-                                end.linkTo(parent.end, margin = 24.dp)
-                                bottom.linkTo(buttons.top, margin = 16.dp)
-                                width = Dimension.fillToConstraints
-                            })
-
                     }
                 }
             }

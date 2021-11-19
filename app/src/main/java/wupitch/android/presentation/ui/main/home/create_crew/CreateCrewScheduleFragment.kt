@@ -11,9 +11,7 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,22 +29,23 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.FullToolBar
-import wupitch.android.presentation.ui.components.NoToggleLayout
-import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.StopWarningDialog
+import wupitch.android.presentation.ui.components.*
 
+@AndroidEntryPoint
 class CreateCrewScheduleFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
+    private val viewModel : CreateCrewViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -77,12 +76,32 @@ class CreateCrewScheduleFragment : Fragment() {
                     val firstBtnToggleState = remember{ mutableStateOf(false)}
                     val secondBtnToggleState = remember{ mutableStateOf(false)}
 
+                    val startTimeState = remember { viewModel.startTime }
+                    val endTimeState = remember { viewModel.endTime }
+                    val hasStartTimeSet = remember { viewModel.hasStartTimeSet }
+                    val hasEndTimeSet = remember { viewModel.hasEndTimeSet }
+
+                    val snackbarHostState = remember { SnackbarHostState() }
+
+                    if (hasStartTimeSet.value == null || hasEndTimeSet.value == null) {
+
+                        LaunchedEffect(key1 = snackbarHostState, block = {
+                            snackbarHostState.showSnackbar(
+                                message = getString(R.string.time_warning),
+                                duration = SnackbarDuration.Short
+                            )
+                            if(hasEndTimeSet.value == null) hasEndTimeSet.value = false
+                            if(hasStartTimeSet.value == null) hasStartTimeSet.value = false
+                        })
+                    }
+
+
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, topDivider, content, bottomDivider, nextBtn) = createRefs()
+                        val (toolbar, topDivider, content, bottomDivider, nextBtn, snackbar) = createRefs()
 
                         FullToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -127,13 +146,17 @@ class CreateCrewScheduleFragment : Fragment() {
                                 lineHeight = 28.sp
                             )
 
-                            ScheduleLayout()
+                            ScheduleLayout(
+                                startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+                            )
                             PlusButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 toggleState = firstBtnToggleState
                             )
                             if(firstBtnToggleState.value) {
-                                ScheduleLayout()
+                                ScheduleLayout(
+                                    startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+                                )
                                 PlusButton(
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
                                     toggleState = secondBtnToggleState
@@ -146,7 +169,9 @@ class CreateCrewScheduleFragment : Fragment() {
 //                                }
                             }
                             if(secondBtnToggleState.value){
-                                ScheduleLayout()
+                                ScheduleLayout(
+                                    startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+                                )
 
                             }
                             
@@ -164,6 +189,15 @@ class CreateCrewScheduleFragment : Fragment() {
                                 .height(1.dp)
                                 .background(colorResource(id = R.color.gray01))
                         )
+
+                        ShowSnackbar(
+                            snackbarHostState = snackbarHostState,
+                            modifier = Modifier.constrainAs(snackbar) {
+                                start.linkTo(parent.start, margin = 24.dp)
+                                end.linkTo(parent.end, margin = 24.dp)
+                                bottom.linkTo(nextBtn.top, margin = 16.dp)
+                                width = Dimension.fillToConstraints
+                            })
 
                         RoundBtn(
                             modifier = Modifier
@@ -220,7 +254,12 @@ class CreateCrewScheduleFragment : Fragment() {
     }
 
     @Composable
-    private fun ScheduleLayout() {
+    private fun ScheduleLayout(
+        startTimeState : State<String>,
+        endTimeState : State<String>,
+        hasStartTimeSet : MutableState<Boolean?>,
+        hasEndTimeSet : MutableState<Boolean?>
+    ) {
 
         val dayList = listOf<FilterItem>(
             FilterItem(stringResource(id = R.string.monday), remember { mutableStateOf(false) }),
@@ -253,13 +292,10 @@ class CreateCrewScheduleFragment : Fragment() {
         NoToggleLayout(toggleState = toggleState, textString = stringResource(id = R.string.every_other_week))
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = stringResource(id = R.string.time),
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.main_black),
-            fontSize = 16.sp,
-        )
+        TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet){
+            val timeBottomSheet = TimeBottomSheetFragment(it, viewModel)
+            timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
+        }
     }
 
     @Composable

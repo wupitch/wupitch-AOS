@@ -115,16 +115,6 @@ class ImpromptuViewModel @Inject constructor(
     private var _joinImpromptuState = mutableStateOf(JoinImpromptuState())
     val joinImpromptuState : State<JoinImpromptuState> = _joinImpromptuState
 
-    private var _startTime = mutableStateOf("00:00")
-    val startTime : State<String> = _startTime
-
-    private var _endTime = mutableStateOf("00:00")
-    val endTime : State<String> = _endTime
-
-    val hasStartTimeSet = mutableStateOf<Boolean?>(false)
-
-    var hasEndTimeSet = mutableStateOf<Boolean?>(false)
-
 
     //todo get list from server.
     fun getImpromptuList () = viewModelScope.launch {
@@ -157,42 +147,6 @@ class ImpromptuViewModel @Inject constructor(
         delay(1200L)
         //todo
         _joinImpromptuState.value = JoinImpromptuState(isSuccess = true)
-    }
-
-    fun setTimeFilter(type : TimeType, hour : Int, min : Int) {
-        var hourString = hour.toString()
-        var minString = min.toString()
-        if(hour < 10) hourString = "0$hour"
-        if(min < 10) minString = "0$min"
-        val timeString = "$hourString:$minString"
-
-        when(type){
-            TimeType.START -> {
-                if(hasEndTimeSet.value == true){
-                    if(isEndTimeFasterThanStart(timeString, _endTime.value)) {
-                        _startTime.value = "00:00"
-                        hasStartTimeSet.value = null
-                    }else {
-                        _startTime.value = timeString
-                        hasStartTimeSet.value = true
-                    }
-                }else {
-                    _startTime.value = timeString
-                    hasStartTimeSet.value = true
-                }
-            }
-            TimeType.END -> {
-
-                if(isEndTimeFasterThanStart(_startTime.value, timeString)) {
-                    _endTime.value = "00:00"
-                    hasEndTimeSet.value = null
-                }
-                else {
-                    _endTime.value = timeString
-                    hasEndTimeSet.value = true
-                }
-            }
-        }
     }
 
 }

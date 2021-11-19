@@ -10,6 +10,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.databinding.FragmentTimeBottomSheetBinding
 import wupitch.android.presentation.ui.main.home.HomeViewModel
+import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.util.TimeType
 import javax.inject.Inject
@@ -43,13 +44,7 @@ class TimeBottomSheetFragment @Inject constructor(
 
         binding.btnConfirm.setOnClickListener {
             when(viewModel){
-                is HomeViewModel -> {
-                    when(timeType){
-                        TimeType.START -> viewModel.setTimeFilter(TimeType.START, binding.timePicker.hour, binding.timePicker.minute)
-                        TimeType.END -> viewModel.setTimeFilter(TimeType.END, binding.timePicker.hour, binding.timePicker.minute)
-                    }
-                }
-                is ImpromptuViewModel -> {
+                is CreateCrewViewModel -> {
                     when(timeType){
                         TimeType.START -> viewModel.setTimeFilter(TimeType.START, binding.timePicker.hour, binding.timePicker.minute)
                         TimeType.END -> viewModel.setTimeFilter(TimeType.END, binding.timePicker.hour, binding.timePicker.minute)
