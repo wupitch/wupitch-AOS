@@ -112,13 +112,14 @@ class SearchFragment : Fragment() {
                             SearchTextField(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .align(Alignment.CenterVertically), textState = textState
+                                    .align(Alignment.CenterVertically),
+                                textState = textState
                             )
                         }
                         SearchPager(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(top = 18.dp),
+                                .padding(top = 12.dp),
                             scope = scope,
                             pagerState = pagerState
                         )
@@ -286,7 +287,7 @@ class SearchFragment : Fragment() {
         ) {
             tabs.forEachIndexed { index, tabItem ->
                 Tab(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier.background(Color.White).height(43.dp),
                     selected = index == pagerState.currentPage,
                     onClick = {
                         onPageSelected(tabItem)

@@ -25,13 +25,15 @@ fun NumberTextFieldLayout(
     modifier: Modifier,
     textState : MutableState<String>,
     measureString : String,
-    thousandIndicator : Boolean = false
+    thousandIndicator : Boolean = false,
+    hintString: String
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         NumberTextField(
             modifier = modifier,
             textState = textState,
-            thousandIndicator = thousandIndicator
+            thousandIndicator = thousandIndicator,
+            hintString = hintString
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(

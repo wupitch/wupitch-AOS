@@ -123,7 +123,7 @@ class EmailPwFragment : Fragment() {
                             modifier = Modifier
                                 .constrainAs(title) {
                                     start.linkTo(parent.start, margin = 20.dp)
-                                    top.linkTo(toolbar.bottom, margin = 32.dp)
+                                    top.linkTo(toolbar.bottom, margin = 24.dp)
                                 },
                             text = stringResource(id = R.string.input_email_pw),
                             fontFamily = Roboto,

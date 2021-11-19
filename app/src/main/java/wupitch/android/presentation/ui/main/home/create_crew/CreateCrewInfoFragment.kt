@@ -273,7 +273,8 @@ class CreateCrewInfoFragment : Fragment() {
                 .width(59.dp)
                 .height(44.dp),
             textState = textState,
-            measureString = stringResource(id = R.string.people_count_measure)
+            measureString = stringResource(id = R.string.people_count_measure),
+            hintString = stringResource(id = R.string.crew_size_hint)
         )
 
     }

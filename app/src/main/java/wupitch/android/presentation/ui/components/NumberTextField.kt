@@ -38,7 +38,8 @@ import wupitch.android.presentation.theme.Roboto
 fun NumberTextField(
     modifier: Modifier,
     textState: MutableState<String>,
-    thousandIndicator : Boolean = false
+    thousandIndicator : Boolean = false,
+    hintString : String
 ) {
 
     BasicTextField(
@@ -48,7 +49,7 @@ fun NumberTextField(
             fontSize = 16.sp,
             fontFamily = Roboto,
             fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.End
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         maxLines = 1,
@@ -85,20 +86,20 @@ fun NumberTextField(
                     val (hint) = createRefs()
 
                     innerTextField()
-//                    if (textState.value.isEmpty()) {
-//                        Text(
-//                            modifier = Modifier.constrainAs(hint) {
-//                                start.linkTo(parent.start)
-//                                top.linkTo(parent.top)
-//                                bottom.linkTo(parent.bottom)
-//                            },
-//                            text = "0",
-//                            color = colorResource(id = R.color.gray03),
-//                            fontSize = 16.sp,
-//                            fontFamily = Roboto,
-//                            fontWeight = FontWeight.Normal
-//                        )
-//                    }
+                    if (textState.value.isEmpty()) {
+                        Text(
+                            modifier = Modifier.constrainAs(hint) {
+                                start.linkTo(parent.start)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                            },
+                            text = hintString,
+                            color = colorResource(id = R.color.gray03),
+                            fontSize = 16.sp,
+                            fontFamily = Roboto,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
                 }
             }
         }

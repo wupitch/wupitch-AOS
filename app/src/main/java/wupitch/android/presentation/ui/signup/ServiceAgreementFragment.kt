@@ -83,7 +83,7 @@ class ServiceAgreementFragment : Fragment() {
                         })
 
                         Row(modifier = Modifier.constrainAs(titleTop) {
-                            top.linkTo(toolbar.bottom, margin = 32.dp)
+                            top.linkTo(toolbar.bottom, margin = 24.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }) {
                             Text(

@@ -35,7 +35,7 @@
 
 <!--    회원가입-->
     <string name="service_agreement_title_top">에 오신 것을</string>
-    <string name="service_agreement_title_bottom">환영해요</string>
+    <string name="service_agreement_title_bottom">환영해요!</string>
     <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 이용해주세요.</string>
     <string name="agree_all">전체동의</string>
     <string name="terms_of_service_agreement">이용약관</string>
@@ -218,6 +218,7 @@
     <string name="crew_schedule">크루의 정기일정을\n알려주세요.</string>
     <string name="every_other_week">격주</string>
     <string name="crew_fee">회비는 얼마인가요?</string>
+    <string name="fee_hint">000\,000</string>
     <string name="fee_measure">원</string>
     <string name="no_fee">회비 없어요!</string>
     <string name="crew_visitor_fee">일일 손님비는 얼마인가요?</string>
