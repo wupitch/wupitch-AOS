@@ -64,6 +64,8 @@ class CrewDetailFragment : Fragment() {
                     val joinDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
+                    val isPinnedState = remember{ mutableStateOf(false)}
+
                     if (joinVisitorDialogOpenState.value)
                         JoinSuccessDialog(
                             dialogOpen = joinVisitorDialogOpenState,
@@ -80,7 +82,9 @@ class CrewDetailFragment : Fragment() {
                         }
 
                     ConstraintLayout(
-                        modifier = Modifier.fillMaxSize().background(Color.White)
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
                     ) {
                         val (appbar, divider, crewInfo, joinBtns) = createRefs()
 
@@ -121,7 +125,7 @@ class CrewDetailFragment : Fragment() {
                                 .verticalScroll(scrollState)
 
                         ) {
-                            CrewImageCard()
+                            CrewImageCard(isPinnedState)
                             CrewInfo()
                             GrayDivider()
 
@@ -579,7 +583,9 @@ class CrewDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewImageCard() {
+    fun CrewImageCard(
+        pinToggleState : MutableState<Boolean>
+    ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -588,6 +594,7 @@ class CrewDetailFragment : Fragment() {
         ) {
 
             val (icon, pin) = createRefs()
+
             Image(painter = painterResource(id = Sport.getNumOf(0).icon),
                 contentDescription = "crew sport icon",
                 modifier = Modifier
@@ -599,14 +606,12 @@ class CrewDetailFragment : Fragment() {
                     }
                     .size(76.dp))
 
-            Image(painter = painterResource(id = R.drawable.ic_pin),
-                contentDescription = "crew detail pin",
-                modifier = Modifier
-                    .constrainAs(pin) {
-                        top.linkTo(parent.top, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp)
-                    }
-                    .size(24.dp))
+
+            PinToggleButton(modifier = Modifier
+                .constrainAs(pin) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                } , toggleState = pinToggleState )
 
         }
     }

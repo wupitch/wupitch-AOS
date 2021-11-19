@@ -71,6 +71,8 @@ class ImpromptuDetailFragment : Fragment() {
                     val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
+                    val pinToggleState = remember { mutableStateOf(false)}
+
                     val joinState = viewModel.joinImpromptuState.value
 
                     if(joinState.isSuccess == true){
@@ -142,7 +144,7 @@ class ImpromptuDetailFragment : Fragment() {
                                 .verticalScroll(scrollState)
 
                         ) {
-                            CrewImageCard() //todo 썸네일 정해지면 refactoring.
+                            CrewImageCard(pinToggleState) //todo 썸네일 정해지면 refactoring.
 
                             ImpromptuInfo()
                             GrayDivider()
@@ -512,7 +514,9 @@ class ImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewImageCard() {
+    fun CrewImageCard(
+        pinToggleState : MutableState<Boolean>
+    ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -532,14 +536,12 @@ class ImpromptuDetailFragment : Fragment() {
 //                    }
 //                    .size(76.dp))
 
-            Image(painter = painterResource(id = R.drawable.ic_pin),
-                contentDescription = "crew detail pin",
-                modifier = Modifier
-                    .constrainAs(pin) {
-                        top.linkTo(parent.top, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp)
-                    }
-                    .size(24.dp))
+            PinToggleButton(modifier = Modifier
+                .constrainAs(pin) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                } , toggleState = pinToggleState )
+
 
         }
     }
