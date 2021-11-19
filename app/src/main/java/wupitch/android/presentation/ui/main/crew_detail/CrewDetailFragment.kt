@@ -251,7 +251,8 @@ class CrewDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
             Row(Modifier.padding(top = 22.dp)) {
@@ -267,7 +268,8 @@ class CrewDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
             Row(Modifier.padding(top = 22.dp)) {
@@ -283,7 +285,8 @@ class CrewDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
         }
@@ -314,7 +317,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
             VisitorDefLayout(Modifier)
             Text(
@@ -333,7 +337,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
         }
     }
@@ -414,7 +419,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
         }
     }

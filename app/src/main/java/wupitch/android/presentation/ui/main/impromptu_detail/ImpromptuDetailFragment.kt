@@ -234,7 +234,8 @@ class ImpromptuDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
             Row(Modifier.padding(top = 22.dp)) {
@@ -250,7 +251,8 @@ class ImpromptuDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
             Row(Modifier.padding(top = 22.dp)) {
@@ -266,7 +268,8 @@ class ImpromptuDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
             Row(Modifier.padding(top = 22.dp)) {
@@ -282,7 +285,8 @@ class ImpromptuDetailFragment : Fragment() {
                     fontSize = 14.sp,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black)
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
                 )
             }
         }
