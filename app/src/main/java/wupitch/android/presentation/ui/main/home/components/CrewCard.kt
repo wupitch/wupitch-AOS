@@ -33,12 +33,14 @@ fun CrewCard(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Spacer(modifier = Modifier.height(8.dp).fillMaxWidth())
+        Spacer(modifier = Modifier
+            .height(8.dp)
+            .fillMaxWidth())
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(128.dp)
+                .height(126.dp)
                 .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(color = colorResource(id = R.color.gray04))
@@ -70,39 +72,22 @@ fun CrewCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 12.dp, start = 12.dp, end = 10.dp, bottom = 14.dp)
+                    .padding(top = 11.dp, start = 12.dp, end = 12.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                    val (keyword, location, pin) = createRefs()
+                    val (keyword, pin) = createRefs()
 
                     SportKeyword(
                         modifier = Modifier
                             .constrainAs(keyword) {
-                                top.linkTo(pin.top)
+                                top.linkTo(parent.top)
                                 start.linkTo(parent.start)
-                                bottom.linkTo(pin.bottom)
+                                bottom.linkTo(parent.bottom)
                             }
                             .clip(RoundedCornerShape(12.dp))
                             .background(colorResource(id = Sport.BASKETBALL.color))
                             .padding(horizontal = 8.dp, vertical = 1.dp),
                         sportName = Sport.BASKETBALL.sportName
-                    )
-                    Text(
-                        modifier = Modifier
-                            .width(59.dp) //todo : maxLength 함수 만들기.
-                            .constrainAs(location) {
-                                top.linkTo(pin.top)
-                                bottom.linkTo(pin.bottom)
-                                start.linkTo(keyword.end)
-                            }
-                            .padding(start = 8.dp),
-                        text = crewCard.location,
-                        color = Color.Black,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
                     )
                     if (crewCard.isPinned) {
                         Image(
@@ -115,27 +100,27 @@ fun CrewCard(
                             contentDescription = "pin"
                         )
                     }
-
                 }
+                Spacer(modifier = Modifier.height(7.dp))
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
                     text = crewCard.name,
                     color = Color.Black,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
 
-                Row(modifier = Modifier.padding(top = 4.dp)) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(Modifier.padding(vertical = 3.dp)) {
                     if (crewCard.isBiweekly) {
                         Text(
                             text = stringResource(id = R.string.biweekly),
                             color = colorResource(id = R.color.gray05),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                     }
 
@@ -144,7 +129,7 @@ fun CrewCard(
                         color = colorResource(id = R.color.gray05),
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
                     )
 
                     if (crewCard.isMoreThanOnceAWeek) {
@@ -153,27 +138,32 @@ fun CrewCard(
                             color = colorResource(id = R.color.gray05),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
                         )
                     }
                 }
 
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    modifier = Modifier.padding(top = 2.dp),
                     text = crewCard.detailAddress,
                     color = colorResource(id = R.color.gray05),
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 22.sp
                 )
+//                Spacer(modifier = Modifier.height(17.dp))
+
 
 
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp).fillMaxWidth())
+        Spacer(modifier = Modifier
+            .height(10.dp)
+            .fillMaxWidth())
     }
 
 }

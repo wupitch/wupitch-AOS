@@ -15,6 +15,12 @@
     <string name="onboarding_subtitle4">서로의 스포츠 활동 사진을 공유하세요.</string>
     <string name="skip_onboarding">건너뛰기</string>
 
+<!--    login-->
+    <string name="not_member_yet">아직 회원이 아니신가요?</string>
+    <string name="signup_with_email">이메일로 회원가입</string>
+    <string name="login">로그인</string>
+    <string name="login_pw">비밀번호</string>
+
     <!--    카카오 로그인-->
     <string name="kakao_native_app_key">b587874a0a178d33f63d9dd3a38b35b9</string>
     <string name="login_kakao_access_denied_toast_message">접근이 거부 됨(동의 취소)</string>
@@ -29,17 +35,35 @@
 
 <!--    회원가입-->
     <string name="service_agreement_title_top">에 오신 것을</string>
-    <string name="service_agreement_title_bottom">환영합니다.</string>
-    <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 즐겨주세요.</string>
+    <string name="service_agreement_title_bottom">환영해요!</string>
+    <string name="service_agreement_subtitle">서비스의 이용을 위하여 필수 약관 동의가 필요합니다.\n약관에 동의하시고 우피치를 이용해주세요.</string>
     <string name="agree_all">전체동의</string>
     <string name="terms_of_service_agreement">이용약관</string>
     <string name="terms_of_privacy_policy">개인정보 수집 및 이용</string>
     <string name="push_notification_agreement">푸시 알람 동의 (선택)</string>
     <string name="detail_agreement">보기</string>
-    <string name="next_one_over_five">다음 (1/5)</string>
-    <string name="next_two_over_five">다음 (2/5)</string>
-    <string name="next_three_over_five">다음 (3/5)</string>
+    <string name="next_one_over_four">다음 (1/4)</string>
+    <string name="next_two_over_four">다음 (2/4)</string>
+    <string name="next_three_over_four">다음 (3/4)</string>
     <string name="next_four_over_five">다음 (4/5)</string>
+    <string name="input_email_pw">이메일과 비밀번호\n입력해주세요.</string>
+    <string name="email">이메일</string>
+    <string name="allowed_email">사용 가능한 이메일입니다.</string>
+    <string name="not_allowed_email">사용 불가능한 이메일입니다.</string>
+    <string name="pw">비밀번호 (8자 이상 영문/숫자)</string>
+    <string name="not_allowed_pw">사용하실 수 없는 비밀번호입니다.</string>
+    <string name="certify_idcard">신분증을\n인증해주세요.</string>
+    <string name="certify_idcard_subtitle">(주민등록증 원본을 이용해 촬영해주세요.)</string>
+    <string name="certify_idcard_guide1">이름과 생년월일, 성별숫자가 꼭 보여야합니다.</string>
+    <string name="certify_idcard_guide2">식별이 불가능할 경우 승인이 거부될 수 있습니다.</string>
+    <string name="certify_idcard_guide3">신분증 정보는 성별 확인 후 즉시 폐기됩니다.</string>
+    <string name="take_idcard_photo">신분증 촬영</string>
+    <string name="retake">다시 찍기</string>
+    <string name="use_photo">사진 사용</string>
+    <string name="requested_id_certification">인증 요청이\n완료됐어요.</string>
+    <string name="id_certification_process_guide">신분증 인증 승인은 24시간 이내 처리되며,\n푸쉬알림을 통해 확인할 수 있습니다.</string>
+
+
     <string name="done">완료</string>
     <string name="select_region">지역을\n선택해주세요.</string>
     <string name="select_region_btn">지역구 선택</string>
@@ -130,13 +154,17 @@
     <string name="three">3</string>
     <string name="register">가입하기</string>
     <string name="end_sentence">&#160;입니다.</string>
+    <string name="crew_guide1">크루 가입 및 손님 신청 시\, 빠른 시일 이내에 크루 리더로부터의 개별 연락이 취해질 예정입니다.</string>
+    <string name="crew_guide2">크루 가입 신청 승인 시, \'내 활동\' 에서 크루 소식 확인이 가능합니다.</string>
+    <string name="crew_guide3">크루 가입 및 손님 신청 취소는 \'프로필\' 에서 가능합니다. </string>
 
 <!--    search-->
     <string name="search">검색</string>
-    <string name="search_tab_crew">&#160;&#160;크루&#160;&#160;</string>
-    <string name="search_tab_impromptu">&#160;&#160;번개&#160;&#160;</string>
+    <string name="search_tab_crew">크루</string>
+    <string name="search_tab_impromptu">번개</string>
+    <string name="no_search_result">\‘%s\’에 대한 결과가 없어요</string>
 
-<!--    filter-->
+<!--   crew filter-->
     <string name="filter">필터</string>
     <string name="apply">적용하기</string>
     <string name="initialize">초기화</string>
@@ -190,6 +218,7 @@
     <string name="crew_schedule">크루의 정기일정을\n알려주세요.</string>
     <string name="every_other_week">격주</string>
     <string name="crew_fee">회비는 얼마인가요?</string>
+    <string name="fee_hint">000\,000</string>
     <string name="fee_measure">원</string>
     <string name="no_fee">회비 없어요!</string>
     <string name="crew_visitor_fee">일일 손님비는 얼마인가요?</string>
@@ -205,5 +234,29 @@
     <string name="inquiry_hint">문의할 수 있는 연락수단을 입력해주세요. (예: 카카오톡 아이디, 인스타그램 아이디, 휴대폰번호 등)</string>
     <string name="from_gallery">갤러리에서 고르기</string>
     <string name="use_default_image">기본 이미지 사용</string>
+    <string name="time_warning">종료시간이 시작시간보다 늦어야 해요!</string>
+
+<!--    impromptu detail-->
+    <string name="join_success_impromptu">참여 신청이 완료됐습니다!\n문의를 통해 번개 리더와 연락할 수 있어요.</string>
+    <string name="info_transferred_to_impromptu_leader">(번개리더에게 프로필이 전달됩니다.)</string>
+    <string name="not_enough_info_impromptu">모든 프로필 정보가 기입되어야\n번개에 신청할 수 있습니다.</string>
+    <string name="join_impromptu">참여하기</string>
+    <string name="impromptu_guide_dot">&#160;&#160;&#8226;&#160;&#160;</string>
+    <string name="impromptu_guide1">번개 참여 혹은 모집 마감 시\, 빠른 시일 이내에 번개 리더로부터의 개별 연락이 취해질 예정입니다.</string>
+    <string name="impromptu_guide2">별도의 승인 절차 없이 번개 참여가 가능합니다.</string>
+    <string name="impromptu_guide3">목표 모집인원의 2\/3 이상의 참여자가 모였을 시\, 번개 리더에 의해 번개 모집이 조기 마감될 수 있습니다.</string>
+    <string name="impromptu_guide4">번개 참여 취소는 \'프로필\' 에서 가능합니다.</string>
+    
+<!--    impromptu filter-->
+    <string name="schedule">일정</string>
+    <string name="in_one_week">1주 이내</string>
+    <string name="in_two_weeks">2주 이내</string>
+    <string name="in_three_weeks">3주 이내</string>
+    <string name="in_four_weeks">4주 이내</string>
+    <string name="num_of_recruitment">모집인원</string>
+    <string name="less_than_five">5명 이하</string>
+    <string name="six_to_ten">6~10명</string>
+    <string name="eleven_to_fifteen">11명~15명</string>
+    <string name="sixteen_to_twenty">16명~20명</string>
 
 </resources>

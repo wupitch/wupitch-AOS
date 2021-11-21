@@ -32,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.CreateFab
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
 import wupitch.android.presentation.ui.main.home.components.CrewList
 
@@ -94,29 +95,22 @@ class HomeFragment : Fragment() {
                                 loading = loading,
                                 crewList = crewList,
                                 navigationToCrewDetailScreen = {
-                                    val bundle = Bundle().apply { putInt("crewId", it) }
+                                    val bundle = Bundle().apply { putInt("crew_id", it) }
                                     activity?.findNavController(R.id.main_nav_container_view)
                                         ?.navigate(
                                             R.id.action_mainFragment_to_crewDetailFragment, bundle
                                         )
                                 })
-                            FloatingActionButton(
+                            CreateFab(
                                 modifier = Modifier
                                     .constrainAs(fab) {
                                         end.linkTo(parent.end, margin = 24.dp)
                                         bottom.linkTo(parent.bottom, margin = 20.dp)
-                                    }
-                                    .size(56.dp),
-                                shape = CircleShape,
-                                backgroundColor = colorResource(id = R.color.main_black),
-                                elevation = FloatingActionButtonDefaults.elevation(10.dp),
+                                    },
                                 onClick = {
                                     activity?.findNavController(R.id.main_nav_container_view)
                                         ?.navigate(R.id.action_mainFragment_to_createCrewSport)
-                                }) {
-                                    Icon(painter = painterResource(id = R.drawable.ic_btn_06_add), contentDescription = "fab icon", tint = Color.White)
-
-                            }
+                                })
                         }
                     }
                 }
@@ -176,8 +170,9 @@ class HomeFragment : Fragment() {
                             }
                             .size(24.dp),
                         onClick = {
+                            val bundle = Bundle().apply { putInt("selected_tab", 0) }
                             activity?.findNavController(R.id.main_nav_container_view)
-                                ?.navigate(R.id.action_mainFragment_to_searchFragment)
+                                ?.navigate(R.id.action_mainFragment_to_searchFragment, bundle)
                         }
                     ) {
                         Icon(
@@ -195,7 +190,7 @@ class HomeFragment : Fragment() {
                             .size(24.dp),
                         onClick = {
                             activity?.findNavController(R.id.main_nav_container_view)
-                                ?.navigate(R.id.action_mainFragment_to_filterFragment)
+                                ?.navigate(R.id.action_mainFragment_to_crewFilterFragment)
                         }
                     ) {
                         Icon(

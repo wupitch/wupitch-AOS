@@ -72,6 +72,29 @@ fun OnboardingTheme(darkTheme: Boolean = false, content: @Composable() () -> Uni
 }
 
 @Composable
+fun CameraTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) {
+
+    val systemUiController = rememberSystemUiController()
+    systemUiController.apply {
+        setStatusBarColor(colorResource(id = R.color.main_black))
+        setNavigationBarColor(colorResource(id = R.color.main_black))
+    }
+
+    val colors = if (darkTheme) {
+        DarkColorPalette
+    } else {
+        LightColorPalette
+    }
+
+    MaterialTheme(
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
+    )
+}
+
+@Composable
 fun SplashTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) {
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(

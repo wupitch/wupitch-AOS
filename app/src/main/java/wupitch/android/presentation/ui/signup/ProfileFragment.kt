@@ -1,14 +1,18 @@
 package wupitch.android.presentation.ui.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.Text
@@ -23,6 +27,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,7 +50,7 @@ import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
     private var job: Job? = null
 
     override fun onCreateView(
@@ -57,19 +62,17 @@ class ProfileFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    if(stopSignupState.value) {
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
+                    if (stopSignupState.value) {
                         findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
                     }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                    if (dialogOpenState.value) {
+                        StopWarningDialog(
+                            dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                        textString = stringResource(id = R.string.warning_stop_signup))
+                            textString = stringResource(id = R.string.warning_stop_signup)
+                        )
                     }
 
                     ConstraintLayout(
@@ -80,13 +83,8 @@ class ProfileFragment : Fragment() {
                     ) {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
-                        val nicknameState = remember {
-                            mutableStateOf("")
-                        }
-
-                        val introState = remember {
-                            mutableStateOf("")
-                        }
+                        val nicknameState = remember { mutableStateOf(viewModel.userNickname.value ?: "") }
+                        val introState = remember { mutableStateOf(viewModel.userIntroduce.value?: "") }
 
                         val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
 
@@ -108,7 +106,7 @@ class ProfileFragment : Fragment() {
                             modifier = Modifier
                                 .constrainAs(title) {
                                     start.linkTo(parent.start, margin = 20.dp)
-                                    top.linkTo(toolbar.bottom, margin = 32.dp)
+                                    top.linkTo(toolbar.bottom, margin = 24.dp)
                                 },
                             text = stringResource(id = R.string.set_profile),
                             fontFamily = Roboto,
@@ -188,17 +186,17 @@ class ProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (introState.value.isNotEmpty() &&
-                                isNicknameValidState.value == true && nicknameState.value.isNotEmpty()
-                            ) R.color.main_orange else R.color.gray03,
-                            textString = R.string.done,
+                            btnColor = if (introState.value.isNotEmpty() && isNicknameValidState.value == true) R.color.main_orange
+                            else R.color.gray03,
+                            textString = R.string.next_three_over_four,
                             fontSize = 16.sp
                         ) {
                             if (introState.value.isNotEmpty() &&
                                 isNicknameValidState.value == true
                             ) {
-                                findNavController().navigate(R.id.action_profileFragment_to_welcomeFragment)
-                                //todo : viewmodel 에 닉네임, 소개글 보내기.
+                                viewModel.setUserIntroduce(introState.value)
+                                findNavController().navigate(R.id.action_profileFragment_to_idCardFragment)
+
                             }
                         }
 
@@ -220,8 +218,8 @@ class ProfileFragment : Fragment() {
     ) {
 
         val customTextSelectionColors = TextSelectionColors(
-            handleColor = colorResource(id = R.color.main_orange),
-            backgroundColor = colorResource(id = R.color.orange02)
+            handleColor = colorResource(id = R.color.gray03),
+            backgroundColor = colorResource(id = R.color.gray03)
         )
 
         CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
@@ -233,18 +231,19 @@ class ProfileFragment : Fragment() {
                     if (value.length in 0..maxLength) {
                         stringState.value = value
                         if (validateNickname) {
-                            if (value.isNotEmpty()) {
-                                job?.cancel()
-                                job = lifecycleScope.launch {
-                                    delay(1500L)
-                                    viewModel.checkNicknameValidation(value)
-                                }
-                            } else {
-                                viewModel.checkNicknameValidation(null)
+
+                            job?.cancel()
+                            job = lifecycleScope.launch {
+                                delay(1200L)
+                                viewModel.checkNicknameValid(value)
                             }
                         }
                     }
                 },
+                keyboardOptions = KeyboardOptions(imeAction = if(validateNickname) ImeAction.Next else ImeAction.Done),
+                 keyboardActions = KeyboardActions (onDone = {
+                        setKeyboardDown()
+                    }),
                 modifier = modifier
                     .clip(RoundedCornerShape(8.dp))
                     .background(colorResource(id = R.color.gray04))
@@ -276,7 +275,7 @@ class ProfileFragment : Fragment() {
                         }
                     }
                 },
-                cursorBrush = SolidColor(colorResource(id = R.color.main_orange)),
+                cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
                 textStyle = TextStyle(
                     fontSize = 16.sp,
                     fontFamily = Roboto,
@@ -284,5 +283,10 @@ class ProfileFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun setKeyboardDown() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }

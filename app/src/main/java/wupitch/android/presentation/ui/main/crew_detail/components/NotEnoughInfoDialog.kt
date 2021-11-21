@@ -29,7 +29,9 @@ import wupitch.android.presentation.ui.components.RoundBtn
 
 @Composable
 fun NotEnoughInfoDialog(
-    dialogOpen: MutableState<Boolean>
+    dialogOpen: MutableState<Boolean>,
+    subtitleString: String,
+    navToProfile : () -> Unit
 ) {
     Dialog(
         onDismissRequest = { dialogOpen.value = false },
@@ -69,12 +71,13 @@ fun NotEnoughInfoDialog(
                 )
                 Text(
                     modifier = Modifier.padding(top =8.dp),
-                    text = stringResource(id = R.string.not_enough_info_subtitle),
+                    text = subtitleString,
                     color = Color.Black,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    lineHeight = 22.sp
                 )
                 RoundBtn(
                     modifier = Modifier
@@ -86,7 +89,7 @@ fun NotEnoughInfoDialog(
                     textString = R.string.go_fill_profile,
                     fontSize = 14.sp
                 ) {
-                    //todo : profile page 로 이동
+                    navToProfile()
                 }
 
             }

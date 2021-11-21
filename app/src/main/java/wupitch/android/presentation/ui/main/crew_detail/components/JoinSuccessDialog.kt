@@ -24,9 +24,10 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.RoundBtn
 
 @Composable
-fun JoinCrewDialog(
+fun JoinSuccessDialog(
     dialogOpen: MutableState<Boolean>,
-    @StringRes titleString : Int
+    @StringRes titleString : Int,
+    isImpromptu : Boolean = false
 ) {
     Dialog(
         onDismissRequest = { dialogOpen.value = false },
@@ -51,13 +52,28 @@ fun JoinCrewDialog(
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    lineHeight = 22.sp
                 )
+                if(isImpromptu){
+                    Text(
+                        modifier = Modifier.padding(top = 4.dp),
+                        text = stringResource(id = R.string.info_transferred_to_impromptu_leader),
+                        color = colorResource(id = R.color.gray02),
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        fontSize = 12.sp
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }else{
+                    Spacer(modifier = Modifier.height(36.dp))
+                }
+
                 RoundBtn(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight()
-                        .padding(top = 36.dp)
                         .padding(horizontal = 30.dp),
                     btnColor = R.color.main_orange,
                     textString = R.string.confirmed,

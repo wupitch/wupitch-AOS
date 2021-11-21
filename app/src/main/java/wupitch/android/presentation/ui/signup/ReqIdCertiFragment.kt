@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -29,79 +32,58 @@ import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 
 @AndroidEntryPoint
-class WelcomeFragment : Fragment() {
-
-    private val viewModel: MainViewModel by viewModels()
+class ReqIdCertiFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
 
-                    val nickname = viewModel.userNickname.value
-
-                    ConstraintLayout {
-                        val (title, subtitle, image, nextBtn) = createRefs()
+                    ConstraintLayout(Modifier.background(Color.White).padding(horizontal = 20.dp)) {
+                        val (title, subtitle, image) = createRefs()
 
                         Text(
                             modifier = Modifier.constrainAs(title) {
-                                top.linkTo(parent.top, margin = 98.dp)
+                                top.linkTo(parent.top, margin = 80.dp)
                                 start.linkTo(parent.start)
-                                end.linkTo(parent.end)
                             },
-                            text = "$nickname " + stringResource(id = R.string.welcome_title),
-                            textAlign = TextAlign.Center,
+                            text = stringResource(id = R.string.requested_id_certification),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            color = colorResource(id = R.color.main_black)
+                            color = colorResource(id = R.color.main_black),
+                            fontSize = 22.sp,
+                            textAlign = TextAlign.Start,
+                            lineHeight = 32.sp
                         )
-
                         Text(
                             modifier = Modifier.constrainAs(subtitle) {
-                                top.linkTo(title.bottom, margin = 4.dp)
+                                top.linkTo(title.bottom, margin = 8.dp)
                                 start.linkTo(parent.start)
-                                end.linkTo(parent.end)
                             },
-                            text = stringResource(id = R.string.welcome_subtitle),
-                            textAlign = TextAlign.Center,
+                            text = stringResource(id = R.string.id_certification_process_guide),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
+                            color = colorResource(id = R.color.gray02),
                             fontSize = 14.sp,
-                            color = colorResource(id = R.color.gray02)
+                            textAlign = TextAlign.Start,
+                            lineHeight = 22.sp
                         )
-
                         Image(
-                            modifier = Modifier.constrainAs(image){
+                            modifier = Modifier.height(280.dp).constrainAs(image){
                                 top.linkTo(title.bottom)
-                                bottom.linkTo(nextBtn.top)
+                                bottom.linkTo(parent.bottom)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             },
                             painter = painterResource(id = R.drawable.chrt_01),
-                            contentDescription = "welcome character"
+                            contentDescription = null
                         )
 
-                        RoundBtn(
-                            modifier = Modifier.constrainAs(nextBtn) {
-                                start.linkTo(parent.start, margin = 20.dp)
-                                end.linkTo(parent.end, margin = 20.dp)
-                                bottom.linkTo(parent.bottom, margin = 32.dp)
-                                width = Dimension.fillToConstraints
-                            }.height(52.dp),
-                            btnColor = R.color.main_orange,
-                            textString = R.string.checkout_main,
-                            fontSize = 16.sp
-                        ) {
-                            findNavController().navigate(R.id.action_welcomeFragment_to_mainFragment)
-                        }
                     }
-
-
                 }
             }
         }

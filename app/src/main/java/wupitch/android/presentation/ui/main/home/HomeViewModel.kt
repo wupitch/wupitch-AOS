@@ -2,6 +2,7 @@ package wupitch.android.presentation.ui.main.home
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,6 +14,8 @@ import wupitch.android.common.Resource
 import wupitch.android.data.remote.dto.DistrictRes
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.repository.GetDistrictRepository
+import wupitch.android.util.TimeType
+import wupitch.android.util.isEndTimeFasterThanStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,9 +29,8 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 0,
                 "축구",
-                "법정동",
                 true,
-                "크루이름",
+                "가나다라마바사아자차...",
                 true,
                 "월요일 23:00 - 24:00",
                 true,
@@ -37,7 +39,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 1,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽",
                 false,
@@ -48,7 +49,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 23,
                 "농구",
-                "이매동",
                 false,
                 "아무이름이지롱",
                 false,
@@ -59,7 +59,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 44,
                 "농구",
-                "이매동",
                 false,
                 "농구하자히히",
                 false,
@@ -70,7 +69,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 54,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽하하",
                 false,
@@ -81,7 +79,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 56,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽호호",
                 false,
@@ -92,7 +89,6 @@ class HomeViewModel @Inject constructor(
             CrewCardInfo(
                 77,
                 "농구",
-                "이매동",
                 false,
                 "농구하자고고씽ㅇㅇㅇ",
                 false,
@@ -111,6 +107,9 @@ class HomeViewModel @Inject constructor(
 
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
+
+
+
 
     fun setUserRegion(districtId : Int, districtName : String) {
         //todo 서버에 보내기

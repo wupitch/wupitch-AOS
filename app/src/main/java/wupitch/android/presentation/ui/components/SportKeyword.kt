@@ -29,6 +29,7 @@ fun SportKeyword (
             fontFamily = Roboto,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
+            lineHeight = 22.sp
         )
     }
 }

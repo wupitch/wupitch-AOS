@@ -12,6 +12,8 @@ import kotlinx.coroutines.launch
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
+import wupitch.android.util.TimeType
+import wupitch.android.util.isEndTimeFasterThanStart
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +25,9 @@ class CreateCrewViewModel @Inject constructor(
     private var _sportsList = mutableStateOf(SportState())
     val sportsList: State<SportState> = _sportsList
 
+    private var _crewSportId = mutableStateOf(-1)
+    val crewSportId : State<Int> = _crewSportId
+
     private var _districtList = mutableStateOf(DistrictState())
     val districtList : State<DistrictState> = _districtList
 
@@ -32,16 +37,21 @@ class CreateCrewViewModel @Inject constructor(
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
 
-    private var _userDongId = MutableLiveData<Int>()
-    val userDongId : LiveData<Int> = _userDongId
-
-    private var _userDongName = MutableLiveData<String>()
-    val userDongName : LiveData<String> = _userDongName
-
     private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
     val isUsingDefaultImage : State<Boolean?> = _isUsingDefaultImage
 
     var imageChosenState = mutableStateOf(false)
+
+    private var _startTime = mutableStateOf("00:00")
+    val startTime : State<String> = _startTime
+
+    private var _endTime = mutableStateOf("00:00")
+    val endTime : State<String> = _endTime
+
+    val hasStartTimeSet = mutableStateOf<Boolean?>(false)
+
+    var hasEndTimeSet = mutableStateOf<Boolean?>(false)
+
 
 
     fun getSports() = viewModelScope.launch {
@@ -50,13 +60,22 @@ class CreateCrewViewModel @Inject constructor(
         val response = getSportRepository.getSport()
         if (response.isSuccessful) {
             response.body()?.let { sportRes ->
-                if (sportRes.isSuccess) _sportsList.value =
-                    SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }.map { it.toFilterItem() })
+                if (sportRes.isSuccess) {
+                    _sportsList.value =
+                        SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }.map { it.toFilterItem() })
+                    _sportsList.value.data.forEachIndexed { index, filterItem ->
+                        if(_crewSportId.value == index){
+                            filterItem.state.value = true
+                        }
+                    }
+                }
+
                 else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
             }
         } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
 
     }
+
 
     fun getDistricts() = viewModelScope.launch {
         _districtList.value = DistrictState(isLoading = true)
@@ -71,18 +90,16 @@ class CreateCrewViewModel @Inject constructor(
 
     }
 
+    fun setCrewSport(sportId : Int) {
+        _crewSportId.value = sportId
+        Log.d("{CreateCrewViewModel.setCrewSport}", _crewSportId.value.toString())
+    }
+
     fun setUserDistrict(districtId : Int, districtName : String) {
         //todo 서버에 보내기
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
         Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $districtId name : $districtName")
-    }
-
-    fun setUserDong(dongId : Int, dongName : String) {
-        //todo 서버에 보내기
-        _userDongId.value = dongId
-        _userDongName.value = dongName
-        Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $dongId name : $dongName")
     }
 
     fun setImageSource(isUsingDefaultImage : Boolean?) {
@@ -91,5 +108,41 @@ class CreateCrewViewModel @Inject constructor(
 
     fun setImageChosenState(attemptedToChoose : Boolean) {
         imageChosenState.value = attemptedToChoose
+    }
+
+    fun setTimeFilter(type : TimeType, hour : Int, min : Int) {
+        var hourString = hour.toString()
+        var minString = min.toString()
+        if(hour < 10) hourString = "0$hour"
+        if(min < 10) minString = "0$min"
+        val timeString = "$hourString:$minString"
+
+        when(type){
+            TimeType.START -> {
+                if(hasEndTimeSet.value == true){
+                    if(isEndTimeFasterThanStart(timeString, _endTime.value)) {
+                        _startTime.value = "00:00"
+                        hasStartTimeSet.value = null
+                    }else {
+                        _startTime.value = timeString
+                        hasStartTimeSet.value = true
+                    }
+                }else {
+                    _startTime.value = timeString
+                    hasStartTimeSet.value = true
+                }
+            }
+            TimeType.END -> {
+
+                if(isEndTimeFasterThanStart(_startTime.value, timeString)) {
+                    _endTime.value = "00:00"
+                    hasEndTimeSet.value = null
+                }
+                else {
+                    _endTime.value = timeString
+                    hasEndTimeSet.value = true
+                }
+            }
+        }
     }
 }

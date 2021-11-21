@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
@@ -49,8 +50,7 @@ import wupitch.android.presentation.ui.components.TitleToolbar
 class CreateCrewSportFragment : Fragment() {
 
 
-    //todo change to shared viewmodel!!!
-    private val viewModel: CreateCrewViewModel by viewModels()
+    private val viewModel: CreateCrewViewModel by activityViewModels()
     private var checkedRadioButton: MutableState<Boolean>? = null
 
 
@@ -64,15 +64,10 @@ class CreateCrewSportFragment : Fragment() {
 
             setContent {
 
-                val stopSignupState = remember {
-                    mutableStateOf(false)
-                }
-                val dialogOpenState = remember {
-                    mutableStateOf(false)
-                }
-                if (stopSignupState.value) {
-                    findNavController().navigateUp()
-                }
+                val stopSignupState = remember { mutableStateOf(false) }
+                val dialogOpenState = remember { mutableStateOf(false) }
+
+                if (stopSignupState.value) { findNavController().navigateUp() }
                 if (dialogOpenState.value) {
                     StopWarningDialog(
                         dialogOpenState = dialogOpenState,
@@ -81,9 +76,7 @@ class CreateCrewSportFragment : Fragment() {
                     )
                 }
 
-                val sportSelectedState = remember {
-                    mutableStateOf(-1)
-                }
+                val sportSelectedState = remember { viewModel.crewSportId }
 
                 BackHandler {
                     if (viewModel.userDistrictId.value != null) dialogOpenState.value = true
@@ -104,7 +97,10 @@ class CreateCrewSportFragment : Fragment() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
-                        Log.d("{CreateCrewSportFragment.onCreateView}", viewModel.userDistrictId.value.toString())
+                        Log.d(
+                            "{CreateCrewSportFragment.onCreateView}",
+                            viewModel.userDistrictId.value.toString()
+                        )
                         if (viewModel.userDistrictId.value != null) {
                             dialogOpenState.value = true
                         } else {
@@ -136,6 +132,20 @@ class CreateCrewSportFragment : Fragment() {
                     }
 
                     if (sportsList.data.isNotEmpty()) {
+                        val sportRememberList = mutableListOf<FilterItem>()
+
+                        sportsList.data.forEach {
+                            if(it.state.value){
+                                sportRememberList.add(FilterItem(it.name, remember {
+                                    mutableStateOf(true)
+                                }))
+                            }else {
+                                 sportRememberList.add(FilterItem(it.name, remember {
+                                mutableStateOf(false)
+                            }))
+                            }
+                        }
+
                         //아래가 여러번 불림. 왜???  sportsList.data 가 변하는 것도 아닌데...
                         // 아마도 sportsList 에 state 가 있고, 그 state 가
                         //클릭에 따라 변하기 때문에 여러번 invoke 되는 것이 아닐까 싶은데...
@@ -157,19 +167,25 @@ class CreateCrewSportFragment : Fragment() {
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
+                                lineHeight = 28.sp
                             )
                             NonRepetitionLayout(
-                                filterItemList = sportsList.data,
-                                flexBoxModifier = Modifier.padding(top = 32.dp),
+                                filterItemList = sportRememberList.toList(),
+                                flexBoxModifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 32.dp),
                                 radioBtnModifier = Modifier
                                     .width(96.dp)
                                     .height(48.dp),
                             ) {
-                                Log.d("{CreateCrewSport.onCreateView}", "스포츠 : $it")
                                 //한 파일안 에 있고 아래 state 코드가 없으면 이 if문 이 여러번 불리지 않는다.
                                 //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
                                 //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
-                                sportSelectedState.value = it
+                                viewModel.setCrewSport(it)
+                                Log.d(
+                                    "{CreateCrewSport.onCreateView}",
+                                    "스포츠 : ${sportSelectedState.value} "
+                                )
                             }
                         }
                     }
@@ -192,7 +208,8 @@ class CreateCrewSportFragment : Fragment() {
                     ) {
                         if (sportSelectedState.value != -1) {
                             Log.d("{CreateCrewSport.onCreateView}", "next btn clicked!")
-                            //todo viewmodel 에 선택된 sport 보내기.
+
+                            viewModel.setCrewSport(sportSelectedState.value)
                             findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)
                         }
                     }
@@ -203,38 +220,24 @@ class CreateCrewSportFragment : Fragment() {
 
     @Composable
     fun NonRepetitionLayout(
-        text: Int? = null,
         filterItemList: List<FilterItem>,
         flexBoxModifier: Modifier,
         radioBtnModifier: Modifier,
         onClick: (index: Int) -> Unit
     ) {
 
-        Column(Modifier.fillMaxWidth()) {
-            if (text != null) {
-                Text(
-                    modifier = Modifier.align(Alignment.Start),
-                    text = stringResource(id = text),
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-            }
-
-            FlowRow(
-                modifier = flexBoxModifier,
-                mainAxisSpacing = 16.dp,
-                crossAxisSpacing = 16.dp
-            ) {
-                filterItemList.forEachIndexed { index, item ->
-                    RadioButton(
-                        modifier = radioBtnModifier,
-                        checkedState = item.state,
-                        text = item.name,
-                        index = index,
-                    ) {
-                        onClick(it)
-                    }
+        FlowRow(
+            modifier = flexBoxModifier,
+            mainAxisSpacing = 16.dp,
+            crossAxisSpacing = 16.dp
+        ) {
+            filterItemList.forEachIndexed { index, item ->
+                RadioButton(
+                    modifier = radioBtnModifier,
+                    checkedState = item.state,
+                    text = item.name,
+                ) {
+                    onClick(index)
                 }
             }
         }
@@ -245,8 +248,7 @@ class CreateCrewSportFragment : Fragment() {
         modifier: Modifier,
         checkedState: MutableState<Boolean>,
         text: String,
-        index: Int,
-        onClick: (index: Int) -> Unit
+        onClick: () -> Unit
     ) {
         Box(
             modifier = modifier
@@ -260,7 +262,7 @@ class CreateCrewSportFragment : Fragment() {
                         checkedRadioButton?.value = false
                         checkedState.value = true
                         checkedRadioButton = checkedState
-                        onClick(index)
+                        onClick()
                     }
                 )
                 .clip(RoundedCornerShape(8.dp))

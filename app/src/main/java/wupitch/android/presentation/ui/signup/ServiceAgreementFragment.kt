@@ -37,7 +37,7 @@ import wupitch.android.presentation.ui.signup.components.ToggleIcon
 @AndroidEntryPoint
 class ServiceAgreementFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,22 +48,17 @@ class ServiceAgreementFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    if(stopSignupState.value) {
-                        findNavController().navigateUp()
-                    }
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
+                    if(stopSignupState.value) { findNavController().navigateUp() }
+
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
                             textString = stringResource(id = R.string.warning_stop_signup))
                     }
                     BackHandler {
-                        if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                        if(viewModel.pushToggleState.value != null) dialogOpenState.value = true
                         else findNavController().navigateUp()
                     }
                     ConstraintLayout(
@@ -73,30 +68,22 @@ class ServiceAgreementFragment : Fragment() {
                     ) {
                         val (toolbar, titleTop, titleBottom, subtitle, allToggleBtn, grayCol, nextBtn)  = createRefs()
 
-                        val allToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val serviceToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val privacyToggleState = remember {
-                            mutableStateOf(false)
-                        }
-                        val pushToggleState = remember {
-                            mutableStateOf(false)
-                        }
+                        val allToggleState = remember { mutableStateOf(viewModel.allToggleState.value) }
+                        val serviceToggleState = remember { mutableStateOf(viewModel.serviceToggleState.value) }
+                        val privacyToggleState = remember { mutableStateOf(viewModel.privacyToggleState.value) }
+                        val pushToggleState = remember { mutableStateOf(viewModel.pushToggleState.value ?: false) }
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, onLeftIconClick = {
-                            if(viewModel.userNotiAgreed.value != null) dialogOpenState.value = true
+                            if(viewModel.pushToggleState.value != null) dialogOpenState.value = true
                             else findNavController().navigateUp()
                         })
 
                         Row(modifier = Modifier.constrainAs(titleTop) {
-                            top.linkTo(toolbar.bottom, margin = 32.dp)
+                            top.linkTo(toolbar.bottom, margin = 24.dp)
                             start.linkTo(parent.start, margin = 20.dp)
                         }) {
                             Text(
@@ -245,12 +232,16 @@ class ServiceAgreementFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if(serviceToggleState.value && privacyToggleState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.next_one_over_five,
+                            textString = R.string.next_one_over_four,
                             fontSize = 16.sp
                         ) {
                             if(serviceToggleState.value && privacyToggleState.value){
-                                viewModel.setUserNotiAgreement(pushToggleState.value)
-                                findNavController().navigate(R.id.action_serviceAgreementFragment_to_regionFragment)
+                                viewModel.setPushToggleState(pushToggleState.value)
+                                viewModel.setAllToggleState(allToggleState.value)
+                                viewModel.setServiceToggleState(serviceToggleState.value)
+                                viewModel.setPrivacyToggleState(privacyToggleState.value)
+
+                                findNavController().navigate(R.id.action_serviceAgreementFragment_to_emailPwFragment)
                             }
                         }
                     }

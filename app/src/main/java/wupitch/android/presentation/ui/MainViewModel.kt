@@ -97,17 +97,17 @@ class MainViewModel @Inject constructor(
     }
 
 
-    fun checkNicknameValidation(nickname : String?) {
-        //서버 validation
-        //okay 이면,
-        Log.d("{SignupViewModel.checkNicknameValidation}", nickname.toString())
-        if(nickname == null){
-            _isNicknameValid.value = null
-        }else {
-            _isNicknameValid.value = true
-        }
-        _userNickname.value = nickname
-    }
+//    fun checkNicknameValidation(nickname : String?) {
+//        //서버 validation
+//        //okay 이면,
+//        Log.d("{SignupViewModel.checkNicknameValidation}", nickname.toString())
+//        if(nickname == null){
+//            _isNicknameValid.value = null
+//        }else {
+//            _isNicknameValid.value = true
+//        }
+//        _userNickname.value = nickname
+//    }
 
     fun setUserIntroduction(intro: String?) {
         _userIntroduction.value = intro

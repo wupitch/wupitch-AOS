@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -35,7 +34,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.presentation.ui.main.crew_detail.components.JoinCrewDialog
+import wupitch.android.presentation.ui.main.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.util.Sport
 
@@ -45,10 +44,10 @@ class CrewDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("crewId")?.let { crewId ->
+        arguments?.getInt("crew_id")?.let { id ->
 //            viewModel.onTriggerEvent(GetRecipeEvent(recipeId))
             //todo : get crew from viewModel with the id.
-            Log.d("{CrewDetailFragment.onCreate}", crewId.toString())
+            Log.d("{CrewDetailFragment.onCreate}", id.toString())
         }
     }
 
@@ -61,28 +60,31 @@ class CrewDetailFragment : Fragment() {
             setContent {
                 WupitchTheme {
                     val scrollState = rememberScrollState(0)
-                    val joinVisitorDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    val joinDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    val notEnoughInfoDialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
+                    val joinDialogOpenState = remember { mutableStateOf(false) }
+                    val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
+
+                    val isPinnedState = remember{ mutableStateOf(false)}
 
                     if (joinVisitorDialogOpenState.value)
-                        JoinCrewDialog(
+                        JoinSuccessDialog(
                             dialogOpen = joinVisitorDialogOpenState,
                             R.string.join_visitor_success
                         )
                     if (joinDialogOpenState.value)
-                        JoinCrewDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
+                        JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
                     if (notEnoughInfoDialogOpenState.value)
-                        NotEnoughInfoDialog(dialogOpen = notEnoughInfoDialogOpenState)
+                        NotEnoughInfoDialog(
+                            dialogOpen = notEnoughInfoDialogOpenState,
+                            subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
+                        ){
+                            //todo to profile edit screen?
+                        }
 
                     ConstraintLayout(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
                     ) {
                         val (appbar, divider, crewInfo, joinBtns) = createRefs()
 
@@ -98,10 +100,10 @@ class CrewDetailFragment : Fragment() {
                             },
                             textString = R.string.crew
                         )
-                        if(scrollState.value > 202.dpToInt()){
+                        if (scrollState.value > 202.dpToInt()) {
                             Divider(
                                 Modifier
-                                    .constrainAs(divider){
+                                    .constrainAs(divider) {
                                         top.linkTo(appbar.bottom)
                                         bottom.linkTo(crewInfo.top)
                                     }
@@ -123,7 +125,7 @@ class CrewDetailFragment : Fragment() {
                                 .verticalScroll(scrollState)
 
                         ) {
-                            CrewImageCard()
+                            CrewImageCard(isPinnedState)
                             CrewInfo()
                             GrayDivider()
 
@@ -156,7 +158,7 @@ class CrewDetailFragment : Fragment() {
 
     }
 
-    fun Int.dpToInt() = (this *  requireContext().resources.displayMetrics.density).toInt()
+    fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
     @Composable
@@ -225,7 +227,7 @@ class CrewDetailFragment : Fragment() {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .padding(top = 20.dp)
+                .padding(top = 20.dp, bottom = 60.dp)
                 .padding(horizontal = 25.dp)
         ) {
 
@@ -236,16 +238,57 @@ class CrewDetailFragment : Fragment() {
                 color = colorResource(id = R.color.main_black),
                 fontSize = 16.sp
             )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 36.dp),
-                text = "안내사항이 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
-            )
+            Row(Modifier.padding(top = 12.dp)) {
+                Text(
+                    text = stringResource(id = R.string.impromptu_guide_dot),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black)
+                )
+                Text(
+                    text = stringResource(id = R.string.crew_guide1),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
+                )
+            }
+            Row(Modifier.padding(top = 22.dp)) {
+                Text(
+                    text = stringResource(id = R.string.impromptu_guide_dot),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black)
+                )
+                Text(
+                    text = stringResource(id = R.string.crew_guide2),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
+                )
+            }
+            Row(Modifier.padding(top = 22.dp)) {
+                Text(
+                    text = stringResource(id = R.string.impromptu_guide_dot),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black)
+                )
+                Text(
+                    text = stringResource(id = R.string.crew_guide3),
+                    fontSize = 14.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 22.sp
+                )
+            }
         }
     }
 
@@ -274,7 +317,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
             VisitorDefLayout(Modifier)
             Text(
@@ -293,7 +337,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
         }
     }
@@ -374,7 +419,8 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black)
+                color = colorResource(id = R.color.main_black),
+                lineHeight = 24.sp
             )
         }
     }
@@ -433,20 +479,14 @@ class CrewDetailFragment : Fragment() {
                     vertical = 22.dp
                 )
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                SportKeyword(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(colorResource(id = Sport.getNumOf(0).color))
-                        .padding(horizontal = 13.dp, vertical = 4.dp),
-                    sportName = Sport.getNumOf(0).sportName
-                )
-                Spacer(modifier = Modifier.width(8.dp))
 
-            }
+            SportKeyword(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(colorResource(id = Sport.getNumOf(0).color))
+                    .padding(horizontal = 13.dp, vertical = 4.dp),
+                sportName = Sport.getNumOf(0).sportName
+            )
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),
@@ -550,7 +590,9 @@ class CrewDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewImageCard() {
+    fun CrewImageCard(
+        pinToggleState : MutableState<Boolean>
+    ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
@@ -558,6 +600,7 @@ class CrewDetailFragment : Fragment() {
         ) {
 
             val (icon, pin) = createRefs()
+
             Image(painter = painterResource(id = Sport.getNumOf(0).detailImage),
                 contentDescription = "crew sport icon",
                 modifier = Modifier
@@ -569,14 +612,12 @@ class CrewDetailFragment : Fragment() {
                     }
                     .size(76.dp))
 
-            Image(painter = painterResource(id = R.drawable.ic_pin),
-                contentDescription = "crew detail pin",
-                modifier = Modifier
-                    .constrainAs(pin) {
-                        top.linkTo(parent.top, margin = 16.dp)
-                        end.linkTo(parent.end, margin = 16.dp)
-                    }
-                    .size(24.dp))
+
+            PinToggleButton(modifier = Modifier
+                .constrainAs(pin) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                } , toggleState = pinToggleState )
 
         }
     }

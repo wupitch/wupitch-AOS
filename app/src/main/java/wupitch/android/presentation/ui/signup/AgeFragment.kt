@@ -93,7 +93,7 @@ class AgeFragment : Fragment() {
                         mutableStateOf(false)
                     }
                     if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_ageFragment_to_onboardingFragment)
+//                        findNavController().navigate(R.id.action_ageFragment_to_onboardingFragment)
                     }
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
@@ -176,7 +176,7 @@ class AgeFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(checkedRadioButtonState.value) {
-                                findNavController().navigate(R.id.action_ageFragment_to_profileFragment)
+//                                findNavController().navigate(R.id.action_ageFragment_to_profileFragment)
                                 //todo : viewmodel 에 선택된 연령값 보내기.
                                 var checkedAge = -1
                                 ageList.forEachIndexed { index, ageRadioButton ->

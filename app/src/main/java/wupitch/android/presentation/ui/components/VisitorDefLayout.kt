@@ -47,7 +47,8 @@ fun VisitorDefLayout (
                 color = colorResource(id = R.color.main_orange),
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                lineHeight = 24.sp
             )
         }
     }

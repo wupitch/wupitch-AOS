@@ -39,22 +39,14 @@ class CreateCrewFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val feeState = remember {
-                        mutableStateOf("")
-                    }
-                    val noFeeState = remember {
-                        mutableStateOf(false)
-                    }
+                    val feeState = remember { mutableStateOf("") }
+                    val noFeeState = remember { mutableStateOf(false) }
 
                     if(noFeeState.value) feeState.value = ""
                     if(feeState.value.isNotEmpty()) noFeeState.value = false
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
+                    val stopSignupState = remember { mutableStateOf(false) }
+                    val dialogOpenState = remember { mutableStateOf(false) }
                     if(stopSignupState.value) {
                         findNavController().navigate(R.id.action_createCrewFeeFragment_to_mainFragment)
                     }
@@ -118,7 +110,8 @@ class CreateCrewFeeFragment : Fragment() {
                                     .height(44.dp),
                                 textState = feeState,
                                 measureString = stringResource(id = R.string.fee_measure),
-                                thousandIndicator = true
+                                thousandIndicator = true, 
+                                hintString = stringResource(id = R.string.fee_hint)
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             NoToggleLayout(noFeeState, stringResource(id = R.string.no_fee))
