@@ -58,7 +58,7 @@ fun CrewCard(
                     .background(colorResource(id = Sport.BASKETBALL.color))
             ) {
                 Image(
-                    painter = painterResource(id = Sport.BASKETBALL.icon),
+                    painter = painterResource(id = Sport.BASKETBALL.thumbnailImage),
                     contentDescription = "",
                     modifier = Modifier
                         .width(60.dp)

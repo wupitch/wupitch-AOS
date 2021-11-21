@@ -445,20 +445,7 @@ class CrewDetailFragment : Fragment() {
                     sportName = Sport.getNumOf(0).sportName
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(colorResource(id = Sport.getNumOf(0).color))
-                        .size(6.dp)
-                )
-                Text(
-                    modifier = Modifier.padding(start = 8.dp),
-                    text = "법정동",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                    fontSize = 14.sp
-                )
+
             }
 
             Text(
@@ -568,11 +555,10 @@ class CrewDetailFragment : Fragment() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(202.dp)
-                .background(colorResource(id = Sport.getNumOf(0).color))
         ) {
 
             val (icon, pin) = createRefs()
-            Image(painter = painterResource(id = Sport.getNumOf(0).icon),
+            Image(painter = painterResource(id = Sport.getNumOf(0).detailImage),
                 contentDescription = "crew sport icon",
                 modifier = Modifier
                     .constrainAs(icon) {
