@@ -11,6 +11,6 @@ enum class Sport(val no : Int, val sportName : Int, val color : Int,  val detail
     HIKING(5, R.string.hiking,  R.color.purple_hiking,R.drawable.img_hike_thumb, R.drawable.img_hike);
 
     companion object {
-        fun getNumOf(no : Int) = Sport.values().first() {it.no == no}
+        fun getNumOf(no : Int) = values().first {it.no == no}
     }
 }
