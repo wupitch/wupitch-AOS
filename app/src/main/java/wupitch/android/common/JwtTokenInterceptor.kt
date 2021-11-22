@@ -4,12 +4,15 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import wupitch.android.common.Constants.dataStore
 import java.io.IOException
 
 class JwtTokenInterceptor(
@@ -23,11 +26,16 @@ class JwtTokenInterceptor(
 
 //        val jwtPreferenceFlow: Flow<String> = context.dataStore.data
 //            .map { preferences ->
-//                preferences[JWT_PREFERENCE_KEY] ?: ""
+//                preferences[Constants.JWT_PREFERENCE_KEY] ?: ""
 //            }
-        //여기서 어떻게 data store 에서 jwt 가져오지 ?
-        //어떤 coroutine scope 사용해야 되지???
-        builder.addHeader("X-ACCESS-TOKEN", "")
+
+        runBlocking {
+            val jwtPreferenceFlow = context.dataStore.data.first()
+            val token = jwtPreferenceFlow[Constants.JWT_PREFERENCE_KEY] ?: ""
+            builder.addHeader("X-ACCESS-TOKEN", token)
+        }
+
         return chain.proceed(builder.build())
+
     }
 }

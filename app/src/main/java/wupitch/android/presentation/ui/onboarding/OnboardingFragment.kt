@@ -198,7 +198,7 @@ class OnboardingFragment : Fragment() {
                                    .clickable {
                                        //todo 카카오 로그인.
                                       // signInWithKakao()
-                                       findNavController().navigate(R.id.action_onboardingFragment_to_serviceAgreementFragment)
+                                       findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
                                        mainViewModel.pagerState = pagerState
                                    },
                                painter = painterResource(id = R.drawable.kakao_login),

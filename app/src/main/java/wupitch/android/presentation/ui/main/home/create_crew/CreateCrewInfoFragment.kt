@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -18,13 +20,16 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
@@ -34,7 +39,10 @@ import wupitch.android.presentation.ui.main.home.create_crew.components.CreateCr
 import wupitch.android.presentation.ui.components.NumberTextFieldLayout
 
 @ExperimentalPagerApi
+@AndroidEntryPoint
 class CreateCrewInfoFragment : Fragment() {
+
+    private val viewModel : CreateCrewViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,11 +56,11 @@ class CreateCrewInfoFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
 
-                    val crewNameState = remember { mutableStateOf("") }
-                    val crewSizeState = remember { mutableStateOf("") }
+                    val crewNameState = remember { mutableStateOf(viewModel.crewName.value) }
+                    val crewSizeState = remember { mutableStateOf(viewModel.crewSize.value) }
 
-                    val crewAgeGroupListState = remember { mutableStateListOf<Int>() }
-                    val crewExtraInfoListState = remember { mutableStateListOf<Int>() }
+                    val crewAgeGroupListState = remember { viewModel.crewAgeGroupList }
+                    val crewExtraInfoListState = remember { viewModel.crewExtraInfoList }
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -151,7 +159,6 @@ class CreateCrewInfoFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            //todo update 가 안 됌.
                             btnColor = if (crewAgeGroupListState.isNotEmpty() && crewNameState.value != "" && crewSizeState.value != "") R.color.main_orange else R.color.gray03,
                             textString = R.string.three_over_seven,
                             fontSize = 16.sp
@@ -159,15 +166,14 @@ class CreateCrewInfoFragment : Fragment() {
                             if (crewNameState.value != "" && crewSizeState.value != ""
                                 && crewAgeGroupListState.isNotEmpty()
                             ) {
+                                viewModel.setCrewName(crewNameState.value)
+                                viewModel.setCrewSize(crewSizeState.value)
+                                viewModel.setCrewAgeGroupList(crewAgeGroupListState)
+                                viewModel.setCrewExtraInfoList(crewExtraInfoListState)
 
                                 findNavController().navigate(R.id.action_createCrewInfoFragment_to_createCrewScheduleFragment)
-                                //todo extra info state value 와 함께 viewModel 로!!!
-//                                crewExtraInfoListState.forEach {
-//                                    Log.d("{CreateCrewInfoFragment.onCreateView}", it.toString())
-//                                }
 
                             }
-
                         }
                     }
                 }
@@ -180,7 +186,7 @@ class CreateCrewInfoFragment : Fragment() {
         crewExtraInfoListState: SnapshotStateList<Int>
     ) {
 
-        val ageGroupList = listOf<FilterItem>(
+        val extraInfoList = arrayListOf<FilterItem>(
             FilterItem(getString(R.string.beginner_centered), remember{ mutableStateOf(false)}),
             FilterItem(getString(R.string.semi_expert_centered), remember{ mutableStateOf(false)}),
             FilterItem(getString(R.string.expert_centered), remember{ mutableStateOf(false)}),
@@ -190,6 +196,11 @@ class CreateCrewInfoFragment : Fragment() {
             FilterItem(getString(R.string.train_centered), remember{ mutableStateOf(false)}),
             FilterItem(getString(R.string.game_centered), remember{ mutableStateOf(false)})
         )
+        if(crewExtraInfoListState.isNotEmpty()){
+            crewExtraInfoListState.forEach {
+                extraInfoList[it].state.value = true
+            }
+        }
 
         Text(
             text = stringResource(id = R.string.extra_info),
@@ -208,7 +219,7 @@ class CreateCrewInfoFragment : Fragment() {
         )
         Spacer(modifier = Modifier.height(12.dp))
         CreateCrewRepetitionLayout(
-            filterItemList = ageGroupList,
+            filterItemList = extraInfoList,
             extraInfoListState = crewExtraInfoListState
         )
 
@@ -226,6 +237,12 @@ class CreateCrewInfoFragment : Fragment() {
             FilterItem(getString(R.string.forties), remember{ mutableStateOf(false)}),
             FilterItem(getString(R.string.over_fifties), remember{ mutableStateOf(false)})
         )
+
+        if(crewAgeGroupState.isNotEmpty()) {
+            crewAgeGroupState.forEach {
+                ageGroupList[it].state.value = true
+            }
+        }
 
         Text(
             text = stringResource(id = R.string.age_group),
@@ -292,7 +309,9 @@ class CreateCrewInfoFragment : Fragment() {
         Spacer(modifier = Modifier.height(12.dp))
         SimpleTextField(
             textState = textState,
-            hintText = stringResource(id = R.string.input_crew_name)
+            hintText = stringResource(id = R.string.input_crew_name),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions.Default
         )
     }
 

@@ -35,7 +35,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
@@ -79,7 +78,7 @@ class CreateCrewSportFragment : Fragment() {
                 val sportSelectedState = remember { viewModel.crewSportId }
 
                 BackHandler {
-                    if (viewModel.userDistrictId.value != null) dialogOpenState.value = true
+                    if (viewModel.crewDistrictId.value != null) dialogOpenState.value = true
                     else findNavController().navigateUp()
                 }
 
@@ -99,9 +98,9 @@ class CreateCrewSportFragment : Fragment() {
                     }, textString = R.string.create_crew) {
                         Log.d(
                             "{CreateCrewSportFragment.onCreateView}",
-                            viewModel.userDistrictId.value.toString()
+                            viewModel.crewDistrictId.value.toString()
                         )
-                        if (viewModel.userDistrictId.value != null) {
+                        if (viewModel.crewDistrictId.value != null) {
                             dialogOpenState.value = true
                         } else {
                             findNavController().navigateUp()
@@ -250,6 +249,9 @@ class CreateCrewSportFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
+        if(checkedState.value){
+            checkedRadioButton = checkedState
+        }
         Box(
             modifier = modifier
                 .selectable(

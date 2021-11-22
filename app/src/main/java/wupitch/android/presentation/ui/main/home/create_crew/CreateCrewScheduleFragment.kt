@@ -1,9 +1,11 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -13,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -73,27 +76,16 @@ class CreateCrewScheduleFragment : Fragment() {
                         )
                     }
 
-                    val firstBtnToggleState = remember{ mutableStateOf(false)}
-                    val secondBtnToggleState = remember{ mutableStateOf(false)}
 
-                    val startTimeState = remember { viewModel.startTime }
-                    val endTimeState = remember { viewModel.endTime }
-                    val hasStartTimeSet = remember { viewModel.hasStartTimeSet }
-                    val hasEndTimeSet = remember { viewModel.hasEndTimeSet }
+
+                    val scheduleList = remember { viewModel.scheduleList }
+
+                    val firstBtnToggleState = remember{ mutableStateOf(scheduleList.size >1)}
+                    val secondBtnToggleState = remember{ mutableStateOf(scheduleList.size >2)}
 
                     val snackbarHostState = remember { SnackbarHostState() }
+                    val nextBtnState = remember { mutableStateOf(false)}
 
-                    if (hasStartTimeSet.value == null || hasEndTimeSet.value == null) {
-
-                        LaunchedEffect(key1 = snackbarHostState, block = {
-                            snackbarHostState.showSnackbar(
-                                message = getString(R.string.time_warning),
-                                duration = SnackbarDuration.Short
-                            )
-                            if(hasEndTimeSet.value == null) hasEndTimeSet.value = false
-                            if(hasStartTimeSet.value == null) hasStartTimeSet.value = false
-                        })
-                    }
 
 
                     ConstraintLayout(
@@ -146,16 +138,21 @@ class CreateCrewScheduleFragment : Fragment() {
                                 lineHeight = 28.sp
                             )
 
-                            ScheduleLayout(
-                                startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+
+                            scheduleLayout(
+                                0, scheduleList[0], snackbarHostState
                             )
                             PlusButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 toggleState = firstBtnToggleState
                             )
+
                             if(firstBtnToggleState.value) {
-                                ScheduleLayout(
-                                    startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+                                if(scheduleList.size ==1){
+                                    viewModel.addCrewSchedule()
+                                }
+                                scheduleLayout(
+                                    1, scheduleList[1], snackbarHostState
                                 )
                                 PlusButton(
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -167,16 +164,28 @@ class CreateCrewScheduleFragment : Fragment() {
 //                                        scrollState.animateScrollTo(600)
 //                                    }
 //                                }
+                            }else {
+                                if(scheduleList.size == 2){
+                                    scheduleList.removeAt(1)
+                                }else if (scheduleList.size ==3) {
+                                    scheduleList.removeRange(1, 2)
+                                }
                             }
+
+
                             if(secondBtnToggleState.value){
-                                ScheduleLayout(
-                                    startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet
+                                if(scheduleList.size == 2){
+                                    viewModel.addCrewSchedule()
+                                }
+                                scheduleLayout(
+                                   2, scheduleList[2], snackbarHostState
                                 )
-
+                                Spacer(modifier = Modifier.height(60.dp))
+                            }else {
+                                if(scheduleList.size == 3){
+                                    scheduleList.removeAt(2)
+                                }
                             }
-                            
-
-
                         }
 
                         Divider(
@@ -209,17 +218,32 @@ class CreateCrewScheduleFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = R.color.gray03,
+                            btnColor = if(checkValid(scheduleList)) R.color.main_orange else R.color.gray03,
                             textString = R.string.four_over_seven,
                             fontSize = 16.sp
                         ) {
-                            findNavController().navigate(R.id.action_createCrewScheduleFragment_to_createCrewImageFragment)
-
+                            if(checkValid(scheduleList)){
+                                findNavController().navigate(R.id.action_createCrewScheduleFragment_to_createCrewImageFragment)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun checkValid(
+        scheduleList: SnapshotStateList<ScheduleState>
+    ) : Boolean {
+        scheduleList.forEach {
+            if(it.day.value == -1){
+                return false
+            }
+            if(it.isStartTimeSet.value != true || it.isEndTimeSet.value != true){
+                return false
+            }
+        }
+        return true
     }
 
     @Composable
@@ -254,14 +278,13 @@ class CreateCrewScheduleFragment : Fragment() {
     }
 
     @Composable
-    private fun ScheduleLayout(
-        startTimeState : State<String>,
-        endTimeState : State<String>,
-        hasStartTimeSet : MutableState<Boolean?>,
-        hasEndTimeSet : MutableState<Boolean?>
-    ) {
+    private fun scheduleLayout(
+        index: Int,
+        scheduleState: ScheduleState,
+        snackbarHostState : SnackbarHostState
+    ) : ScheduleState {
 
-        val dayList = listOf<FilterItem>(
+        val dayList = arrayListOf<FilterItem>(
             FilterItem(stringResource(id = R.string.monday), remember { mutableStateOf(false) }),
             FilterItem(stringResource(id = R.string.tuesday), remember { mutableStateOf(false) }),
             FilterItem(stringResource(id = R.string.wednesday), remember { mutableStateOf(false) }),
@@ -271,8 +294,32 @@ class CreateCrewScheduleFragment : Fragment() {
             FilterItem(stringResource(id = R.string.sunday), remember { mutableStateOf(false) })
         )
 
-        val dayState = remember { mutableStateOf(-1)}
-        val toggleState = remember { mutableStateOf(false)}
+        scheduleState.apply {
+            day = remember { day }
+            startTime = remember { startTime }
+            endTime = remember { endTime }
+            isStartTimeSet = remember {isStartTimeSet}
+            isEndTimeSet = remember { isEndTimeSet }
+        }
+
+        if(scheduleState.day.value != -1){
+            dayList[scheduleState.day.value].state.value = true
+        }
+
+
+
+        if (scheduleState.isStartTimeSet.value == null || scheduleState.isEndTimeSet.value == null) {
+
+            LaunchedEffect(key1 = snackbarHostState, block = {
+                snackbarHostState.showSnackbar(
+                    message = getString(R.string.time_warning),
+                    duration = SnackbarDuration.Short
+                )
+                if(scheduleState.isEndTimeSet.value == null) scheduleState.isEndTimeSet.value = false
+                if(scheduleState.isStartTimeSet.value == null) scheduleState.isStartTimeSet.value = false
+            })
+
+        }
 
         Spacer(modifier = Modifier.height(32.dp))
         Text(
@@ -285,17 +332,17 @@ class CreateCrewScheduleFragment : Fragment() {
         NonRepetitionLayout(
             itemList = dayList
         ){
-            dayState.value = it
+            scheduleState.day.value = it
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        NoToggleLayout(toggleState = toggleState, textString = stringResource(id = R.string.every_other_week))
 
         Spacer(modifier = Modifier.height(32.dp))
-        TimeFilter(startTimeState, endTimeState, hasStartTimeSet, hasEndTimeSet){
-            val timeBottomSheet = TimeBottomSheetFragment(it, viewModel)
+        TimeFilter(scheduleState.startTime, scheduleState.endTime, scheduleState.isStartTimeSet, scheduleState.isEndTimeSet){
+            val timeBottomSheet = TimeBottomSheetFragment(index, it, viewModel)
             timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
         }
+
+
+        return scheduleState
     }
 
     @Composable
@@ -331,6 +378,9 @@ class CreateCrewScheduleFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
+        if(checkedState.value) {
+            checkedRadioButton = checkedState
+        }
         Box(
             modifier = modifier
                 .selectable(

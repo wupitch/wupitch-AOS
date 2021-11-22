@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -42,6 +45,7 @@ import wupitch.android.common.Constants.SUPPLY_MAX_LENGTH
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
+import wupitch.android.util.Sport
 
 @ExperimentalPermissionsApi
 @ExperimentalPagerApi
@@ -62,10 +66,10 @@ class CreateCrewImageFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
 
-                    val titleTextState = remember { mutableStateOf("") }
-                    val introTextState = remember { mutableStateOf("") }
-                    val supplyTextState = remember { mutableStateOf("") }
-                    val inquiryTextState = remember { mutableStateOf("") }
+                    val titleTextState = remember { mutableStateOf(viewModel.crewTitle.value) }
+                    val introTextState = remember { mutableStateOf(viewModel.crewIntro.value) }
+                    val supplyTextState = remember { mutableStateOf(viewModel.crewSupplies.value) }
+                    val inquiryTextState = remember { mutableStateOf(viewModel.crewInquiry.value) }
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -79,7 +83,7 @@ class CreateCrewImageFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning)
                         )
                     }
-                    val imageChosenState = remember { mutableStateOf(false) }
+                    val imageChosenState = remember { mutableStateOf(viewModel.imageChosenState.value) }
 
                     ConstraintLayout(
                         Modifier
@@ -162,7 +166,15 @@ class CreateCrewImageFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" ){
-                                //todo save to viewModel.
+                                viewModel.apply {
+                                    setCrewTitle(titleTextState.value)
+                                    setCrewIntro(introTextState.value)
+                                    setCrewSupplies(supplyTextState.value)
+                                    setCrewInquiry(inquiryTextState.value)
+                                    setImageChosenState(imageChosenState.value)
+                                    //todo save image and call it back!!!
+                                }
+
                                 findNavController().navigate(R.id.action_createCrewImageFragment_to_createCrewFeeFragment)
                             }
 
@@ -225,7 +237,9 @@ class CreateCrewImageFragment : Fragment() {
         Spacer(modifier = Modifier.height(24.dp))
         SimpleTextField(
             textState = titleTextState,
-            hintText = stringResource(id = R.string.input_title)
+            hintText = stringResource(id = R.string.input_title),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+            keyboardActions = KeyboardActions.Default
         )
         Spacer(modifier = Modifier.height(24.dp))
         LargeTextField(
@@ -289,7 +303,7 @@ class CreateCrewImageFragment : Fragment() {
                 Image(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
-                    painter = painterResource(id = getSportThumbnail(viewModel.crewSportId.value)),
+                    painter = painterResource(id = Sport.getNumOf(viewModel.crewSportId.value).detailImage),
                     contentDescription = "crew image from gallery"
                 )
                 imageChosenState.value = true
@@ -317,14 +331,4 @@ class CreateCrewImageFragment : Fragment() {
         }
     }
 
-    private fun getSportThumbnail(sportId : Int) : Int {
-        return when(sportId){
-            0 -> R.drawable.img_foot_thumb
-            1 -> R.drawable.img_bad_thumb
-            2 -> R.drawable.img_voll_thumb
-            3 -> R.drawable.img_bask_thumb
-            4 -> R.drawable.img_hike_thumb
-            else -> R.drawable.img_run_thumb
-        }
-    }
 }

@@ -21,14 +21,19 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 
+@AndroidEntryPoint
 class CreateCrewVisitorFeeFragment : Fragment() {
+
+    private val viewModel : CreateCrewViewModel by activityViewModels()
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -40,8 +45,8 @@ class CreateCrewVisitorFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val feeState = remember { mutableStateOf("") }
-                    val noFeeState = remember { mutableStateOf(false) }
+                    val feeState = remember { mutableStateOf(viewModel.crewVisitorFee.value) }
+                    val noFeeState = remember { mutableStateOf(viewModel.noCrewVisitorFee.value) }
 
                     if(noFeeState.value) feeState.value = ""
                     if(feeState.value.isNotEmpty()) noFeeState.value = false
@@ -139,6 +144,7 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if (feeState.value != "" || noFeeState.value) {
+                                viewModel.setCrewVisitorFee(feeState.value, noFeeState.value)
                                 //todo 크루 아이디 생성 후  디테일 페이지로 이동.
                                 val bundle = Bundle().apply { putInt("crewId", 0) }
                                 findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)

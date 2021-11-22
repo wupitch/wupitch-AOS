@@ -1,39 +1,35 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
@@ -69,11 +65,10 @@ class CreateCrewLocationFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning))
                     }
 
-                    val locationSelectedState = remember { mutableStateOf(-1) }
 
-                    val textState = remember { mutableStateOf("") }
+                    val locationTextState = remember { mutableStateOf(viewModel.crewLocation.value) }
                     val districtList = viewModel.districtList.value
-                    val districtState = viewModel.userDistrictName.observeAsState()
+                    val districtState = viewModel.crewDistrictName.observeAsState()
 
 
                     ConstraintLayout(
@@ -104,7 +99,6 @@ class CreateCrewLocationFragment : Fragment() {
                                 .background(colorResource(id = R.color.gray01))
                         )
 
-                        // todo 동 추가
                         if (districtList.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressBar) {
@@ -117,7 +111,6 @@ class CreateCrewLocationFragment : Fragment() {
                             )
                         }
 
-                        //todo 동 추가
                         if (districtList.data.isNotEmpty()) {
 
                             Column(
@@ -160,11 +153,13 @@ class CreateCrewLocationFragment : Fragment() {
 
                                 Spacer(modifier = Modifier.height(12.dp))
                                 SimpleTextField(
-                                    textState = textState,
-                                    hintText = stringResource(id = R.string.input_location)
+                                    textState = locationTextState,
+                                    hintText = stringResource(id = R.string.input_location),
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                    keyboardActions = KeyboardActions(onDone = {
+                                        setKeyboardDown()
+                                    })
                                 )
-
-
 
                                 Spacer(modifier = Modifier.height(12.dp))
                                 Text(
@@ -174,12 +169,8 @@ class CreateCrewLocationFragment : Fragment() {
                                     color = colorResource(id = R.color.gray02),
                                     fontSize = 14.sp,
                                 )
-
-
                             }
                         }
-
-
 
 
                         RoundBtn(
@@ -197,13 +188,10 @@ class CreateCrewLocationFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if (districtState.value != null) {
-                                Log.d("{CreateCrewLocationFragment.onCreateView}", "next btn clicked!")
-                                //todo viewmodel 에 선택된 location 보내기.
+                                viewModel.setCrewLocation(locationTextState.value)
                                 findNavController().navigate(R.id.action_createCrewLocationFragment_to_createCrewInfoFragment)
                             }
                         }
-
-
                     }
                 }
             }
@@ -221,5 +209,10 @@ class CreateCrewLocationFragment : Fragment() {
     private fun showDistrictBottomSheet(districtList: Array<String>) {
         districtBottomSheet = DistrictBottomSheetFragment(districtList, viewModel)
         districtBottomSheet.show(childFragmentManager, "district_bottom_sheet")
+    }
+
+    private fun setKeyboardDown() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }

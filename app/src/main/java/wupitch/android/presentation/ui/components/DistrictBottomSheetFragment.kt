@@ -147,7 +147,7 @@ class DistrictBottomSheetFragment @Inject constructor(
                                             viewModel.setUserRegion(pickerValueState.value, districtList[pickerValueState.value])
                                         }
                                         is CreateCrewViewModel -> {
-                                            viewModel.setUserDistrict(pickerValueState.value, districtList[pickerValueState.value])
+                                            viewModel.setCrewDistrict(pickerValueState.value, districtList[pickerValueState.value])
                                         }
                                     }
                                     dismiss()

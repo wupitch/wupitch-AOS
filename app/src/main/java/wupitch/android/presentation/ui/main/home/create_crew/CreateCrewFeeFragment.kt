@@ -21,14 +21,20 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 
+@AndroidEntryPoint
 class CreateCrewFeeFragment : Fragment() {
+
+    private val viewModel : CreateCrewViewModel by activityViewModels()
+
     @ExperimentalPagerApi
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,8 +45,8 @@ class CreateCrewFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val feeState = remember { mutableStateOf("") }
-                    val noFeeState = remember { mutableStateOf(false) }
+                    val feeState = remember { mutableStateOf(viewModel.crewFee.value) }
+                    val noFeeState = remember { mutableStateOf(viewModel.noCrewFee.value) }
 
                     if(noFeeState.value) feeState.value = ""
                     if(feeState.value.isNotEmpty()) noFeeState.value = false
@@ -131,9 +137,9 @@ class CreateCrewFeeFragment : Fragment() {
                             textString = R.string.six_over_seven,
                             fontSize = 16.sp
                         ) {
-                            if (feeState.value != "" || noFeeState.value) {
+                            if (feeState.value.isNotEmpty() || noFeeState.value) {
+                                viewModel.setCrewFee(feeState.value, noFeeState.value )
                                 findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
-                                //todo viewmodel set fee.
                             }
                         }
                     }
