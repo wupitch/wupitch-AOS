@@ -75,11 +75,11 @@ class SplashFragment : Fragment() {
                 //development 용도.
                 //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewImageFragment)
-                //findNavController().navigate(R.id.action_splashFragment_to_createCrewInfoFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_createCrewInfoFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewScheduleFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_profileFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_idCardFragment)
-                findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                //findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewFeeFragment)
 
             }

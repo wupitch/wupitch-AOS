@@ -63,19 +63,21 @@ fun NumberTextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             maxLines = 1,
             onValueChange = { value ->
+
                 if (thousandIndicator) {
                     if (value.length in 1..7) {
 //                    textState.value = value.replace("[\$&+,:;=\\\\\\\\?@#|/'<>.^*()%!-]".toRegex(), "")
 //                    textState.value = value.replace("\\s".toRegex(), "")
-
-                        textState.value = value.formatToWon()
+                        textState.value = value.filter { it.isDigit() }
+                        if(textState.value.isNotEmpty()) textState.value = textState.value.formatToWon()
                     } else if (value.isEmpty()) {
                         textState.value = value
                     }
 
                 } else {
                     if (value.length <= 3) {
-                        textState.value = value
+                        textState.value = value.filter { it.isDigit() }
+                        if(textState.value.isNotEmpty() && textState.value.toInt() == 0) textState.value = "0"
                     }
                 }
 

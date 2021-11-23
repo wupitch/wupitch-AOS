@@ -275,7 +275,7 @@ class CreateCrewViewModel @Inject constructor(
             location = if(_crewLocation.value.isEmpty()) null else _crewLocation.value,
             sportsId = _crewSportId.value +1,
             title = _crewTitle.value,
-            memberCount = _crewSize.value.toInt(), //todo
+            memberCount = _crewSize.value.toInt(),
             scheduleList = _scheduleList.map { Schedule(it.day.value +1, it.startTime.value.stringToDouble(), it.endTime.value.stringToDouble()) }
         )
         val response = crewRepository.createCrew(crewReq)
