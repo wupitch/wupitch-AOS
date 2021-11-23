@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -42,7 +43,7 @@ import wupitch.android.presentation.ui.components.NumberTextFieldLayout
 @AndroidEntryPoint
 class CreateCrewInfoFragment : Fragment() {
 
-    private val viewModel : CreateCrewViewModel by viewModels()
+    private val viewModel : CreateCrewViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

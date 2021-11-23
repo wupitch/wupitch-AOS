@@ -48,4 +48,10 @@ object RepositoryModule {
     fun provideLoginRepository(retrofit: Retrofit) : LoginRepository {
         return LoginRepositoryImpl(retrofit)
     }
+
+    @Provides
+    @Singleton
+    fun provideCrewRepository(retrofit: Retrofit) : CrewRepository {
+        return CrewRepositoryImpl(retrofit)
+    }
 }

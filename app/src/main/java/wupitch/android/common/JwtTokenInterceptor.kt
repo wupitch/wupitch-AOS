@@ -21,13 +21,8 @@ class JwtTokenInterceptor(
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
+
         val builder: Request.Builder = chain.request().newBuilder()
-
-
-//        val jwtPreferenceFlow: Flow<String> = context.dataStore.data
-//            .map { preferences ->
-//                preferences[Constants.JWT_PREFERENCE_KEY] ?: ""
-//            }
 
         runBlocking {
             val jwtPreferenceFlow = context.dataStore.data.first()
@@ -36,6 +31,5 @@ class JwtTokenInterceptor(
         }
 
         return chain.proceed(builder.build())
-
     }
 }

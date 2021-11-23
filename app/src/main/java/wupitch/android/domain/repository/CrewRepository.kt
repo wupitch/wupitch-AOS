@@ -1,4 +1,4 @@
-package wupitch.android.data.remote
+package wupitch.android.domain.repository
 
 import retrofit2.Response
 import retrofit2.http.Body
@@ -6,9 +6,7 @@ import retrofit2.http.POST
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.domain.model.CreateCrewReq
 
-interface CrewApi {
-    @POST("app/clubs")
-    suspend fun createCrew(
-        @Body createCrewReq : CreateCrewReq
-    ) : Response<BaseRes>
+interface CrewRepository {
+
+    suspend fun createCrew(crewReq : CreateCrewReq) : Response<BaseRes>
 }

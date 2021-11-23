@@ -11,17 +11,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
 import wupitch.android.data.remote.dto.toFilterItem
+import wupitch.android.domain.model.CreateCrewReq
+import wupitch.android.domain.model.Schedule
+import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.util.TimeType
 import wupitch.android.util.isEndTimeFasterThanStart
+import wupitch.android.util.stringToDouble
+import wupitch.android.util.wonToNum
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateCrewViewModel @Inject constructor(
     private val getSportRepository: GetSportRepository,
-    private val getDistrictRepository: GetDistrictRepository
+    private val getDistrictRepository: GetDistrictRepository,
+    private val crewRepository : CrewRepository
 ) : ViewModel() {
 
     private var _sportsList = mutableStateOf(SportState())
@@ -73,9 +80,6 @@ class CreateCrewViewModel @Inject constructor(
     private var _imageChosenState = mutableStateOf(false)
     val imageChosenState : State<Boolean> = _imageChosenState
 
-
-
-
     private var _scheduleList = mutableStateListOf<ScheduleState>(
         ScheduleState(
             day = mutableStateOf(-1),
@@ -86,6 +90,9 @@ class CreateCrewViewModel @Inject constructor(
         )
     )
     val scheduleList: SnapshotStateList<ScheduleState> = _scheduleList
+
+    private var _createCrewState = mutableStateOf(BaseState())
+    val createCrewState : State<BaseState> = _createCrewState
 
 
     fun getSports() = viewModelScope.launch {
@@ -252,5 +259,31 @@ class CreateCrewViewModel @Inject constructor(
     fun setCrewVisitorFee(money : String, toggleState : Boolean) {
         _crewVisitorFee.value = money
         _noCrewVisitorFee.value = toggleState
+    }
+
+    fun createCrew() = viewModelScope.launch {
+        _createCrewState.value = BaseState(isLoading = true)
+
+        val crewReq = CreateCrewReq(
+            ageList = _crewAgeGroupList.map { it +1 },
+            areaId =  _crewDistrictId.value!! +1,
+            conference = if(_noCrewFee.value) null else _crewFee.value.wonToNum(),
+            extraInfoList = _crewExtraInfoList.map { it+1 },
+            guestConference = if(_noCrewVisitorFee.value) null else _crewVisitorFee.value.wonToNum(),
+            inquiries = _crewInquiry.value,
+            introduction = _crewIntro.value,
+            location = if(_crewLocation.value.isEmpty()) null else _crewLocation.value,
+            sportsId = _crewSportId.value +1,
+            title = _crewTitle.value,
+            memberCount = _crewSize.value.toInt(), //todo
+            scheduleList = _scheduleList.map { Schedule(it.day.value +1, it.startTime.value.stringToDouble(), it.endTime.value.stringToDouble()) }
+        )
+        val response = crewRepository.createCrew(crewReq)
+        if(response.isSuccessful) {
+            response.body()?.let { baseRes ->
+                if(baseRes.isSuccess) _createCrewState.value = BaseState(isSuccess = true)
+                else _createCrewState.value = BaseState(error = baseRes.message)
+            }
+        }else _createCrewState.value = BaseState(error = "크루 생성을 실패했습니다.")
     }
 }

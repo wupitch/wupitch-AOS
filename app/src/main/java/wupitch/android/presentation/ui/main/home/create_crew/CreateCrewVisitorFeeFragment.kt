@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
@@ -61,12 +63,22 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                             stopSignupState = stopSignupState,
                             textString = stringResource(id = R.string.stop_create_crew_warning))
                     }
+
+                    val createCrewState = remember {viewModel.createCrewState}
+                    if(createCrewState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), createCrewState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+                    if(createCrewState.value.isSuccess){
+                        //todo crewid 받아올것!!!
+                        val bundle = Bundle().apply { putInt("crewId", 0) }
+                        findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)
+                    }
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, topDivider, content, visitorDef, nextBtn) = createRefs()
+                        val (toolbar, topDivider, content, visitorDef, nextBtn, progressbar) = createRefs()
 
                         FullToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -129,6 +141,18 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                 end.linkTo(parent.end, margin = 20.dp)
                                 width = Dimension.fillToConstraints
                             })
+
+                        if (createCrewState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
+                                    bottom.linkTo(nextBtn.top)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
                         RoundBtn(
                             modifier = Modifier
                                 .constrainAs(nextBtn) {
@@ -145,12 +169,8 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                         ) {
                             if (feeState.value != "" || noFeeState.value) {
                                 viewModel.setCrewVisitorFee(feeState.value, noFeeState.value)
-                                //todo 크루 아이디 생성 후  디테일 페이지로 이동.
-                                val bundle = Bundle().apply { putInt("crewId", 0) }
-                                findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)
+                                viewModel.createCrew()
                             }
-
-
                         }
                     }
                 }

@@ -8,12 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +31,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.pager.ExperimentalPagerApi
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.util.NumberTransformation
+import wupitch.android.util.formatToWon
 
 @ExperimentalPagerApi
 @Composable
@@ -42,66 +43,80 @@ fun NumberTextField(
     hintString : String
 ) {
 
-    BasicTextField(
-        value = textState.value,
-        textStyle = TextStyle(
-            color = Color.Black,
-            fontSize = 16.sp,
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Start
-        ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        maxLines = 1,
-        onValueChange = { value ->
-            if(thousandIndicator){
-                //todo 천 단위에 점 찍기.
-                if(value.length <=6){
-                    textState.value = value
-                }
-            }else {
-                if(value.length <=3){
-                    textState.value = value
-                }
-            }
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor = colorResource(id = R.color.gray03),
+        backgroundColor = colorResource(id = R.color.gray03)
+    )
 
-        },
-        cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(colorResource(id = R.color.gray04))
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 11.dp, bottom = 9.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
 
-                ConstraintLayout(
-                    modifier = Modifier
+        BasicTextField(
+            value = textState.value,
+            textStyle = TextStyle(
+                color = Color.Black,
+                fontSize = 16.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Start
+            ),
+//        visualTransformation = NumberTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            maxLines = 1,
+            onValueChange = { value ->
+                if (thousandIndicator) {
+                    if (value.length in 1..7) {
+//                    textState.value = value.replace("[\$&+,:;=\\\\\\\\?@#|/'<>.^*()%!-]".toRegex(), "")
+//                    textState.value = value.replace("\\s".toRegex(), "")
+
+                        textState.value = value.formatToWon()
+                    } else if (value.isEmpty()) {
+                        textState.value = value
+                    }
+
+                } else {
+                    if (value.length <= 3) {
+                        textState.value = value
+                    }
+                }
+
+            },
+            cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
+            decorationBox = { innerTextField ->
+                Row(
+                    modifier = modifier
                         .fillMaxWidth()
-                        .background(Color.Transparent)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colorResource(id = R.color.gray04))
+                        .padding(horizontal = 16.dp)
+                        .padding(top = 11.dp, bottom = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val (hint) = createRefs()
 
-                    innerTextField()
-                    if (textState.value.isEmpty()) {
-                        Text(
-                            modifier = Modifier.constrainAs(hint) {
-                                start.linkTo(parent.start)
-                                top.linkTo(parent.top)
-                                bottom.linkTo(parent.bottom)
-                            },
-                            text = hintString,
-                            color = colorResource(id = R.color.gray03),
-                            fontSize = 16.sp,
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal
-                        )
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Transparent)
+                    ) {
+                        val (hint) = createRefs()
+
+                        innerTextField()
+                        if (textState.value.isEmpty()) {
+                            Text(
+                                modifier = Modifier.constrainAs(hint) {
+                                    start.linkTo(parent.start)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                text = hintString,
+                                color = colorResource(id = R.color.gray03),
+                                fontSize = 16.sp,
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
                     }
                 }
             }
-        }
-    )
+        )
+    }
 }
