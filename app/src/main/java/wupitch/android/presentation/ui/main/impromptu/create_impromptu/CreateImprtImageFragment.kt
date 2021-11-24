@@ -1,6 +1,5 @@
-package wupitch.android.presentation.ui.main.home.create_crew
+package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -46,17 +45,14 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.util.Sport
-import android.provider.MediaStore
-import java.io.File
-
 
 @ExperimentalPermissionsApi
 @ExperimentalPagerApi
 @AndroidEntryPoint
-class CreateCrewImageFragment : Fragment() {
+class CreateImprtImageFragment : Fragment() {
 
     private lateinit var uploadImageBottomSheet: UploadImageBottomSheetFragment
-    private val viewModel: CreateCrewViewModel by activityViewModels()
+    private val viewModel: CreateImprtViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,10 +65,10 @@ class CreateCrewImageFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
 
-                    val titleTextState = remember { mutableStateOf(viewModel.crewTitle.value) }
-                    val introTextState = remember { mutableStateOf(viewModel.crewIntro.value) }
-                    val supplyTextState = remember { mutableStateOf(viewModel.crewSupplies.value) }
-                    val inquiryTextState = remember { mutableStateOf(viewModel.crewInquiry.value) }
+                    val titleTextState = remember { mutableStateOf(viewModel.imprtTitle.value) }
+                    val introTextState = remember { mutableStateOf(viewModel.imprtIntro.value) }
+                    val supplyTextState = remember { mutableStateOf(viewModel.imprtSupplies.value) }
+                    val inquiryTextState = remember { mutableStateOf(viewModel.imprtInquiry.value) }
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -88,7 +84,7 @@ class CreateCrewImageFragment : Fragment() {
                     }
                     val imageChosenState = remember { viewModel.imageChosenState}
                     val isUsingDefaultImage = remember { viewModel.isUsingDefaultImage }
-                    val imageUri = remember { viewModel.crewImage }
+                    val imageUri = remember { viewModel.imprtImage }
 
                     ConstraintLayout(
                         Modifier
@@ -172,10 +168,10 @@ class CreateCrewImageFragment : Fragment() {
                         ) {
                             if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" ){
                                 viewModel.apply {
-                                    setCrewTitle(titleTextState.value)
-                                    setCrewIntro(introTextState.value)
-                                    setCrewSupplies(supplyTextState.value)
-                                    setCrewInquiry(inquiryTextState.value)
+                                    setImprtTitle(titleTextState.value)
+                                    setImprtIntro(introTextState.value)
+                                    setImprtSupplies(supplyTextState.value)
+                                    setImprtInquiry(inquiryTextState.value)
                                     setImageChosenState(imageChosenState.value)
                                 }
 
@@ -258,7 +254,7 @@ class CreateCrewImageFragment : Fragment() {
     fun IntroImageLayout(
         imageChosenState : State<Boolean>,
         isUsingDefaultImage : State<Boolean?>,
-        imageUri : State<Uri>
+        imageUri : State<Uri?>
     ) {
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -296,7 +292,7 @@ class CreateCrewImageFragment : Fragment() {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     painter = if(imageUri.value != EMPTY_IMAGE_URI) rememberImagePainter(data = imageUri.value)
-                    else painterResource(id = Sport.getNumOf(viewModel.crewSportId.value).detailImage),
+                    else painterResource(id = Sport.getNumOf(0).detailImage),
                     contentDescription = "crew image"
                 )
             }
@@ -305,12 +301,8 @@ class CreateCrewImageFragment : Fragment() {
                 GallerySelect(
                     onImageUri = { uri ->
                         if(uri != EMPTY_IMAGE_URI){
-                            viewModel.setCrewImage(uri)
+                            viewModel.setImprtImage(uri)
                             viewModel.setImageChosenState(true)
-
-                            viewModel.testCrewImage(uri)
-
-
                             viewModel.setIsUsingDefaultImage(null)
                         }
                         Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())
@@ -320,24 +312,4 @@ class CreateCrewImageFragment : Fragment() {
         }
     }
 
-    fun getRealPathFromURIForGallery(uri: Uri?): String? {
-        if (uri == null) {
-            return null
-        }
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        val cursor: Cursor? = requireActivity().contentResolver.query(
-            uri, projection, null,
-            null, null
-        )
-        if (cursor != null) {
-            val columnIdx: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            cursor.moveToFirst()
-            return cursor.getString(columnIdx)
-        }
-        assert(false)
-        cursor?.close()
-        return uri.path
-    }
-
 }
-

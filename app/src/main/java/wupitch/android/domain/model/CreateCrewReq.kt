@@ -15,5 +15,6 @@ data class CreateCrewReq(
     val memberCount: Int,
     val scheduleList: List<Schedule>,
     val sportsId: Int,
-    val title: String
+    val title: String,
+    val materials : String?
 )

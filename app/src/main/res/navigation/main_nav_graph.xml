@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_mainFragment_to_impromptuFilterFragment"
             app:destination="@id/impromptuFilterFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_createImprtLocationFragment"
+            app:destination="@id/createImprtLocationFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -73,6 +76,9 @@
         <action
             android:id="@+id/action_splashFragment_to_createCrewInfoFragment"
             app:destination="@id/createCrewInfoFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_createCrewImageFragment"
+            app:destination="@id/createCrewImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/serviceAgreementFragment"
@@ -288,4 +294,66 @@
         android:id="@+id/impromptuFilterFragment"
         android:name="wupitch.android.presentation.ui.main.impromptu.filter.ImpromptuFilterFragment"
         android:label="ImpromptuFilterFragment" />
+    <fragment
+        android:id="@+id/createImprtLocationFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtLocationFragment"
+        android:label="CreateImprtLocationFragment" >
+        <action
+            android:id="@+id/action_createImprtLocationFragment_to_createImprtScheduleFragment"
+            app:destination="@id/createImprtScheduleFragment" />
+        <action
+            android:id="@+id/action_createImprtLocationFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createImprtScheduleFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtScheduleFragment"
+        android:label="CreateImprtScheduleFragment" >
+        <action
+            android:id="@+id/action_createImprtScheduleFragment_to_createImprtImageFragment"
+            app:destination="@id/createImprtImageFragment" />
+        <action
+            android:id="@+id/action_createImprtScheduleFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createImprtFeeFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtFeeFragment"
+        android:label="CreateImprtFeeFragment" >
+        <action
+            android:id="@+id/action_createImprtFeeFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createImprtSizeFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtSizeFragment"
+        android:label="CreateImprtSizeFragment" >
+        <action
+            android:id="@+id/action_createImprtSizeFragment_to_createImprtFeeFragment"
+            app:destination="@id/createImprtFeeFragment" />
+        <action
+            android:id="@+id/action_createImprtSizeFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/createImprtImageFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtImageFragment"
+        android:label="CreateImprtImageFragment" >
+        <action
+            android:id="@+id/action_createImprtImageFragment_to_createImprtSizeFragment"
+            app:destination="@id/createImprtSizeFragment" />
+        <action
+            android:id="@+id/action_createImprtImageFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

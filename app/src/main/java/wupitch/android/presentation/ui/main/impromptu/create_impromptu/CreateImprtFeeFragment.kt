@@ -1,13 +1,11 @@
-package wupitch.android.presentation.ui.main.home.create_crew
+package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
@@ -33,9 +31,9 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 
 @AndroidEntryPoint
-class CreateCrewVisitorFeeFragment : Fragment() {
+class CreateImprtFeeFragment : Fragment() {
 
-    private val viewModel : CreateCrewViewModel by activityViewModels()
+    private val viewModel : CreateImprtViewModel by activityViewModels()
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -47,8 +45,8 @@ class CreateCrewVisitorFeeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val feeState = remember { mutableStateOf(viewModel.crewVisitorFee.value) }
-                    val noFeeState = remember { mutableStateOf(viewModel.noCrewVisitorFee.value) }
+                    val feeState = remember { mutableStateOf(viewModel.imprtFee.value) }
+                    val noFeeState = remember { mutableStateOf(viewModel.noImprtFee.value) }
 
                     if(noFeeState.value) feeState.value = ""
                     if(feeState.value.isNotEmpty()) noFeeState.value = false
@@ -56,7 +54,7 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_mainFragment)
+                        findNavController().navigate(R.id.action_createCrewFeeFragment_to_mainFragment)
                     }
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
@@ -64,20 +62,12 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning))
                     }
 
-                    val createCrewState = remember {viewModel.createCrewState}
-                    if(createCrewState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), createCrewState.value.error, Toast.LENGTH_SHORT).show()
-                    }
-                    createCrewState.value.data?.let {
-                        val bundle = Bundle().apply { putInt("crewId", it) }
-                        findNavController().navigate(R.id.action_createCrewVisitorFeeFragment_to_crewDetailFragment, bundle)
-                    }
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, topDivider, content, visitorDef, nextBtn, progressbar) = createRefs()
+                        val (toolbar, topDivider, content, nextBtn) = createRefs()
 
                         FullToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -113,7 +103,7 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                         {
                             Spacer(modifier = Modifier.height(24.dp))
                             Text(
-                                text = stringResource(id = R.string.crew_visitor_fee),
+                                text = stringResource(id = R.string.crew_fee),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
@@ -126,31 +116,12 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                     .height(44.dp),
                                 textState = feeState,
                                 measureString = stringResource(id = R.string.fee_measure),
-                                thousandIndicator = true,
+                                thousandIndicator = true, 
                                 hintString = stringResource(id = R.string.fee_hint)
                             )
                             Spacer(modifier = Modifier.height(20.dp))
-                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_visitor))
+                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_fee))
 
-                        }
-                        VisitorDefLayout(modifier = Modifier
-                            .constrainAs(visitorDef) {
-                                bottom.linkTo(nextBtn.top, margin = 40.dp)
-                                start.linkTo(parent.start, margin = 20.dp)
-                                end.linkTo(parent.end, margin = 20.dp)
-                                width = Dimension.fillToConstraints
-                            })
-
-                        if (createCrewState.value.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.constrainAs(progressbar) {
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(nextBtn.top)
-                                },
-                                color = colorResource(id = R.color.main_orange)
-                            )
                         }
                         RoundBtn(
                             modifier = Modifier
@@ -163,12 +134,12 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if (feeState.value != "" || noFeeState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.upload,
+                            textString = R.string.six_over_seven,
                             fontSize = 16.sp
                         ) {
-                            if (feeState.value != "" || noFeeState.value) {
-                                viewModel.setCrewVisitorFee(feeState.value, noFeeState.value)
-                                viewModel.createCrew()
+                            if (feeState.value.isNotEmpty() || noFeeState.value) {
+                                viewModel.setImprtFee(feeState.value, noFeeState.value )
+                                findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
                             }
                         }
                     }
@@ -176,4 +147,6 @@ class CreateCrewVisitorFeeFragment : Fragment() {
             }
         }
     }
+
+
 }
