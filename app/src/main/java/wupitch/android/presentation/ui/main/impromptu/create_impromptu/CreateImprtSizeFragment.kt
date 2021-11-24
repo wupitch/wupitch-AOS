@@ -5,12 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
@@ -33,7 +36,8 @@ import wupitch.android.presentation.ui.components.*
 @AndroidEntryPoint
 class CreateImprtSizeFragment : Fragment() {
 
-    private val viewModel : CreateImprtViewModel by activityViewModels()
+    private lateinit var recruitSizeBottomSheet: RecruitSizeBottomSheetFragment
+    private val viewModel: CreateImprtViewModel by activityViewModels()
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -45,21 +49,19 @@ class CreateImprtSizeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val feeState = remember { mutableStateOf(viewModel.imprtFee.value) }
-                    val noFeeState = remember { mutableStateOf(viewModel.noImprtFee.value) }
-
-                    if(noFeeState.value) feeState.value = ""
-                    if(feeState.value.isNotEmpty()) noFeeState.value = false
+                    val sizeState = remember { viewModel.imprtSize }
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
-                    if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createCrewFeeFragment_to_mainFragment)
+                    if (stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createImprtSizeFragment_to_mainFragment)
                     }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                    if (dialogOpenState.value) {
+                        StopWarningDialog(
+                            dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                            textString = stringResource(id = R.string.stop_create_impromptu_warning)
+                        )
                     }
 
                     ConstraintLayout(
@@ -75,8 +77,8 @@ class CreateImprtSizeFragment : Fragment() {
                             end.linkTo(parent.end)
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { dialogOpenState.value = true},
-                            textString = R.string.create_crew
+                            onRightIconClick = { dialogOpenState.value = true },
+                            textString = R.string.create_impromptu
                         )
 
                         Divider(
@@ -103,24 +105,14 @@ class CreateImprtSizeFragment : Fragment() {
                         {
                             Spacer(modifier = Modifier.height(24.dp))
                             Text(
-                                text = stringResource(id = R.string.crew_fee),
+                                text = stringResource(id = R.string.title_num_of_recruitment),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 20.sp,
                             )
                             Spacer(modifier = Modifier.height(32.dp))
-                            NumberTextFieldLayout(
-                                modifier = Modifier
-                                    .width(95.dp)
-                                    .height(44.dp),
-                                textState = feeState,
-                                measureString = stringResource(id = R.string.fee_measure),
-                                thousandIndicator = true, 
-                                hintString = stringResource(id = R.string.fee_hint)
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_fee))
+                            SizeLayout(sizeState)
 
                         }
                         RoundBtn(
@@ -133,19 +125,62 @@ class CreateImprtSizeFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (feeState.value != "" || noFeeState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.six_over_seven,
+                            btnColor = if (sizeState.value != "00") R.color.main_orange else R.color.gray03,
+                            textString = R.string.four_over_five,
                             fontSize = 16.sp
                         ) {
-                            if (feeState.value.isNotEmpty() || noFeeState.value) {
-                                viewModel.setImprtFee(feeState.value, noFeeState.value )
-                                findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
+                            if (sizeState.value != "00") {
+                                findNavController().navigate(R.id.action_createImprtSizeFragment_to_createImprtFeeFragment)
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    @Composable
+    private fun SizeLayout(
+        sizeTextState: State<String>
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Box(
+                modifier = Modifier
+                    .width(55.dp)
+                    .height(44.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        colorResource(id = R.color.gray04)
+                    ).clickable {
+                        showRecruitSizeBottomSheet()
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = sizeTextState.value,
+                    fontFamily = Roboto,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = if(sizeTextState.value == "00") colorResource(id = R.color.gray03) else Color.Black
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = stringResource(id = R.string.people_count_measure),
+                fontFamily = Roboto,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = colorResource(id = R.color.main_black)
+            )
+
+
+        }
+    }
+
+    private fun showRecruitSizeBottomSheet() {
+        recruitSizeBottomSheet = RecruitSizeBottomSheetFragment(viewModel)
+        recruitSizeBottomSheet.show(childFragmentManager, "district_bottom_sheet")
     }
 
 

@@ -92,7 +92,7 @@ private fun TimeButton(
             textAlign = TextAlign.Center,
             fontSize = 14.sp,
             fontFamily = Roboto,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Normal,
             color = if (hasSetTimeState.value == true) colorResource(id = R.color.main_orange)
             else colorResource(id = R.color.gray02)
         )

@@ -73,13 +73,13 @@ class CreateImprtImageFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createCrewImageFragment_to_mainFragment)
+                        findNavController().navigate(R.id.action_createImprtImageFragment_to_mainFragment)
                     }
                     if (dialogOpenState.value) {
                         StopWarningDialog(
                             dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.stop_create_crew_warning)
+                            textString = stringResource(id = R.string.stop_create_impromptu_warning)
                         )
                     }
                     val imageChosenState = remember { viewModel.imageChosenState}
@@ -100,7 +100,7 @@ class CreateImprtImageFragment : Fragment() {
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
                             onRightIconClick = { dialogOpenState.value = true },
-                            textString = R.string.create_crew
+                            textString = R.string.create_impromptu
                         )
 
                         Divider(
@@ -163,7 +163,7 @@ class CreateImprtImageFragment : Fragment() {
                                 .height(52.dp),
                             btnColor = if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" )
                                 R.color.main_orange else R.color.gray03,
-                            textString = R.string.five_over_seven,
+                            textString = R.string.three_over_five,
                             fontSize = 16.sp
                         ) {
                             if(imageChosenState.value && titleTextState.value != "" && introTextState.value != "" && inquiryTextState.value != "" ){
@@ -175,7 +175,7 @@ class CreateImprtImageFragment : Fragment() {
                                     setImageChosenState(imageChosenState.value)
                                 }
 
-                                findNavController().navigate(R.id.action_createCrewImageFragment_to_createCrewFeeFragment)
+                                findNavController().navigate(R.id.action_createImprtImageFragment_to_createImprtSizeFragment)
                             }
 
                         }
@@ -244,7 +244,7 @@ class CreateImprtImageFragment : Fragment() {
         Spacer(modifier = Modifier.height(24.dp))
         LargeTextField(
             textState = introTextState,
-            hintText = stringResource(id = R.string.input_introduce_crew),
+            hintText = stringResource(id = R.string.input_intro_impromptu),
             maxLength = INTRO_MAX_LENGTH
         )
 
@@ -292,7 +292,7 @@ class CreateImprtImageFragment : Fragment() {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     painter = if(imageUri.value != EMPTY_IMAGE_URI) rememberImagePainter(data = imageUri.value)
-                    else painterResource(id = Sport.getNumOf(0).detailImage),
+                    else painterResource(id = R.drawable.img_bungae_thumb),
                     contentDescription = "crew image"
                 )
             }
@@ -303,8 +303,8 @@ class CreateImprtImageFragment : Fragment() {
                         if(uri != EMPTY_IMAGE_URI){
                             viewModel.setImprtImage(uri)
                             viewModel.setImageChosenState(true)
-                            viewModel.setIsUsingDefaultImage(null)
                         }
+                        viewModel.setIsUsingDefaultImage(null)
                         Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())
                     }
                 )

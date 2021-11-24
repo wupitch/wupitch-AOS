@@ -13,22 +13,17 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.EMPTY_IMAGE_URI
-import wupitch.android.domain.model.CreateCrewReq
-import wupitch.android.domain.model.Schedule
-import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.ScheduleState
 import wupitch.android.util.TimeType
+import wupitch.android.util.dateFormatter
 import wupitch.android.util.isEndTimeFasterThanStart
-import wupitch.android.util.wonToNum
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateImprtViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
-    private val crewRepository : CrewRepository
 ) : ViewModel() {
 
     private var _districtList = mutableStateOf(DistrictState())
@@ -43,7 +38,7 @@ class CreateImprtViewModel @Inject constructor(
     private var _imprtLocation = mutableStateOf("")
     val crewLocation: State<String> = _imprtLocation
 
-    private var _imprtSize = mutableStateOf("")
+    private var _imprtSize = mutableStateOf("00")
     val imprtSize: State<String> = _imprtSize
 
 
@@ -69,16 +64,21 @@ class CreateImprtViewModel @Inject constructor(
     private var _imprtImage = mutableStateOf<Uri?>(Constants.EMPTY_IMAGE_URI)
     val imprtImage : State<Uri?> = _imprtImage
 
-    private var _scheduleList = mutableStateListOf<ScheduleState>(
-        ScheduleState(
-            day = mutableStateOf(-1),
+    private var _dateState = mutableStateOf("0000.00.00 (요일)")
+    val dateState : State<String> = _dateState
+
+    private var _dateValidState = mutableStateOf<Boolean?>(true)
+    val dateValidState : State<Boolean?> = _dateValidState
+
+    private var _timeState = mutableStateOf<TimeState>(
+        TimeState(
             startTime = mutableStateOf("00:00"),
             endTime = mutableStateOf("00:00"),
             isStartTimeSet = mutableStateOf<Boolean?>(false),
             isEndTimeSet = mutableStateOf<Boolean?>(false)
         )
     )
-    val scheduleList: SnapshotStateList<ScheduleState> = _scheduleList
+    val timeState: State<TimeState> = _timeState
 
     private var _createImprtState = mutableStateOf(CreateImpromptuState())
     val createImprtState : State<CreateImpromptuState> = _createImprtState
@@ -116,18 +116,26 @@ class CreateImprtViewModel @Inject constructor(
         _imprtSize.value = size
     }
 
+    fun setDateState(longDate : Long?){
+        if(longDate != null){
+            val date = dateFormatter(longDate)
+            if( date != null){
+                _dateState.value = date
+                _dateValidState.value = true
+            }else {
+                _dateState.value = "0000.00.00 (요일)"
+                _dateValidState.value = false
+            }
+        }else {
+            _dateState.value = "0000.00.00 (요일)"
+        }
 
-    fun addImprtSchedule() {
-        _scheduleList.add(
-            ScheduleState(
-                day = mutableStateOf(-1),
-                startTime = mutableStateOf("00:00"),
-                endTime = mutableStateOf("00:00"),
-                isStartTimeSet = mutableStateOf<Boolean?>(false),
-                isEndTimeSet = mutableStateOf<Boolean?>(false)
-            )
-        )
     }
+
+    fun resetDateValid() {
+        _dateValidState.value = null
+    }
+
 
     fun setImprtImage(image : Uri) {
         _imprtImage.value = image
@@ -141,7 +149,7 @@ class CreateImprtViewModel @Inject constructor(
         _imageChosenState.value = isImageChosen
     }
 
-    fun setTimeFilter(index: Int, type: TimeType, hour: Int, min: Int) {
+    fun setTimeFilter(type: TimeType, hour: Int, min: Int) {
         Log.d("{CreateCrewViewModel.setTimeFilter}", "hour : $hour min : $min")
         var hourString = hour.toString()
         var minString = min.toString()
@@ -149,31 +157,29 @@ class CreateImprtViewModel @Inject constructor(
         if (min < 10) minString = "0$min"
         val timeString = "$hourString:$minString"
 
-        val schedule = scheduleList[index]
 
         when (type) {
             TimeType.START -> {
-                if (schedule.isEndTimeSet.value == true) {
-                    if (isEndTimeFasterThanStart(timeString, schedule.endTime.value)) {
-                        schedule.startTime.value = "00:00"
-                        schedule.isStartTimeSet.value = null
+                if (_timeState.value.isEndTimeSet.value == true) {
+                    if (isEndTimeFasterThanStart(timeString, _timeState.value.endTime.value)) {
+                        _timeState.value.startTime.value = "00:00"
+                        _timeState.value.isStartTimeSet.value = null
                     } else {
-                        schedule.startTime.value = timeString
-                        schedule.isStartTimeSet.value = true
+                        _timeState.value.startTime.value = timeString
+                        _timeState.value.isStartTimeSet.value = true
                     }
                 } else {
-                    schedule.startTime.value = timeString
-                    schedule.isStartTimeSet.value = true
+                    _timeState.value.startTime.value = timeString
+                    _timeState.value.isStartTimeSet.value = true
                 }
             }
             TimeType.END -> {
-
-                if (isEndTimeFasterThanStart(schedule.startTime.value, timeString)) {
-                    schedule.endTime.value = "00:00"
-                    schedule.isEndTimeSet.value = null
+                if (isEndTimeFasterThanStart(_timeState.value.startTime.value, timeString)) {
+                    _timeState.value.endTime.value = "00:00"
+                    _timeState.value.isEndTimeSet.value = null
                 } else {
-                    schedule.endTime.value = timeString
-                    schedule.isEndTimeSet.value = true
+                    _timeState.value.endTime.value = timeString
+                    _timeState.value.isEndTimeSet.value = true
                 }
             }
         }
@@ -228,7 +234,7 @@ class CreateImprtViewModel @Inject constructor(
 //        }else _createImprtState.value = CreateImpromptuState(error = "크루 생성을 실패했습니다.")
     }
 
-    private fun postCrewImage(crewId : Int) = viewModelScope.launch {
+    private fun postImprtImage(id : Int) = viewModelScope.launch {
 //        Log.d("{CreateCrewViewModel.postCrewImage}", "${_isUsingDefaultImage.value}, ${_imprtImage.value}")
 //        if(_imprtImage.value == EMPTY_IMAGE_URI) {
 //            _createImprtState.value = CreateImpromptuState(data = crewId)

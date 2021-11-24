@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -55,17 +56,24 @@ class CreateImprtLocationFragment : Fragment() {
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
-                    if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createCrewLocationFragment_to_mainFragment)
+                    if (stopSignupState.value) {
+                        findNavController().navigate(R.id.action_createImprtLocationFragment_to_mainFragment)
                     }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                    if (dialogOpenState.value) {
+                        StopWarningDialog(
+                            dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                            textString = stringResource(id = R.string.stop_create_impromptu_warning)
+                        )
+                    }
+                    BackHandler {
+                        if (viewModel.dateState.value != "0000.00.00 (요일)") dialogOpenState.value = true
+                        else findNavController().navigateUp()
                     }
 
 
-                    val locationTextState = remember { mutableStateOf(viewModel.crewLocation.value) }
+                    val locationTextState =
+                        remember { mutableStateOf(viewModel.crewLocation.value) }
                     val districtList = viewModel.districtList.value
                     val districtState = viewModel.imprtDistrictName.observeAsState()
 
@@ -77,15 +85,17 @@ class CreateImprtLocationFragment : Fragment() {
                     ) {
                         val (toolbar, divider, content, nextBtn, progressBar) = createRefs()
 
-                        FullToolBar(modifier = Modifier.constrainAs(toolbar) {
+                        TitleToolbar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                            width = Dimension.fillToConstraints
-                        }, onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { dialogOpenState.value = true },
-                            textString = R.string.create_crew
-                        )
+                        }, textString = R.string.create_impromptu) {
+                            if (viewModel.dateState.value != "0000.00.00 (요일)") {
+                                dialogOpenState.value = true
+                            } else {
+                                findNavController().navigateUp()
+                            }
+                        }
 
                         Divider(
                             modifier = Modifier
@@ -129,17 +139,19 @@ class CreateImprtLocationFragment : Fragment() {
                                     lineHeight = 28.sp
                                 )
                                 Spacer(modifier = Modifier.height(32.dp))
-                                 WhiteRoundBtn(
-                                        modifier = Modifier
-                                            .height(48.dp)
-                                            .width(152.dp),
-                                        textString = if (districtState.value != null) districtState.value!! else stringResource(id = R.string.select_region_btn),
-                                        fontSize = 14.sp,
-                                        textColor = if (districtState.value != null) R.color.main_orange else R.color.gray02,
-                                        borderColor = if (districtState.value != null) R.color.main_orange else R.color.gray02
-                                    ) {
-                                        showDistrictBottomSheet(districtList.data)
-                                    }
+                                WhiteRoundBtn(
+                                    modifier = Modifier
+                                        .height(48.dp)
+                                        .width(152.dp),
+                                    textString = if (districtState.value != null) districtState.value!! else stringResource(
+                                        id = R.string.select_region_btn
+                                    ),
+                                    fontSize = 14.sp,
+                                    textColor = if (districtState.value != null) R.color.main_orange else R.color.gray02,
+                                    borderColor = if (districtState.value != null) R.color.main_orange else R.color.gray02
+                                ) {
+                                    showDistrictBottomSheet(districtList.data)
+                                }
 
                                 Spacer(modifier = Modifier.height(32.dp))
                                 Text(
@@ -183,12 +195,12 @@ class CreateImprtLocationFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if (districtState.value != null) R.color.main_orange else R.color.gray03,
-                            textString = R.string.two_over_seven,
+                            textString = R.string.one_over_five,
                             fontSize = 16.sp
                         ) {
                             if (districtState.value != null) {
                                 viewModel.setImprtLocation(locationTextState.value)
-                                findNavController().navigate(R.id.action_createCrewLocationFragment_to_createCrewInfoFragment)
+                                findNavController().navigate(R.id.action_createImprtLocationFragment_to_createImprtScheduleFragment)
                             }
                         }
                     }
@@ -196,7 +208,6 @@ class CreateImprtLocationFragment : Fragment() {
             }
         }
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.components
+package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
 import android.os.Bundle
 import android.util.Log
@@ -39,8 +39,7 @@ import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImp
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DistrictBottomSheetFragment @Inject constructor(
-    val districtList : Array<String>,
+class RecruitSizeBottomSheetFragment @Inject constructor(
     val viewModel : ViewModel
 ) : BottomSheetDialogFragment() {
 
@@ -62,9 +61,7 @@ class DistrictBottomSheetFragment @Inject constructor(
 
             setContent {
 
-                val pickerValueState = remember {
-                    mutableStateOf(0)
-                }
+                val pickerValueState = remember { mutableStateOf(1) }
 
 
                     Column(
@@ -85,7 +82,7 @@ class DistrictBottomSheetFragment @Inject constructor(
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
-                                text = stringResource(id = R.string.select_region_bottom_sheet),
+                                text = stringResource(id = R.string.select_recruit_size),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
@@ -117,11 +114,9 @@ class DistrictBottomSheetFragment @Inject constructor(
                                 },
                                 factory = { context ->
                                     NumberPicker(context).apply {
-                                        minValue = 0
-                                        maxValue = districtList.size -1
-                                        displayedValues = districtList
+                                        minValue = 1
+                                        maxValue = 20
                                         setOnValueChangedListener { picker, oldVal, newVal ->
-                                            //서울시 : 0 에서 바뀌지 않으면 불리지 않음. pickerValueState default : 0
                                             pickerValueState.value =  picker.value
                                         }
                                     }
@@ -139,20 +134,10 @@ class DistrictBottomSheetFragment @Inject constructor(
                                     .height(52.dp)
                                     .clip(RoundedCornerShape(8.dp)),
                                 onClick = {
-                                    // todo : viewModel 에 number picker value 보내기. & view model 값 state 로 받아서 crew list 변경.
                                     Log.d("{DistrictBottomSheetFragment.onCreateView}", pickerValueState.value.toString())
                                     when (viewModel) {
-                                        is MainViewModel -> {
-                                            viewModel.setUserDistrict(pickerValueState.value, districtList[pickerValueState.value])
-                                        }
-                                        is HomeViewModel -> {
-                                            viewModel.setUserRegion(pickerValueState.value, districtList[pickerValueState.value])
-                                        }
-                                        is CreateCrewViewModel -> {
-                                            viewModel.setCrewDistrict(pickerValueState.value, districtList[pickerValueState.value])
-                                        }
                                         is CreateImprtViewModel -> {
-                                            viewModel.setImprtDistrict(pickerValueState.value, districtList[pickerValueState.value])
+                                            viewModel.setImprtSize(pickerValueState.value.toString())
 
                                         }
                                     }

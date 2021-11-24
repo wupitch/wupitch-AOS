@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -144,7 +145,7 @@ class ImpromptuDetailFragment : Fragment() {
                                 .verticalScroll(scrollState)
 
                         ) {
-                            CrewImageCard(pinToggleState) //todo 썸네일 정해지면 refactoring.
+                            CrewImageCard(pinToggleState)
 
                             ImpromptuInfo()
                             GrayDivider()
@@ -525,20 +526,22 @@ class ImpromptuDetailFragment : Fragment() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(202.dp)
-                .background(colorResource(id = R.color.main_orange))
         ) {
-            val (icon, pin) = createRefs()
+            val (image, pin) = createRefs()
 
-//            Image(painter = painterResource(id = R.color.main_orange),
-//                contentDescription = null,
-//                modifier = Modifier
-//                    .constrainAs(icon) {
-//                        top.linkTo(parent.top)
-//                        bottom.linkTo(parent.bottom)
-//                        start.linkTo(parent.start)
-//                        end.linkTo(parent.end)
-//                    }
-//                    .size(76.dp))
+            Image(painter = painterResource(id = R.drawable.img_bungae_thumb),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .constrainAs(image) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.fillToConstraints
+                    }
+                    .size(76.dp))
 
             PinToggleButton(modifier = Modifier
                 .constrainAs(pin) {

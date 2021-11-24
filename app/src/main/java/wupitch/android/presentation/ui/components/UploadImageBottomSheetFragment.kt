@@ -21,6 +21,7 @@ import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
+import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
 
 
 class UploadImageBottomSheetFragment(
@@ -52,6 +53,8 @@ class UploadImageBottomSheetFragment(
                             .clickable {
                                 if(viewModel is CreateCrewViewModel) {
                                     viewModel.setIsUsingDefaultImage(false)
+                                }else if(viewModel is CreateImprtViewModel) {
+                                    viewModel.setIsUsingDefaultImage(false)
                                 }
                                 dismiss()
                             }){
@@ -71,6 +74,10 @@ class UploadImageBottomSheetFragment(
                                     viewModel.setIsUsingDefaultImage(true)
                                     viewModel.setImageChosenState(true)
                                     viewModel.setCrewImage(Constants.EMPTY_IMAGE_URI)
+                                }else if (viewModel is CreateImprtViewModel){
+                                    viewModel.setIsUsingDefaultImage(true)
+                                    viewModel.setImageChosenState(true)
+                                    viewModel.setImprtImage(Constants.EMPTY_IMAGE_URI)
                                 }
                                 dismiss()
 

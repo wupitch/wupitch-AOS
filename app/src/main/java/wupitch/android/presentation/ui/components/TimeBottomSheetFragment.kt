@@ -13,6 +13,7 @@ import wupitch.android.databinding.FragmentTimeBottomSheetBinding
 import wupitch.android.presentation.ui.main.home.HomeViewModel
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
+import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
 import wupitch.android.util.TimeType
 import wupitch.android.util.getDisplayedMinute
 import wupitch.android.util.setTimeInterval
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TimeBottomSheetFragment @Inject constructor(
-    private val index : Int,
+    private val index : Int = -1,
     private val timeType : TimeType,
     private val viewModel : ViewModel
 ) :  BottomSheetDialogFragment() {
@@ -58,7 +59,12 @@ class TimeBottomSheetFragment @Inject constructor(
                         TimeType.END -> viewModel.setTimeFilter(index, TimeType.END, binding.timePicker.hour, binding.timePicker.getDisplayedMinute())
                     }
                 }
-
+                is CreateImprtViewModel -> {
+                    when(timeType){
+                        TimeType.START -> viewModel.setTimeFilter(TimeType.START, binding.timePicker.hour, binding.timePicker.getDisplayedMinute())
+                        TimeType.END -> viewModel.setTimeFilter(TimeType.END, binding.timePicker.hour, binding.timePicker.getDisplayedMinute())
+                    }
+                }
             }
             dismiss()
         }

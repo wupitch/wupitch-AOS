@@ -204,7 +204,7 @@ class CreateCrewScheduleFragment : Fragment() {
                             modifier = Modifier.constrainAs(snackbar) {
                                 start.linkTo(parent.start, margin = 24.dp)
                                 end.linkTo(parent.end, margin = 24.dp)
-                                bottom.linkTo(nextBtn.top, margin = 16.dp)
+                                bottom.linkTo(nextBtn.top, margin = 24.dp)
                                 width = Dimension.fillToConstraints
                             })
 

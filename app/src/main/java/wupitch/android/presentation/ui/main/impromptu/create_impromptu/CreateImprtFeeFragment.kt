@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.mutableStateOf
@@ -54,12 +56,22 @@ class CreateImprtFeeFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if(stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createCrewFeeFragment_to_mainFragment)
+                        findNavController().navigate(R.id.action_createImprtFeeFragment_to_mainFragment)
                     }
                     if(dialogOpenState.value){
                         StopWarningDialog(dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                            textString = stringResource(id = R.string.stop_create_impromptu_warning))
+                    }
+
+                    val createImprtState = remember {viewModel.createImprtState}
+                    if(createImprtState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), createImprtState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+                    createImprtState.value.data?.let {
+                        val bundle = Bundle().apply { putInt("impromptu_id", it) }
+                        findNavController().navigate(R.id.action_createImprtFeeFragment_to_impromptuDetailFragment, bundle)
+
                     }
 
                     ConstraintLayout(
@@ -67,7 +79,7 @@ class CreateImprtFeeFragment : Fragment() {
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, topDivider, content, nextBtn) = createRefs()
+                        val (toolbar, topDivider, content, nextBtn, progressbar) = createRefs()
 
                         FullToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -76,7 +88,7 @@ class CreateImprtFeeFragment : Fragment() {
                             width = Dimension.fillToConstraints
                         }, onLeftIconClick = { findNavController().navigateUp() },
                             onRightIconClick = { dialogOpenState.value = true},
-                            textString = R.string.create_crew
+                            textString = R.string.create_impromptu
                         )
 
                         Divider(
@@ -103,7 +115,7 @@ class CreateImprtFeeFragment : Fragment() {
                         {
                             Spacer(modifier = Modifier.height(24.dp))
                             Text(
-                                text = stringResource(id = R.string.crew_fee),
+                                text = stringResource(id = R.string.participation_fee),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
@@ -120,8 +132,20 @@ class CreateImprtFeeFragment : Fragment() {
                                 hintString = stringResource(id = R.string.fee_hint)
                             )
                             Spacer(modifier = Modifier.height(20.dp))
-                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_fee))
+                            NoToggleLayout(noFeeState, stringResource(id = R.string.no_participation_fee))
 
+                        }
+
+                        if (createImprtState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
+                                    bottom.linkTo(nextBtn.top)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
                         }
                         RoundBtn(
                             modifier = Modifier
@@ -134,12 +158,12 @@ class CreateImprtFeeFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if (feeState.value != "" || noFeeState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.six_over_seven,
+                            textString = R.string.upload,
                             fontSize = 16.sp
                         ) {
                             if (feeState.value.isNotEmpty() || noFeeState.value) {
                                 viewModel.setImprtFee(feeState.value, noFeeState.value )
-                                findNavController().navigate(R.id.action_createCrewFeeFragment_to_createCrewVisitorFeeFragment)
+                                viewModel.createImpromptu()
                             }
                         }
                     }

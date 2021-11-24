@@ -102,8 +102,8 @@ class ImpromptuFragment : Fragment() {
                                             bottom.linkTo(parent.bottom, margin = 20.dp)
                                         },
                                     onClick = {
-//                                        activity?.findNavController(R.id.main_nav_container_view)
-//                                            ?.navigate(R.id.action_mainFragment_to_createCrewSport)
+                                        activity?.findNavController(R.id.main_nav_container_view)
+                                            ?.navigate(R.id.action_mainFragment_to_createImprtLocationFragment)
                                     })
                             }
 
