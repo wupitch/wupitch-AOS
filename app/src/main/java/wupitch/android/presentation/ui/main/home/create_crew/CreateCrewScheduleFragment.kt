@@ -61,7 +61,6 @@ class CreateCrewScheduleFragment : Fragment() {
                 WupitchTheme {
 
                     val scrollState = rememberScrollState(0)
-                    val scope = rememberCoroutineScope()
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -84,7 +83,6 @@ class CreateCrewScheduleFragment : Fragment() {
                     val secondBtnToggleState = remember{ mutableStateOf(scheduleList.size >2)}
 
                     val snackbarHostState = remember { SnackbarHostState() }
-                    val nextBtnState = remember { mutableStateOf(false)}
 
 
 

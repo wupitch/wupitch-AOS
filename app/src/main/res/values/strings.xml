@@ -294,7 +294,14 @@
     <string name="report_crew">크루 신고하기</string>
     <string name="report">신고하기</string>
     <string name="input_report">신고 내용을 입력해주세요.</string>
-
+    
+<!--    my page-->
+    <string name="interested_activity">관심 크루 및 번개</string>
+    <string name="my_record">작성글 및 사진</string>
+    <string name="announcement">공지사항</string>
+    <string name="faq">FAQ</string>
+    <string name="settings">설정</string>
+    <string name="fill_info_guide">크루 및 번개 신청을 위해\n모든 프로필 항목을 채워야해요!</string>
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>

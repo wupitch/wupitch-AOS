@@ -30,6 +30,7 @@
         app:itemIconTint="@drawable/selector_bottom_nav"
         app:itemTextColor="@drawable/selector_bottom_nav"
         android:theme="@style/Widget.BottomNavigationView"
+        app:itemBackground="@android:color/transparent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
