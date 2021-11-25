@@ -203,7 +203,7 @@ class MyActivityFragment : Fragment() {
                     ImpromptuCard(cardInfo = item) {
                         val bundle = Bundle().apply { putInt("impromptu_id", item.id) }
                         activity?.findNavController(R.id.main_nav_container_view)
-                            ?.navigate(R.id.action_mainFragment_to_impromptuDetailFragment, bundle)
+                            ?.navigate(R.id.action_mainFragment_to_myImpromptuDetailFragment, bundle)
                     }
                 }
             }

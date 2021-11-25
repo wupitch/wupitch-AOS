@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.crew_detail
+package wupitch.android.presentation.ui.main.home.crew_detail
 
 import android.os.Bundle
 import android.util.Log
@@ -35,8 +35,8 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.presentation.ui.main.crew_detail.components.JoinSuccessDialog
-import wupitch.android.presentation.ui.main.crew_detail.components.NotEnoughInfoDialog
+import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
+import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.util.Sport
 
 class CrewDetailFragment : Fragment() {

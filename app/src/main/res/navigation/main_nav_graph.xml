@@ -42,10 +42,13 @@
         <action
             android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
             app:destination="@id/myCrewDetailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myImpromptuDetailFragment"
+            app:destination="@id/myImpromptuDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.crew_detail.CrewDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailFragment"
         android:label="CrewDetailFragment" >
         <argument
             android:name="crew_id"
@@ -290,7 +293,7 @@
     </fragment>
     <fragment
         android:id="@+id/impromptuDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu_detail.ImpromptuDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImpromptuDetailFragment"
         android:label="ImpromptuDetailFragment" >
         <argument
             android:name="impromptu_id"
@@ -372,6 +375,15 @@
         android:label="MyCrewDetailFragment" >
         <argument
             android:name="crew_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/myImpromptuDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.MyImpromptuDetailFragment"
+        android:label="MyImpromptuDetailFragment" >
+        <argument
+            android:name="impromptu_id"
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>

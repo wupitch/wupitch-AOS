@@ -13,9 +13,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.Resource
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.domain.repository.GetDistrictRepository
-import wupitch.android.presentation.ui.main.impromptu_detail.JoinImpromptuState
-import wupitch.android.util.TimeType
-import wupitch.android.util.isEndTimeFasterThanStart
+import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.JoinImpromptuState
 import javax.inject.Inject
 
 @HiltViewModel

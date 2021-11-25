@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.impromptu_detail
+package wupitch.android.presentation.ui.main.my_activity
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -18,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
@@ -38,15 +36,13 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.presentation.ui.main.crew_detail.VisitorBottomSheetFragment
-import wupitch.android.presentation.ui.main.crew_detail.components.JoinSuccessDialog
-import wupitch.android.presentation.ui.main.crew_detail.components.NotEnoughInfoDialog
+import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
+import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
-import wupitch.android.util.Sport
 
 @AndroidEntryPoint
-class ImpromptuDetailFragment : Fragment() {
+class MyImpromptuDetailFragment : Fragment() {
 
     private val viewModel : ImpromptuViewModel by viewModels()
 

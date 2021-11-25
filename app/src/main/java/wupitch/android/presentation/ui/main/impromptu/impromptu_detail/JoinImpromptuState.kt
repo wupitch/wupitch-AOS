@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.impromptu_detail
+package wupitch.android.presentation.ui.main.impromptu.impromptu_detail
 
 data class JoinImpromptuState(
     val isLoading : Boolean = false,
