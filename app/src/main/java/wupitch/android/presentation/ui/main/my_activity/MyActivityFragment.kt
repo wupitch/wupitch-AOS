@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,14 +14,12 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.ComposeView
@@ -41,12 +38,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import hilt_aggregated_deps._wupitch_android_presentation_ui_main_home_HomeFragment_GeneratedInjector
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.MainViewModel
-import wupitch.android.presentation.ui.main.MainFragment
+import wupitch.android.presentation.ui.components.NotiToolbar
 import wupitch.android.presentation.ui.main.impromptu.components.ImpromptuCard
 import wupitch.android.presentation.ui.main.my_activity.components.MyCrewCard
 
@@ -82,13 +77,17 @@ class MyActivityFragment : Fragment() {
 
                         val (toolbar, colList) = createRefs()
 
-                        MyActivityToolbar(
+                        NotiToolbar(
                             modifier = Modifier.constrainAs(toolbar) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-                            }
-                        )
+                            },
+                            textString = stringResource(id = R.string.my_activity)
+                        ){
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_notificationFragment)
+                        }
 
                         MyActivityScrollCol(
                             modifier = Modifier
@@ -130,7 +129,9 @@ class MyActivityFragment : Fragment() {
             }
             if(myCrewState.value.isLoading){
                 item {
-                    Box(modifier = Modifier.height(160.dp).fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Box(modifier = Modifier
+                        .height(160.dp)
+                        .fillMaxWidth(), contentAlignment = Alignment.Center){
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.main_orange)
                         )
@@ -175,7 +176,9 @@ class MyActivityFragment : Fragment() {
             }
             if(myImprtState.value.isLoading){
                 item {
-                    Box(modifier = Modifier.height(160.dp).fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Box(modifier = Modifier
+                        .height(160.dp)
+                        .fillMaxWidth(), contentAlignment = Alignment.Center){
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.main_orange)
                         )
@@ -240,57 +243,7 @@ class MyActivityFragment : Fragment() {
         }
     }
 
-    @Composable
-    fun MyActivityToolbar(
-        modifier: Modifier,
-    ) {
-        ConstraintLayout(modifier = modifier) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                    val (icon_notification, text) = createRefs()
 
-                    Text(
-                        text = stringResource(id = R.string.my_activity),
-                        modifier = Modifier.constrainAs(text) {
-                            top.linkTo(parent.top)
-                            start.linkTo(parent.start)
-                            bottom.linkTo(parent.bottom)
-                        },
-                        color = colorResource(id = R.color.black),
-                        fontSize = 22.sp,
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    IconButton(
-                        modifier = Modifier
-                            .constrainAs(icon_notification) {
-                                top.linkTo(parent.top)
-                                bottom.linkTo(parent.bottom)
-                                end.linkTo(parent.end)
-                            }
-                            .size(24.dp),
-                        onClick = {
-                            activity?.findNavController(R.id.main_nav_container_view)
-                                ?.navigate(R.id.action_mainFragment_to_notificationFragment)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_bell),
-                            contentDescription = "search"
-                        )
-                    }
-
-                }
-            }
-        }
-    }
 
     val Int.dpToPxFloat: Float
         get() = (this * Resources.getSystem().displayMetrics.density)
