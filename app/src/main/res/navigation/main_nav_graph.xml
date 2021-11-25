@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myImpromptuDetailFragment"
             app:destination="@id/myImpromptuDetailFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myPageInfoFragment"
+            app:destination="@id/myPageInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -386,4 +389,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/myPageInfoFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageInfoFragment"
+        android:label="MyPageInfoFragment" />
 </navigation>

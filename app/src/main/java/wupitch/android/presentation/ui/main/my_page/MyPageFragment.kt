@@ -36,6 +36,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.GrayDivider
 import wupitch.android.presentation.ui.components.NotiToolbar
 import wupitch.android.presentation.ui.main.my_page.components.FillInfoSnackbar
+import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 
 class MyPageFragment : Fragment() {
 
@@ -84,6 +85,10 @@ class MyPageFragment : Fragment() {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
+                            },
+                            onDetailClick = {
+                                activity?.findNavController(R.id.main_nav_container_view)
+                                    ?.navigate(R.id.action_mainFragment_to_myPageInfoFragment)
                             }
                         )
 
@@ -143,34 +148,14 @@ class MyPageFragment : Fragment() {
 
     }
 
+
+
+
     @Composable
-    private fun MyPageText(
+    private fun ProfileBox(
         modifier: Modifier,
-        textString: String,
-        onClick : () -> Unit
-    ) {
-        Text(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 14.dp)
-                .clickable(
-                    interactionSource = MutableInteractionSource(),
-                    indication = null
-                ) {
-                    onClick()
-                },
-            text = textString,
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Normal,
-            fontSize = 16.sp,
-            color = Color.Black,
-            textAlign = TextAlign.Start
-        )
-    }
-
-
-    @Composable
-    private fun ProfileBox(modifier: Modifier) {
+        onDetailClick : () -> Unit
+        ) {
 
         ConstraintLayout(
             modifier = modifier
@@ -249,9 +234,7 @@ class MyPageFragment : Fragment() {
                         end.linkTo(parent.end, margin = 16.dp)
                     }
                     .size(24.dp),
-                onClick = {
-
-            }) {
+                onClick = { onDetailClick() }) {
                 Icon(painter = painterResource(id = R.drawable.i_arrows_chevron_backward),
                     contentDescription = null,
                     tint = colorResource(id = R.color.gray05)

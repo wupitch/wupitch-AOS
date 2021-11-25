@@ -302,6 +302,12 @@
     <string name="faq">FAQ</string>
     <string name="settings">설정</string>
     <string name="fill_info_guide">크루 및 번개 신청을 위해\n모든 프로필 항목을 채워야해요!</string>
+    <string name="profile">프로필</string>
+    <string name="nickname_intro">닉네임 및 소개</string>
+    <string name="profile_district">지역</string>
+    <string name="profile_interested_sport">관심스포츠</string>
+    <string name="profile_agegroup">연령대</string>
+    <string name="profile_contact">연락처</string>
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>
