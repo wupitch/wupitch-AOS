@@ -307,8 +307,6 @@ class CreateCrewImageFragment : Fragment() {
                         if(uri != EMPTY_IMAGE_URI){
                             viewModel.setCrewImage(uri)
                             viewModel.setImageChosenState(true)
-
-                            viewModel.testCrewImage(uri)
                         }
                         viewModel.setIsUsingDefaultImage(null)
                         Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())

@@ -109,7 +109,7 @@
     <string name="impromptu">번개</string>
     <string name="my_activity">내 활동</string>
     <string name="feed">피드</string>
-    <string name="profile">프로필</string>
+    <string name="my_page">마이페이지</string>
 
 <!--    home-->
     <string name="district">지역구</string>
@@ -277,4 +277,10 @@
     <string name="select_recruit_size">인원을 선택해주세요.</string>
     <string name="hint_date">0000.00.00 (요일)</string>
     <string name="date_not_valid">최대 4주 이내 번개만 생성 가능해요!</string>
+
+<!--    my activity-->
+    <string name="crew_in_activity">활동중인 크루</string>
+    <string name="board">게시판</string>
+    <string name="gallery">사진첩</string>
+    <string name="members">크루원</string>
 </resources>

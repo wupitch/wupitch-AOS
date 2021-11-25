@@ -1,6 +1,7 @@
 package wupitch.android.data.remote
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
@@ -17,6 +18,7 @@ interface CrewApi {
     @PATCH("app/clubs/image")
     suspend fun postCrewImage(
         @Query ("crewId") crewId: Int,
-        @Part images : MultipartBody.Part
+        @Part file : MultipartBody.Part,
+        @Part("images") images: RequestBody
     ) : Response<BaseRes>
 }

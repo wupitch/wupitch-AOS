@@ -2,15 +2,15 @@ package wupitch.android.presentation.ui.main.home.create_crew
 
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.core.net.toFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,15 +18,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.selects.select
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
-import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.model.CreateCrewReq
 import wupitch.android.domain.model.Schedule
@@ -39,9 +34,6 @@ import wupitch.android.util.stringToDouble
 import wupitch.android.util.wonToNum
 import java.io.File
 import javax.inject.Inject
-import android.provider.MediaStore.MediaColumns
-
-
 
 
 @HiltViewModel
@@ -325,57 +317,48 @@ class CreateCrewViewModel @Inject constructor(
     }
 
     private fun postCrewImage(crewId: Int) = viewModelScope.launch {
-//        Log.d(
-//            "{CreateCrewViewModel.postCrewImage}",
-//            "${_isUsingDefaultImage.value}, ${_crewImage.value}"
-//        )
-//        if (_crewImage.value == EMPTY_IMAGE_URI) {
-//            _createCrewState.value = CreateCrewState(data = crewId)
-//        } else {
-//            if (_crewImage.value.path != null) {
-//
-//                Log.d("{CreateCrewViewModel.postCrewImage}", "${File(_crewImage.value.path!!)}")
-//                val response =
-//                    crewRepository.postCrewImage(File(_crewImage.value.path!!).toString(), crewId)
-//                if (response.isSuccessful) {
-//                    response.body()?.let { res ->
-//                        if (res.isSuccess) _createCrewState.value = CreateCrewState(data = crewId)
-//                        else _createCrewState.value = CreateCrewState(error = res.message)
-//                    }
-//                } else _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
-//            } else {
-//                _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
-//            }
-//        }
-    }
 
-    fun testCrewImage(uri: Uri) = viewModelScope.launch {
-
-//        val stream = context.contentResolver.openInputStream(uri)
-//        Log.d("{CreateCrewViewModel.testCrewImage}", stream.toString())
-
-        val path = getRealPathFromURIForGallery(uri)
-        Log.d("{CreateCrewViewModel.testCrewImage}", path.toString())
+        val path = getRealPathFromURIForGallery(_crewImage.value)
 
         if (path != null) {
+            resizeImage(file = File(path))
 
-            val file = getImageBody("image", File(path))
-            Log.d("{CreateCrewImageFragment.IntroImageLayout}", file.toString())
+            val file = getImageBody(File(path))
 
-            val response = crewRepository.postCrewImage(file, 31)
+            val response = crewRepository.postCrewImage( file.body, file, crewId)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
-                    if (res.isSuccess) _createCrewState.value = CreateCrewState(data = 31)
+                    if (res.isSuccess) _createCrewState.value = CreateCrewState(data = crewId)
                     else _createCrewState.value = CreateCrewState(error = res.message)
                 }
             } else _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
         }
-
     }
 
-    fun getImageBody(key: String, file: File): MultipartBody.Part {
+
+    private fun resizeImage(file: File, scaleTo: Int = 1024) {
+        val bmOptions = BitmapFactory.Options()
+        bmOptions.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+        val photoW = bmOptions.outWidth
+        val photoH = bmOptions.outHeight
+
+        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
+
+        bmOptions.inJustDecodeBounds = false
+        bmOptions.inSampleSize = scaleFactor
+
+        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
+        file.outputStream().use {
+            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+            resized.recycle()
+        }
+    }
+
+
+    private fun getImageBody(file: File): MultipartBody.Part {
         return MultipartBody.Part.createFormData(
-            name = key,
+            name = "images",
             filename = file.name,
             body = file.asRequestBody("image/*".toMediaType())
         )
@@ -388,8 +371,8 @@ class CreateCrewViewModel @Inject constructor(
         var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
         if (cursor != null) {
             cursor.moveToFirst()
-            var document_id = cursor.getString(0)
-            if (document_id == null) {
+            var documentId = cursor.getString(0)
+            if (documentId == null) {
                 for (i in 0 until cursor.columnCount) {
                     if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
                         fullPath = cursor.getString(i)
@@ -397,7 +380,7 @@ class CreateCrewViewModel @Inject constructor(
                     }
                 }
             } else {
-                document_id = document_id.substring(document_id.lastIndexOf(":") + 1)
+                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
                 cursor.close()
                 val projection = arrayOf(column)
                 try {
@@ -405,7 +388,7 @@ class CreateCrewViewModel @Inject constructor(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         projection,
                         MediaStore.Images.Media._ID + " = ? ",
-                        arrayOf(document_id),
+                        arrayOf(documentId),
                         null
                     )
                     if (cursor != null) {
@@ -418,86 +401,5 @@ class CreateCrewViewModel @Inject constructor(
             }
         }
         return fullPath
-
-//        // Open a specific media item using ParcelFileDescriptor.
-//        val resolver = context.contentResolver
-//
-//// "rw" for read-and-write;
-//// "rwt" for truncating or overwriting existing file contents.
-//        val readOnlyMode = "r"
-//        resolver.openFileDescriptor(uri, readOnlyMode).use { file ->
-//            // Perform operations on "pfd".
-//            Log.d("{CreateCrewViewModel.getRealPathFromURIForGallery}", file.toString())
-//        }
-//        return null
-
-//        val projection = arrayOf(MediaStore.Images.Media._ID)
-////        val selection = sql-where-clause-with-placeholder-variables
-////        val selectionArgs = values-of-placeholder-variables
-////        val sortOrder = sql-order-by-clause
-//
-//        context.contentResolver.query(
-//            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//            projection, null, null, null
-//        )?.use { cursor ->
-//            while (cursor.moveToNext()) {
-//                // Use an ID column from the projection to get
-//                // a URI representing the media item itself.
-//                val columnIdx: Int = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-//                return cursor.getString(columnIdx)
-//            }
-//        }
-//        return null
-
-//        val projection = arrayOf(MediaStore.Images.Media.DATA)
-//        val cursor: Cursor? = context.contentResolver.query(
-//            uri, projection, null,
-//            null, null
-//        )
-//        if (cursor != null) {
-//            cursor.moveToFirst()
-//            val columnIdx: Int = cursor.getColumnIndex(MediaStore.MediaColumns.DATA)
-//            return cursor.getString(columnIdx)
-//
-//        }
-//        cursor?.close()
-//        return uri.path
-
-//        if (uri?.path?.startsWith("/storage")) {
-//            return contentUri.getPath();
-//        }
-//        val id = DocumentsContract.getDocumentId(uri).split(":")[1]
-//        val columns = arrayOf(MediaStore.Images.Media._ID)
-//        val selection = MediaStore.Images.Media._ID + " = " + id
-//        val cursor: Cursor? = context.contentResolver.query(
-//            uri, columns, selection,
-//            null, null
-//        )
-//        if (cursor != null) {
-//
-//            try {
-//                val columnIndex = cursor.getColumnIndex(columns[0])
-//                if (cursor.moveToFirst()) {
-//                    return cursor.getString(columnIndex)
-//                }
-//            } finally {
-//                cursor.close()
-//            }
-//
-//        }
-//        return null
-
-//        val filePath: String
-//        val filePathColumn = arrayOf(MediaColumns._ID)
-//
-//        val cursor: Cursor? =
-//            context.contentResolver.query(uri, null, null, null, null)
-//        cursor?.moveToFirst()
-//
-//        val path = cursor?.getString(cursor.getColumnIndex("_data") ?: 0)
-////        filePath = cursor!!.getString(columnIndex)
-//        cursor?.close()
-//        return path
-
     }
 }

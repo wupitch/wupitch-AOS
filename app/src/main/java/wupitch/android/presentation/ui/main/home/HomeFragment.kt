@@ -59,7 +59,6 @@ class HomeFragment : Fragment() {
 
                         districtBottomSheet = DistrictBottomSheetFragment(list, viewModel)
 
-                        //todo : viewmodel 을 bottom sheet constructor 로 inject 하기??
                         val crewList = viewModel.crewList.value
                         val loading = viewModel.loading.value
 

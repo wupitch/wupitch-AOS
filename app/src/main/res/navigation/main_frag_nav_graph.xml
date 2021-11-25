@@ -22,6 +22,6 @@
         android:label="FeedFragment" />
     <fragment
         android:id="@+id/profileFragment2"
-        android:name="wupitch.android.presentation.ui.main.profile.ProfileFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageFragment"
         android:label="ProfileFragment" />
 </navigation>
