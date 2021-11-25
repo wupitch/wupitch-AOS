@@ -374,9 +374,8 @@
         android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"
         android:label="MyCrewDetailFragment" >
         <argument
-            android:name="crew_id"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:name="my_crew_info"
+            app:argType="wupitch.android.presentation.ui.main.my_activity.MyCrewArg" />
     </fragment>
     <fragment
         android:id="@+id/myImpromptuDetailFragment"

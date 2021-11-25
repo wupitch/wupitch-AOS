@@ -44,7 +44,6 @@ import wupitch.android.common.Constants.SUPPLY_MAX_LENGTH
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.util.Sport
 
 @ExperimentalPermissionsApi
 @ExperimentalPagerApi
@@ -200,7 +199,7 @@ class CreateImprtImageFragment : Fragment() {
             fontSize = 16.sp,
         )
         Spacer(modifier = Modifier.height(12.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = inquiryTextState,
             hintText = stringResource(id = R.string.inquiry_hint),
             maxLength = SUPPLY_MAX_LENGTH
@@ -220,7 +219,7 @@ class CreateImprtImageFragment : Fragment() {
             fontSize = 16.sp,
         )
         Spacer(modifier = Modifier.height(12.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = supplyTextState,
             hintText = stringResource(id = R.string.input_supplies),
             maxLength = SUPPLY_MAX_LENGTH
@@ -242,7 +241,7 @@ class CreateImprtImageFragment : Fragment() {
             keyboardActions = KeyboardActions.Default
         )
         Spacer(modifier = Modifier.height(24.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = introTextState,
             hintText = stringResource(id = R.string.input_intro_impromptu),
             maxLength = INTRO_MAX_LENGTH

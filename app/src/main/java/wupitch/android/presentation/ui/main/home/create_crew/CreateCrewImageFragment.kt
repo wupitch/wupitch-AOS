@@ -47,7 +47,6 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.util.Sport
 import android.provider.MediaStore
-import java.io.File
 
 
 @ExperimentalPermissionsApi
@@ -204,7 +203,7 @@ class CreateCrewImageFragment : Fragment() {
             fontSize = 16.sp,
         )
         Spacer(modifier = Modifier.height(12.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = inquiryTextState,
             hintText = stringResource(id = R.string.inquiry_hint),
             maxLength = SUPPLY_MAX_LENGTH
@@ -224,7 +223,7 @@ class CreateCrewImageFragment : Fragment() {
             fontSize = 16.sp,
         )
         Spacer(modifier = Modifier.height(12.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = supplyTextState,
             hintText = stringResource(id = R.string.input_supplies),
             maxLength = SUPPLY_MAX_LENGTH
@@ -246,7 +245,7 @@ class CreateCrewImageFragment : Fragment() {
             keyboardActions = KeyboardActions.Default
         )
         Spacer(modifier = Modifier.height(24.dp))
-        LargeTextField(
+        LargeTextFieldWithCounter(
             textState = introTextState,
             hintText = stringResource(id = R.string.input_introduce_crew),
             maxLength = INTRO_MAX_LENGTH

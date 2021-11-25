@@ -29,7 +29,7 @@ import wupitch.android.presentation.theme.Roboto
 
 @ExperimentalPagerApi
 @Composable
-fun LargeTextField(
+fun LargeTextFieldWithCounter(
     textState: MutableState<String>,
     hintText: String,
     maxLength : Int

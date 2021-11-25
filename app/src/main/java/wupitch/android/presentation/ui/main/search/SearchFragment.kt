@@ -17,7 +17,7 @@ import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentSearchBinding
 import wupitch.android.util.changeTabFont
-
+//todo compose 사용할 거면 삭제.
 @AndroidEntryPoint
 class SearchFragment
     : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding::bind, R.layout.fragment_search) {

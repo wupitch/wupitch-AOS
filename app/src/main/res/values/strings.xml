@@ -281,9 +281,13 @@
 <!--    my activity-->
     <string name="crew_in_activity">활동중인 크루</string>
     <string name="arranged_impromptu">예정된 번개</string>
+    <string name="intro">소개</string>
     <string name="board">게시판</string>
     <string name="gallery">사진첩</string>
     <string name="members">크루원</string>
     <string name="look_around_crew">+ 크루 둘러보기</string>
     <string name="look_around_impromptu">+ 번개 둘러보기</string>
+    <string name="report_crew">크루 신고하기</string>
+    <string name="report">신고하기</string>
+    <string name="input_report">신고 내용을 입력해주세요.</string>
 </resources>

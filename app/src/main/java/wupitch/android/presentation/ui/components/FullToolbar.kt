@@ -29,6 +29,7 @@ import wupitch.android.presentation.theme.Roboto
 @Composable
 fun FullToolBar(
     modifier: Modifier,
+    icon : Int = R.drawable.close,
     onLeftIconClick: () -> Unit,
     onRightIconClick: () -> Unit,
     @StringRes textString: Int,
@@ -79,7 +80,7 @@ fun FullToolBar(
                 interactionSource = MutableInteractionSource(),
                 indication = null
             ) { onRightIconClick() },
-            painter = painterResource(id = R.drawable.close),
+            painter = painterResource(id = icon),
             contentDescription = "close this page"
         )
     }

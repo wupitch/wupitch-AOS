@@ -155,7 +155,7 @@ class MyActivityFragment : Fragment() {
                     items = myCrewState.value.data
                 ){ _, item ->
                     MyCrewCard(crew = item){ tabId ->
-                        val bundle = Bundle().apply { putInt("crew_id", tabId) }
+                        val bundle = Bundle().apply { putParcelable("my_crew_info", MyCrewArg(item.id, tabId)) }
                         activity?.findNavController(R.id.main_nav_container_view)
                             ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                     }
