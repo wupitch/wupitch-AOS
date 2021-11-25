@@ -215,7 +215,6 @@ class HomeFragment : Fragment() {
                             contentDescription = "search"
                         )
                     }
-
                 }
             }
         }

@@ -24,6 +24,13 @@ class MainViewModel @Inject constructor(
     @ExperimentalPagerApi
     var pagerState : PagerState? = null
 
+    private var _selectedTab = MutableLiveData<Int>()
+    val selectedTab : LiveData<Int> = _selectedTab
+
+    fun setSelectedTab(id : Int) {
+        _selectedTab.value = id
+    }
+
     private var _userNotiAgreed = MutableLiveData<Boolean>()
     val userNotiAgreed : LiveData<Boolean> = _userNotiAgreed
 

@@ -40,7 +40,7 @@ fun ImpromptuCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(140.dp)
+                .height(142.dp)
                 .padding(horizontal = 20.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .background(color = colorResource(id = R.color.gray04))

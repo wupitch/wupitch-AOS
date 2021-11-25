@@ -28,7 +28,7 @@
         android:title="@string/feed"
         app:showAsAction="always" />
     <item
-        android:id="@+id/profileFragment2"
+        android:id="@+id/myPageFragment"
         android:enabled="true"
         android:icon="@drawable/ic_profile"
         android:title="@string/my_page"

@@ -35,6 +35,13 @@
         <action
             android:id="@+id/action_mainFragment_to_createImprtLocationFragment"
             app:destination="@id/createImprtLocationFragment" />
+        <argument
+            android:name="tab_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
+            app:destination="@id/myCrewDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -358,5 +365,14 @@
             app:destination="@id/mainFragment"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/myCrewDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"
+        android:label="MyCrewDetailFragment" >
+        <argument
+            android:name="crew_id"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
 </navigation>

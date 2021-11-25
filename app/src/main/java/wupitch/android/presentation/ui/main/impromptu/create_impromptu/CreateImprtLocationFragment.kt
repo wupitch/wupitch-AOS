@@ -57,7 +57,8 @@ class CreateImprtLocationFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createImprtLocationFragment_to_mainFragment)
+                        val bundle = Bundle().apply { putInt("tab_id", 1) }
+                        findNavController().navigate(R.id.action_createImprtLocationFragment_to_mainFragment, bundle)
                     }
                     if (dialogOpenState.value) {
                         StopWarningDialog(
@@ -67,7 +68,7 @@ class CreateImprtLocationFragment : Fragment() {
                         )
                     }
                     BackHandler {
-                        if (viewModel.dateState.value != "0000.00.00 (요일)") dialogOpenState.value = true
+                        if (viewModel.imprtDistrictId.value != null) dialogOpenState.value = true
                         else findNavController().navigateUp()
                     }
 
@@ -90,9 +91,10 @@ class CreateImprtLocationFragment : Fragment() {
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                         }, textString = R.string.create_impromptu) {
-                            if (viewModel.dateState.value != "0000.00.00 (요일)") {
+                            if (viewModel.imprtDistrictId.value != null) {
                                 dialogOpenState.value = true
                             } else {
+                                //todo fix!!
                                 findNavController().navigateUp()
                             }
                         }
