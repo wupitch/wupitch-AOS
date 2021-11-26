@@ -50,7 +50,6 @@ class MyPageSportFragment : Fragment() {
 
 
     private val viewModel: MyPageViewModel by viewModels()
-    private var checkedRadioButton: MutableState<Boolean>? = null
 
 
     override fun onCreateView(

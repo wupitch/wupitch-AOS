@@ -35,10 +35,7 @@
         <action
             android:id="@+id/action_mainFragment_to_createImprtLocationFragment"
             app:destination="@id/createImprtLocationFragment" />
-        <argument
-            android:name="tab_id"
-            app:argType="integer"
-            android:defaultValue="0" />
+
         <action
             android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
             app:destination="@id/myCrewDetailFragment" />
