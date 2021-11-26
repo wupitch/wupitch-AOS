@@ -44,31 +44,31 @@ class MyPageInfoFragment : Fragment(){
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.nickname_intro)
                         ){
-
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_myPageProfileFragment)
                         }
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.profile_district)
                         ){
-
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_regionFragment)
                         }
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.profile_interested_sport)
                         ){
-
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_sportFragment)
                         }
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.profile_agegroup)
                         ){
-
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_ageFragment)
                         }
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.profile_contact)
                         ){
-
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_myPageContactFragment)
                         }
 
 

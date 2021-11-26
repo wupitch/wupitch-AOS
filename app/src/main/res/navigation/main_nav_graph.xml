@@ -392,5 +392,45 @@
     <fragment
         android:id="@+id/myPageInfoFragment"
         android:name="wupitch.android.presentation.ui.main.my_page.MyPageInfoFragment"
-        android:label="MyPageInfoFragment" />
+        android:label="MyPageInfoFragment" >
+        <action
+            android:id="@+id/action_myPageInfoFragment_to_myPageProfileFragment"
+            app:destination="@id/myPageProfileFragment" />
+        <action
+            android:id="@+id/action_myPageInfoFragment_to_myPageContactFragment"
+            app:destination="@id/myPageContactFragment" />
+        <action
+            android:id="@+id/action_myPageInfoFragment_to_sportFragment"
+            app:destination="@id/sportFragment" />
+        <action
+            android:id="@+id/action_myPageInfoFragment_to_ageFragment"
+            app:destination="@id/ageFragment" />
+        <action
+            android:id="@+id/action_myPageInfoFragment_to_regionFragment"
+            app:destination="@id/regionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myPageProfileFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageProfileFragment"
+        android:label="MyPageProfileFragment" />
+    <fragment
+        android:id="@+id/myPagePwFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPagePwFragment"
+        android:label="MyPagePwFragment" />
+    <fragment
+        android:id="@+id/myPageContactFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageContactFragment"
+        android:label="MyPageContactFragment" />
+    <fragment
+        android:id="@+id/sportFragment"
+        android:name="wupitch.android.presentation.ui.signup.SportFragment"
+        android:label="SportFragment" />
+    <fragment
+        android:id="@+id/regionFragment"
+        android:name="wupitch.android.presentation.ui.signup.RegionFragment"
+        android:label="RegionFragment" />
+    <fragment
+        android:id="@+id/ageFragment"
+        android:name="wupitch.android.presentation.ui.signup.AgeFragment"
+        android:label="AgeFragment" />
 </navigation>

@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup
+package wupitch.android.presentation.ui.main.my_page
 
 import android.content.Context
 import android.os.Bundle
@@ -35,22 +35,23 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.MainViewModel
-import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
-import wupitch.android.presentation.ui.components.StopWarningDialog
+import wupitch.android.presentation.ui.components.RoundBtn
 
-class ProfileFragment : Fragment() {
+@AndroidEntryPoint
+class MyPageProfileFragment : Fragment() {
 
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: MyPageViewModel by viewModels()
     private var job: Job? = null
 
     override fun onCreateView(
@@ -61,20 +62,6 @@ class ProfileFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-
-                    val stopSignupState = remember { mutableStateOf(false) }
-                    val dialogOpenState = remember { mutableStateOf(false) }
-                    if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_profileFragment_to_onboardingFragment)
-                    }
-                    if (dialogOpenState.value) {
-                        StopWarningDialog(
-                            dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.warning_stop_signup)
-                        )
-                    }
-
                     ConstraintLayout(
                         modifier = Modifier
                             .background(Color.White)
@@ -83,6 +70,7 @@ class ProfileFragment : Fragment() {
                     ) {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
+                        //todo 처음에 유저 정보 가져오기.
                         val nicknameState = remember { mutableStateOf(viewModel.userNickname.value ?: "") }
                         val introState = remember { mutableStateOf(viewModel.userIntroduce.value?: "") }
 
@@ -93,13 +81,9 @@ class ProfileFragment : Fragment() {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                        }, onLeftIconClick = {
-                            findNavController().navigateUp()
-                        },
+                        }, onLeftIconClick = { findNavController().navigateUp() },
                             hasRightIcon = true,
-                            onRightIconClick = {
-                                dialogOpenState.value = true
-                            }
+                            onRightIconClick = { findNavController().navigateUp() }
                         )
 
                         Text(
@@ -188,7 +172,7 @@ class ProfileFragment : Fragment() {
                                 .height(52.dp),
                             btnColor = if (introState.value.isNotEmpty() && isNicknameValidState.value == true && nicknameState.value.isNotEmpty()) R.color.main_orange
                             else R.color.gray03,
-                            textString = R.string.next_three_over_four,
+                            textString = R.string.done,
                             fontSize = 16.sp
                         ) {
                             if (introState.value.isNotEmpty() &&
@@ -196,14 +180,12 @@ class ProfileFragment : Fragment() {
                                 nicknameState.value.isNotEmpty()
                             ) {
                                 viewModel.setUserIntroduce(introState.value)
-                                findNavController().navigate(R.id.action_profileFragment_to_idCardFragment)
+                                //todo patch profile 되면 navigate up.
+                                findNavController().navigateUp()
 
                             }
                         }
-
-
                     }
-
                 }
             }
         }
@@ -246,9 +228,9 @@ class ProfileFragment : Fragment() {
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = if(validateNickname) ImeAction.Next else ImeAction.Done),
-                 keyboardActions = KeyboardActions (onDone = {
-                        setKeyboardDown()
-                    }),
+                keyboardActions = KeyboardActions (onDone = {
+                    setKeyboardDown()
+                }),
                 modifier = modifier
                     .clip(RoundedCornerShape(8.dp))
                     .background(colorResource(id = R.color.gray04))
@@ -294,4 +276,5 @@ class ProfileFragment : Fragment() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
+
 }
