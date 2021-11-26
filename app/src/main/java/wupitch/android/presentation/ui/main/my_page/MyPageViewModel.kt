@@ -1,14 +1,19 @@
 package wupitch.android.presentation.ui.main.my_page
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.repository.CheckValidRepository
@@ -21,9 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
-    private val getDistrictRepository : GetDistrictRepository,
-    private val getSportRepository: GetSportRepository
-    ) : ViewModel() {
+    private val getDistrictRepository: GetDistrictRepository,
+    private val getSportRepository: GetSportRepository,
+    @ApplicationContext val context: Context
+) : ViewModel() {
 
     //profile
     private var _isNicknameValid = MutableLiveData<Boolean?>()
@@ -40,10 +46,10 @@ class MyPageViewModel @Inject constructor(
     val districtList: State<DistrictState> = _districtList
 
     private var _userDistrictId = MutableLiveData<Int>()
-    val userDistrictId : LiveData<Int> = _userDistrictId
+    val userDistrictId: LiveData<Int> = _userDistrictId
 
     private var _userDistrictName = MutableLiveData<String>()
-    val userDistrictName : LiveData<String> = _userDistrictName
+    val userDistrictName: LiveData<String> = _userDistrictName
 
     //sports
     private var _sportsList = mutableStateOf(SportState())
@@ -54,10 +60,13 @@ class MyPageViewModel @Inject constructor(
 
     //age group
     private var _userAge = MutableLiveData<Int>()
-    val userAge : LiveData<Int> = _userAge
+    val userAge: LiveData<Int> = _userAge
 
     //contact
     var userPhoneNum = mutableStateOf("")
+
+    //notification
+    var notificationState = mutableStateOf(false)
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
         Log.d("{SignupViewModel.checkNicknameValid}", nickname)
@@ -80,7 +89,7 @@ class MyPageViewModel @Inject constructor(
 
     }
 
-    fun setUserIntroduce (introduce : String) {
+    fun setUserIntroduce(introduce: String) {
         _userIntroduce.value = introduce
     }
 
@@ -98,7 +107,7 @@ class MyPageViewModel @Inject constructor(
 
     }
 
-    fun setUserDistrict(districtId : Int, districtName : String) {
+    fun setUserDistrict(districtId: Int, districtName: String) {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
         Log.d("{SignupViewModel.getUserRegion}", "id : $districtId name : $districtName")
@@ -130,13 +139,22 @@ class MyPageViewModel @Inject constructor(
         Log.d("{CreateCrewViewModel.setCrewSport}", _userSportId.value.toString())
     }
 
-    fun setUserAge(ageCode : Int) {
+    fun setUserAge(ageCode: Int) {
         _userAge.value = ageCode
         Log.d("{SignupViewModel.setUserAge}", _userAge.value.toString())
     }
 
-    fun setUserPhoneNum (phoneNum : String) {
+    fun setUserPhoneNum(phoneNum: String) {
         userPhoneNum.value = phoneNum
+    }
+
+    fun logoutUnregisterUser() = viewModelScope.launch {
+
+        context.dataStore.edit { settings ->
+            settings[Constants.JWT_PREFERENCE_KEY] = ""
+            settings[Constants.USER_ID] = -1
+            settings[Constants.USER_NICKNAME] = ""
+        }
     }
 
 }

@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_mainFragment_to_myPageInfoFragment"
             app:destination="@id/myPageInfoFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_myPageSettingFragment"
+            app:destination="@id/myPageSettingFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -433,4 +436,18 @@
         android:id="@+id/myPageAgeGroupFragment"
         android:name="wupitch.android.presentation.ui.main.my_page.MyPageAgeGroupFragment"
         android:label="MyPageAgeGroupFragment" />
+    <fragment
+        android:id="@+id/myPageSettingFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageSettingFragment"
+        android:label="MyPageSettingFragment" >
+        <action
+            android:id="@+id/action_myPageSettingFragment_to_myPagePwFragment"
+            app:destination="@id/myPagePwFragment" />
+        <action
+            android:id="@+id/action_myPageSettingFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true"/>
+    </fragment>
 </navigation>

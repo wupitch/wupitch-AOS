@@ -140,7 +140,8 @@ class MyPageFragment : Fragment() {
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.settings)
                     ){
-
+                        activity?.findNavController(R.id.main_nav_container_view)
+                            ?.navigate(R.id.action_mainFragment_to_myPageSettingFragment)
                     }
                 }
             }

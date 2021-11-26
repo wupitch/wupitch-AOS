@@ -312,6 +312,10 @@
     <string name="select_sport_at_least_one">(다중선택)</string>
     <string name="input_contact">연락처를\n입력해주세요.</string>
     <string name="contact_hint">000\-0000\-0000</string>
+    <string name="setting_notification">알림</string>
+    <string name="setting_change_pw">비밀번호 변경</string>
+    <string name="setting_logout">로그아웃</string>
+    <string name="setting_unregister">탈퇴</string>
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>

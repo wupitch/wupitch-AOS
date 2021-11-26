@@ -39,4 +39,8 @@
     <color name="black04">#AD222222</color>
     <color name="gray06">#AD959595</color>
 
+<!--    my page-->
+    <color name="green02">#34C759</color>
+    <color name="gray07">#787880</color>
+
 </resources>
