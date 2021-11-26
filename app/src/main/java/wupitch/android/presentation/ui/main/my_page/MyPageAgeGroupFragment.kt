@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup
+package wupitch.android.presentation.ui.main.my_page
 
 import android.os.Bundle
 import android.util.Log
@@ -33,7 +33,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Dimension
+import androidx.fragment.app.viewModels
 import com.google.accompanist.flowlayout.FlowRow
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.domain.model.AgeRadioButton
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
@@ -42,9 +44,10 @@ import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.StopWarningDialog
 
-class AgeFragment : Fragment() {
+@AndroidEntryPoint
+class MyPageAgeGroupFragment : Fragment() {
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MyPageViewModel by viewModels()
     private var checkedRadioButton: MutableState<Boolean>? = null
 
 
@@ -58,26 +61,13 @@ class AgeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val checkedRadioButtonState = remember {
-                        mutableStateOf(false)
-                    }
+                    val checkedRadioButtonState = remember { mutableStateOf(false) }
+                    val checkedState1 = remember { mutableStateOf(false) }
+                    val checkedState2 = remember { mutableStateOf(false) }
+                    val checkedState3 = remember { mutableStateOf(false) }
+                    val checkedState4 = remember { mutableStateOf(false) }
+                    val checkedState5 = remember { mutableStateOf(false) }
 
-                    val checkedState1 = remember {
-                        mutableStateOf(false)
-                    }
-
-                    val checkedState2 = remember {
-                        mutableStateOf(false)
-                    }
-                    val checkedState3 = remember {
-                        mutableStateOf(false)
-                    }
-                    val checkedState4 = remember {
-                        mutableStateOf(false)
-                    }
-                    val checkedState5 = remember {
-                        mutableStateOf(false)
-                    }
                     val ageList = listOf<AgeRadioButton>(
                         AgeRadioButton("10대", checkedState1),
                         AgeRadioButton("20대", checkedState2),
@@ -85,21 +75,6 @@ class AgeFragment : Fragment() {
                         AgeRadioButton("40대", checkedState4),
                         AgeRadioButton("50대", checkedState5)
                     )
-
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    if(stopSignupState.value) {
-//                        findNavController().navigate(R.id.action_ageFragment_to_onboardingFragment)
-                    }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState,
-                        textString = stringResource(id = R.string.warning_stop_signup))
-                    }
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -116,32 +91,27 @@ class AgeFragment : Fragment() {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                        }, onLeftIconClick = {
-                            findNavController().navigateUp()
-                        },
-                            hasRightIcon = true,
-                            onRightIconClick = {
-                                dialogOpenState.value = true
-                            })
+                        }, onLeftIconClick = { findNavController().navigateUp() })
 
                         Text(
                             modifier = Modifier
                                 .constrainAs(title) {
                                     start.linkTo(parent.start, margin = 20.dp)
-                                    top.linkTo(toolbar.bottom, margin = 32.dp)
+                                    top.linkTo(toolbar.bottom, margin = 24.dp)
                                 },
                             text = stringResource(id = R.string.select_age),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Bold,
                             color = colorResource(id = R.color.main_black),
                             fontSize = 22.sp,
-                            textAlign = TextAlign.Start
+                            textAlign = TextAlign.Start,
+                            lineHeight = 32.sp
                         )
 
                         FlowRow(
                             modifier = Modifier
                                 .constrainAs(radioGroup) {
-                                    top.linkTo(title.bottom, margin = 48.dp)
+                                    top.linkTo(title.bottom, margin = 32.dp)
                                     start.linkTo(title.start)
                                     end.linkTo(parent.end, margin = 20.dp)
                                     width = Dimension.fillToConstraints
@@ -172,11 +142,10 @@ class AgeFragment : Fragment() {
                                 .fillMaxWidth()
                                 .height(52.dp),
                             btnColor = if(checkedRadioButtonState.value) R.color.main_orange else R.color.gray03,
-                            textString = R.string.next_four_over_five,
+                            textString = R.string.done,
                             fontSize = 16.sp
                         ) {
                             if(checkedRadioButtonState.value) {
-//                                findNavController().navigate(R.id.action_ageFragment_to_profileFragment)
                                 //todo : viewmodel 에 선택된 연령값 보내기.
                                 var checkedAge = -1
                                 ageList.forEachIndexed { index, ageRadioButton ->
@@ -185,15 +154,14 @@ class AgeFragment : Fragment() {
                                     return@forEachIndexed
                                 }
                                 Log.d("{AgeFragment.onCreateView}", checkedAge.toString())
+
+                                //todo 잘 보내졌으면...
+                                findNavController().navigateUp()
                             }
                         }
                     }
                 }
-
-
             }
-
-
         }
     }
 
@@ -243,7 +211,5 @@ class AgeFragment : Fragment() {
             )
         }
     }
-
-
 }
 

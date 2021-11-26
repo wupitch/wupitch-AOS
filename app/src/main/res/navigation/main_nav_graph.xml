@@ -403,8 +403,8 @@
             android:id="@+id/action_myPageInfoFragment_to_sportFragment"
             app:destination="@id/sportFragment" />
         <action
-            android:id="@+id/action_myPageInfoFragment_to_ageFragment"
-            app:destination="@id/ageFragment" />
+            android:id="@+id/action_myPageInfoFragment_to_myPageAgeGroupFragment"
+            app:destination="@id/myPageAgeGroupFragment" />
         <action
             android:id="@+id/action_myPageInfoFragment_to_regionFragment"
             app:destination="@id/regionFragment" />
@@ -423,14 +423,14 @@
         android:label="MyPageContactFragment" />
     <fragment
         android:id="@+id/sportFragment"
-        android:name="wupitch.android.presentation.ui.signup.SportFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageSportFragment"
         android:label="SportFragment" />
     <fragment
         android:id="@+id/regionFragment"
-        android:name="wupitch.android.presentation.ui.signup.RegionFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageDistrictFragment"
         android:label="RegionFragment" />
     <fragment
-        android:id="@+id/ageFragment"
-        android:name="wupitch.android.presentation.ui.signup.AgeFragment"
-        android:label="AgeFragment" />
+        android:id="@+id/myPageAgeGroupFragment"
+        android:name="wupitch.android.presentation.ui.main.my_page.MyPageAgeGroupFragment"
+        android:label="MyPageAgeGroupFragment" />
 </navigation>

@@ -62,7 +62,7 @@ class MyPageInfoFragment : Fragment(){
                             modifier = Modifier.padding(start = 20.dp),
                             textString = stringResource(id = R.string.profile_agegroup)
                         ){
-                            findNavController().navigate(R.id.action_myPageInfoFragment_to_ageFragment)
+                            findNavController().navigate(R.id.action_myPageInfoFragment_to_myPageAgeGroupFragment)
                         }
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),

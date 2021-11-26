@@ -65,11 +65,8 @@
 
 
     <string name="done">완료</string>
-    <string name="select_region">지역을\n선택해주세요.</string>
-    <string name="select_region_btn">지역구 선택</string>
-    <string name="select_region_bottom_sheet">지역을 선택해주세요.</string>
-    <string name="select_sport">관심 스포츠를\n선택해주세요.</string>
-    <string name="select_sport_at_least_one">(최소 1개이상 선택)</string>
+
+
     <string name="soccer_football">축구/풋살</string>
     <string name="badminton">배드민턴</string>
     <string name="volleyball">배구</string>
@@ -308,6 +305,11 @@
     <string name="profile_interested_sport">관심스포츠</string>
     <string name="profile_agegroup">연령대</string>
     <string name="profile_contact">연락처</string>
+    <string name="select_region">지역을\n선택해주세요.</string>
+    <string name="select_region_btn">지역구 선택</string>
+    <string name="select_region_bottom_sheet">지역을 선택해주세요.</string>
+    <string name="select_sport">관심 스포츠를\n선택해주세요.</string>
+    <string name="select_sport_at_least_one">(다중선택)</string>
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>

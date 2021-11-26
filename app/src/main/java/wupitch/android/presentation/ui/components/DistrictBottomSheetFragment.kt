@@ -36,6 +36,7 @@ import wupitch.android.presentation.ui.main.home.HomeViewModel
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImpromptuState
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
+import wupitch.android.presentation.ui.main.my_page.MyPageViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -142,7 +143,7 @@ class DistrictBottomSheetFragment @Inject constructor(
                                     // todo : viewModel 에 number picker value 보내기. & view model 값 state 로 받아서 crew list 변경.
                                     Log.d("{DistrictBottomSheetFragment.onCreateView}", pickerValueState.value.toString())
                                     when (viewModel) {
-                                        is MainViewModel -> {
+                                        is MyPageViewModel -> {
                                             viewModel.setUserDistrict(pickerValueState.value, districtList[pickerValueState.value])
                                         }
                                         is HomeViewModel -> {

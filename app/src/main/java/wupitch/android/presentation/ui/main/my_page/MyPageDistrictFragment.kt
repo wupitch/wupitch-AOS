@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.signup
+package wupitch.android.presentation.ui.main.my_page
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -39,10 +41,10 @@ import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
 import wupitch.android.presentation.ui.components.StopWarningDialog
 
 @AndroidEntryPoint
-class RegionFragment : Fragment() {
+class MyPageDistrictFragment : Fragment() {
 
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
-    val viewModel: MainViewModel by activityViewModels()
+    val viewModel: MyPageViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -54,23 +56,9 @@ class RegionFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val stopSignupState = remember {
-                        mutableStateOf(false)
-                    }
-                    val dialogOpenState = remember {
-                        mutableStateOf(false)
-                    }
-                    if(stopSignupState.value) {
-//                        findNavController().navigate(R.id.action_regionFragment_to_onboardingFragment)
-                    }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
-                            stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.warning_stop_signup))
-                    }
-                    val districtList = viewModel.district.observeAsState()
+                    val districtList = viewModel.districtList.value
 
-                    districtList.value?.data?.let { list ->
+                    if (districtList.data.isNotEmpty()) {
 
 
                         ConstraintLayout(
@@ -78,39 +66,34 @@ class RegionFragment : Fragment() {
                                 .background(Color.White)
                                 .fillMaxSize()
                         ) {
-                            val (toolbar, title, districtBtn, nextBtn) = createRefs()
+                            val (toolbar, title, districtBtn, nextBtn, progressbar) = createRefs()
                             val regionState = viewModel.userDistrictName.observeAsState()
 
                             IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-                            }, onLeftIconClick = {
-                                findNavController().navigateUp()
-                            },
-                                hasRightIcon = true,
-                                onRightIconClick = {
-                                    dialogOpenState.value = true
-                                })
+                            }, onLeftIconClick = { findNavController().navigateUp() })
 
                             Text(
                                 modifier = Modifier.constrainAs(title) {
                                     start.linkTo(parent.start, margin = 20.dp)
-                                    top.linkTo(toolbar.bottom, margin = 32.dp)
+                                    top.linkTo(toolbar.bottom, margin = 24.dp)
                                 },
                                 text = stringResource(id = R.string.select_region),
                                 fontFamily = Roboto,
                                 fontWeight = FontWeight.Bold,
                                 color = colorResource(id = R.color.main_black),
                                 fontSize = 22.sp,
-                                textAlign = TextAlign.Start
+                                textAlign = TextAlign.Start,
+                                lineHeight = 32.sp
                             )
 
                             WhiteRoundBtn(
                                 modifier = Modifier
                                     .constrainAs(districtBtn) {
                                         start.linkTo(title.start)
-                                        top.linkTo(title.bottom, margin = 48.dp)
+                                        top.linkTo(title.bottom, margin = 32.dp)
                                     }
                                     .height(48.dp)
                                     .width(152.dp),
@@ -121,7 +104,19 @@ class RegionFragment : Fragment() {
                                 textColor = if (regionState.value != null) R.color.main_orange else R.color.gray02,
                                 borderColor = if (regionState.value != null) R.color.main_orange else R.color.gray02
                             ) {
-                                showRegionBottomSheet(list)
+                                showRegionBottomSheet(districtList.data)
+                            }
+
+                            if (districtList.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.constrainAs(progressbar) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(nextBtn.top)
+                                    },
+                                    color = colorResource(id = R.color.main_orange)
+                                )
                             }
 
                             RoundBtn(
@@ -135,17 +130,13 @@ class RegionFragment : Fragment() {
                                     .fillMaxWidth()
                                     .height(52.dp),
                                 btnColor = if (regionState.value != null) R.color.main_orange else R.color.gray03,
-                                textString = R.string.next_two_over_four,
+                                textString = R.string.done,
                                 fontSize = 16.sp
                             ) {
-//                                findNavController().navigate(R.id.action_regionFragment_to_sportFragment)
+                                //todo server 올려지면
+                                findNavController().navigateUp()
                             }
-
                         }
-                    }
-
-                    districtList?.value?.message?.isNotEmpty()?.let {
-                        //todo show loading dialog.
                     }
                 }
             }
@@ -163,15 +154,4 @@ class RegionFragment : Fragment() {
         districtBottomSheet = DistrictBottomSheetFragment(districtList, viewModel)
         districtBottomSheet.show(childFragmentManager, "region_bottom_sheet")
     }
-//
-//
-//    fun showStopSignupDialog() {
-//        stopSignupDialog = StopSignupDialog(requireContext(), this)
-//        stopSignupDialog.show()
-//    }
-//
-//    override fun onStopSignupClick() {
-//        stopSignupDialog.dismiss()
-//        activity?.finish()
-//    }
 }
