@@ -9,11 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import wupitch.android.common.Resource
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.data.remote.dto.toFilterItem
-import wupitch.android.data.remote.dto.toSportResult
-import wupitch.android.domain.model.SportResult
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
@@ -58,6 +55,9 @@ class MyPageViewModel @Inject constructor(
     //age group
     private var _userAge = MutableLiveData<Int>()
     val userAge : LiveData<Int> = _userAge
+
+    //contact
+    var userPhoneNum = mutableStateOf("")
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
         Log.d("{SignupViewModel.checkNicknameValid}", nickname)
@@ -133,6 +133,10 @@ class MyPageViewModel @Inject constructor(
     fun setUserAge(ageCode : Int) {
         _userAge.value = ageCode
         Log.d("{SignupViewModel.setUserAge}", _userAge.value.toString())
+    }
+
+    fun setUserPhoneNum (phoneNum : String) {
+        userPhoneNum.value = phoneNum
     }
 
 }
