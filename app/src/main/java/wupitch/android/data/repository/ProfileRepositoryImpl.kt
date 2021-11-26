@@ -21,4 +21,9 @@ class ProfileRepositoryImpl @Inject constructor(
 
     override suspend fun changeNotiStatus(): Response<BaseRes>
     = retrofit.create(ProfileApi::class.java).patchNotiStatus()
+
+    override suspend fun unregisterUser(): Response<BaseRes>
+    = retrofit.create(ProfileApi::class.java).patchUnregister()
+
+
 }

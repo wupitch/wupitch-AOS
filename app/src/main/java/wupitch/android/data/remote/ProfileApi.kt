@@ -22,4 +22,7 @@ interface ProfileApi {
     @PATCH("app/accounts/toggle-alarm-info")
     suspend fun patchNotiStatus() : Response<BaseRes>
 
+    @PATCH("app/accounts/toggle-status")
+    suspend fun patchUnregister() : Response<BaseRes>
+
 }

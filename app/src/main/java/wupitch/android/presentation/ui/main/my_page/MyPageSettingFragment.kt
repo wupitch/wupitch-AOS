@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
@@ -37,7 +38,7 @@ import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 @AndroidEntryPoint
 class MyPageSettingFragment : Fragment() {
 
-    private val viewModel : MyPageViewModel by viewModels()
+    private val viewModel: MyPageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,47 +59,85 @@ class MyPageSettingFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val switchState = remember {viewModel.userNotiState}
+                    val switchState = remember { viewModel.userNotiState }
 
-                    if(switchState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(),switchState.value.error , Toast.LENGTH_SHORT).show()
+                    if (switchState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            switchState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
-                    Column(
+                    val unregisterState = remember { viewModel.unregisterState }
+                    if (unregisterState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            unregisterState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    if (unregisterState.value.isSuccess) {
+                        findNavController().navigate(R.id.action_myPageSettingFragment_to_loginFragment)
+                    }
+
+                    ConstraintLayout(
                         Modifier
                             .fillMaxSize()
-                            .background(Color.White)) {
+                            .background(Color.White)
+                    ) {
 
-                        TitleToolbar(
-                            modifier = Modifier.fillMaxWidth(),
-                            textString = R.string.settings
-                        ) {
-                            findNavController().navigateUp()
+                        val (col, progressbar) = createRefs()
+
+
+                        Column(Modifier.constrainAs(col) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }) {
+
+                            TitleToolbar(
+                                modifier = Modifier.fillMaxWidth(),
+                                textString = R.string.settings
+                            ) {
+                                findNavController().navigateUp()
+                            }
+
+                            NotificationSettingLayout(switchState) {
+                                viewModel.changeUserNotiState()
+                            }
+
+                            MyPageText(
+                                modifier = Modifier.padding(start = 20.dp),
+                                textString = stringResource(id = R.string.setting_change_pw)
+                            ) {
+                                findNavController().navigate(R.id.action_myPageSettingFragment_to_myPagePwFragment)
+                            }
+                            MyPageText(
+                                modifier = Modifier.padding(start = 20.dp),
+                                textString = stringResource(id = R.string.setting_logout)
+                            ) {
+                                viewModel.logoutUser()
+                                findNavController().navigate(R.id.action_myPageSettingFragment_to_loginFragment)
+                            }
+                            MyPageText(
+                                modifier = Modifier.padding(start = 20.dp),
+                                textString = stringResource(id = R.string.setting_unregister)
+                            ) {
+                                viewModel.unregisterUser()
+                            }
                         }
 
-                        NotificationSettingLayout(switchState){
-                            viewModel.changeUserNotiState()
-                        }
-
-                        MyPageText(
-                            modifier = Modifier.padding(start = 20.dp),
-                            textString = stringResource(id = R.string.setting_change_pw)
-                        ){
-                            findNavController().navigate(R.id.action_myPageSettingFragment_to_myPagePwFragment)
-                        }
-                        MyPageText(
-                            modifier = Modifier.padding(start = 20.dp),
-                            textString = stringResource(id = R.string.setting_logout)
-                        ){
-                            viewModel.logoutUnregisterUser()
-                            findNavController().navigate(R.id.action_myPageSettingFragment_to_loginFragment)
-                        }
-                        MyPageText(
-                            modifier = Modifier.padding(start = 20.dp),
-                            textString = stringResource(id = R.string.setting_unregister)
-                        ){
-                            viewModel.logoutUnregisterUser()
-                            findNavController().navigate(R.id.action_myPageSettingFragment_to_loginFragment)
+                        if (unregisterState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
                         }
                     }
                 }
@@ -108,14 +147,15 @@ class MyPageSettingFragment : Fragment() {
 
     @Composable
     private fun NotificationSettingLayout(
-        switchState : State<NotiState>,
-        onCheckedChange : (Boolean) -> Unit
+        switchState: State<NotiState>,
+        onCheckedChange: (Boolean) -> Unit
     ) {
 
         ConstraintLayout(
             Modifier
                 .fillMaxWidth()
-                .padding(start = 20.dp)) {
+                .padding(start = 20.dp)
+        ) {
 
             val (text, switch) = createRefs()
 

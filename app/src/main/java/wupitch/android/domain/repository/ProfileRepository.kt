@@ -9,4 +9,5 @@ interface ProfileRepository {
     suspend fun getUserInfo() : Response<UserInfoRes>
     suspend fun changePw(newPw : ChangePwReq) : Response<BaseRes>
     suspend fun changeNotiStatus() : Response<BaseRes>
+    suspend fun unregisterUser() : Response<BaseRes>
 }

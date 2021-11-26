@@ -195,13 +195,36 @@ class MyPageViewModel @Inject constructor(
         userPhoneNum.value = phoneNum
     }
 
-    fun logoutUnregisterUser() = viewModelScope.launch {
+    fun logoutUser() = viewModelScope.launch {
 
         context.dataStore.edit { settings ->
             settings[Constants.JWT_PREFERENCE_KEY] = ""
             settings[Constants.USER_ID] = -1
             settings[Constants.USER_NICKNAME] = ""
         }
+    }
+
+    private var _unregisterState = mutableStateOf(BaseState())
+    val unregisterState : State<BaseState> = _unregisterState
+
+    fun unregisterUser() = viewModelScope.launch {
+
+        _unregisterState.value = BaseState(isLoading = true)
+
+        val response = profileRepository.unregisterUser()
+        if(response.isSuccessful){
+            response.body()?.let { baseRes ->
+                if(baseRes.isSuccess) {
+                    _unregisterState.value = BaseState(isSuccess = true)
+                    context.dataStore.edit { settings ->
+                        settings[Constants.JWT_PREFERENCE_KEY] = ""
+                        settings[Constants.USER_ID] = -1
+                        settings[Constants.USER_NICKNAME] = ""
+                    }
+                }
+                else _unregisterState.value = BaseState(error = baseRes.message)
+            }
+        }else _unregisterState.value = BaseState(error = "회원 탈퇴를 실패했습니다.")
     }
 
     fun checkCurrentPwValid(pw : String) = viewModelScope.launch {
