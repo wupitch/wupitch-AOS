@@ -347,7 +347,9 @@
             app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_createImprtFeeFragment_to_impromptuDetailFragment"
-            app:destination="@id/impromptuDetailFragment" />
+            app:destination="@id/impromptuDetailFragment"
+            app:popUpTo="@id/createImprtLocationFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/createImprtSizeFragment"

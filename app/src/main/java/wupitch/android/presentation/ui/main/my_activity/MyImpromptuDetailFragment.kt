@@ -204,8 +204,6 @@ class MyImpromptuDetailFragment : Fragment() {
     private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
-
-
     @Composable
     fun ImpromptuExtraInfo() {
         Column(

@@ -82,9 +82,7 @@ class MyActivityViewModel : ViewModel(){
                 11,
                 false,
                 "가나다라마바사아자차...",
-                true,
                 "월요일 23:00 - 24:00",
-                true,
                 "동백 2로 37",
                 2,
                 3
@@ -94,9 +92,7 @@ class MyActivityViewModel : ViewModel(){
                 12,
                 false,
                 "번개합시다",
-                false,
                 "월요일 23:00 - 24:00",
-                false,
                 "동백 2로 37",
                 1,
                 3
@@ -106,9 +102,7 @@ class MyActivityViewModel : ViewModel(){
                 13,
                 false,
                 "날씨좋다 모이자",
-                true,
                 "월요일 23:00 - 24:00",
-                true,
                 "동백 2로 37",
                 2,
                 3
@@ -118,9 +112,7 @@ class MyActivityViewModel : ViewModel(){
                 14,
                 false,
                 "천둥번개!",
-                true,
                 "월요일 23:00 - 24:00",
-                true,
                 "동백 2로 37",
                 2,
                 3
@@ -130,9 +122,7 @@ class MyActivityViewModel : ViewModel(){
                 15,
                 false,
                 "번개 제목",
-                true,
                 "월요일 23:00 - 24:00",
-                true,
                 "동백 2로 37",
                 2,
                 3
@@ -142,9 +132,7 @@ class MyActivityViewModel : ViewModel(){
                 16,
                 false,
                 "마지막 번개",
-                true,
                 "월요일 23:00 - 24:00",
-                true,
                 "동백 2로 37",
                 2,
                 3

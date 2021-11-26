@@ -54,4 +54,10 @@ object RepositoryModule {
     fun provideCrewRepository(retrofit: Retrofit) : CrewRepository {
         return CrewRepositoryImpl(retrofit)
     }
+
+    @Provides
+    @Singleton
+    fun provideImprtRepository(retrofit: Retrofit) : ImprtRepository {
+        return ImprtRepositoryImpl(retrofit)
+    }
 }

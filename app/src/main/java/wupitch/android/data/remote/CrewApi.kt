@@ -10,7 +10,7 @@ import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewApi {
     @POST("app/clubs")
-    suspend fun createCrew(
+    suspend fun postCrew(
         @Body createCrewReq : CreateCrewReq
     ) : Response<CreateCrewRes>
 

@@ -5,9 +5,7 @@ data class ImpromptuCardInfo(
     val id : Int,
     val isPinned : Boolean,
     val title : String,
-    val isBiweekly : Boolean,
     val time : String,
-    val isMoreThanOnceAWeek : Boolean,
     val detailAddress : String,
     val gatheredPeople : Int,
     val totalCount : Int

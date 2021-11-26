@@ -16,7 +16,7 @@ class CrewRepositoryImpl @Inject constructor(
 ) : CrewRepository{
 
     override suspend fun createCrew(crewReq: CreateCrewReq): Response<CreateCrewRes> =
-        retrofit.create(CrewApi::class.java).createCrew(crewReq)
+        retrofit.create(CrewApi::class.java).postCrew(crewReq)
 
     override suspend fun postCrewImage(images: RequestBody, file : MultipartBody.Part, crewId: Int): Response<BaseRes> =
         retrofit.create(CrewApi::class.java).postCrewImage(crewId, file, images)

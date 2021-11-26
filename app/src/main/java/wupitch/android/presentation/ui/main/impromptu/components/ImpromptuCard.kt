@@ -33,9 +33,11 @@ fun ImpromptuCard(
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-        Spacer(modifier = Modifier
-            .height(8.dp)
-            .fillMaxWidth())
+        Spacer(
+            modifier = Modifier
+                .height(8.dp)
+                .fillMaxWidth()
+        )
 
         Row(
             modifier = Modifier
@@ -111,15 +113,13 @@ fun ImpromptuCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(Modifier.padding(vertical = 3.dp)) {
-                    if (cardInfo.isBiweekly) {
                         Text(
-                            text = stringResource(id = R.string.biweekly),
+                            text = "21.00.00",
                             color = colorResource(id = R.color.gray05),
                             fontFamily = Roboto,
                             fontWeight = FontWeight.Normal,
                             fontSize = 14.sp,
                         )
-                    }
 
                     Text(
                         text = cardInfo.time,
@@ -129,15 +129,13 @@ fun ImpromptuCard(
                         fontSize = 14.sp,
                     )
 
-                    if (cardInfo.isMoreThanOnceAWeek) {
-                        Text(
-                            text = stringResource(id = R.string.moreThanOnceAWeek),
-                            color = colorResource(id = R.color.gray05),
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp,
-                        )
-                    }
+                    Text(
+                        text = "20:00",
+                        color = colorResource(id = R.color.gray05),
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(2.dp))
@@ -170,9 +168,11 @@ fun ImpromptuCard(
             }
         }
 
-        Spacer(modifier = Modifier
-            .height(10.dp)
-            .fillMaxWidth())
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+                .fillMaxWidth()
+        )
     }
 
 }

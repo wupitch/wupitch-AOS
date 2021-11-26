@@ -13,17 +13,18 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
+import wupitch.android.domain.model.CreateImprtReq
 import wupitch.android.domain.repository.GetDistrictRepository
+import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.ScheduleState
-import wupitch.android.util.TimeType
-import wupitch.android.util.dateFormatter
-import wupitch.android.util.isEndTimeFasterThanStart
+import wupitch.android.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateImprtViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
+    private val imprtRepository: ImprtRepository
 ) : ViewModel() {
 
     private var _districtList = mutableStateOf(DistrictState())
@@ -212,26 +213,28 @@ class CreateImprtViewModel @Inject constructor(
     }
 
     fun createImpromptu() = viewModelScope.launch {
-//        _createImprtState.value = CreateImpromptuState(isLoading = true)
+        _createImprtState.value = CreateImpromptuState(isLoading = true)
 
-//        val crewReq = CreateCrewReq(
-//            areaId =  _imprtDistrictId.value!! +1,
-//            conference = if(_noImprtFee.value) null else _imprtFee.value.wonToNum(),
-//            inquiries = _imprtInquiry.value,
-//            materials = if(_imprtSupplies.value.isNotEmpty()) _imprtSupplies.value else null,
-//            introduction = _imprtIntro.value,
-//            location = if(_imprtLocation.value.isEmpty()) null else _imprtLocation.value,
-//            title = _imprtTitle.value,
-//            memberCount = _imprtSize.value.toInt(),
-//            scheduleList = _scheduleList.map { Schedule(it.day.value +1, it.startTime.value.stringToDouble(), it.endTime.value.stringToDouble()) }
-//        )
-//        val response = crewRepository.createCrew(crewReq)
-//        if(response.isSuccessful) {
-//            response.body()?.let { res ->
-//                if(res.isSuccess) postCrewImage(res.result.clubId)
-//                else _createImprtState.value = CreateImpromptuState(error = res.message)
-//            }
-//        }else _createImprtState.value = CreateImpromptuState(error = "크루 생성을 실패했습니다.")
+        val req = CreateImprtReq(
+            areaId =  _imprtDistrictId.value!! +1,
+            dues = if(_noImprtFee.value) null else _imprtFee.value.wonToNum(),
+            inquiries = _imprtInquiry.value,
+            materials = if(_imprtSupplies.value.isNotEmpty()) _imprtSupplies.value else null,
+            introduction = _imprtIntro.value,
+            location = if(_imprtLocation.value.isEmpty()) null else _imprtLocation.value,
+            title = _imprtTitle.value,
+            recruitmentCount = _imprtSize.value.toInt(),
+            date = convertDateForServer(_dateState.value),
+            startTime = _timeState.value.startTime.value.stringToDouble(),
+            endTime = _timeState.value.endTime.value.stringToDouble()
+        )
+        val response = imprtRepository.createImprt(req)
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) _createImprtState.value = CreateImpromptuState(data = res.result.impromptuId) //postCrewImage(res.result.clubId)
+                else _createImprtState.value = CreateImpromptuState(error = res.message)
+            }
+        }else _createImprtState.value = CreateImpromptuState(error = "번개 생성을 실패했습니다.")
     }
 
     private fun postImprtImage(id : Int) = viewModelScope.launch {
@@ -247,5 +250,10 @@ class CreateImprtViewModel @Inject constructor(
 //                }
 //            }else _createImprtState.value = CreateImpromptuState(error = "크루 이미지 업로드를 실패했습니다.")
 //        }
+    }
+
+    private fun convertDateForServer(date : String) : String {
+        val datePart = date.split(" ")[0]
+        return datePart.replace(".", "-")
     }
 }
