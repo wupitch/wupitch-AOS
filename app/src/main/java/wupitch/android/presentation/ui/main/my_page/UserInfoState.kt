@@ -8,7 +8,7 @@ data class UserInfoState(
         introduce = "",
         isPushAgree = false,
         nickname = "",
-        profileImageUrl = ""
+        profileImageUrl = null
     ),
     val error : String = ""
 )

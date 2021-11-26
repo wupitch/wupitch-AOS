@@ -315,24 +315,5 @@ class CreateCrewImageFragment : Fragment() {
         }
     }
 
-    fun getRealPathFromURIForGallery(uri: Uri?): String? {
-        if (uri == null) {
-            return null
-        }
-        val projection = arrayOf(MediaStore.Images.Media._ID)
-        val cursor: Cursor? = requireActivity().contentResolver.query(
-            uri, projection, null,
-            null, null
-        )
-        if (cursor != null) {
-            val columnIdx: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            cursor.moveToFirst()
-            return cursor.getString(columnIdx)
-        }
-        assert(false)
-        cursor?.close()
-        return uri.path
-    }
-
 }
 

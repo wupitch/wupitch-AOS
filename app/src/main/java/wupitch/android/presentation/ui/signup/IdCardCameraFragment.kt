@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -60,11 +62,12 @@ class IdCardCameraFragment : Fragment() {
             setContent {
                 CameraTheme {
 
-
-
                     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
-                    val signupState = viewModel.signupState.observeAsState()
-                    if(signupState.value == true) findNavController().navigate(R.id.action_idCardCameraFragment_to_reqIdCertiFragment)
+                    val signupState = remember {viewModel.signupState}
+                    if(signupState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), signupState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+                    if(signupState.value.isSuccess) findNavController().navigate(R.id.action_idCardCameraFragment_to_reqIdCertiFragment)
 
                     ConstraintLayout(
                         Modifier
@@ -72,7 +75,7 @@ class IdCardCameraFragment : Fragment() {
                             .fillMaxSize()
                     ) {
 
-                        val (takenImage, retake, useImage) = createRefs()
+                        val (takenImage, retake, useImage, progressbar) = createRefs()
 
                         if (imageUri != EMPTY_IMAGE_URI) {
 
@@ -121,9 +124,8 @@ class IdCardCameraFragment : Fragment() {
                                 colors = ButtonDefaults.buttonColors(Color.Transparent),
                                 elevation = null,
                                 onClick = {
+                                    viewModel.setIdCardImage(imageUri)
                                     viewModel.postSignup()
-                                    //todo save image!!  + loading state.
-
                                 }
                             ) {
                                 Text(
@@ -139,6 +141,18 @@ class IdCardCameraFragment : Fragment() {
                                 onImageFile = { file ->
                                     imageUri = file.toUri()
                                 }
+                            )
+                        }
+
+                        if (signupState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                color = colorResource(id = R.color.main_orange)
                             )
                         }
                     }

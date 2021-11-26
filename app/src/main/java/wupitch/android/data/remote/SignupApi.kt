@@ -1,8 +1,10 @@
 package wupitch.android.data.remote
 
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.POST
+import retrofit2.http.*
+import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.SignupRes
 import wupitch.android.domain.model.SignupReq
 
@@ -12,4 +14,11 @@ interface SignupApi {
     suspend fun postSignup(
         @Body signup : SignupReq
     ) : Response<SignupRes>
+
+    @Multipart
+    @POST("app/accounts/identification")
+    suspend fun postIdCardImage(
+        @Part file : MultipartBody.Part,
+        @Part("images") images: RequestBody
+    ) : Response<BaseRes>
 }

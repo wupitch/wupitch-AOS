@@ -1,6 +1,8 @@
 package wupitch.android.presentation.ui.main.my_page
 
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,13 +15,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -34,9 +34,15 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
+import coil.transform.CircleCropTransformation
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.common.Constants
+import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.components.GallerySelect
 import wupitch.android.presentation.ui.components.GrayDivider
 import wupitch.android.presentation.ui.components.NotiToolbar
 import wupitch.android.presentation.ui.main.my_page.components.FillInfoSnackbar
@@ -52,6 +58,7 @@ class MyPageFragment : Fragment() {
         viewModel.getUserInfo()
     }
 
+    @ExperimentalPermissionsApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +69,13 @@ class MyPageFragment : Fragment() {
 
                 val snackbarHostState = remember { SnackbarHostState() }
                 val userInfoState = remember {viewModel.userInfo}
+                val openGallery = remember { mutableStateOf(false)}
+                val imageUri = remember { mutableStateOf<Uri>(EMPTY_IMAGE_URI)}
+
+                val userImageState = remember {viewModel.userImageState}
+                if(userImageState.value.error.isNotEmpty()){
+                    Toast.makeText(requireContext(), userImageState.value.error, Toast.LENGTH_SHORT).show()
+                }
 
                 if(userInfoState.value.error.isNotEmpty()){
                     Toast.makeText(requireContext(), userInfoState.value.error, Toast.LENGTH_SHORT).show()
@@ -97,6 +111,18 @@ class MyPageFragment : Fragment() {
                         val (profile, alert, myActivity, myRecord, progressbar) = createRefs()
 
 
+                        if(openGallery.value) {
+                            GallerySelect(
+                                onImageUri = { uri ->
+                                    if(uri != EMPTY_IMAGE_URI){
+                                        imageUri.value = uri
+                                        viewModel.setUserImage(uri)
+                                    }
+                                    openGallery.value = false
+                                }
+                            )
+                        }
+
                         ProfileBox(
                             modifier = Modifier
                                 .constrainAs(profile) {
@@ -105,6 +131,10 @@ class MyPageFragment : Fragment() {
                                 end.linkTo(parent.end)
                             },
                             userInfoState = userInfoState,
+                            imageUri = imageUri,
+                            onImageClick = {
+                                openGallery.value = true
+                            },
                             onDetailClick = {
                                 activity?.findNavController(R.id.main_nav_container_view)
                                     ?.navigate(R.id.action_mainFragment_to_myPageInfoFragment)
@@ -190,6 +220,8 @@ class MyPageFragment : Fragment() {
     private fun ProfileBox(
         modifier: Modifier,
         userInfoState : State<UserInfoState>,
+        imageUri : MutableState<Uri>,
+        onImageClick : () -> Unit,
         onDetailClick : () -> Unit
         ) {
 
@@ -214,8 +246,30 @@ class MyPageFragment : Fragment() {
                         start.linkTo(parent.start, margin = 24.dp)
                     }
                     .size(64.dp),
-                painter = painterResource(id = R.drawable.profile_basic),
-                contentDescription = null
+                painter =
+                if (imageUri.value != EMPTY_IMAGE_URI) {
+                    rememberImagePainter(
+                        imageUri.value,
+                        builder = {
+                            placeholder(R.drawable.profile_basic)
+                            transformations(CircleCropTransformation())
+                            build()
+                        }
+                    )
+                }else if(userInfoState.value.data.profileImageUrl != null){
+                    rememberImagePainter(
+                        userInfoState.value.data.profileImageUrl,
+                        builder = {
+                            placeholder(R.drawable.profile_basic)
+                            transformations(CircleCropTransformation())
+                            build()
+                        }
+                    )
+                }else {
+                    rememberImagePainter(R.drawable.profile_basic,)
+                      },
+                contentDescription = null,
+                contentScale = ContentScale.Crop
             )
             
             IconButton(
@@ -225,7 +279,7 @@ class MyPageFragment : Fragment() {
                         start.linkTo(image.start, margin = 32.dp)
                     },
                 onClick = {
-
+                    onImageClick()
                 }){
                     Image(
                         modifier = Modifier.size(24.dp),

@@ -7,5 +7,5 @@ data class UserInfoResult(
     val introduce: String,
     val isPushAgree: Boolean,
     val nickname: String,
-    val profileImageUrl: String
+    val profileImageUrl: String?
 )

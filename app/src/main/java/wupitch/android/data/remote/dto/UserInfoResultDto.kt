@@ -18,6 +18,6 @@ fun UserInfoResultDto.toResult() : UserInfoResult {
         introduce = introduce ?: "",
         isPushAgree = isPushAgree ?: false,
         nickname = nickname,
-        profileImageUrl = profileImageUrl ?: ""
+        profileImageUrl = profileImageUrl
     )
 }

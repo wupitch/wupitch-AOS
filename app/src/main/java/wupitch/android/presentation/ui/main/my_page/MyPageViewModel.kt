@@ -1,6 +1,9 @@
 package wupitch.android.presentation.ui.main.my_page
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -21,8 +24,12 @@ import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.domain.repository.ProfileRepository
+import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.SportState
+import wupitch.android.util.getImageBody
+import wupitch.android.util.getRealPathFromURIForGallery
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -273,6 +280,47 @@ class MyPageViewModel @Inject constructor(
                 else  _changePwState.value = BaseState(error = baseRes.message)
             }
         }else  _changePwState.value = BaseState(error = "비밀번호 변경을 실패했습니다.")
+    }
+
+    private var _userImageState = mutableStateOf(BaseState())
+    val userImageState : State<BaseState> = _userImageState
+
+    fun setUserImage(uri : Uri) = viewModelScope.launch {
+        val path = getRealPathFromURIForGallery(context, uri)
+
+        if (path != null) {
+            resizeImage(file = File(path))
+
+            val file = getImageBody(File(path))
+
+            val response = profileRepository.postProfileImage( file.body, file)
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    if (res.isSuccess) _userImageState.value = BaseState(isSuccess = true)
+                    else  _userImageState.value = BaseState(error = res.message)
+                }
+            } else  _userImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
+        }
+
+    }
+
+    private fun resizeImage(file: File, scaleTo: Int = 1024) {
+        val bmOptions = BitmapFactory.Options()
+        bmOptions.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+        val photoW = bmOptions.outWidth
+        val photoH = bmOptions.outHeight
+
+        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
+
+        bmOptions.inJustDecodeBounds = false
+        bmOptions.inSampleSize = scaleFactor
+
+        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
+        file.outputStream().use {
+            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+            resized.recycle()
+        }
     }
 
 }
