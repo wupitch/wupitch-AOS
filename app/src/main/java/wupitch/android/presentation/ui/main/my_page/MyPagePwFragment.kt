@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -79,6 +81,15 @@ class MyPagePwFragment : Fragment() {
                     val isCurrentPwValid = remember { viewModel.isCurrentPwValid }
                     val isNewPwValid = remember { viewModel.isNewPwValid }
 
+                    val changePwState = remember {viewModel.changePwState}
+
+                    if(changePwState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), changePwState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+                    if(changePwState.value.isSuccess){
+                        findNavController().navigateUp()
+                    }
+
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -88,7 +99,7 @@ class MyPagePwFragment : Fragment() {
                                 )
                             )
                     ) {
-                        val (toolbar, pwCol, nextBtn) = createRefs()
+                        val (toolbar, pwCol, nextBtn, progressbar) = createRefs()
 
                         TitleToolbar(
                             modifier = Modifier.constrainAs(toolbar) {
@@ -197,6 +208,18 @@ class MyPagePwFragment : Fragment() {
                             }
                         }
 
+                        if (changePwState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
+                                    bottom.linkTo(nextBtn.top)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
+
                         RoundBtn(
                             modifier = Modifier
                                 .constrainAs(nextBtn) {
@@ -213,9 +236,7 @@ class MyPagePwFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(isCurrentPwValid.value == true && isNewPwValid.value == true){
-
-                            //todo 잘 보내졌으면...
-                                findNavController().navigateUp()
+                                viewModel.changePw()
                             }
                         }
                     }

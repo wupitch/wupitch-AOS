@@ -60,4 +60,10 @@ object RepositoryModule {
     fun provideImprtRepository(retrofit: Retrofit) : ImprtRepository {
         return ImprtRepositoryImpl(retrofit)
     }
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(retrofit: Retrofit) : ProfileRepository {
+        return ProfileRepositoryImpl(retrofit)
+    }
 }

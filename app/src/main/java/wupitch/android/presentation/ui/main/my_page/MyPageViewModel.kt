@@ -13,14 +13,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
+import wupitch.android.data.remote.dto.ChangePwReq
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
+import wupitch.android.domain.repository.ProfileRepository
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.SportState
 import javax.inject.Inject
@@ -30,7 +33,7 @@ class MyPageViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val getDistrictRepository: GetDistrictRepository,
     private val getSportRepository: GetSportRepository,
-
+    private val profileRepository: ProfileRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
@@ -79,6 +82,9 @@ class MyPageViewModel @Inject constructor(
     val isNewPwValid : State<Boolean?> = _isNewPwValid
 
     private var _userNewPw = mutableStateOf("")
+
+    private var _changePwState = mutableStateOf(BaseState())
+    val changePwState : State<BaseState> = _changePwState
 
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
@@ -205,6 +211,17 @@ class MyPageViewModel @Inject constructor(
         } else {
             _isNewPwValid.value = false
         }
+    }
+
+    fun changePw() = viewModelScope.launch {
+        _changePwState.value = BaseState(isLoading = true)
+        val response = profileRepository.changePw(ChangePwReq(password = _userNewPw.value))
+        if(response.isSuccessful){
+            response.body()?.let { baseRes ->
+                if(baseRes.isSuccess)  _changePwState.value = BaseState(isSuccess = true)
+                else  _changePwState.value = BaseState(error = baseRes.message)
+            }
+        }else  _changePwState.value = BaseState(error = "비밀번호 변경을 실패했습니다.")
     }
 
 }
