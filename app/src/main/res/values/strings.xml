@@ -244,10 +244,12 @@
     <string name="not_enough_info_impromptu">모든 프로필 정보가 기입되어야\n번개에 신청할 수 있습니다.</string>
     <string name="join_impromptu">참여하기</string>
     <string name="impromptu_guide_dot">&#160;&#160;&#8226;&#160;&#160;</string>
-    <string name="impromptu_guide1">번개 참여 혹은 모집 마감 시\, 빠른 시일 이내에 번개 리더로부터의 개별 연락이 취해질 예정입니다.</string>
-    <string name="impromptu_guide2">별도의 승인 절차 없이 번개 참여가 가능합니다.</string>
-    <string name="impromptu_guide3">목표 모집인원의 2\/3 이상의 참여자가 모였을 시\, 번개 리더에 의해 번개 모집이 조기 마감될 수 있습니다.</string>
-    <string name="impromptu_guide4">번개 참여 취소는 \'프로필\' 에서 가능합니다.</string>
+    <string name="impromptu_guide1">번개 참여는 번개 리더의 승인 없이 가능합니다.</string>
+    <string name="impromptu_guide2">번개 참여 신청 취소는&#160;</string>
+    <string name="impromptu_guide2_2">마이페이지 \- 참여 신청한 크루 및 번개</string>
+    <string name="impromptu_guide2_3">에서 가능합니다.\n(단, 운동 하루 전까지 취소 가능)</string>
+    <string name="impromptu_guide3">번개 리더에 의한 번개 삭제 시 푸시 알림을 통해 알려드립니다.</string>
+    <string name="impromptu_guide4">번개 참여 신청이 완료된 후, 운동일 하루 전 푸시 알림을 통해 알려드립니다.</string>
     
 <!--    impromptu filter-->
     <string name="schedule">일정</string>
