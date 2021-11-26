@@ -16,10 +16,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
-import wupitch.android.data.remote.dto.ChangePwReq
-import wupitch.android.data.remote.dto.EmailValidReq
-import wupitch.android.data.remote.dto.NicknameValidReq
-import wupitch.android.data.remote.dto.toFilterItem
+import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
@@ -36,6 +33,12 @@ class MyPageViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
+
+    private var _userInfo = mutableStateOf(UserInfoState())
+    val userInfo : State<UserInfoState> = _userInfo
+
+    private var _userNotiState = mutableStateOf(NotiState())
+    val userNotiState : State<NotiState> = _userNotiState
 
     //profile
     private var _isNicknameValid = MutableLiveData<Boolean?>()
@@ -71,9 +74,6 @@ class MyPageViewModel @Inject constructor(
     //contact
     var userPhoneNum = mutableStateOf("")
 
-    //notification
-    var notificationState = mutableStateOf(false)
-
     //password
     private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
     val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
@@ -85,6 +85,34 @@ class MyPageViewModel @Inject constructor(
 
     private var _changePwState = mutableStateOf(BaseState())
     val changePwState : State<BaseState> = _changePwState
+
+    fun getUserInfo() = viewModelScope.launch {
+        _userInfo.value = UserInfoState(isLoading = true)
+
+        val response = profileRepository.getUserInfo()
+        if(response.isSuccessful){
+            response.body()?.let { infoRes ->
+                if(infoRes.isSuccess) _userInfo.value = UserInfoState(data = infoRes.result.toResult())
+                else  _userInfo.value = UserInfoState(error = infoRes.message)
+            }
+        }else  _userInfo.value = UserInfoState(error = "유저 정보 조회를 실패했습니다.")
+    }
+
+    fun setUserNotiState(value : Boolean){
+        _userNotiState.value = NotiState(data = value)
+    }
+
+    fun changeUserNotiState() = viewModelScope.launch {
+        _userNotiState.value = NotiState(isLoading = true)
+
+        val response = profileRepository.changeNotiStatus()
+        if(response.isSuccessful){
+            response.body()?.let { baseRes ->
+                if(baseRes.isSuccess) _userNotiState.value = NotiState(data = !_userNotiState.value.data)
+                else _userNotiState.value = NotiState(error = baseRes.message)
+            }
+        }else _userNotiState.value = NotiState(error = "푸시 알림 상태 변경에 실패했습니다.")
+    }
 
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {

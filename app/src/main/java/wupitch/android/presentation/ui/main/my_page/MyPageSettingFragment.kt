@@ -1,18 +1,18 @@
 package wupitch.android.presentation.ui.main.my_page
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +39,16 @@ class MyPageSettingFragment : Fragment() {
 
     private val viewModel : MyPageViewModel by viewModels()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getBoolean("isPushAgreed")?.let { value ->
+
+            viewModel.setUserNotiState(value)
+
+            Log.d("{MyPageSettingFragment.onCreate}", value.toString())
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,7 +58,11 @@ class MyPageSettingFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val switchState = remember {viewModel.notificationState}
+                    val switchState = remember {viewModel.userNotiState}
+
+                    if(switchState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(),switchState.value.error , Toast.LENGTH_SHORT).show()
+                    }
 
                     Column(
                         Modifier
@@ -62,7 +76,9 @@ class MyPageSettingFragment : Fragment() {
                             findNavController().navigateUp()
                         }
 
-                        NotificationSettingLayout(switchState)
+                        NotificationSettingLayout(switchState){
+                            viewModel.changeUserNotiState()
+                        }
 
                         MyPageText(
                             modifier = Modifier.padding(start = 20.dp),
@@ -92,7 +108,8 @@ class MyPageSettingFragment : Fragment() {
 
     @Composable
     private fun NotificationSettingLayout(
-        switchState : MutableState<Boolean>
+        switchState : State<NotiState>,
+        onCheckedChange : (Boolean) -> Unit
     ) {
 
         ConstraintLayout(
@@ -119,13 +136,15 @@ class MyPageSettingFragment : Fragment() {
             )
 
             Switch(
-                modifier = Modifier.constrainAs(switch){
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end, margin = 25.dp)
-                    bottom.linkTo(parent.bottom)
-                }.size(50.dp, 30.dp),
-                checked = switchState.value,
-                onCheckedChange = { switchState.value = it },
+                modifier = Modifier
+                    .constrainAs(switch) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end, margin = 25.dp)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .size(50.dp, 30.dp),
+                checked = switchState.value.data,
+                onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,
                     checkedTrackColor = colorResource(id = R.color.green02),

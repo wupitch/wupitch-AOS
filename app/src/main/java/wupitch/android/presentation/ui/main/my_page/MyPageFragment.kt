@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,7 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.GrayDivider
@@ -38,7 +42,15 @@ import wupitch.android.presentation.ui.components.NotiToolbar
 import wupitch.android.presentation.ui.main.my_page.components.FillInfoSnackbar
 import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 
+@AndroidEntryPoint
 class MyPageFragment : Fragment() {
+
+    private val viewModel : MyPageViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getUserInfo()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +61,11 @@ class MyPageFragment : Fragment() {
             setContent {
 
                 val snackbarHostState = remember { SnackbarHostState() }
+                val userInfoState = remember {viewModel.userInfo}
+
+                if(userInfoState.value.error.isNotEmpty()){
+                    Toast.makeText(requireContext(), userInfoState.value.error, Toast.LENGTH_SHORT).show()
+                }
 
                 LaunchedEffect(key1 = snackbarHostState, block = {
                     snackbarHostState.showSnackbar(
@@ -77,7 +94,8 @@ class MyPageFragment : Fragment() {
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
                     ) {
-                        val (profile, alert, myActivity, myRecord) = createRefs()
+                        val (profile, alert, myActivity, myRecord, progressbar) = createRefs()
+
 
                         ProfileBox(
                             modifier = Modifier
@@ -86,6 +104,7 @@ class MyPageFragment : Fragment() {
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             },
+                            userInfoState = userInfoState,
                             onDetailClick = {
                                 activity?.findNavController(R.id.main_nav_container_view)
                                     ?.navigate(R.id.action_mainFragment_to_myPageInfoFragment)
@@ -101,6 +120,7 @@ class MyPageFragment : Fragment() {
                             textString = stringResource(id = R.string.interested_activity)
                         ){
 
+                            //todo
                         }
 
                         MyPageText(
@@ -112,6 +132,7 @@ class MyPageFragment : Fragment() {
                             textString = stringResource(id = R.string.my_record)
                         ){
 
+                            //todo
                         }
                         FillInfoSnackbar(
                             modifier = Modifier.constrainAs(alert){
@@ -120,6 +141,18 @@ class MyPageFragment : Fragment() {
                             },
                             snackbarHostState = snackbarHostState
                         )
+
+                        if (userInfoState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
                     }
 
                     GrayDivider()
@@ -140,8 +173,9 @@ class MyPageFragment : Fragment() {
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.settings)
                     ){
+                        val bundle = Bundle().apply { putBoolean("isPushAgreed", userInfoState.value.data.isPushAgree) }
                         activity?.findNavController(R.id.main_nav_container_view)
-                            ?.navigate(R.id.action_mainFragment_to_myPageSettingFragment)
+                            ?.navigate(R.id.action_mainFragment_to_myPageSettingFragment, bundle)
                     }
                 }
             }
@@ -155,6 +189,7 @@ class MyPageFragment : Fragment() {
     @Composable
     private fun ProfileBox(
         modifier: Modifier,
+        userInfoState : State<UserInfoState>,
         onDetailClick : () -> Unit
         ) {
 
@@ -204,7 +239,7 @@ class MyPageFragment : Fragment() {
                 width = Dimension.fillToConstraints
             }) {
                 Text(
-                    text = "사용자 닉네임",
+                    text = userInfoState.value.data.nickname,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
@@ -216,7 +251,7 @@ class MyPageFragment : Fragment() {
 
                 Text(
                     modifier = Modifier.padding(top=2.dp),
-                    text = "사용자 소개djksldjksldjklsjkfldsjkfldsjaklfdjka;",
+                    text =  userInfoState.value.data.introduce,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
