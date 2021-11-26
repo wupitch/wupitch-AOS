@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -57,6 +58,15 @@ class MyPageDistrictFragment : Fragment() {
                 WupitchTheme {
 
                     val districtList = viewModel.districtList.value
+                    val updateState = remember { viewModel.updateState }
+                    if (updateState.value.isSuccess) findNavController().navigateUp()
+                    if (updateState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            updateState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
                     if (districtList.data.isNotEmpty()) {
 
@@ -133,8 +143,9 @@ class MyPageDistrictFragment : Fragment() {
                                 textString = R.string.done,
                                 fontSize = 16.sp
                             ) {
-                                //todo server 올려지면
-                                findNavController().navigateUp()
+                                if (regionState.value != null) {
+                                    viewModel.changeUserDistrict()
+                                }
                             }
                         }
                     }

@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.ChangePwReq
+import wupitch.android.data.remote.dto.UpdateUserInfoReq
 import wupitch.android.data.remote.dto.UserInfoRes
 
 interface ProfileRepository {
@@ -13,5 +14,5 @@ interface ProfileRepository {
     suspend fun changeNotiStatus() : Response<BaseRes>
     suspend fun unregisterUser() : Response<BaseRes>
     suspend fun postProfileImage(images: RequestBody, file : MultipartBody.Part) : Response<BaseRes>
-
+    suspend fun updateUserInfo(userInfoReq : UpdateUserInfoReq) : Response<BaseRes>
 }

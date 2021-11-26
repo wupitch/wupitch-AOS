@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,10 +43,7 @@ import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.components.IconToolBar
-import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.components.StopWarningDialog
-import wupitch.android.presentation.ui.components.TitleToolbar
+import wupitch.android.presentation.ui.components.*
 
 @AndroidEntryPoint
 class MyPageSportFragment : Fragment() {
@@ -64,9 +62,19 @@ class MyPageSportFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
+                    val userSportListState = remember { viewModel.userSportList }
 
-                    val sportSelectedState = remember { viewModel.userSportId }
                     val sportsList = viewModel.sportsList.value
+
+                    val updateState = remember { viewModel.updateState }
+                    if (updateState.value.isSuccess) findNavController().navigateUp()
+                    if (updateState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            updateState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
                     ConstraintLayout(
                         Modifier
@@ -134,18 +142,15 @@ class MyPageSportFragment : Fragment() {
                                         fontSize = 12.sp,
                                     )
                                 }
-
-                                NonRepetitionLayout(
+                                Spacer(modifier = Modifier.height(20.dp))
+                                RepetitionLayout(
+                                    text = null,
                                     filterItemList = sportRememberList.toList(),
-                                    flexBoxModifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(top = 32.dp),
-                                    radioBtnModifier = Modifier
+                                    modifier = Modifier
                                         .width(152.dp)
                                         .height(48.dp),
-                                ) {
-                                    viewModel.setUserSport(it)
-                                }
+                                    checkedListState = userSportListState
+                                )
                             }
                         }
 
@@ -159,16 +164,14 @@ class MyPageSportFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (sportSelectedState.value != -1) R.color.main_orange
+                            btnColor = if (userSportListState.isNotEmpty()) R.color.main_orange
                             else R.color.gray03,
                             textString = R.string.done,
                             fontSize = 16.sp
                         ) {
-                            if (sportSelectedState.value != -1) {
-
-                                //todo sport patch 하면 navigate up.
-                                viewModel.setUserSport(sportSelectedState.value)
-                                findNavController().navigateUp()
+                            if (userSportListState.isNotEmpty()) {
+                                viewModel.setUserSportList(userSportListState)
+                                viewModel.changeUserSport()
                             }
                         }
                     }
@@ -177,80 +180,6 @@ class MyPageSportFragment : Fragment() {
         }
     }
 
-    @Composable
-    fun NonRepetitionLayout(
-        filterItemList: List<FilterItem>,
-        flexBoxModifier: Modifier,
-        radioBtnModifier: Modifier,
-        onClick: (index: Int) -> Unit
-    ) {
-
-        FlowRow(
-            modifier = flexBoxModifier,
-            mainAxisSpacing = 16.dp,
-            crossAxisSpacing = 16.dp
-        ) {
-            filterItemList.forEachIndexed { index, item ->
-                RadioButton(
-                    modifier = radioBtnModifier,
-                    checkedState = item.state,
-                    text = item.name,
-                ) {
-                    onClick(index)
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun RadioButton(
-        modifier: Modifier,
-        checkedState: MutableState<Boolean>,
-        text: String,
-        onClick: () -> Unit
-    ) {
-        if(checkedState.value){
-            checkedRadioButton = checkedState
-        }
-        Box(
-            modifier = modifier
-                .selectable(
-                    selected = checkedState.value,
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    enabled = true,
-                    role = Role.RadioButton,
-                    onClick = {
-                        checkedRadioButton?.value = false
-                        checkedState.value = true
-                        checkedRadioButton = checkedState
-                        onClick()
-                    }
-                )
-                .clip(RoundedCornerShape(8.dp))
-                .background(
-                    if (checkedState.value) colorResource(id = R.color.orange02) else
-                        colorResource(id = R.color.gray01)
-                )
-                .border(
-                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
-                    else Color.Transparent,
-                    width = if (checkedState.value) 1.dp else 0.dp,
-                    shape = RoundedCornerShape(8.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = text,
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = if (checkedState.value) colorResource(id = R.color.main_orange)
-                else colorResource(id = R.color.gray02)
-            )
-        }
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

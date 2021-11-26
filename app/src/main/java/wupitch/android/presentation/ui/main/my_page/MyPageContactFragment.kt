@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,7 @@ import wupitch.android.presentation.ui.components.RoundBtn
 @AndroidEntryPoint
 class MyPageContactFragment : Fragment() {
 
-    private val viewModel : MyPageViewModel by viewModels()
+    private val viewModel: MyPageViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +61,15 @@ class MyPageContactFragment : Fragment() {
                 WupitchTheme {
 
                     val textState = remember { viewModel.userPhoneNum }
-
+                    val updateState = remember { viewModel.updateState }
+                    if (updateState.value.isSuccess) findNavController().navigateUp()
+                    if (updateState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            updateState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -93,7 +102,7 @@ class MyPageContactFragment : Fragment() {
                             lineHeight = 32.sp
                         )
 
-                        PhoneNumberTextField(modifier = Modifier.constrainAs(textField){
+                        PhoneNumberTextField(modifier = Modifier.constrainAs(textField) {
                             top.linkTo(title.bottom, margin = 24.dp)
                             start.linkTo(title.start)
                         }, textState = textState)
@@ -108,24 +117,26 @@ class MyPageContactFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if(textState.value.isNotEmpty()) R.color.main_orange else R.color.gray03,
+                            btnColor = if (textState.value.isNotEmpty()) R.color.main_orange else R.color.gray03,
                             textString = R.string.done,
                             fontSize = 16.sp
                         ) {
-                                //todo 잘 보내졌으면...
-                                findNavController().navigateUp()
+                            if (textState.value.isNotEmpty()) {
+                                viewModel.setUserPhoneNum(textState.value)
+                                viewModel.changeUserPhoneNum()
                             }
                         }
                     }
                 }
             }
         }
+    }
 
     //todo 핸드폰 번호 식으로 입력되게 하기!!!!!!! + 핸드폰 형식 유효성 검사???는 그럼 필요 없을듯!
     @Composable
     private fun PhoneNumberTextField(
         modifier: Modifier,
-        textState : MutableState<String>
+        textState: MutableState<String>
     ) {
 
         val customTextSelectionColors = TextSelectionColors(
@@ -146,8 +157,11 @@ class MyPageContactFragment : Fragment() {
                     textAlign = TextAlign.Start
                 ),
 //        visualTransformation = NumberTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone ={
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(onDone = {
                     setKeyboardDown()
                 }),
                 maxLines = 1,

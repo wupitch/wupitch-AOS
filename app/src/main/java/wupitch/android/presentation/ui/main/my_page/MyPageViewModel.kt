@@ -6,7 +6,9 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,7 +26,6 @@ import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.domain.repository.ProfileRepository
-import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.SportState
 import wupitch.android.util.getImageBody
@@ -68,6 +69,9 @@ class MyPageViewModel @Inject constructor(
     val userDistrictName: LiveData<String> = _userDistrictName
 
     //sports
+    private var _userSportList = mutableStateListOf<Int>()
+    val userSportList: SnapshotStateList<Int> = _userSportList
+
     private var _sportsList = mutableStateOf(SportState())
     val sportsList: State<SportState> = _sportsList
 
@@ -147,6 +151,42 @@ class MyPageViewModel @Inject constructor(
         _userIntroduce.value = introduce
     }
 
+    private var _updateState = mutableStateOf(BaseState())
+    val updateState : State<BaseState> = _updateState
+
+    fun changeUserNicknameOrIntro() = viewModelScope.launch {
+        getUserInfo()
+        _updateState.value = BaseState(isLoading = true)
+        val req = UpdateUserInfoReq(
+            nickname = if(_userNickname.value == _userInfo.value.data.nickname) null else _userNickname.value,
+            introduce = if(_userIntroduce.value == _userInfo.value.data.introduce) null else _userIntroduce.value
+        )
+        val response = profileRepository.updateUserInfo(req)
+        if(response.isSuccessful){
+            response.body()?.let {
+                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                else _updateState.value = BaseState(error = it.message)
+            }
+        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
+
+    }
+
+    //todo
+    fun changeUserDistrict() = viewModelScope.launch {
+        getUserInfo()
+        _updateState.value = BaseState(isLoading = true)
+        val req = UpdateUserInfoReq(
+            areaId = _userDistrictId.value!! + 1//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
+        )
+        val response = profileRepository.updateUserInfo(req)
+        if(response.isSuccessful){
+            response.body()?.let {
+                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                else _updateState.value = BaseState(error = it.message)
+            }
+        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
+    }
+
     fun getDistricts() = viewModelScope.launch {
         _districtList.value = DistrictState(isLoading = true)
 
@@ -167,6 +207,7 @@ class MyPageViewModel @Inject constructor(
         Log.d("{SignupViewModel.getUserRegion}", "id : $districtId name : $districtName")
     }
 
+    //todo sport without etc and edit this.
     fun getSports() = viewModelScope.launch {
         _sportsList.value = SportState(isLoading = true)
 
@@ -188,9 +229,24 @@ class MyPageViewModel @Inject constructor(
 
     }
 
-    fun setUserSport(sportId: Int) {
-        _userSportId.value = sportId
-        Log.d("{CreateCrewViewModel.setCrewSport}", _userSportId.value.toString())
+    fun setUserSportList(list: SnapshotStateList<Int>) {
+        _userSportList = list
+    }
+
+    //todo
+    fun changeUserSport() = viewModelScope.launch {
+        getUserInfo()
+        _updateState.value = BaseState(isLoading = true)
+        val req = UpdateUserInfoReq(
+            sportsList = _userSportList.map { it +1 }//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
+        )
+        val response = profileRepository.updateUserInfo(req)
+        if(response.isSuccessful){
+            response.body()?.let {
+                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                else _updateState.value = BaseState(error = it.message)
+            }
+        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
     }
 
     fun setUserAge(ageCode: Int) {
@@ -198,8 +254,41 @@ class MyPageViewModel @Inject constructor(
         Log.d("{SignupViewModel.setUserAge}", _userAge.value.toString())
     }
 
+    //todo
+    fun changeUserAgeGroup() = viewModelScope.launch {
+        getUserInfo()
+        _updateState.value = BaseState(isLoading = true)
+        val req = UpdateUserInfoReq(
+            ageNum = _userAge.value!! + 1//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
+        )
+        val response = profileRepository.updateUserInfo(req)
+        if(response.isSuccessful){
+            response.body()?.let {
+                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                else _updateState.value = BaseState(error = it.message)
+            }
+        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
+    }
+
+
     fun setUserPhoneNum(phoneNum: String) {
         userPhoneNum.value = phoneNum
+    }
+
+    //todo
+    fun changeUserPhoneNum() = viewModelScope.launch {
+        getUserInfo()
+        _updateState.value = BaseState(isLoading = true)
+        val req = UpdateUserInfoReq(
+            phoneNumber = userPhoneNum.value //if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
+        )
+        val response = profileRepository.updateUserInfo(req)
+        if(response.isSuccessful){
+            response.body()?.let {
+                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                else _updateState.value = BaseState(error = it.message)
+            }
+        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
     }
 
     fun logoutUser() = viewModelScope.launch {

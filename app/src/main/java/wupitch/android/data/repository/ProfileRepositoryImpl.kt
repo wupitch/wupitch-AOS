@@ -1,14 +1,13 @@
 package wupitch.android.data.repository
 
-import android.provider.ContactsContract
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.ProfileApi
-import wupitch.android.data.remote.SignupApi
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.ChangePwReq
+import wupitch.android.data.remote.dto.UpdateUserInfoReq
 import wupitch.android.data.remote.dto.UserInfoRes
 import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject
@@ -33,6 +32,9 @@ class ProfileRepositoryImpl @Inject constructor(
         images: RequestBody,
         file: MultipartBody.Part
     ): Response<BaseRes> =retrofit.create(ProfileApi::class.java).postProfileImage(file, images)
+
+    override suspend fun updateUserInfo(userInfoReq: UpdateUserInfoReq): Response<BaseRes>
+    = retrofit.create(ProfileApi::class.java).updateUserInfo(userInfoReq)
 
 
 }

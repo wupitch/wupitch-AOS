@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -71,11 +72,21 @@ class MyPageProfileFragment : Fragment() {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
                         //todo 처음에 유저 정보 가져오기.
-                        val nicknameState = remember { mutableStateOf(viewModel.userNickname.value ?: "") }
-                        val introState = remember { mutableStateOf(viewModel.userIntroduce.value?: "") }
+                        val nicknameState =
+                            remember { mutableStateOf(viewModel.userNickname.value ?: "") }
+                        val introState =
+                            remember { mutableStateOf(viewModel.userIntroduce.value ?: "") }
 
                         val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
-
+                        val updateState = remember { viewModel.updateState }
+                        if (updateState.value.isSuccess) findNavController().navigateUp()
+                        if (updateState.value.error.isNotEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                updateState.value.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -180,9 +191,7 @@ class MyPageProfileFragment : Fragment() {
                                 nicknameState.value.isNotEmpty()
                             ) {
                                 viewModel.setUserIntroduce(introState.value)
-                                //todo patch profile 되면 navigate up.
-                                findNavController().navigateUp()
-
+                                viewModel.changeUserNicknameOrIntro()
                             }
                         }
                     }
@@ -215,9 +224,9 @@ class MyPageProfileFragment : Fragment() {
                         stringState.value = value
                         if (validateNickname) {
 
-                            if(stringState.value.isEmpty()){
+                            if (stringState.value.isEmpty()) {
                                 viewModel.checkNicknameValid("")
-                            }else {
+                            } else {
                                 job?.cancel()
                                 job = lifecycleScope.launch {
                                     delay(1200L)
@@ -227,8 +236,8 @@ class MyPageProfileFragment : Fragment() {
                         }
                     }
                 },
-                keyboardOptions = KeyboardOptions(imeAction = if(validateNickname) ImeAction.Next else ImeAction.Done),
-                keyboardActions = KeyboardActions (onDone = {
+                keyboardOptions = KeyboardOptions(imeAction = if (validateNickname) ImeAction.Next else ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = {
                     setKeyboardDown()
                 }),
                 modifier = modifier

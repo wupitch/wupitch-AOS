@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -75,6 +76,17 @@ class MyPageAgeGroupFragment : Fragment() {
                         AgeRadioButton("40대", checkedState4),
                         AgeRadioButton("50대", checkedState5)
                     )
+
+                    val updateState = remember { viewModel.updateState }
+                    if (updateState.value.isSuccess) findNavController().navigateUp()
+                    if (updateState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            updateState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -153,10 +165,8 @@ class MyPageAgeGroupFragment : Fragment() {
                                         checkedAge = index
                                     return@forEachIndexed
                                 }
-                                Log.d("{AgeFragment.onCreateView}", checkedAge.toString())
-
-                                //todo 잘 보내졌으면...
-                                findNavController().navigateUp()
+                                viewModel.setUserAge(checkedAge)
+                                viewModel.changeUserAgeGroup()
                             }
                         }
                     }

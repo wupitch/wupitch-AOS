@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.ChangePwReq
+import wupitch.android.data.remote.dto.UpdateUserInfoReq
 import wupitch.android.data.remote.dto.UserInfoRes
 
 interface ProfileApi {
@@ -30,5 +31,10 @@ interface ProfileApi {
 
     @PATCH("app/accounts/toggle-status")
     suspend fun patchUnregister() : Response<BaseRes>
+
+    @PATCH("app/accounts/information")
+    suspend fun updateUserInfo(
+        @Body userInfoReq : UpdateUserInfoReq
+    ) : Response<BaseRes>
 
 }
