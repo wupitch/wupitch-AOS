@@ -316,6 +316,9 @@
     <string name="setting_change_pw">비밀번호 변경</string>
     <string name="setting_logout">로그아웃</string>
     <string name="setting_unregister">탈퇴</string>
+    <string name="current_pw">현재 비밀번호</string>
+    <string name="incorrect_pw">비밀번호가 일치하지 않습니다.</string>
+    <string name="new_pw">변경할 비밀번호</string>
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>

@@ -11,9 +11,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
+import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.repository.CheckValidRepository
@@ -28,6 +30,7 @@ class MyPageViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val getDistrictRepository: GetDistrictRepository,
     private val getSportRepository: GetSportRepository,
+
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
@@ -67,6 +70,16 @@ class MyPageViewModel @Inject constructor(
 
     //notification
     var notificationState = mutableStateOf(false)
+
+    //password
+    private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
+    val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
+
+    private var _isNewPwValid = mutableStateOf<Boolean?>(null)
+    val isNewPwValid : State<Boolean?> = _isNewPwValid
+
+    private var _userNewPw = mutableStateOf("")
+
 
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
         Log.d("{SignupViewModel.checkNicknameValid}", nickname)
@@ -154,6 +167,43 @@ class MyPageViewModel @Inject constructor(
             settings[Constants.JWT_PREFERENCE_KEY] = ""
             settings[Constants.USER_ID] = -1
             settings[Constants.USER_NICKNAME] = ""
+        }
+    }
+
+    fun checkCurrentPwValid(pw : String) = viewModelScope.launch {
+        if (pw.isEmpty()) {
+            _isCurrentPwValid.value = null
+            return@launch
+        }
+
+        //todo
+        delay(1000L)
+        _isCurrentPwValid.value = true
+
+//        val response = checkValidRepository.checkEmailValidation(EmailValidReq(email))
+//        if (response.isSuccessful) {
+//            response.body()?.let { validRes ->
+//                if (validRes.isSuccess) {
+//                    _isEmailValid.value = true
+//                    _userEmail.value = email
+//                } else {
+//                    _isEmailValid.value = false
+//                }
+//            }
+//        } else _isEmailValid.value = false
+    }
+
+    fun checkNewPwValid(pw : String) {
+        if (pw.isEmpty()) {
+            _isNewPwValid.value = null
+            return
+        }
+        val isPwValid = pw.matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$".toRegex())
+        if (isPwValid) {
+            _isNewPwValid.value = true
+            _userNewPw.value = pw
+        } else {
+            _isNewPwValid.value = false
         }
     }
 
