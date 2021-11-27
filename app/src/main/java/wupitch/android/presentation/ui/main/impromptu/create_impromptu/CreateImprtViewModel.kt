@@ -256,6 +256,7 @@ class CreateImprtViewModel @Inject constructor(
             _createImprtState.value = CreateImpromptuState(data = id)
         } else {
             val path = getRealPathFromURIForGallery(context,_imprtImage.value)
+            Log.d("{CreateImprtViewModel.postImprtImage}", path.toString())
 
             if (path != null) {
                 resizeImage(file = File(path))

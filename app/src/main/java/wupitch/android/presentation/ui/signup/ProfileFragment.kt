@@ -238,7 +238,7 @@ class ProfileFragment : Fragment() {
                             }else {
                                 job?.cancel()
                                 job = lifecycleScope.launch {
-                                    delay(1200L)
+                                    delay(1800L)
                                     viewModel.checkNicknameValid(value)
                                 }
                             }

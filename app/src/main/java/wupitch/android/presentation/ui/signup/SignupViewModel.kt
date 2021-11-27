@@ -2,8 +2,10 @@ package wupitch.android.presentation.ui.signup
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -23,13 +25,13 @@ import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
-import wupitch.android.data.remote.dto.SignupResult
 import wupitch.android.domain.model.SignupReq
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.SignupRepository
-import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
-import java.io.File
+import java.io.*
+import java.util.*
 import javax.inject.Inject
+
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
@@ -177,60 +179,81 @@ class SignupViewModel @Inject constructor(
                         settings[Constants.USER_NICKNAME] = signupRes.result.nickname
                     }
                     postIdCardImage()
-                }
-                else _signupState.value = BaseState(error = signupRes.message)
+                } else _signupState.value = BaseState(error = signupRes.message)
             }
         } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
     }
 
     private var _idCardImage = mutableStateOf<Uri>(Constants.EMPTY_IMAGE_URI)
-    val idCardImage: State<Uri> = _idCardImage
 
-    fun setIdCardImage(uri : Uri) {
+    fun setIdCardImage(uri: Uri) {
         _idCardImage.value = uri
     }
 
     private fun postIdCardImage() = viewModelScope.launch {
 
-//        val path = getRealPathFromURIForGallery(context, _idCardImage.value)
+        if (_idCardImage.value.path != null) {
 
-//        if (path != null) {
-//            resizeImage(file = File(path))
+            val bitmap = withContext(Dispatchers.IO) {
+                convertUriToBitmap()
+            }
 
-//            val file = getImageBody(File(path))
-        if(_idCardImage.value.path != null){
-            val file = getImageBody(File(_idCardImage.value.path!!))
+            if (bitmap != null) {
+                val internalFile = saveFileInAppDirectory(bitmap)
+                Log.d("{SignupViewModel.postIdCardImage}", internalFile.toString())
 
-            val response = signupRepository.postIdCardImage(images = file.body, file = file)
-            if (response.isSuccessful) {
-                response.body()?.let { res ->
-                    if (res.isSuccess) _signupState.value = BaseState(isSuccess = true)
-                    else  _signupState.value = BaseState(error = res.message)
-                }
+                val file = getImageBody(internalFile)
+
+                val response = signupRepository.postIdCardImage(images = file.body, file = file)
+                if (response.isSuccessful) {
+                    response.body()?.let { res ->
+                        if (res.isSuccess) _signupState.value = BaseState(isSuccess = true)
+                        else _signupState.value = BaseState(error = res.message)
+                    }
+                } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
             } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
-        }else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
-    }
-
-
-    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-        val bmOptions = BitmapFactory.Options()
-        bmOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-        val photoW = bmOptions.outWidth
-        val photoH = bmOptions.outHeight
-
-        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-
-        bmOptions.inJustDecodeBounds = false
-        bmOptions.inSampleSize = scaleFactor
-
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-        file.outputStream().use {
-            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
         }
     }
 
+    private fun convertUriToBitmap(): Bitmap? {
+        var bitmap: Bitmap? = null
+
+        try {
+            bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.decodeBitmap(
+                    ImageDecoder.createSource(
+                        context.contentResolver,
+                        _idCardImage.value
+                    )
+                )
+            } else {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, _idCardImage.value)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return bitmap
+    }
+
+    private fun saveFileInAppDirectory(bitmap: Bitmap): File {
+
+        var file = context.getDir("images", Context.MODE_PRIVATE)
+        file = File(file, "${UUID.randomUUID()}.jpg")
+
+        try {
+            val stream: OutputStream = FileOutputStream(file)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
+
+            stream.flush()
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return file
+
+    }
 
     private fun getImageBody(file: File): MultipartBody.Part {
         return MultipartBody.Part.createFormData(
@@ -239,45 +262,4 @@ class SignupViewModel @Inject constructor(
             body = file.asRequestBody("image/*".toMediaType())
         )
     }
-
-//    private fun getRealPathFromURIForGallery(uri: Uri): String? {
-//
-//        var fullPath: String? = null
-//        val column = "_data"
-//        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
-//        if (cursor != null) {
-//            cursor.moveToFirst()
-//            var documentId = cursor.getString(0)
-//            if (documentId == null) {
-//                for (i in 0 until cursor.columnCount) {
-//                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-//                        fullPath = cursor.getString(i)
-//                        break
-//                    }
-//                }
-//            } else {
-//                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
-//                cursor.close()
-//                val projection = arrayOf(column)
-//                try {
-//                    cursor = context.contentResolver.query(
-//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                        projection,
-//                        MediaStore.Images.Media._ID + " = ? ",
-//                        arrayOf(documentId),
-//                        null
-//                    )
-//                    if (cursor != null) {
-//                        cursor.moveToFirst()
-//                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
-//                    }
-//                } finally {
-//                    if (cursor != null) cursor.close()
-//                }
-//            }
-//        }
-//        return fullPath
-//    }
-
-
 }

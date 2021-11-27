@@ -156,7 +156,7 @@ class MyActivityFragment : Fragment() {
                     items = myCrewState.value.data
                 ){ _, item ->
                     MyCrewCard(crew = item){ tabId ->
-                        val bundle = Bundle().apply { putParcelable("my_crew_info", MyCrewArg(item.id, tabId)) }
+                        val bundle = Bundle().apply { putParcelable("myCrewInfo", MyCrewArg(item.id, tabId)) }
                         activity?.findNavController(R.id.main_nav_container_view)
                             ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                     }
@@ -204,7 +204,7 @@ class MyActivityFragment : Fragment() {
                     items = myImprtState.value.data
                 ){ _, item ->
                     ImpromptuCard(cardInfo = item) {
-                        val bundle = Bundle().apply { putInt("impromptu_id", item.id) }
+                        val bundle = Bundle().apply { putInt("impromptuId", item.id) }
                         activity?.findNavController(R.id.main_nav_container_view)
                             ?.navigate(R.id.action_mainFragment_to_myImpromptuDetailFragment, bundle)
                     }

@@ -50,7 +50,7 @@ class MyCrewDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.getParcelable<MyCrewArg>("my_crew_info")?.let { crewInfo ->
+        arguments?.getParcelable<MyCrewArg>("myCrewInfo")?.let { crewInfo ->
             //todo : get crew from viewModel with the crewInfo.crewId
             selectedTab = crewInfo.selectedTab
         }
