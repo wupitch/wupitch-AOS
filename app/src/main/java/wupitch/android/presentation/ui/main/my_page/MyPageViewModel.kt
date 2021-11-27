@@ -39,7 +39,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
-    private val getDistrictRepository: GetDistrictRepository,
     private val getSportRepository: GetSportRepository,
     private val profileRepository: ProfileRepository,
     @ApplicationContext val context: Context
@@ -61,15 +60,7 @@ class MyPageViewModel @Inject constructor(
     private var _userIntroduce = MutableLiveData<String>()
     val userIntroduce: LiveData<String> = _userIntroduce
 
-    //district
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList: State<DistrictState> = _districtList
 
-    private var _userDistrictId = MutableLiveData<Int>()
-    val userDistrictId: LiveData<Int> = _userDistrictId
-
-    private var _userDistrictName = MutableLiveData<String>()
-    val userDistrictName: LiveData<String> = _userDistrictName
 
     //sports
     private var _userSportList = mutableStateListOf<Int>()
@@ -172,42 +163,6 @@ class MyPageViewModel @Inject constructor(
             }
         }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
 
-    }
-
-    //todo
-    fun changeUserDistrict() = viewModelScope.launch {
-        getUserInfo()
-        _updateState.value = BaseState(isLoading = true)
-        val req = UpdateUserInfoReq(
-            areaId = _userDistrictId.value!! + 1//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
-        )
-        val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
-            response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
-                else _updateState.value = BaseState(error = it.message)
-            }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
-    }
-
-    fun getDistricts() = viewModelScope.launch {
-        _districtList.value = DistrictState(isLoading = true)
-
-        val response = getDistrictRepository.getDistricts()
-        if (response.isSuccessful) {
-            response.body()?.let { districtRes ->
-                if (districtRes.isSuccess) _districtList.value =
-                    DistrictState(data = districtRes.result.map { it.name }.toTypedArray())
-                else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
-            }
-        } else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
-
-    }
-
-    fun setUserDistrict(districtId: Int, districtName: String) {
-        _userDistrictId.value = districtId
-        _userDistrictName.value = districtName
-        Log.d("{SignupViewModel.getUserRegion}", "id : $districtId name : $districtName")
     }
 
     //todo sport without etc and edit this.

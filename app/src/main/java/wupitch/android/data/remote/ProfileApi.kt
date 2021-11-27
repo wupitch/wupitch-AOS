@@ -4,10 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.PwReq
-import wupitch.android.data.remote.dto.UpdateUserInfoReq
-import wupitch.android.data.remote.dto.UserInfoRes
+import wupitch.android.data.remote.dto.*
 
 interface ProfileApi {
 
@@ -41,5 +38,17 @@ interface ProfileApi {
     suspend fun checkPwMatch(
         @Body pw : PwReq
     ): Response<BaseRes>
+
+    @GET("app/accounts/auth/area")
+    suspend fun getUserDistrict() : Response<UserDistrictRes>
+
+    @GET("app/accounts/auth/age")
+    suspend fun getUserAgeGroup() : Response<UserAgeGroupRes>
+
+    @GET("app/accounts/auth/phoneNumber")
+    suspend fun getUserPhoneNumber() : Response<UserPhoneNumRes>
+
+    @GET("app/accounts/auth/sports")
+    suspend fun getUserSport() : Response<UserSportsRes>
 
 }

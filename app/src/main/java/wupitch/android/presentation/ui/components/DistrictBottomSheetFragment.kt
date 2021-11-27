@@ -36,7 +36,7 @@ import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
-import wupitch.android.presentation.ui.main.my_page.MyPageViewModel
+import wupitch.android.presentation.ui.main.my_page.MyPageDistrictViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -62,7 +62,7 @@ class DistrictBottomSheetFragment @Inject constructor(
 
                 val pickerValueState = remember { mutableStateOf(0) }
                 val districtState = remember { when (viewModel) {
-                    is MyPageViewModel -> {
+                    is MyPageDistrictViewModel -> {
                         viewModel.districtList
                     }
                     is ImpromptuViewModel -> {
@@ -183,7 +183,7 @@ class DistrictBottomSheetFragment @Inject constructor(
                                             districtState.value.data[pickerValueState.value]
                                         )
                                     }
-                                    is MyPageViewModel -> {
+                                    is MyPageDistrictViewModel -> {
                                         viewModel.setUserDistrict(
                                             pickerValueState.value,
                                             districtState.value.data[pickerValueState.value]
@@ -228,7 +228,7 @@ class DistrictBottomSheetFragment @Inject constructor(
             is ImpromptuViewModel -> {
                 viewModel.getDistricts()
             }
-            is MyPageViewModel -> {
+            is MyPageDistrictViewModel -> {
                 viewModel.getDistricts()
             }
             is HomeViewModel -> {
