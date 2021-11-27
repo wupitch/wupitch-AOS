@@ -69,7 +69,7 @@ class CreateImprtFeeFragment : Fragment() {
                         Toast.makeText(requireContext(), createImprtState.value.error, Toast.LENGTH_SHORT).show()
                     }
                     createImprtState.value.data?.let {
-                        val bundle = Bundle().apply { putInt("impromptu_id", it) }
+                        val bundle = Bundle().apply { putInt("impromptuId", it) }
                         findNavController().navigate(R.id.action_createImprtFeeFragment_to_impromptuDetailFragment, bundle)
 
                     }

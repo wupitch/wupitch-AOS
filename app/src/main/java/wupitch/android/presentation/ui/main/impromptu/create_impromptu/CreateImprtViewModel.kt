@@ -1,9 +1,11 @@
 package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -16,6 +18,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.domain.model.CreateImprtReq
@@ -250,7 +255,7 @@ class CreateImprtViewModel @Inject constructor(
         if (_imprtImage.value == EMPTY_IMAGE_URI) {
             _createImprtState.value = CreateImpromptuState(data = id)
         } else {
-            val path = getRealPathFromURIForGallery(context, _imprtImage.value!!)
+            val path = getRealPathFromURIForGallery(context,_imprtImage.value)
 
             if (path != null) {
                 resizeImage(file = File(path))
@@ -260,7 +265,7 @@ class CreateImprtViewModel @Inject constructor(
                 val response = imprtRepository.postImprtImage(file.body, file, id)
                 if (response.isSuccessful) {
                     response.body()?.let { res ->
-                        if (res.isSuccess) CreateImpromptuState(data = id)
+                        if (res.isSuccess) _createImprtState.value = CreateImpromptuState(data = id)
                         else _createImprtState.value = CreateImpromptuState(error = res.message)
                     }
                 } else _createImprtState.value = CreateImpromptuState(error = "번개 이미지 업로드를 실패했습니다.")

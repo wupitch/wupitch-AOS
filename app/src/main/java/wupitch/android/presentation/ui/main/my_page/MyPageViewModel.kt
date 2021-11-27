@@ -1,9 +1,11 @@
 package wupitch.android.presentation.ui.main.my_page
 
 import android.content.Context
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -18,6 +20,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
@@ -28,8 +33,6 @@ import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.domain.repository.ProfileRepository
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.SportState
-import wupitch.android.util.getImageBody
-import wupitch.android.util.getRealPathFromURIForGallery
 import java.io.File
 import javax.inject.Inject
 
@@ -370,7 +373,7 @@ class MyPageViewModel @Inject constructor(
     val userImageState : State<BaseState> = _userImageState
 
     fun setUserImage(uri : Uri) = viewModelScope.launch {
-        val path = getRealPathFromURIForGallery(context, uri)
+        val path = getRealPathFromURIForGallery(uri)
 
         if (path != null) {
             resizeImage(file = File(path))
@@ -405,6 +408,53 @@ class MyPageViewModel @Inject constructor(
             resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
             resized.recycle()
         }
+    }
+
+    private fun getImageBody(file: File): MultipartBody.Part {
+        return MultipartBody.Part.createFormData(
+            name = "images",
+            filename = file.name,
+            body = file.asRequestBody("image/*".toMediaType())
+        )
+    }
+
+    private fun getRealPathFromURIForGallery(uri: Uri): String? {
+
+        var fullPath: String? = null
+        val column = "_data"
+        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+        if (cursor != null) {
+            cursor.moveToFirst()
+            var documentId = cursor.getString(0)
+            if (documentId == null) {
+                for (i in 0 until cursor.columnCount) {
+                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
+                        fullPath = cursor.getString(i)
+                        break
+                    }
+                }
+            } else {
+                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
+                cursor.close()
+                val projection = arrayOf(column)
+                try {
+                    cursor = context.contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection,
+                        MediaStore.Images.Media._ID + " = ? ",
+                        arrayOf(documentId),
+                        null
+                    )
+                    if (cursor != null) {
+                        cursor.moveToFirst()
+                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
+                    }
+                } finally {
+                    if (cursor != null) cursor.close()
+                }
+            }
+        }
+        return fullPath
     }
 
 }

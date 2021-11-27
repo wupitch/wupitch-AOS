@@ -28,8 +28,6 @@ import wupitch.android.domain.model.SignupReq
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.SignupRepository
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
-import wupitch.android.util.getImageBody
-import wupitch.android.util.getRealPathFromURIForGallery
 import java.io.File
 import javax.inject.Inject
 
@@ -234,13 +232,13 @@ class SignupViewModel @Inject constructor(
     }
 
 
-//    private fun getImageBody(file: File): MultipartBody.Part {
-//        return MultipartBody.Part.createFormData(
-//            name = "images",
-//            filename = file.name,
-//            body = file.asRequestBody("image/*".toMediaType())
-//        )
-//    }
+    private fun getImageBody(file: File): MultipartBody.Part {
+        return MultipartBody.Part.createFormData(
+            name = "images",
+            filename = file.name,
+            body = file.asRequestBody("image/*".toMediaType())
+        )
+    }
 
 //    private fun getRealPathFromURIForGallery(uri: Uri): String? {
 //

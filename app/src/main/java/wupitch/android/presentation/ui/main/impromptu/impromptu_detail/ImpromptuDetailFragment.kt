@@ -47,7 +47,7 @@ class ImpromptuDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("impromptu_id")?.let { id ->
+        arguments?.getInt("impromptuId")?.let { id ->
             Log.d("{CrewDetailFragment.onCreate}", id.toString())
             viewModel.getImprtDetail(id)
         }

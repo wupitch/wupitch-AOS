@@ -29,10 +29,7 @@ import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImpromptuState
-import wupitch.android.util.TimeType
-import wupitch.android.util.isEndTimeFasterThanStart
-import wupitch.android.util.stringToDouble
-import wupitch.android.util.wonToNum
+import wupitch.android.util.*
 import java.io.File
 import javax.inject.Inject
 
@@ -324,7 +321,7 @@ class CreateCrewViewModel @Inject constructor(
             _createCrewState.value = CreateCrewState(data = crewId)
         } else {
 
-            val path = getRealPathFromURIForGallery(_crewImage.value)
+            val path = getRealPathFromURIForGallery(context, _crewImage.value)
 
             if (path != null) {
                 resizeImage(file = File(path))
@@ -362,51 +359,4 @@ class CreateCrewViewModel @Inject constructor(
         }
     }
 
-
-    private fun getImageBody(file: File): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(
-            name = "images",
-            filename = file.name,
-            body = file.asRequestBody("image/*".toMediaType())
-        )
-    }
-
-    private fun getRealPathFromURIForGallery(uri: Uri): String? {
-
-        var fullPath: String? = null
-        val column = "_data"
-        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
-        if (cursor != null) {
-            cursor.moveToFirst()
-            var documentId = cursor.getString(0)
-            if (documentId == null) {
-                for (i in 0 until cursor.columnCount) {
-                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-                        fullPath = cursor.getString(i)
-                        break
-                    }
-                }
-            } else {
-                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
-                cursor.close()
-                val projection = arrayOf(column)
-                try {
-                    cursor = context.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection,
-                        MediaStore.Images.Media._ID + " = ? ",
-                        arrayOf(documentId),
-                        null
-                    )
-                    if (cursor != null) {
-                        cursor.moveToFirst()
-                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
-                    }
-                } finally {
-                    if (cursor != null) cursor.close()
-                }
-            }
-        }
-        return fullPath
-    }
 }

@@ -309,7 +309,7 @@
         android:name="wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImpromptuDetailFragment"
         android:label="ImpromptuDetailFragment" >
         <argument
-            android:name="impromptu_id"
+            android:name="impromptuId"
             app:argType="integer"
             android:defaultValue="-1" />
         <action

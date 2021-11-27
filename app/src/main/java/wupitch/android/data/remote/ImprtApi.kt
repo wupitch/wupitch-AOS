@@ -19,7 +19,7 @@ interface ImprtApi {
     @Multipart
     @PATCH("app/impromptu/image")
     suspend fun postImprtImage(
-        @Query("impromptuId ") impromptuId : Int,
+        @Query("impromptuId") impromptuId : Int,
         @Part file : MultipartBody.Part,
         @Part("images") images: RequestBody
     ) : Response<BaseRes>
