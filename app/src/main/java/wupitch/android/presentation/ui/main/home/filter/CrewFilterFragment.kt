@@ -53,8 +53,6 @@ class CrewFilterFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-                    Log.d("{HomeFragment.onCreateView}", viewModel._test.value)
-                    viewModel._test.value ="filter"
                     val sportsList = listOf<FilterItem>(
                         FilterItem(
                             getString(R.string.soccer_football),
@@ -202,10 +200,6 @@ class CrewFilterFragment : Fragment() {
                                 itemList = crewSizeList
                             ) {
                                 viewModel.setCrewSize(it)
-                                Log.d(
-                                    "{FilterFragment.onCreateView}",
-                                    "크루원 수 : ${crewSizeState.value}"
-                                )
                             }
 
                             Spacer(modifier = Modifier.height(32.dp))

@@ -25,7 +25,6 @@ class HomeViewModel @Inject constructor(
     private val crewRepository: CrewRepository
 ) : ViewModel() {
 
-    var _test = mutableStateOf("default")
 
     private var _crewState = mutableStateOf(CrewState())
     val crewState : State<CrewState> = _crewState
@@ -116,7 +115,7 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun setUserRegion(districtId : Int, districtName : String) {
+    fun setUserDistrict(districtId : Int, districtName : String) {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
         getCrew()

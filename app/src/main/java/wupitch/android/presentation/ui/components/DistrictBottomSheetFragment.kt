@@ -1,7 +1,6 @@
 package wupitch.android.presentation.ui.components
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -33,11 +31,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.main.home.HomeViewModel
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
-import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImpromptuState
+import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
 import wupitch.android.presentation.ui.main.my_page.MyPageViewModel
 import javax.inject.Inject
@@ -66,6 +63,9 @@ class DistrictBottomSheetFragment @Inject constructor(
                 val pickerValueState = remember { mutableStateOf(0) }
                 val districtState = remember { when (viewModel) {
                     is MyPageViewModel -> {
+                        viewModel.districtList
+                    }
+                    is ImpromptuViewModel -> {
                         viewModel.districtList
                     }
                     is HomeViewModel -> {
@@ -170,16 +170,21 @@ class DistrictBottomSheetFragment @Inject constructor(
                                 .height(52.dp)
                                 .clip(RoundedCornerShape(8.dp)),
                             onClick = {
-                                // todo : viewModel 에 number picker value 보내기. & view model 값 state 로 받아서 crew list 변경.
                                 when (viewModel) {
-                                    is MyPageViewModel -> {
+                                    is HomeViewModel -> {
                                         viewModel.setUserDistrict(
                                             pickerValueState.value,
                                             districtState.value.data[pickerValueState.value]
                                         )
                                     }
-                                    is HomeViewModel -> {
-                                        viewModel.setUserRegion(
+                                    is ImpromptuViewModel -> {
+                                        viewModel.setUserDistrict(
+                                            pickerValueState.value,
+                                            districtState.value.data[pickerValueState.value]
+                                        )
+                                    }
+                                    is MyPageViewModel -> {
+                                        viewModel.setUserDistrict(
                                             pickerValueState.value,
                                             districtState.value.data[pickerValueState.value]
                                         )
@@ -220,6 +225,9 @@ class DistrictBottomSheetFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
 
         when (viewModel) {
+            is ImpromptuViewModel -> {
+                viewModel.getDistricts()
+            }
             is MyPageViewModel -> {
                 viewModel.getDistricts()
             }

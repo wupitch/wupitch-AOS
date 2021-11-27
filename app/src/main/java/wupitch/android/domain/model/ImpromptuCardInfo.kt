@@ -8,5 +8,6 @@ data class ImpromptuCardInfo(
     val time : String,
     val detailAddress : String,
     val gatheredPeople : Int,
-    val totalCount : Int
+    val totalCount : Int,
+    val imprtImage : String?
 )

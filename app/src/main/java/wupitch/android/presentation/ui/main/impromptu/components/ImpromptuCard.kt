@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.compose.rememberImagePainter
 import wupitch.android.R
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.presentation.theme.Roboto
@@ -62,7 +63,15 @@ fun ImpromptuCard(
                     .background(colorResource(id = R.color.main_orange))
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.img_bungae),
+                    painter = if(cardInfo.imprtImage != null){
+                        rememberImagePainter(
+                            cardInfo.imprtImage,
+                            builder = {
+                                placeholder(R.drawable.img_bungae)
+                                build()
+                            }
+                        )
+                    } else painterResource(id = R.drawable.img_bungae),
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxSize()
@@ -112,31 +121,14 @@ fun ImpromptuCard(
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
-                Row(Modifier.padding(vertical = 3.dp)) {
-                        Text(
-                            text = "21.00.00",
-                            color = colorResource(id = R.color.gray05),
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp,
-                        )
-
-                    Text(
-                        text = cardInfo.time,
-                        color = colorResource(id = R.color.gray05),
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                    )
-
-                    Text(
-                        text = "20:00",
-                        color = colorResource(id = R.color.gray05),
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 14.sp,
-                    )
-                }
+                Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
+                    text = cardInfo.time,
+                    color = colorResource(id = R.color.gray05),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp,
+                )
 
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(

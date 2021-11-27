@@ -6,10 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.CrewApi
 import wupitch.android.data.remote.ImprtApi
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.CreateCrewRes
-import wupitch.android.data.remote.dto.CreateImprtRes
-import wupitch.android.data.remote.dto.ImprtDetailRes
+import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.model.CreateCrewReq
 import wupitch.android.domain.model.CreateImprtReq
 import wupitch.android.domain.repository.CrewRepository
@@ -32,6 +29,21 @@ class ImprtRepositoryImpl @Inject constructor(
 
     override suspend fun getImprtDetail(id: Int): Response<ImprtDetailRes>
     = retrofit.create(ImprtApi::class.java).getImprtDetail(id)
+
+    override suspend fun getImpromptu(
+        areaId: Int?,
+        days: List<Int>?,
+        memberCountIdx: Int?,
+        page: Int,
+        scheduleIndex: Int?
+    ): Response<GetImprtRes>
+    = retrofit.create(ImprtApi::class.java).getImprts(
+        areaId = areaId,
+        days = days,
+        memberCountIdx = memberCountIdx,
+        page = page,
+        scheduleIndex = scheduleIndex
+    )
 
 
 }

@@ -40,13 +40,6 @@ import wupitch.android.presentation.ui.main.home.components.CrewList
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by activityViewModels()
-//    private val viewModel: HomeViewModel by viewModels(
-//        ownerProducer = { requireParentFragment() }
-//    )
-//    private val viewModel: HomeViewModel by viewModels(
-//        ownerProducer = { requireParentFragment()}
-//    )
-//    private val viewModel = (requireParentFragment().requireParentFragment() as MainFragment).homeViewModel
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -60,14 +53,8 @@ class HomeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-//                    viewModel = (parentFragment as MainFragment).homeViewModel
 
                     val districtNameState = remember { viewModel.userDistrictName }
-
-                        Toast.makeText(requireContext(), viewModel._test.value, Toast.LENGTH_SHORT).show()
-
-                    Log.d("{HomeFragment.onCreateView}", viewModel._test.value.toString())
-
 
                     val crewState = remember { viewModel.crewState }
                     if (crewState.value.error.isNotEmpty()) {

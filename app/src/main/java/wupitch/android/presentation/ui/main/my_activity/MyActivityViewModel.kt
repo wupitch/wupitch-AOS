@@ -13,8 +13,8 @@ import wupitch.android.domain.model.ImpromptuCardInfo
 class MyActivityViewModel : ViewModel(){
 
     //todo isPinned 무조건 false
-    private var _myImprtState : MutableState<MyImprtState> = mutableStateOf(MyImprtState())
-    val myImprtState : State<MyImprtState> = _myImprtState
+    private var _myImprtState : MutableState<ImprtState> = mutableStateOf(ImprtState())
+    val myImprtState : State<ImprtState> = _myImprtState
 
     private var _myCrewState : MutableState<MyCrewState> = mutableStateOf(MyCrewState())
     val myCrewState : State<MyCrewState> = _myCrewState
@@ -33,69 +33,10 @@ class MyActivityViewModel : ViewModel(){
     }
 
     fun getMyImpromptu() = viewModelScope.launch {
-        _myImprtState.value = MyImprtState(isLoading = true)
+        _myImprtState.value = ImprtState(isLoading = true)
         delay(500L)
-        _myImprtState.value = MyImprtState(data = listOf<ImpromptuCardInfo>(
-            ImpromptuCardInfo(
-                1,
-                11,
-                false,
-                "가나다라마바사아자차...",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                2,
-                3
-            ),
-            ImpromptuCardInfo(
-                10,
-                12,
-                false,
-                "번개합시다",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                1,
-                3
-            ),
-            ImpromptuCardInfo(
-                1,
-                13,
-                false,
-                "날씨좋다 모이자",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                2,
-                3
-            ),
-            ImpromptuCardInfo(
-                1,
-                14,
-                false,
-                "천둥번개!",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                2,
-                3
-            ),
-            ImpromptuCardInfo(
-                1,
-                15,
-                false,
-                "번개 제목",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                2,
-                3
-            ),
-            ImpromptuCardInfo(
-                1,
-                16,
-                false,
-                "마지막 번개",
-                "월요일 23:00 - 24:00",
-                "동백 2로 37",
-                2,
-                3
-            ),
+        _myImprtState.value = ImprtState(data = listOf<ImpromptuCardInfo>(
+
         ))
     }
 

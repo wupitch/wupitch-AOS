@@ -26,7 +26,6 @@ import wupitch.android.presentation.ui.main.home.HomeViewModel
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main)
 {
-    val homeViewModel : HomeViewModel by activityViewModels()
     private var tabId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,11 +41,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        Log.d("{HomeFragment.onCreateView}", homeViewModel._test.value.toString())
-//        homeViewModel._test.value = "main"
-//        Log.d("{HomeFragment.onViewCreated}", homeViewModel._test.value)
-
 
         setStatusBar(R.color.white)
 

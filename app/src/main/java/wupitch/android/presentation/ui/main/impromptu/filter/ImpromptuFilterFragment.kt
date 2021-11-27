@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
@@ -44,7 +45,7 @@ import wupitch.android.util.TimeType
 class ImpromptuFilterFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
-    private val viewModel: ImpromptuViewModel by viewModels()
+    private val viewModel: ImpromptuViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,9 +109,9 @@ class ImpromptuFilterFragment : Fragment() {
                             remember { mutableStateOf(false) })
                     )
 
-                    val scheduleState = remember { mutableStateOf(-1) }
-                    val dayState = remember { mutableStateListOf<Int>() }
-                    val recruitSizeState = remember { mutableStateOf(-1) }
+                    val scheduleState = remember {viewModel.imprtScheduleState }
+                    val dayState = remember { viewModel.imprtDayList }
+                    val recruitSizeState = remember { viewModel.imprtSizeState }
 
 
                     ConstraintLayout(
@@ -157,7 +158,7 @@ class ImpromptuFilterFragment : Fragment() {
                                 itemList = scheduleList,
                                 titleText = stringResource(id = R.string.schedule),
                             ) {
-                                scheduleState.value = it
+                                viewModel.setImprtSchedule(it)
                                Log.d("{ImpromptuFilterFragment.onCreateView}", "일정 : ${scheduleState.value}")
                             }
 
@@ -176,7 +177,7 @@ class ImpromptuFilterFragment : Fragment() {
                                 itemList = recruitSizeList,
                                 titleText = stringResource(id = R.string.num_of_recruitment),
                             ) {
-                                recruitSizeState.value = it
+                                viewModel.setImprtSize(it)
                                 Log.d("{ImpromptuFilterFragment.onCreateView}", "모집인원: ${recruitSizeState.value}")
                             }
                             Spacer(modifier = Modifier.height(60.dp))
@@ -198,7 +199,14 @@ class ImpromptuFilterFragment : Fragment() {
                                 bottom.linkTo(parent.bottom)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-                            }
+                            },
+                            onApplyClick = {
+                                viewModel.setImprtSize(recruitSizeState.value)
+                                viewModel.setImprtDayList(dayState)
+                                viewModel.setImprtSchedule(scheduleState.value)
+
+                                viewModel.applyFilter()},
+                            onResetClick = {viewModel.resetFilter()}
                         )
 
                     }
@@ -292,10 +300,11 @@ class ImpromptuFilterFragment : Fragment() {
         }
     }
 
-//todo : refactoring & 초기화 & 적용하기 구현.
     @Composable
     fun FilterBottomButtons(
-        modifier: Modifier
+        modifier: Modifier,
+        onApplyClick : () -> Unit,
+        onResetClick : () -> Unit
     ) {
         Row(
             modifier = modifier
@@ -313,9 +322,7 @@ class ImpromptuFilterFragment : Fragment() {
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
-                        onClick = {
-                            //todo 초기화.
-                        }
+                        onClick = onResetClick
                     ), contentAlignment = Alignment.Center
 //                    .constrainAs(init) {
 //                        start.linkTo(parent.start)
@@ -346,10 +353,9 @@ class ImpromptuFilterFragment : Fragment() {
                     .width(208.dp)
                     .height(44.dp),
                 btnColor = R.color.main_orange,
-                textString = R.string.apply, fontSize = 16.sp
-            ) {
-                //todo apply button function.
-            }
+                textString = R.string.apply, fontSize = 16.sp,
+                onClick = onApplyClick
+            )
         }
     }
 }

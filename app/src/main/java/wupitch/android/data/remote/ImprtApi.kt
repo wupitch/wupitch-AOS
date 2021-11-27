@@ -4,10 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.CreateImprtRes
-import wupitch.android.data.remote.dto.CrewDetailRes
-import wupitch.android.data.remote.dto.ImprtDetailRes
+import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.model.CreateImprtReq
 
 interface ImprtApi {
@@ -28,4 +25,13 @@ interface ImprtApi {
     suspend fun getImprtDetail(
         @Path("impromptuId") impromptuId : Int
     ) : Response<ImprtDetailRes>
+
+    @GET("app/impromptus")
+    suspend fun getImprts(
+        @Query("areaId") areaId : Int?,
+        @Query("days") days : List<Int>?,
+        @Query("memberCountIdx") memberCountIdx : Int?,
+        @Query("page") page : Int,
+        @Query("scheduleIndex") scheduleIndex : Int?,
+    ) : Response<GetImprtRes>
 }
