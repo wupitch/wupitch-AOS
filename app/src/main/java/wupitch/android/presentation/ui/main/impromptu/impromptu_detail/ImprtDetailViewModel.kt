@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
 import wupitch.android.data.remote.dto.ImprtDetailResultDto
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
@@ -71,6 +72,22 @@ class ImprtDetailViewModel @Inject constructor(
         delay(1200L)
         //todo
         _joinImpromptuState.value = JoinImpromptuState(isSuccess = true)
+    }
+
+    private var _pinState = mutableStateOf(BaseState())
+    val pinState : State<BaseState> = _pinState
+
+    fun changePinStatus() = viewModelScope.launch {
+        _imprtDetailState.value.data?.impromptuId?.let {
+            val response = imprtRepository.changePinStatus(it)
+            if(response.isSuccessful){
+                response.body()?.let { res ->
+                    if(res.isSuccess) _pinState.value = BaseState(isSuccess = true)
+                    else  _pinState.value = BaseState(error = res.message)
+                }
+            }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
+        }
+
     }
 
 }

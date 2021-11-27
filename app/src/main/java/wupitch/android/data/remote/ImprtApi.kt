@@ -34,4 +34,9 @@ interface ImprtApi {
         @Query("page") page : Int,
         @Query("scheduleIndex") scheduleIndex : Int?,
     ) : Response<GetImprtRes>
+
+    @PATCH("app/impromptus/{impromptuId}/pinUp-toggle")
+    suspend fun changePinStatus(
+        @Path("impromptuId") impromptuId : Int
+    ): Response<BaseRes>
 }

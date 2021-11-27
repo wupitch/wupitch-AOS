@@ -19,4 +19,6 @@ interface ImprtRepository {
         memberCountIdx: Int?,
         page: Int, scheduleIndex: Int?
     ): Response<GetImprtRes>
+    suspend fun changePinStatus( id : Int) : Response<BaseRes>
+
 }

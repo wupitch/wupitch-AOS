@@ -38,4 +38,9 @@ interface CrewApi {
         @Query("page") page : Int,
         @Query("sportId") sportId : List<Int>?,
     ) : Response<GetCrewRes>
+
+    @PATCH("app/clubs/{clubId}/pinUp-toggle")
+    suspend fun changePinStatus(
+        @Path("clubId") crewId : Int
+    ): Response<BaseRes>
 }

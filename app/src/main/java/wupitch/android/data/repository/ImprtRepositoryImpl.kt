@@ -45,5 +45,8 @@ class ImprtRepositoryImpl @Inject constructor(
         scheduleIndex = scheduleIndex
     )
 
+    override suspend fun changePinStatus(id: Int): Response<BaseRes>
+    = retrofit.create(ImprtApi::class.java).changePinStatus(id)
+
 
 }

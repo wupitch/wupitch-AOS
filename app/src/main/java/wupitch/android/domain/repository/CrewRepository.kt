@@ -26,4 +26,6 @@ interface CrewRepository {
         areaId: Int?, days: List<Int>?, memberCountValue: Int?,
         page: Int, sportId: List<Int>?
     ): Response<GetCrewRes>
+
+    suspend fun changePinStatus(id : Int) : Response<BaseRes>
 }

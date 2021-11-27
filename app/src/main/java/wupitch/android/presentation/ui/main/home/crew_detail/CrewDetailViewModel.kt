@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
 import wupitch.android.data.remote.dto.Schedule
 import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
@@ -97,6 +98,22 @@ class CrewDetailViewModel @Inject constructor(
             }
         }
         return stringBuilder.toString()
+    }
+
+    private var _pinState = mutableStateOf(BaseState())
+    val pinState : State<BaseState> = _pinState
+
+    fun changePinStatus() = viewModelScope.launch {
+        _crewDetailState.value.data?.clubId?.let {
+            val response = crewRepository.changePinStatus(it)
+            if(response.isSuccessful){
+                response.body()?.let { res ->
+                    if(res.isSuccess) _pinState.value = BaseState(isSuccess = true)
+                    else  _pinState.value = BaseState(error = res.message)
+                }
+            }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
+        }
+
     }
 
 

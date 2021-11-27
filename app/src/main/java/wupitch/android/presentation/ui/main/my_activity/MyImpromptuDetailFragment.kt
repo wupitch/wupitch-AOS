@@ -454,11 +454,11 @@ class MyImpromptuDetailFragment : Fragment() {
                     }
                     .size(76.dp))
 
-            PinToggleButton(modifier = Modifier
-                .constrainAs(pin) {
-                    top.linkTo(parent.top, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                } , toggleState = pinToggleState )
+//            PinToggleButton(modifier = Modifier
+//                .constrainAs(pin) {
+//                    top.linkTo(parent.top, margin = 16.dp)
+//                    end.linkTo(parent.end, margin = 16.dp)
+//                } , toggleState = pinToggleState )
 
 
         }

@@ -72,12 +72,19 @@ class CrewDetailFragment : Fragment() {
                         Toast.makeText(requireContext(), crewState.value.error, Toast.LENGTH_SHORT)
                             .show()
                     }
+
                     val scrollState = rememberScrollState(0)
                     val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
                     val joinDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val isPinnedState = remember { mutableStateOf(false) }
+                    val isPinnedState = remember { mutableStateOf(false) } //todo init value : crewState.value.isPinned
+
+
+                    if(viewModel.pinState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
 
                     if (joinVisitorDialogOpenState.value)
                         JoinSuccessDialog(
@@ -142,7 +149,10 @@ class CrewDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(isPinnedState, crewInfo)
+                                CrewImageCard(isPinnedState, crewInfo){
+                                    isPinnedState.value = it
+                                    viewModel.changePinStatus()
+                                }
                                 CrewInfo(crewInfo)
                                 GrayDivider()
 
@@ -553,7 +563,8 @@ class CrewDetailFragment : Fragment() {
     @Composable
     fun CrewImageCard(
         pinToggleState: MutableState<Boolean>,
-        crewState: CrewDetailResult
+        crewState: CrewDetailResult,
+        onValueChange : (Boolean) -> Unit
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -594,7 +605,8 @@ class CrewDetailFragment : Fragment() {
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                }, toggleState = pinToggleState
+                }, toggleState = pinToggleState,
+                onValueChange = onValueChange
             )
 
         }

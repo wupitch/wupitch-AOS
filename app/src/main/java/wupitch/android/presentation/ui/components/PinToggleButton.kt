@@ -16,7 +16,8 @@ import wupitch.android.R
 @Composable
 fun PinToggleButton(
     modifier: Modifier,
-    toggleState : MutableState<Boolean>
+    toggleState : MutableState<Boolean>,
+    onValueChange : (Boolean) -> Unit,
 ) {
     Image(painter = if(toggleState.value) painterResource(id = R.drawable.ic_pin)
         else painterResource(id = R.drawable.pin_inact),
@@ -27,9 +28,7 @@ fun PinToggleButton(
             indication = null,
             enabled = true,
             role = Role.Checkbox,
-            onValueChange = {
-                toggleState.value = it
-            }
+            onValueChange = onValueChange
         )
     )
 }

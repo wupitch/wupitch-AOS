@@ -73,7 +73,12 @@ class ImpromptuDetailFragment : Fragment() {
                     val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val pinToggleState = remember { mutableStateOf(false)}
+                    val pinToggleState = remember { mutableStateOf(false)}//todo init value : crewState.value.isPinned
+                    if(viewModel.pinState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
 
                     val joinState = viewModel.joinImpromptuState.value
 
@@ -150,7 +155,10 @@ class ImpromptuDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(pinToggleState, imprtInfo)
+                                CrewImageCard(pinToggleState, imprtInfo){
+                                    pinToggleState.value = it
+                                    viewModel.changePinStatus()
+                                }
 
                                 ImpromptuInfo(imprtInfo)
                                 GrayDivider()
@@ -452,7 +460,9 @@ class ImpromptuDetailFragment : Fragment() {
     @Composable
     fun CrewImageCard(
         pinToggleState : MutableState<Boolean>,
-        imprtInfo : ImprtDetailResult
+        imprtInfo : ImprtDetailResult,
+        onValueChange : (Boolean) -> Unit
+
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -490,7 +500,8 @@ class ImpromptuDetailFragment : Fragment() {
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                } , toggleState = pinToggleState )
+                } , toggleState = pinToggleState ,
+                onValueChange = onValueChange)
 
 
         }
