@@ -6,7 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.ProfileApi
 import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.ChangePwReq
+import wupitch.android.data.remote.dto.PwReq
 import wupitch.android.data.remote.dto.UpdateUserInfoReq
 import wupitch.android.data.remote.dto.UserInfoRes
 import wupitch.android.domain.repository.ProfileRepository
@@ -19,8 +19,11 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun getUserInfo(): Response<UserInfoRes>
     = retrofit.create(ProfileApi::class.java).getUserInfo()
 
-    override suspend fun changePw(newPw: ChangePwReq): Response<BaseRes>
+    override suspend fun changePw(newPw: PwReq): Response<BaseRes>
     = retrofit.create(ProfileApi::class.java).patchPw(newPw)
+
+    override suspend fun checkPwMatch(pw: PwReq): Response<BaseRes>
+    = retrofit.create(ProfileApi::class.java).checkPwMatch(pw)
 
     override suspend fun changeNotiStatus(): Response<BaseRes>
     = retrofit.create(ProfileApi::class.java).patchNotiStatus()

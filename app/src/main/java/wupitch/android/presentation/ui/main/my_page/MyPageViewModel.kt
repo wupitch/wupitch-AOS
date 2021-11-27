@@ -329,21 +329,16 @@ class MyPageViewModel @Inject constructor(
             return@launch
         }
 
-        //todo
-        delay(1000L)
-        _isCurrentPwValid.value = true
-
-//        val response = checkValidRepository.checkEmailValidation(EmailValidReq(email))
-//        if (response.isSuccessful) {
-//            response.body()?.let { validRes ->
-//                if (validRes.isSuccess) {
-//                    _isEmailValid.value = true
-//                    _userEmail.value = email
-//                } else {
-//                    _isEmailValid.value = false
-//                }
-//            }
-//        } else _isEmailValid.value = false
+        val response = profileRepository.checkPwMatch(PwReq(pw))
+        if (response.isSuccessful) {
+            response.body()?.let { baseRes ->
+                if (baseRes.isSuccess) {
+                    _isCurrentPwValid.value = baseRes.result
+                } else {
+                    _isCurrentPwValid.value = baseRes.result
+                }
+            }
+        } else _isCurrentPwValid.value = false
     }
 
     fun checkNewPwValid(pw : String) {
@@ -362,7 +357,7 @@ class MyPageViewModel @Inject constructor(
 
     fun changePw() = viewModelScope.launch {
         _changePwState.value = BaseState(isLoading = true)
-        val response = profileRepository.changePw(ChangePwReq(password = _userNewPw.value))
+        val response = profileRepository.changePw(PwReq(password = _userNewPw.value))
         if(response.isSuccessful){
             response.body()?.let { baseRes ->
                 if(baseRes.isSuccess)  _changePwState.value = BaseState(isSuccess = true)

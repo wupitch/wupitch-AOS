@@ -66,4 +66,10 @@ object RepositoryModule {
     fun provideProfileRepository(retrofit: Retrofit) : ProfileRepository {
         return ProfileRepositoryImpl(retrofit)
     }
+
+    @Provides
+    @Singleton
+    fun provideFcmRepository(retrofit: Retrofit) : FcmRepository {
+        return FcmRepositoryImpl(retrofit)
+    }
 }

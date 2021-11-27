@@ -5,7 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.ChangePwReq
+import wupitch.android.data.remote.dto.PwReq
 import wupitch.android.data.remote.dto.UpdateUserInfoReq
 import wupitch.android.data.remote.dto.UserInfoRes
 
@@ -23,7 +23,7 @@ interface ProfileApi {
 
     @PATCH("app/accounts/auth/password")
     suspend fun patchPw(
-        @Body newPw : ChangePwReq
+        @Body newPw : PwReq
     ) : Response<BaseRes>
 
     @PATCH("app/accounts/toggle-alarm-info")
@@ -36,5 +36,10 @@ interface ProfileApi {
     suspend fun updateUserInfo(
         @Body userInfoReq : UpdateUserInfoReq
     ) : Response<BaseRes>
+
+    @POST("app/accounts/auth/password/check")
+    suspend fun checkPwMatch(
+        @Body pw : PwReq
+    ): Response<BaseRes>
 
 }

@@ -24,18 +24,4 @@ abstract class BaseActivity<B : ViewBinding>(private val inflate: (LayoutInflate
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-//    fun setStatusBar(color : Int) {
-//        window.statusBarColor = ContextCompat.getColor(this, color)
-//
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = true
-//        }else {
-//            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-//        }
-//    }
-//
-//    fun setNavBarColor() {
-//        window.navigationBarColor = ContextCompat.getColor(this, R.color.bottom_nav_color)
-//    }
-
 }
