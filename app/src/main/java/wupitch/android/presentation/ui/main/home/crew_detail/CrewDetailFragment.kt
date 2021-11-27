@@ -92,7 +92,10 @@ class CrewDetailFragment : Fragment() {
                             subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
                         ) {
                             val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
-                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
+                            findNavController().navigate(
+                                R.id.action_crewDetailFragment_to_mainFragment,
+                                bundle
+                            )
 
                         }
                     ConstraintLayout(
@@ -258,25 +261,29 @@ class CrewDetailFragment : Fragment() {
                 .padding(horizontal = 25.dp)
         ) {
 
-            Text(
-                text = stringResource(id = R.string.supplies),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.main_black),
-                fontSize = 16.sp
-            )
-            //todo
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 36.dp),
-                text = "준비물이 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black),
-                lineHeight = 24.sp
-            )
+            if(crewState.materials != null) {
+                Text(
+                    text = stringResource(id = R.string.supplies),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.main_black),
+                    fontSize = 16.sp
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 36.dp),
+                    text = crewState.materials,
+                    fontSize = 16.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 24.sp
+                )
+            }
+
+
             VisitorDefLayout(Modifier)
             Text(
                 modifier = Modifier.padding(top = 36.dp),
@@ -286,12 +293,11 @@ class CrewDetailFragment : Fragment() {
                 color = colorResource(id = R.color.main_black),
                 fontSize = 16.sp
             )
-            //todo
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                text = "문의가 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
+                text = crewState.inquiries ?: "",
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -460,9 +466,11 @@ class CrewDetailFragment : Fragment() {
                     painter = painterResource(id = R.drawable.ic_date_fill),
                     contentDescription = "calendar icon"
                 )
-                Column(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp)
+                ) {
 
                     crewState.schedules.forEach { item ->
                         Text(
@@ -505,7 +513,7 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
-            if(crewState.dues.isNotEmpty()) {
+            if (crewState.dues.isNotEmpty()) {
 
                 Row(
                     modifier = Modifier
@@ -517,9 +525,11 @@ class CrewDetailFragment : Fragment() {
                         painter = painterResource(id = R.drawable.ic_monetization_on),
                         contentDescription = "won icon"
                     )
-                    Column( modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp)
+                    ) {
                         crewState.dues.forEach { item ->
                             Text(
                                 modifier = Modifier
@@ -584,7 +594,8 @@ class CrewDetailFragment : Fragment() {
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                }, toggleState = pinToggleState)
+                }, toggleState = pinToggleState
+            )
 
         }
     }

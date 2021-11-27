@@ -17,5 +17,7 @@ data class CrewDetailResultDto(
     val memberCount: Int,
     val schedules: List<Schedule>,
     val sportsId: Int,
-    val sportsName: String
+    val sportsName: String,
+    val materials : String?,
+    val inquiries : String
 )

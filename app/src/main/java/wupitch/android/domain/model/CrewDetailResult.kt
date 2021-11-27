@@ -16,5 +16,7 @@ data class CrewDetailResult(
     val introduction: String,
     val memberCount: String,
     val schedules: List<String>,
-    val sportsId: Int
+    val sportsId: Int,
+    val materials : String?,
+    val inquiries : String?
 )

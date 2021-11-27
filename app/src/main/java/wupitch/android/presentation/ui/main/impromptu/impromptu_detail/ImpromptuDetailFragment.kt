@@ -223,26 +223,29 @@ class ImpromptuDetailFragment : Fragment() {
                 .padding(horizontal = 25.dp)
         ) {
 
+            if(imprtInfo.materials != null){
+                Text(
+                    text = stringResource(id = R.string.supplies),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.main_black),
+                    fontSize = 16.sp
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    text = imprtInfo.materials,
+                    fontSize = 16.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 24.sp
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+
             Text(
-                text = stringResource(id = R.string.supplies),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.main_black),
-                fontSize = 16.sp
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                text = imprtInfo.materials?:"",
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black),
-                lineHeight = 24.sp
-            )
-            Text(
-                modifier = Modifier.padding(top = 32.dp),
                 text = stringResource(id = R.string.inquiry),
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,

@@ -46,6 +46,8 @@ class CrewDetailViewModel @Inject constructor(
                         memberCount = "${res.result.memberCount}명",
                         schedules = convertedSchedule(res.result.schedules),
                         sportsId = res.result.sportsId-1,
+                        materials = res.result.materials,
+                        inquiries = res.result.inquiries
                     )
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)
