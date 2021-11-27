@@ -25,4 +25,14 @@ class CrewRepositoryImpl @Inject constructor(
     override suspend fun getCrewDetail(crewId: Int): Response<CrewDetailRes>
     = retrofit.create(CrewApi::class.java).getCrewDetail(crewId)
 
+    override suspend fun getCrew(
+        ageList: List<Int>?,
+        areaId: Int?,
+        days: List<Int>?,
+        memberCountValue: Int?,
+        page: Int,
+        sportId: List<Int>?
+    ) = retrofit.create(CrewApi::class.java).getCrews(ageList = ageList,
+    areaId= areaId, days = days, memberCountValue = memberCountValue, page = page, sportId = sportId)
+
 }

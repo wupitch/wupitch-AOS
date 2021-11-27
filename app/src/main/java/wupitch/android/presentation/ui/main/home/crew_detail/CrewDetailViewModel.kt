@@ -37,7 +37,7 @@ class CrewDetailViewModel @Inject constructor(
                         clubId = res.result.clubId,
                         clubTitle = res.result.clubTitle,
                         crewImage = res.result.crewImage,
-                        crewName = res.result.crewName,
+                        crewName = res.result.crewName ?: "",
                         dues = convertedCrewFee(res.result.dues, res.result.guestDues),
                         guestDues = convertedGuestFee(res.result.guestDues),
                         extraList = res.result.extraList,
@@ -59,7 +59,8 @@ class CrewDetailViewModel @Inject constructor(
         }
         return schedule.toList()
     }
-    private fun convertedGuestFee(guestDues: Int? ):String {
+    private fun convertedGuestFee(guestDues: Int?):String{
+        if(guestDues == null) return "0원"
         val formatter: DecimalFormat =
             DecimalFormat("#,###")
         return "${formatter.format(guestDues)}원"

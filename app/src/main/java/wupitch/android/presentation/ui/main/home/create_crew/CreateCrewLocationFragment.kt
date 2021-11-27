@@ -207,7 +207,7 @@ class CreateCrewLocationFragment : Fragment() {
     }
 
     private fun showDistrictBottomSheet(districtList: Array<String>) {
-        districtBottomSheet = DistrictBottomSheetFragment(districtList, viewModel)
+        districtBottomSheet = DistrictBottomSheetFragment(viewModel)
         districtBottomSheet.show(childFragmentManager, "district_bottom_sheet")
     }
 

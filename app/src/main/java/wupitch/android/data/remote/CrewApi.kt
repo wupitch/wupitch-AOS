@@ -7,6 +7,7 @@ import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.CreateCrewRes
 import wupitch.android.data.remote.dto.CrewDetailRes
+import wupitch.android.data.remote.dto.GetCrewRes
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewApi {
@@ -27,4 +28,14 @@ interface CrewApi {
     suspend fun getCrewDetail(
         @Path("clubId") crewId : Int
     ) : Response<CrewDetailRes>
+
+    @GET("app/clubs")
+    suspend fun getCrews(
+        @Query("ageList") ageList : List<Int>?,
+        @Query("areaId") areaId : Int?,
+        @Query("days") days : List<Int>?,
+        @Query("memberCountValue") memberCountValue : Int?,
+        @Query("page") page : Int,
+        @Query("sportId") sportId : List<Int>?,
+    ) : Response<GetCrewRes>
 }

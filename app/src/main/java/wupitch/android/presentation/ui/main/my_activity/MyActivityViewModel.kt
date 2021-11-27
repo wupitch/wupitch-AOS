@@ -28,48 +28,7 @@ class MyActivityViewModel : ViewModel(){
         _myCrewState.value = MyCrewState(isLoading = true)
         delay(500L)
 //        _myCrewState.value = MyCrewState()
-        _myCrewState.value = MyCrewState(data = listOf<CrewCardInfo>(
-            CrewCardInfo(
-                0,
-                "축구",
-                false,
-                "가나다라마바사아자차...",
-                true,
-                "월요일 23:00 - 24:00",
-                true,
-                "동백 2로 37"
-            ),
-            CrewCardInfo(
-                1,
-                "농구",
-                false,
-                "농구하자고고씽",
-                false,
-                "화요일 23:00 - 24:00",
-                false,
-                "이매동 럭키타운 농구장"
-            ),
-            CrewCardInfo(
-                23,
-                "농구",
-                false,
-                "아무이름이지롱",
-                false,
-                "화요일 23:00 - 24:00",
-                false,
-                "이매동 럭키타운 농구장"
-            ),
-            CrewCardInfo(
-                44,
-                "농구",
-                false,
-                "농구하자히히",
-                false,
-                "화요일 23:00 - 24:00",
-                false,
-                "이매동 럭키타운 농구장"
-            )
-        ))
+        _myCrewState.value = MyCrewState(data = listOf<CrewCardInfo>())
 
     }
 

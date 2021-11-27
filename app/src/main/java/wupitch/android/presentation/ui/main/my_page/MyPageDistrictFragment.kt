@@ -162,7 +162,7 @@ class MyPageDistrictFragment : Fragment() {
 
 
     private fun showRegionBottomSheet(districtList: Array<String>) {
-        districtBottomSheet = DistrictBottomSheetFragment(districtList, viewModel)
+        districtBottomSheet = DistrictBottomSheetFragment( viewModel)
         districtBottomSheet.show(childFragmentManager, "region_bottom_sheet")
     }
 }

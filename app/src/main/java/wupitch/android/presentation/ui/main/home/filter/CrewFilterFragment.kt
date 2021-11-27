@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -28,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,13 +37,12 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.HomeViewModel
-import wupitch.android.util.TimeType
 
 @AndroidEntryPoint
 class CrewFilterFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +53,8 @@ class CrewFilterFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+                    Log.d("{HomeFragment.onCreateView}", viewModel._test.value)
+                    viewModel._test.value ="filter"
                     val sportsList = listOf<FilterItem>(
                         FilterItem(
                             getString(R.string.soccer_football),
@@ -131,14 +131,11 @@ class CrewFilterFragment : Fragment() {
                             remember { mutableStateOf(false) })
                     )
 
-                    val eventState = remember { mutableStateListOf<Int>() }
-                    val dayState = remember { mutableStateListOf<Int>() }
-                    val ageGroupState = remember { mutableStateListOf<Int>() }
+                    val eventState = remember { viewModel.crewEventList }
+                    val dayState = remember { viewModel.crewDayList }
+                    val ageGroupState = remember { viewModel.crewAgeGroupList }
 
-
-
-
-                    val crewNumSelectedState = remember { mutableStateOf(-1) }
+                    val crewSizeState = remember { viewModel.crewSizeState }
 
                     ConstraintLayout(
                         Modifier
@@ -204,10 +201,10 @@ class CrewFilterFragment : Fragment() {
                             NonRepetitionLayout(
                                 itemList = crewSizeList
                             ) {
-                                crewNumSelectedState.value = it
+                                viewModel.setCrewSize(it)
                                 Log.d(
                                     "{FilterFragment.onCreateView}",
-                                    "크루원 수 : ${crewNumSelectedState.value}"
+                                    "크루원 수 : ${crewSizeState.value}"
                                 )
                             }
 
@@ -239,7 +236,15 @@ class CrewFilterFragment : Fragment() {
                                 bottom.linkTo(parent.bottom)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-                            }
+                            },
+                            onApplyClick = {
+                                viewModel.setCrewSize(crewSizeState.value)
+                                viewModel.setCrewAgeGroupList(ageGroupState)
+                                viewModel.setCrewDayList(dayState)
+                                viewModel.setCrewEventList(eventState)
+
+                                viewModel.applyFilter()},
+                            onResetClick = {viewModel.resetFilter()}
                         )
                     }
                 }
@@ -335,7 +340,9 @@ class CrewFilterFragment : Fragment() {
 
     @Composable
     fun FilterBottomButtons(
-        modifier: Modifier
+        modifier: Modifier,
+        onApplyClick : () -> Unit,
+        onResetClick : () -> Unit
     ) {
         Row(
             modifier = modifier
@@ -353,9 +360,7 @@ class CrewFilterFragment : Fragment() {
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
-                        onClick = {
-                            //todo 초기화.
-                        }
+                        onClick = onResetClick
                     ), contentAlignment = Alignment.Center
 //                    .constrainAs(init) {
 //                        start.linkTo(parent.start)
@@ -386,10 +391,9 @@ class CrewFilterFragment : Fragment() {
                     .width(208.dp)
                     .height(44.dp),
                 btnColor = R.color.main_orange,
-                textString = R.string.apply, fontSize = 16.sp
-            ) {
-                //todo apply button function.
-            }
+                textString = R.string.apply, fontSize = 16.sp,
+                onClick = onApplyClick
+            )
         }
     }
 }

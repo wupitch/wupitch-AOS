@@ -1,6 +1,5 @@
 package wupitch.android.presentation.ui.main.my_activity.components
 
-import android.os.Bundle
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import androidx.navigation.findNavController
 import wupitch.android.R
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
@@ -100,7 +98,7 @@ fun MyCrewCard(
                     }
                     Spacer(modifier = Modifier.height(7.dp))
                     Text(
-                        text = crew.name,
+                        text = crew.title,
                         color = Color.Black,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Bold,
@@ -110,15 +108,6 @@ fun MyCrewCard(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(Modifier.padding(vertical = 3.dp)) {
-                        if (crew.isBiweekly) {
-                            Text(
-                                text = stringResource(id = R.string.biweekly),
-                                color = colorResource(id = R.color.gray05),
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal,
-                                fontSize = 14.sp,
-                            )
-                        }
                         Text(
                             text = crew.time,
                             color = colorResource(id = R.color.gray05),

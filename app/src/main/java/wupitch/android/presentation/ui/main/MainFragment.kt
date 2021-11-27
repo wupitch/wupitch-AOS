@@ -5,7 +5,10 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -18,10 +21,12 @@ import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentMainBinding
 import wupitch.android.fcm.FcmViewModel
+import wupitch.android.presentation.ui.main.home.HomeViewModel
 
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main)
 {
+    val homeViewModel : HomeViewModel by activityViewModels()
     private var tabId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +42,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.d("{HomeFragment.onCreateView}", homeViewModel._test.value.toString())
+//        homeViewModel._test.value = "main"
+//        Log.d("{HomeFragment.onViewCreated}", homeViewModel._test.value)
+
 
         setStatusBar(R.color.white)
 

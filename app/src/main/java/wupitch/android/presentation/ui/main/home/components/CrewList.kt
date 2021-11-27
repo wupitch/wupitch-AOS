@@ -15,27 +15,20 @@ import wupitch.android.domain.model.CrewCardInfo
 @Composable
 fun CrewList(
     modifier: Modifier,
-    loading : Boolean,
-    crewList : List<CrewCardInfo>,
-    navigationToCrewDetailScreen : (Int) -> Unit
-){
-    Box(modifier = modifier.background(Color.White)){
-        if(loading && crewList.isEmpty()) {
-            //todo : show progressbar
-        } else if(crewList.isEmpty()) {
-            //todo : show no crew.
-        } else {
-            LazyColumn {
-                itemsIndexed(
-                    items = crewList
-                ){ index, crew ->
-                    //todo : get next page.
-                    CrewCard(crewCard = crew) {
-                        navigationToCrewDetailScreen(crew.id)
-                    }
+    crewList: List<CrewCardInfo>,
+    navigationToCrewDetailScreen: (Int) -> Unit
+) {
+    Box(modifier = modifier.background(Color.White)) {
+
+        LazyColumn {
+            itemsIndexed(
+                items = crewList
+            ) { index, crew ->
+                //todo : get next page.
+                CrewCard(crewCard = crew) {
+                    navigationToCrewDetailScreen(crew.id)
                 }
             }
         }
-
     }
 }

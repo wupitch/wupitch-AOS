@@ -7,7 +7,9 @@ fun String.stringToDouble() : Double {
 }
 
 fun doubleToTime(time : Double) : String {
-    val hour = time.toInt()
-    val min = (time -hour)*100
+    var hour = time.toInt()
+    var min = ((time -hour)*100).toInt().toString()
+    if(hour==0) hour = 12
+    if(min == "0") min = "00"
     return "$hour:$min"
 }

@@ -460,22 +460,22 @@ class CrewDetailFragment : Fragment() {
                     painter = painterResource(id = R.drawable.ic_date_fill),
                     contentDescription = "calendar icon"
                 )
-                LazyColumn(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp))
-                {
-                    items(items = crewState.schedules, itemContent = { item ->
-                        Text(
-                            modifier = Modifier.padding(bottom = 6.dp),
-                            text = item,
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal,
-                            color = colorResource
-                                (id = R.color.main_black),
-                            fontSize = 14.sp
-                        )
-                    })
-                }
+//                LazyColumn(modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(start = 8.dp))
+//                {
+//                    items(items = crewState.schedules, itemContent = { item ->
+//                        Text(
+//                            modifier = Modifier.padding(bottom = 6.dp),
+//                            text = item,
+//                            fontFamily = Roboto,
+//                            fontWeight = FontWeight.Normal,
+//                            color = colorResource
+//                                (id = R.color.main_black),
+//                            fontSize = 14.sp
+//                        )
+//                    })
+//                }
             }
 
             Row(
@@ -518,27 +518,27 @@ class CrewDetailFragment : Fragment() {
                         contentDescription = "won icon"
                     )
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp)
-                    )
-                    {
-                        items(items = crewState.dues, itemContent = { item ->
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 8.dp),
-                                text = item,
-                                fontFamily = Roboto,
-                                fontWeight = FontWeight.Normal,
-                                color = colorResource
-                                    (id = R.color.main_black),
-                                fontSize = 14.sp,
-                                maxLines = 1
-                            )
-                        })
-                    }
+//                    LazyColumn(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(start = 8.dp)
+//                    )
+//                    {
+//                        items(items = crewState.dues, itemContent = { item ->
+//                            Text(
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(bottom = 8.dp),
+//                                text = item,
+//                                fontFamily = Roboto,
+//                                fontWeight = FontWeight.Normal,
+//                                color = colorResource
+//                                    (id = R.color.main_black),
+//                                fontSize = 14.sp,
+//                                maxLines = 1
+//                            )
+//                        })
+//                    }
                 }
             }
         }

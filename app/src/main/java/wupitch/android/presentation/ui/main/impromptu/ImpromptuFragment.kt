@@ -56,7 +56,7 @@ class ImpromptuFragment : Fragment() {
 
                     districtList.value?.data?.let { list ->
 
-                        districtBottomSheet = DistrictBottomSheetFragment(list, viewModel)
+                        districtBottomSheet = DistrictBottomSheetFragment( viewModel)
 
                         ConstraintLayout(
                             modifier = Modifier

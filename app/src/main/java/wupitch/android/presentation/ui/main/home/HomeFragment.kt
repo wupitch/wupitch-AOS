@@ -6,9 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -18,28 +18,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.CreateFab
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
+import wupitch.android.presentation.ui.main.MainFragment
 import wupitch.android.presentation.ui.main.home.components.CrewList
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
+//    private val viewModel: HomeViewModel by viewModels(
+//        ownerProducer = { requireParentFragment() }
+//    )
+//    private val viewModel: HomeViewModel by viewModels(
+//        ownerProducer = { requireParentFragment()}
+//    )
+//    private val viewModel = (requireParentFragment().requireParentFragment() as MainFragment).homeViewModel
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -53,63 +60,83 @@ class HomeFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val districtList = viewModel.district.observeAsState()
+//                    viewModel = (parentFragment as MainFragment).homeViewModel
 
-                    districtList.value?.data?.let { list ->
+                    val districtNameState = remember { viewModel.userDistrictName }
 
-                        districtBottomSheet = DistrictBottomSheetFragment(list, viewModel)
+                        Toast.makeText(requireContext(), viewModel._test.value, Toast.LENGTH_SHORT).show()
 
-                        val crewList = viewModel.crewList.value
-                        val loading = viewModel.loading.value
+                    Log.d("{HomeFragment.onCreateView}", viewModel._test.value.toString())
 
-                        ConstraintLayout(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.White)
-                        ) {
 
-                            val (appbar, homeList, fab) = createRefs()
+                    val crewState = remember { viewModel.crewState }
+                    if (crewState.value.error.isNotEmpty()) {
+                        Toast.makeText(requireContext(), crewState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
 
-                            HomeAppBar(
-                                modifier = Modifier.constrainAs(appbar) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
+                    ConstraintLayout(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
+                    ) {
+
+                        val (toolbar, homeList, fab, progressbar) = createRefs()
+
+                        HomeToolbar(
+                            modifier = Modifier.constrainAs(toolbar) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
 //                                    height = Dimension.fillToConstraints
-                                },
-                                districtOnClick = {
-                                    districtBottomSheet.show(
-                                        childFragmentManager,
-                                        "district bottom sheet"
-                                    )
-                                })
+                            },
+                            districtNameState = districtNameState,
+                            districtOnClick = {
+                                showDistrictBottomSheet()
+
+                            })
+
+                        if (crewState.value.data.isNotEmpty()) {
+
                             CrewList(
                                 modifier = Modifier.constrainAs(homeList) {
-                                    top.linkTo(appbar.bottom)
+                                    top.linkTo(toolbar.bottom)
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
                                     bottom.linkTo(parent.bottom)
                                     height = Dimension.fillToConstraints
                                 },
-                                loading = loading,
-                                crewList = crewList,
+                                crewList = crewState.value.data,
                                 navigationToCrewDetailScreen = {
-                                    val bundle = Bundle().apply { putInt("crew_id", it) }
+                                    val bundle = Bundle().apply { putInt("crewId", it) }
                                     activity?.findNavController(R.id.main_nav_container_view)
                                         ?.navigate(
-                                            R.id.action_mainFragment_to_crewDetailFragment, bundle
+                                            R.id.action_mainFragment_to_crewDetailFragment,
+                                            bundle
                                         )
                                 })
-                            CreateFab(
-                                modifier = Modifier
-                                    .constrainAs(fab) {
-                                        end.linkTo(parent.end, margin = 24.dp)
-                                        bottom.linkTo(parent.bottom, margin = 20.dp)
-                                    },
-                                onClick = {
-                                    activity?.findNavController(R.id.main_nav_container_view)
-                                        ?.navigate(R.id.action_mainFragment_to_createCrewSport)
-                                })
+                        }
+                        CreateFab(
+                            modifier = Modifier
+                                .constrainAs(fab) {
+                                    end.linkTo(parent.end, margin = 24.dp)
+                                    bottom.linkTo(parent.bottom, margin = 20.dp)
+                                },
+                            onClick = {
+                                activity?.findNavController(R.id.main_nav_container_view)
+                                    ?.navigate(R.id.action_mainFragment_to_createCrewSport)
+                            })
+
+                        if (crewState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
                         }
                     }
                 }
@@ -117,9 +144,15 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun showDistrictBottomSheet() {
+        districtBottomSheet = DistrictBottomSheetFragment(viewModel)
+        districtBottomSheet.show(childFragmentManager, "district bottom sheet")
+    }
+
     @Composable
-    fun HomeAppBar(
+    fun HomeToolbar(
         modifier: Modifier,
+        districtNameState: State<String>,
         districtOnClick: () -> Unit
     ) {
         ConstraintLayout(modifier = modifier) {
@@ -134,7 +167,7 @@ class HomeFragment : Fragment() {
                     val (icon_down, icon_search, icon_filter, icon_notification, text) = createRefs()
 
                     Text(
-                        text = stringResource(id = R.string.district),
+                        text = districtNameState.value,
                         modifier = Modifier.constrainAs(text) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
@@ -222,7 +255,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.getDistricts()
+        viewModel.getCrew()
     }
 }

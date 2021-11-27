@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import coil.compose.rememberImagePainter
 import wupitch.android.R
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
@@ -54,8 +55,17 @@ fun CrewCard(
 
         ) {
                 Image(
-                    painter = painterResource(id = Sport.BASKETBALL.thumbnailImage),
+                    painter = if(crewCard.crewImage != null){
+                        rememberImagePainter(
+                            crewCard.crewImage,
+                            builder = {
+                                placeholder(Sport.getNumOf(crewCard.sportId).thumbnailImage)
+                                build()
+                            }
+                        )
+                    } else painterResource(id = Sport.getNumOf(crewCard.sportId).thumbnailImage),
                     contentDescription = "",
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .width(128.dp)
                         .fillMaxHeight()
@@ -78,9 +88,9 @@ fun CrewCard(
                                 bottom.linkTo(parent.bottom)
                             }
                             .clip(RoundedCornerShape(12.dp))
-                            .background(colorResource(id = Sport.BASKETBALL.color))
+                            .background(colorResource(id = Sport.getNumOf(crewCard.sportId).color))
                             .padding(horizontal = 8.dp, vertical = 1.dp),
-                        sportName = Sport.BASKETBALL.sportName
+                        sportName = Sport.getNumOf(crewCard.sportId).sportName
                     )
                     if (crewCard.isPinned) {
                         Image(
@@ -97,7 +107,7 @@ fun CrewCard(
                 }
                 Spacer(modifier = Modifier.height(7.dp))
                 Text(
-                    text = crewCard.name,
+                    text = crewCard.title,
                     color = Color.Black,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
@@ -108,15 +118,6 @@ fun CrewCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(Modifier.padding(vertical = 3.dp)) {
-                    if (crewCard.isBiweekly) {
-                        Text(
-                            text = stringResource(id = R.string.biweekly),
-                            color = colorResource(id = R.color.gray05),
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 14.sp,
-                        )
-                    }
 
                     Text(
                         text = crewCard.time,
@@ -148,10 +149,6 @@ fun CrewCard(
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 22.sp
                 )
-//                Spacer(modifier = Modifier.height(17.dp))
-
-
-
             }
         }
 
