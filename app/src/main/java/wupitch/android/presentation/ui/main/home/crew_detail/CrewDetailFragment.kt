@@ -460,28 +460,29 @@ class CrewDetailFragment : Fragment() {
                     painter = painterResource(id = R.drawable.ic_date_fill),
                     contentDescription = "calendar icon"
                 )
-//                LazyColumn(modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(start = 8.dp))
-//                {
-//                    items(items = crewState.schedules, itemContent = { item ->
-//                        Text(
-//                            modifier = Modifier.padding(bottom = 6.dp),
-//                            text = item,
-//                            fontFamily = Roboto,
-//                            fontWeight = FontWeight.Normal,
-//                            color = colorResource
-//                                (id = R.color.main_black),
-//                            fontSize = 14.sp
-//                        )
-//                    })
-//                }
+                Column(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp)) {
+
+                    crewState.schedules.forEach { item ->
+                        Text(
+                            modifier = Modifier.padding(bottom = 6.dp),
+                            text = item,
+                            fontFamily = Roboto,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource
+                                (id = R.color.main_black),
+                            fontSize = 14.sp
+                        )
+                    }
+                }
+
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = 2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
@@ -509,36 +510,31 @@ class CrewDetailFragment : Fragment() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(top = 8.dp)
                 ) {
 
                     Image(
                         painter = painterResource(id = R.drawable.ic_monetization_on),
                         contentDescription = "won icon"
                     )
-
-//                    LazyColumn(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(start = 8.dp)
-//                    )
-//                    {
-//                        items(items = crewState.dues, itemContent = { item ->
-//                            Text(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(bottom = 8.dp),
-//                                text = item,
-//                                fontFamily = Roboto,
-//                                fontWeight = FontWeight.Normal,
-//                                color = colorResource
-//                                    (id = R.color.main_black),
-//                                fontSize = 14.sp,
-//                                maxLines = 1
-//                            )
-//                        })
-//                    }
+                    Column( modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp)) {
+                        crewState.dues.forEach { item ->
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 6.dp),
+                                text = item,
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal,
+                                color = colorResource
+                                    (id = R.color.main_black),
+                                fontSize = 14.sp,
+                                maxLines = 1
+                            )
+                        }
+                    }
                 }
             }
         }

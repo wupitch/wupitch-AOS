@@ -12,6 +12,7 @@ import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.util.doubleToTime
 import wupitch.android.util.formatToWon
+import java.lang.StringBuilder
 import java.text.DecimalFormat
 import javax.inject.Inject
 
@@ -85,13 +86,15 @@ class CrewDetailViewModel @Inject constructor(
 
     private fun convertedAge(ageTable: List<String>): String {
 
-        val ageString = ""
+        val stringBuilder = StringBuilder()
         ageTable.forEachIndexed { index, s ->
             if (index != ageTable.size - 1) {
-                ageString.plus("$s, ")
+                stringBuilder.append("$s, ")
+            }else {
+                stringBuilder.append(s)
             }
         }
-        return ageString
+        return stringBuilder.toString()
     }
 
 
