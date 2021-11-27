@@ -28,6 +28,7 @@ import wupitch.android.domain.model.Schedule
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
+import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImpromptuState
 import wupitch.android.util.TimeType
 import wupitch.android.util.isEndTimeFasterThanStart
 import wupitch.android.util.stringToDouble
@@ -289,6 +290,7 @@ class CreateCrewViewModel @Inject constructor(
         val crewReq = CreateCrewReq(
             ageList = _crewAgeGroupList.map { it + 1 },
             areaId = _crewDistrictId.value!! + 1,
+            crewName = _crewName.value,
             conference = if (_noCrewFee.value) null else _crewFee.value.wonToNum(),
             extraInfoList = _crewExtraInfoList.map { it + 1 },
             guestConference = if (_noCrewVisitorFee.value) null else _crewVisitorFee.value.wonToNum(),
@@ -318,20 +320,25 @@ class CreateCrewViewModel @Inject constructor(
 
     private fun postCrewImage(crewId: Int) = viewModelScope.launch {
 
-        val path = getRealPathFromURIForGallery(_crewImage.value)
+        if (_crewImage.value == Constants.EMPTY_IMAGE_URI) {
+            _createCrewState.value = CreateCrewState(data = crewId)
+        } else {
 
-        if (path != null) {
-            resizeImage(file = File(path))
+            val path = getRealPathFromURIForGallery(_crewImage.value)
 
-            val file = getImageBody(File(path))
+            if (path != null) {
+                resizeImage(file = File(path))
 
-            val response = crewRepository.postCrewImage( file.body, file, crewId)
-            if (response.isSuccessful) {
-                response.body()?.let { res ->
-                    if (res.isSuccess) _createCrewState.value = CreateCrewState(data = crewId)
-                    else _createCrewState.value = CreateCrewState(error = res.message)
-                }
-            } else _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
+                val file = getImageBody(File(path))
+
+                val response = crewRepository.postCrewImage(file.body, file, crewId)
+                if (response.isSuccessful) {
+                    response.body()?.let { res ->
+                        if (res.isSuccess) _createCrewState.value = CreateCrewState(data = crewId)
+                        else _createCrewState.value = CreateCrewState(error = res.message)
+                    }
+                } else _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
+            }
         }
     }
 

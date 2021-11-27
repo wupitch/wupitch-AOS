@@ -98,8 +98,6 @@ class ImpromptuViewModel @Inject constructor(
     private var _userDistrictName = MutableLiveData<String>()
     val userDistrictName : LiveData<String> = _userDistrictName
 
-    private var _joinImpromptuState = mutableStateOf(JoinImpromptuState())
-    val joinImpromptuState : State<JoinImpromptuState> = _joinImpromptuState
 
 
     //todo get list from server.
@@ -122,17 +120,6 @@ class ImpromptuViewModel @Inject constructor(
             }
         } else _district.value = Resource.Error<Array<String>>(null, "지역 가져오기를 실패했습니다.")
 
-    }
-
-    fun initJoinImpromptuState() {
-        _joinImpromptuState.value = JoinImpromptuState()
-    }
-
-    fun joinImpromptu() = viewModelScope.launch {
-        _joinImpromptuState.value = JoinImpromptuState(isLoading = true)
-        delay(1200L)
-        //todo
-        _joinImpromptuState.value = JoinImpromptuState(isSuccess = true)
     }
 
 }

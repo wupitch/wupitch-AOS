@@ -7,11 +7,12 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.CreateCrewRes
+import wupitch.android.data.remote.dto.CrewDetailRes
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewRepository {
 
     suspend fun createCrew(crewReq : CreateCrewReq) : Response<CreateCrewRes>
     suspend fun postCrewImage(images: RequestBody, file : MultipartBody.Part, crewId : Int) : Response<BaseRes>
-
+    suspend fun getCrewDetail(crewId : Int) : Response<CrewDetailRes>
 }

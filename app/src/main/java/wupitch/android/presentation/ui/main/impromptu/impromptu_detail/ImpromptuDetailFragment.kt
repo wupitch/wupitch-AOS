@@ -38,20 +38,18 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
-import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
 
 @AndroidEntryPoint
 class ImpromptuDetailFragment : Fragment() {
 
-    private val viewModel : ImpromptuViewModel by viewModels()
+    private val viewModel : ImprtDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("impromptu_id")?.let { id ->
-//            viewModel.onTriggerEvent(GetRecipeEvent(recipeId))
-            //todo : get crew from viewModel with the id.
             Log.d("{CrewDetailFragment.onCreate}", id.toString())
+            viewModel.getImprtDetail(id)
         }
     }
 
@@ -63,6 +61,11 @@ class ImpromptuDetailFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+                    val imprtState = remember { viewModel.imprtDetailState }
+                    if (imprtState.value.error.isNotEmpty()) {
+                        Toast.makeText(requireContext(), imprtState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
 
                     val scrollState = rememberScrollState(0)
                     val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
@@ -97,7 +100,8 @@ class ImpromptuDetailFragment : Fragment() {
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_impromptu),
                         ){
-                            //todo to profile edit screen?
+                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
+                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
                         }
 
                     ConstraintLayout(
@@ -130,67 +134,71 @@ class ImpromptuDetailFragment : Fragment() {
                             )
                         }
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .constrainAs(infoContent) {
-                                    top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(bottomDivider.top)
-                                    height = Dimension.fillToConstraints
-                                }
-                                .verticalScroll(scrollState)
+                        imprtState.value.data?.let { imprtInfo ->
 
-                        ) {
-                            CrewImageCard(pinToggleState)
 
-                            ImpromptuInfo()
-                            GrayDivider()
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .constrainAs(infoContent) {
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(bottomDivider.top)
+                                        height = Dimension.fillToConstraints
+                                    }
+                                    .verticalScroll(scrollState)
 
-                            ImpromptuIntroCard()
-                            GrayDivider()
+                            ) {
+                                CrewImageCard(pinToggleState)
 
-                            ImpromptuExtraInfo()
-                            GrayDivider()
+                                ImpromptuInfo()
+                                GrayDivider()
 
-                            ImpromptuGuidance()
-                        }
+                                ImpromptuIntroCard()
+                                GrayDivider()
 
-                        Divider(Modifier
-                            .constrainAs(bottomDivider) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(joinButton.top, margin = 11.dp)
-                                width = Dimension.fillToConstraints
+                                ImpromptuExtraInfo()
+                                GrayDivider()
+
+                                ImpromptuGuidance()
                             }
-                            .height(1.dp)
-                            .background(colorResource(id = R.color.gray01)))
 
-                        RoundBtn(
-                            modifier = Modifier
-                                .constrainAs(joinButton) {
-                                    start.linkTo(parent.start, margin = 20.dp)
-                                    end.linkTo(parent.end, margin = 20.dp)
-                                    bottom.linkTo(parent.bottom, margin = 12.dp)
-                                    width = Dimension.fillToConstraints
-                                }
-                                .height(44.dp),
-                            btnColor = R.color.main_orange,
-                            textString = R.string.join_impromptu,
-                            fontSize = 16.sp
-                        ){
-                            viewModel.joinImpromptu()
-                        }
-
-                        if(joinState.isLoading){
-                            CircularProgressIndicator(
-                                modifier = Modifier.constrainAs(progressbar) {
+                            Divider(Modifier
+                                .constrainAs(bottomDivider) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                    top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(bottomDivider.top)
-                                },
-                                color = colorResource(id = R.color.main_orange)
-                            )
+                                    bottom.linkTo(joinButton.top, margin = 11.dp)
+                                    width = Dimension.fillToConstraints
+                                }
+                                .height(1.dp)
+                                .background(colorResource(id = R.color.gray01)))
+
+                            RoundBtn(
+                                modifier = Modifier
+                                    .constrainAs(joinButton) {
+                                        start.linkTo(parent.start, margin = 20.dp)
+                                        end.linkTo(parent.end, margin = 20.dp)
+                                        bottom.linkTo(parent.bottom, margin = 12.dp)
+                                        width = Dimension.fillToConstraints
+                                    }
+                                    .height(44.dp),
+                                btnColor = R.color.main_orange,
+                                textString = R.string.join_impromptu,
+                                fontSize = 16.sp
+                            ) {
+                                viewModel.joinImpromptu()
+                            }
+
+                            if (joinState.isLoading || imprtState.value.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.constrainAs(progressbar) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(bottomDivider.top)
+                                    },
+                                    color = colorResource(id = R.color.main_orange)
+                                )
+                            }
                         }
                     }
                 }

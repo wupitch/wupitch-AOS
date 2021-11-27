@@ -43,18 +43,18 @@ import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSucc
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
+import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailViewModel
 
 @AndroidEntryPoint
 class MyImpromptuDetailFragment : Fragment() {
 
-    private val viewModel : ImpromptuViewModel by viewModels()
+    private val viewModel : ImprtDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("impromptu_id")?.let { id ->
-//            viewModel.onTriggerEvent(GetRecipeEvent(recipeId))
-            //todo : get crew from viewModel with the id.
             Log.d("{CrewDetailFragment.onCreate}", id.toString())
+            viewModel.getImprtDetail(id)
         }
     }
 

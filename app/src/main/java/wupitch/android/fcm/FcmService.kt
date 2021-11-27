@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.FcmReq
 import wupitch.android.domain.repository.FcmRepository
 import wupitch.android.presentation.ui.MainActivity
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class FcmService : FirebaseMessagingService() {
     private var registerTokenState = mutableStateOf(BaseState())
 
     private fun registerToken(token : String) = CoroutineScope(Dispatchers.IO).launch {
-        val response = fcmRepository.postToken("테스트 내용", token, "테스트 제목")
+        val response = fcmRepository.postToken(FcmReq("hallo test content", token, "hello title"))
         if(response.isSuccessful){
             response.body()?.let {
                 if(!it.isSuccess) registerTokenState.value = BaseState(error = it.message)

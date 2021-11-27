@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "960910636671",
-    "project_id": "wupitch",
-    "storage_bucket": "wupitch.appspot.com"
+    "project_number": "292664998882",
+    "project_id": "wupitch-server",
+    "storage_bucket": "wupitch-server.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:960910636671:android:e3c4f3a1271852ddbb714a",
+        "mobilesdk_app_id": "1:292664998882:android:22ac9b43e992f9ede3d7bb",
         "android_client_info": {
           "package_name": "wupitch.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "960910636671-fv09cjob2nuccs565gva1c8o4cnqjv0s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "wupitch.android",
-            "certificate_hash": "ba3ff3e9d8ad8fbf557ce1a2e61386c452219e64"
-          }
-        },
-        {
-          "client_id": "960910636671-ktivbo9gradtmlcmbjvrbdq83473cerk.apps.googleusercontent.com",
+          "client_id": "292664998882-ldjrl8lbd42vgmnf05qgq3lbgsscqo6k.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDzSWPqVShD3I7yueZpoZBxl9AQ0ey-Cz4"
+          "current_key": "AIzaSyAs04gf0RqbeXs__A-zALDPkAxDuyhtnUA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "960910636671-ktivbo9gradtmlcmbjvrbdq83473cerk.apps.googleusercontent.com",
+              "client_id": "292664998882-ldjrl8lbd42vgmnf05qgq3lbgsscqo6k.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -22,6 +22,14 @@ import wupitch.android.fcm.FcmViewModel
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main)
 {
+    private var tabId = -1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getInt("tabId")?.let { id ->
+            if(id != -1) tabId = id
+        }
+    }
 
     private lateinit var navController: NavController
     private val viewModel : FcmViewModel by viewModels()
@@ -37,6 +45,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
         navController = navHostFragment.navController
 
         binding.bottomNavView.setupWithNavController(navController)
+        if(tabId != -1){
+            binding.bottomNavView.selectedItemId = tabId
+        }
 
         initFcm()
 

@@ -8,12 +8,13 @@ import retrofit2.http.POST
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.CreateCrewRes
 import wupitch.android.data.remote.dto.CreateImprtRes
+import wupitch.android.data.remote.dto.ImprtDetailRes
 import wupitch.android.domain.model.CreateCrewReq
 import wupitch.android.domain.model.CreateImprtReq
 
 interface ImprtRepository {
 
     suspend fun createImprt(imprtReq : CreateImprtReq) : Response<CreateImprtRes>
-//    suspend fun postCrewImage(images: RequestBody, file : MultipartBody.Part, crewId : Int) : Response<BaseRes>
-
+    suspend fun postImprtImage(images: RequestBody, file : MultipartBody.Part, impromptuId : Int) : Response<BaseRes>
+    suspend fun getImprtDetail(id : Int) : Response<ImprtDetailRes>
 }

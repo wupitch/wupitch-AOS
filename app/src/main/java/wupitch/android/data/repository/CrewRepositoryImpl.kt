@@ -7,6 +7,7 @@ import retrofit2.Retrofit
 import wupitch.android.data.remote.CrewApi
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.CreateCrewRes
+import wupitch.android.data.remote.dto.CrewDetailRes
 import wupitch.android.domain.model.CreateCrewReq
 import wupitch.android.domain.repository.CrewRepository
 import javax.inject.Inject
@@ -20,5 +21,8 @@ class CrewRepositoryImpl @Inject constructor(
 
     override suspend fun postCrewImage(images: RequestBody, file : MultipartBody.Part, crewId: Int): Response<BaseRes> =
         retrofit.create(CrewApi::class.java).postCrewImage(crewId, file, images)
+
+    override suspend fun getCrewDetail(crewId: Int): Response<CrewDetailRes>
+    = retrofit.create(CrewApi::class.java).getCrewDetail(crewId)
 
 }

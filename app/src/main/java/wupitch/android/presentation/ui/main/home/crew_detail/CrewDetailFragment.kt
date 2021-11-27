@@ -5,15 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,9 +28,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.flowlayout.FlowRow
+import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.data.remote.dto.CrewDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
@@ -39,16 +42,17 @@ import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSucc
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.util.Sport
 
+@AndroidEntryPoint
 class CrewDetailFragment : Fragment() {
 
+    private val viewModel: CrewDetailViewModel by viewModels()
     private lateinit var visitorBottomSheet: VisitorBottomSheetFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("crew_id")?.let { id ->
-//            viewModel.onTriggerEvent(GetRecipeEvent(recipeId))
-            //todo : get crew from viewModel with the id.
+        arguments?.getInt("crewId")?.let { id ->
             Log.d("{CrewDetailFragment.onCreate}", id.toString())
+            viewModel.getCrewDetail(id)
         }
     }
 
@@ -60,12 +64,17 @@ class CrewDetailFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+                    val crewState = remember { viewModel.crewDetailState }
+                    if (crewState.value.error.isNotEmpty()) {
+                        Toast.makeText(requireContext(), crewState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
                     val scrollState = rememberScrollState(0)
                     val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
                     val joinDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val isPinnedState = remember{ mutableStateOf(false)}
+                    val isPinnedState = remember { mutableStateOf(false) }
 
                     if (joinVisitorDialogOpenState.value)
                         JoinSuccessDialog(
@@ -78,21 +87,22 @@ class CrewDetailFragment : Fragment() {
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
-                        ){
-                            //todo to profile edit screen?
-                        }
+                        ) {
+                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
+                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
 
+                        }
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White)
                     ) {
-                        val (appbar, divider, crewInfo, joinBtns) = createRefs()
+                        val (toolbar, divider, crewInfoCol, joinBtns, progressbar) = createRefs()
 
                         TitleToolbar(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .constrainAs(appbar) {
+                                .constrainAs(toolbar) {
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
@@ -105,58 +115,70 @@ class CrewDetailFragment : Fragment() {
                             Divider(
                                 Modifier
                                     .constrainAs(divider) {
-                                        top.linkTo(appbar.bottom)
-                                        bottom.linkTo(crewInfo.top)
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(crewInfoCol.top)
                                     }
                                     .fillMaxWidth()
                                     .height(1.dp)
                                     .background(colorResource(id = R.color.gray01))
                             )
                         }
+                        crewState.value.data?.let { crewInfo ->
 
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .constrainAs(crewInfoCol) {
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(joinBtns.top)
+                                        height = Dimension.fillToConstraints
+                                    }
+                                    .verticalScroll(scrollState)
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .constrainAs(crewInfo) {
-                                    top.linkTo(appbar.bottom)
-                                    bottom.linkTo(joinBtns.top)
-                                    height = Dimension.fillToConstraints
-                                }
-                                .verticalScroll(scrollState)
+                            ) {
+                                CrewImageCard(isPinnedState, crewInfo)
+                                CrewInfo(crewInfo)
+                                GrayDivider()
 
-                        ) {
-                            CrewImageCard(isPinnedState)
-                            CrewInfo()
-                            GrayDivider()
+                                CrewIntroCard(crewInfo)
+                                GrayDivider()
 
-                            CrewIntroCard()
-                            GrayDivider()
+                                CrewExtraInfo(crewInfo)
+                                GrayDivider()
 
-                            CrewExtraInfo()
-                            GrayDivider()
+                                CrewGuidance()
+                            }
 
-                            CrewGuidance()
+                            JoinCrewBtns(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(68.dp)
+                                    .background(Color.White)
+                                    .constrainAs(joinBtns) {
+                                        bottom.linkTo(parent.bottom)
+                                    },
+                                crewState = crewInfo,
+                                //todo: bottom dialog 구현 후 분기처리.
+                                joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
+                                joinDialogOpenState = joinDialogOpenState
+                            )
                         }
 
-                        JoinCrewBtns(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(68.dp)
-                                .background(Color.White)
-                                .constrainAs(joinBtns) {
+                        if (crewState.value.isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
                                     bottom.linkTo(parent.bottom)
                                 },
-
-                            //todo: bottom dialog 구현 후 분기처리.
-                            joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
-                            joinDialogOpenState = joinDialogOpenState
-                        )
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
                     }
                 }
             }
         }
-
     }
 
     fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
@@ -167,6 +189,7 @@ class CrewDetailFragment : Fragment() {
         modifier: Modifier,
         joinVisitorDialogOpenState: MutableState<Boolean>,
         joinDialogOpenState: MutableState<Boolean>,
+        crewState: CrewDetailResult
     ) {
 
         Column(
@@ -224,7 +247,9 @@ class CrewDetailFragment : Fragment() {
 
 
     @Composable
-    fun CrewExtraInfo() {
+    fun CrewExtraInfo(
+        crewState: CrewDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -275,7 +300,9 @@ class CrewDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewIntroCard() {
+    fun CrewIntroCard(
+        crewState: CrewDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -292,6 +319,7 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp
             )
 
+            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -317,6 +345,7 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
+            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -342,11 +371,11 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
-            CrewIntroKeyword()
+            CrewIntroKeyword(crewState)
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "크루 소개가 이 부분에 들어갑니다." + stringResource(id = R.string.long_text),
+                text = crewState.introduction,
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -357,19 +386,10 @@ class CrewDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewIntroKeyword() {
+    fun CrewIntroKeyword(
+        crewState: CrewDetailResult
+    ) {
 
-        //todo : 소개 키워드 받기. 
-        val keywordList = listOf<String>(
-            "크루 키워드",
-            "이 부분에",
-            "들어갑니다.",
-            "초보 중심",
-            "코치님과 훈련",
-            "레슨 운영",
-            "훈련 중심",
-            "경기 중심"
-        )
         FlowRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -377,8 +397,8 @@ class CrewDetailFragment : Fragment() {
             mainAxisSpacing = 12.dp,
             crossAxisSpacing = 14.dp
         ) {
-            if (keywordList.isNotEmpty()) {
-                keywordList.forEach {
+            if (crewState.extraList.isNotEmpty()) {
+                crewState.extraList.forEach {
 
                     Box(
                         modifier = Modifier
@@ -401,7 +421,9 @@ class CrewDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewInfo() {
+    fun CrewInfo(
+        crewState: CrewDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .background(Color.White)
@@ -414,14 +436,14 @@ class CrewDetailFragment : Fragment() {
             SportKeyword(
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
-                    .background(colorResource(id = Sport.getNumOf(0).color))
+                    .background(colorResource(id = Sport.getNumOf(crewState.sportsId-1).color))
                     .padding(horizontal = 13.dp, vertical = 4.dp),
-                sportName = Sport.getNumOf(0).sportName
+                sportName = Sport.getNumOf(crewState.sportsId-1).sportName
             )
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),
-                text = "크루 이름이 이곳에 들어갑니다.",
+                text = crewState.crewName,
                 fontSize = 18.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
@@ -429,6 +451,7 @@ class CrewDetailFragment : Fragment() {
                 maxLines = 1
             )
 
+            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -480,7 +503,7 @@ class CrewDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "구체적 위치가 여기에 들어갑니다.",
+                    text = crewState.areaName ?: "장소미정",
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -490,6 +513,7 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
+            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -506,7 +530,7 @@ class CrewDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "정기회비 15,000",
+                    text =  crewState.dues.toString(),
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -515,14 +539,13 @@ class CrewDetailFragment : Fragment() {
                     maxLines = 1
                 )
             }
-
-
         }
     }
 
     @Composable
     fun CrewImageCard(
-        pinToggleState : MutableState<Boolean>
+        pinToggleState: MutableState<Boolean>,
+        crewState: CrewDetailResult
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -532,7 +555,17 @@ class CrewDetailFragment : Fragment() {
 
             val (icon, pin) = createRefs()
 
-            Image(painter = painterResource(id = Sport.getNumOf(0).detailImage),
+            Image(painter = if (crewState.crewImage != null) {
+                rememberImagePainter(
+                    crewState.crewImage,
+                    builder = {
+                        placeholder(R.drawable.profile_basic)
+                        build()
+                    }
+                )
+            } else {
+                rememberImagePainter(Sport.getNumOf(crewState.sportsId-1).detailImage)
+            },
                 contentDescription = "crew sport icon",
                 modifier = Modifier
                     .constrainAs(icon) {
@@ -552,7 +585,7 @@ class CrewDetailFragment : Fragment() {
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                } , toggleState = pinToggleState )
+                }, toggleState = pinToggleState)
 
         }
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.FcmReq
 import wupitch.android.domain.repository.FcmRepository
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class FcmViewModel @Inject constructor(
     val registerTokenState : State<BaseState> = _registerTokenState
 
     fun registerToken(token : String) = viewModelScope.launch {
-        val response = fcmRepository.postToken("테스트 내용", token, "테스트 제목")
+        val response = fcmRepository.postToken(FcmReq("hallo test content", token, "hello title"))
         if(response.isSuccessful){
             response.body()?.let {
                 if(!it.isSuccess) _registerTokenState.value = BaseState(error = it.message)

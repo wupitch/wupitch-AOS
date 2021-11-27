@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.CreateCrewRes
+import wupitch.android.data.remote.dto.CrewDetailRes
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewApi {
@@ -21,4 +22,9 @@ interface CrewApi {
         @Part file : MultipartBody.Part,
         @Part("images") images: RequestBody
     ) : Response<BaseRes>
+
+    @GET("app/clubs/{clubId}")
+    suspend fun getCrewDetail(
+        @Path("clubId") crewId : Int
+    ) : Response<CrewDetailRes>
 }

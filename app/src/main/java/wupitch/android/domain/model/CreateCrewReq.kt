@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class CreateCrewReq(
     val ageList: List<Int>,
     val areaId: Int,
+    val crewName : String,
     val conference: Int?,
     val extraInfoList: List<Int>,
     val guestConference: Int?,

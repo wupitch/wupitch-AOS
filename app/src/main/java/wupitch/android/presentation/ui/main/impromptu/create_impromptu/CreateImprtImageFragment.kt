@@ -253,7 +253,7 @@ class CreateImprtImageFragment : Fragment() {
     fun IntroImageLayout(
         imageChosenState : State<Boolean>,
         isUsingDefaultImage : State<Boolean?>,
-        imageUri : State<Uri?>
+        imageUri : State<Uri>
     ) {
 
         Spacer(modifier = Modifier.height(24.dp))

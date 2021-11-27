@@ -48,15 +48,25 @@
         <action
             android:id="@+id/action_mainFragment_to_myPageSettingFragment"
             app:destination="@id/myPageSettingFragment" />
+        <argument
+            android:name="tabId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
         android:name="wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailFragment"
         android:label="CrewDetailFragment" >
         <argument
-            android:name="crew_id"
+            android:name="crewId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_crewDetailFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -302,6 +312,12 @@
             android:name="impromptu_id"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_impromptuDetailFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true"
+            />
     </fragment>
     <fragment
         android:id="@+id/impromptuFilterFragment"

@@ -1,5 +1,8 @@
 package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
@@ -11,20 +14,25 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
+import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.domain.model.CreateImprtReq
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.ImprtRepository
+import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
 import wupitch.android.presentation.ui.main.home.create_crew.ScheduleState
 import wupitch.android.util.*
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateImprtViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
-    private val imprtRepository: ImprtRepository
+    private val imprtRepository: ImprtRepository,
+    @ApplicationContext val context: Context
 ) : ViewModel() {
 
     private var _districtList = mutableStateOf(DistrictState())
@@ -44,32 +52,32 @@ class CreateImprtViewModel @Inject constructor(
 
 
     private var _imprtTitle = mutableStateOf("")
-    val imprtTitle : State<String> = _imprtTitle
+    val imprtTitle: State<String> = _imprtTitle
 
     private var _imprtIntro = mutableStateOf("")
-    val imprtIntro : State<String> = _imprtIntro
+    val imprtIntro: State<String> = _imprtIntro
 
     private var _imprtSupplies = mutableStateOf("")
-    val imprtSupplies : State<String> = _imprtSupplies
+    val imprtSupplies: State<String> = _imprtSupplies
 
     private var _imprtInquiry = mutableStateOf("")
-    val imprtInquiry : State<String> = _imprtInquiry
+    val imprtInquiry: State<String> = _imprtInquiry
 
 
     private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
     val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
 
     private var _imageChosenState = mutableStateOf(false)
-    val imageChosenState : State<Boolean> = _imageChosenState
+    val imageChosenState: State<Boolean> = _imageChosenState
 
-    private var _imprtImage = mutableStateOf<Uri?>(Constants.EMPTY_IMAGE_URI)
-    val imprtImage : State<Uri?> = _imprtImage
+    private var _imprtImage = mutableStateOf<Uri>(EMPTY_IMAGE_URI)
+    val imprtImage: State<Uri> = _imprtImage
 
     private var _dateState = mutableStateOf("0000.00.00 (요일)")
-    val dateState : State<String> = _dateState
+    val dateState: State<String> = _dateState
 
     private var _dateValidState = mutableStateOf<Boolean?>(true)
-    val dateValidState : State<Boolean?> = _dateValidState
+    val dateValidState: State<Boolean?> = _dateValidState
 
     private var _timeState = mutableStateOf<TimeState>(
         TimeState(
@@ -82,8 +90,7 @@ class CreateImprtViewModel @Inject constructor(
     val timeState: State<TimeState> = _timeState
 
     private var _createImprtState = mutableStateOf(CreateImpromptuState())
-    val createImprtState : State<CreateImpromptuState> = _createImprtState
-
+    val createImprtState: State<CreateImpromptuState> = _createImprtState
 
 
     fun getDistricts() = viewModelScope.launch {
@@ -117,17 +124,17 @@ class CreateImprtViewModel @Inject constructor(
         _imprtSize.value = size
     }
 
-    fun setDateState(longDate : Long?){
-        if(longDate != null){
+    fun setDateState(longDate: Long?) {
+        if (longDate != null) {
             val date = dateFormatter(longDate)
-            if( date != null){
+            if (date != null) {
                 _dateState.value = date
                 _dateValidState.value = true
-            }else {
+            } else {
                 _dateState.value = "0000.00.00 (요일)"
                 _dateValidState.value = false
             }
-        }else {
+        } else {
             _dateState.value = "0000.00.00 (요일)"
         }
 
@@ -138,7 +145,7 @@ class CreateImprtViewModel @Inject constructor(
     }
 
 
-    fun setImprtImage(image : Uri) {
+    fun setImprtImage(image: Uri) {
         _imprtImage.value = image
     }
 
@@ -186,28 +193,30 @@ class CreateImprtViewModel @Inject constructor(
         }
     }
 
-    fun setImprtTitle(title : String) {
+    fun setImprtTitle(title: String) {
         _imprtTitle.value = title
     }
 
-    fun setImprtIntro(intro : String) {
+    fun setImprtIntro(intro: String) {
         _imprtIntro.value = intro
     }
-    fun setImprtSupplies(supplies : String) {
+
+    fun setImprtSupplies(supplies: String) {
         _imprtSupplies.value = supplies
     }
-    fun setImprtInquiry(inquiry : String) {
+
+    fun setImprtInquiry(inquiry: String) {
         _imprtInquiry.value = inquiry
     }
 
     private var _imprtFee = mutableStateOf<String>("")
-    val imprtFee : State<String> = _imprtFee
+    val imprtFee: State<String> = _imprtFee
 
     private var _noImprtFee = mutableStateOf(false)
-    val noImprtFee : State<Boolean> = _noImprtFee
+    val noImprtFee: State<Boolean> = _noImprtFee
 
 
-    fun setImprtFee(money : String, toggleState : Boolean) {
+    fun setImprtFee(money: String, toggleState: Boolean) {
         _imprtFee.value = money
         _noImprtFee.value = toggleState
     }
@@ -216,12 +225,12 @@ class CreateImprtViewModel @Inject constructor(
         _createImprtState.value = CreateImpromptuState(isLoading = true)
 
         val req = CreateImprtReq(
-            areaId =  _imprtDistrictId.value!! +1,
-            dues = if(_noImprtFee.value) null else _imprtFee.value.wonToNum(),
+            areaId = _imprtDistrictId.value!! + 1,
+            dues = if (_noImprtFee.value) null else _imprtFee.value.wonToNum(),
             inquiries = _imprtInquiry.value,
-            materials = if(_imprtSupplies.value.isNotEmpty()) _imprtSupplies.value else null,
+            materials = if (_imprtSupplies.value.isNotEmpty()) _imprtSupplies.value else null,
             introduction = _imprtIntro.value,
-            location = if(_imprtLocation.value.isEmpty()) null else _imprtLocation.value,
+            location = if (_imprtLocation.value.isEmpty()) null else _imprtLocation.value,
             title = _imprtTitle.value,
             recruitmentCount = _imprtSize.value.toInt(),
             date = convertDateForServer(_dateState.value),
@@ -229,31 +238,57 @@ class CreateImprtViewModel @Inject constructor(
             endTime = _timeState.value.endTime.value.stringToDouble()
         )
         val response = imprtRepository.createImprt(req)
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { res ->
-                if(res.isSuccess) _createImprtState.value = CreateImpromptuState(data = res.result.impromptuId) //postCrewImage(res.result.clubId)
+                if (res.isSuccess) postImprtImage(res.result.impromptuId)
                 else _createImprtState.value = CreateImpromptuState(error = res.message)
             }
-        }else _createImprtState.value = CreateImpromptuState(error = "번개 생성을 실패했습니다.")
+        } else _createImprtState.value = CreateImpromptuState(error = "번개 생성을 실패했습니다.")
     }
 
-    private fun postImprtImage(id : Int) = viewModelScope.launch {
-//        Log.d("{CreateCrewViewModel.postCrewImage}", "${_isUsingDefaultImage.value}, ${_imprtImage.value}")
-//        if(_imprtImage.value == EMPTY_IMAGE_URI) {
-//            _createImprtState.value = CreateImpromptuState(data = crewId)
-//        }else{
-//            val response = crewRepository.postCrewImage(_imprtImage.value.toString(), crewId)
-//            if(response.isSuccessful){
-//                response.body()?.let { res ->
-//                    if(res.isSuccess)  _createImprtState.value = CreateImpromptuState(data = crewId)
-//                    else _createImprtState.value = CreateImpromptuState(error = res.message)
-//                }
-//            }else _createImprtState.value = CreateImpromptuState(error = "크루 이미지 업로드를 실패했습니다.")
-//        }
+    private fun postImprtImage(id: Int) = viewModelScope.launch {
+        if (_imprtImage.value == EMPTY_IMAGE_URI) {
+            _createImprtState.value = CreateImpromptuState(data = id)
+        } else {
+            val path = getRealPathFromURIForGallery(context, _imprtImage.value!!)
+
+            if (path != null) {
+                resizeImage(file = File(path))
+
+                val file = getImageBody(File(path))
+
+                val response = imprtRepository.postImprtImage(file.body, file, id)
+                if (response.isSuccessful) {
+                    response.body()?.let { res ->
+                        if (res.isSuccess) CreateImpromptuState(data = id)
+                        else _createImprtState.value = CreateImpromptuState(error = res.message)
+                    }
+                } else _createImprtState.value = CreateImpromptuState(error = "번개 이미지 업로드를 실패했습니다.")
+            }
+        }
     }
 
-    private fun convertDateForServer(date : String) : String {
+    private fun convertDateForServer(date: String): String {
         val datePart = date.split(" ")[0]
         return datePart.replace(".", "-")
+    }
+
+    private fun resizeImage(file: File, scaleTo: Int = 1024) {
+        val bmOptions = BitmapFactory.Options()
+        bmOptions.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+        val photoW = bmOptions.outWidth
+        val photoH = bmOptions.outHeight
+
+        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
+
+        bmOptions.inJustDecodeBounds = false
+        bmOptions.inSampleSize = scaleFactor
+
+        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
+        file.outputStream().use {
+            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+            resized.recycle()
+        }
     }
 }
