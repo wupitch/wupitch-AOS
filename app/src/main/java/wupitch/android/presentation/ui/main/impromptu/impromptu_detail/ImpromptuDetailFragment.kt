@@ -31,14 +31,17 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
+import wupitch.android.util.Sport
 
 @AndroidEntryPoint
 class ImpromptuDetailFragment : Fragment() {
@@ -48,7 +51,6 @@ class ImpromptuDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("impromptuId")?.let { id ->
-            Log.d("{CrewDetailFragment.onCreate}", id.toString())
             viewModel.getImprtDetail(id)
         }
     }
@@ -148,15 +150,15 @@ class ImpromptuDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(pinToggleState)
+                                CrewImageCard(pinToggleState, imprtInfo)
 
-                                ImpromptuInfo()
+                                ImpromptuInfo(imprtInfo)
                                 GrayDivider()
 
-                                ImpromptuIntroCard()
+                                ImpromptuIntroCard(imprtInfo)
                                 GrayDivider()
 
-                                ImpromptuExtraInfo()
+                                ImpromptuExtraInfo(imprtInfo)
                                 GrayDivider()
 
                                 ImpromptuGuidance()
@@ -210,7 +212,9 @@ class ImpromptuDetailFragment : Fragment() {
 
 
     @Composable
-    fun ImpromptuExtraInfo() {
+    fun ImpromptuExtraInfo(
+        imprtInfo : ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -230,7 +234,7 @@ class ImpromptuDetailFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                text = "준비물이 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
+                text = imprtInfo.materials?:"",
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -249,7 +253,7 @@ class ImpromptuDetailFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                text = "문의가 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
+                text = imprtInfo.inquiries,
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -260,7 +264,9 @@ class ImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun ImpromptuIntroCard() {
+    fun ImpromptuIntroCard(
+        imprtInfo : ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -280,7 +286,7 @@ class ImpromptuDetailFragment : Fragment() {
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "크루 소개가 이 부분에 들어갑니다." + stringResource(id = R.string.long_text),
+                text = imprtInfo.introduction,
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -291,7 +297,9 @@ class ImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun ImpromptuInfo() {
+    fun ImpromptuInfo(
+        imprtInfo : ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -303,13 +311,13 @@ class ImpromptuDetailFragment : Fragment() {
         ) {
             RemainingDays(
                 modifier = Modifier,
-                remainingDays = 1,
+                remainingDays = imprtInfo.dday,
                 isDetail = true
             )
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),
-                text = "번개 이름이 이곳에 들어갑니다.",
+                text = imprtInfo.title,
                 fontSize = 18.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
@@ -335,7 +343,7 @@ class ImpromptuDetailFragment : Fragment() {
                         .padding(start = 8.dp)
                 ) {
                     Text(
-                        text = "수요일 20:00 - 22:00",
+                        text = imprtInfo.date,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         color = colorResource
@@ -343,7 +351,8 @@ class ImpromptuDetailFragment : Fragment() {
                         fontSize = 14.sp
                     )
                     Text(
-                        text = "수요일 20:00 - 22:00",
+                        modifier = Modifier.padding(top = 6.dp),
+                        text = imprtInfo.time,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         color = colorResource
@@ -371,7 +380,7 @@ class ImpromptuDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "구체적 위치가 여기에 들어갑니다.",
+                    text = imprtInfo.location,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -381,31 +390,34 @@ class ImpromptuDetailFragment : Fragment() {
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = R.drawable.ic_monetization_on),
-                    contentDescription = "won icon"
-                )
-
-                Text(
+            if(imprtInfo.dues != null){
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp),
-                    text = "정기회비 15,000",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black),
-                    fontSize = 14.sp,
-                    maxLines = 1
-                )
+                        .padding(top = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.ic_monetization_on),
+                        contentDescription = "won icon"
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        text = imprtInfo.dues,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.main_black),
+                        fontSize = 14.sp,
+                        maxLines = 1
+                    )
+                }
             }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -423,7 +435,7 @@ class ImpromptuDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "2/3명 참여",
+                    text = imprtInfo.recruitStatus,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource(id = R.color.main_black),
@@ -436,7 +448,8 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun CrewImageCard(
-        pinToggleState : MutableState<Boolean>
+        pinToggleState : MutableState<Boolean>,
+        imprtInfo : ImprtDetailResult
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -445,7 +458,17 @@ class ImpromptuDetailFragment : Fragment() {
         ) {
             val (image, pin) = createRefs()
 
-            Image(painter = painterResource(id = R.drawable.img_bungae_thumb),
+            Image(painter = if (imprtInfo.impromptuImage != null) {
+                rememberImagePainter(
+                    imprtInfo.impromptuImage,
+                    builder = {
+                        placeholder( R.drawable.img_bungae_thumb)
+                        build()
+                    }
+                )
+            } else {
+                painterResource(id = R.drawable.img_bungae_thumb)
+            },
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -459,6 +482,7 @@ class ImpromptuDetailFragment : Fragment() {
                     }
                     .size(76.dp))
 
+            //todo
             PinToggleButton(modifier = Modifier
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)

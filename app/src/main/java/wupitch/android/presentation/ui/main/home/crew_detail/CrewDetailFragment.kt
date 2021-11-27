@@ -557,7 +557,7 @@ class CrewDetailFragment : Fragment() {
                 rememberImagePainter(
                     crewState.crewImage,
                     builder = {
-                        placeholder(R.drawable.profile_basic)
+                        placeholder(Sport.getNumOf(crewState.sportsId).detailImage)
                         build()
                     }
                 )

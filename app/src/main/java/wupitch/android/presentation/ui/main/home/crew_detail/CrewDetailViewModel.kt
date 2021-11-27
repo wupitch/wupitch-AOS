@@ -43,7 +43,7 @@ class CrewDetailViewModel @Inject constructor(
                         guestDues = convertedGuestFee(res.result.guestDues),
                         extraList = res.result.extraList,
                         introduction = res.result.introduction,
-                        memberCount = "${res.result.memberCount} 명",
+                        memberCount = "${res.result.memberCount}명",
                         schedules = convertedSchedule(res.result.schedules),
                         sportsId = res.result.sportsId-1,
                     )

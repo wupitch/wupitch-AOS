@@ -1,22 +1,19 @@
-package wupitch.android.data.remote.dto
+package wupitch.android.domain.model
 
 
 import com.google.gson.annotations.SerializedName
 
 data class ImprtDetailResult(
     val date: String,
-    val day: String,
+    val time: String,
     val dday: Int,
-    val dues: Int?,
-    val endTime: Double,
+    val dues: String?,
     val impromptuId: Int,
     val impromptuImage: String?,
     val inquiries: String,
     val introduction: String,
-    val location: String?,
+    val location: String,
     val materials: String?,
-    val nowMemberCount: Int,
-    val recruitmentCount: Int,
-    val startTime: Double,
+    val recruitStatus : String,
     val title: String
 )
