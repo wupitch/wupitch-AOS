@@ -86,14 +86,13 @@ class HomeViewModel @Inject constructor(
     fun getCrew() = viewModelScope.launch {
         _crewState.value = CrewState(isLoading = true)
 
-        //todo fix sportid
         val response = crewRepository.getCrew(
             ageList = if(_crewAgeGroupList.isEmpty())null else _crewAgeGroupList.map { it +1 },
             areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
             page = 1,
-            sportId = null
+            sportId = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
         )
         if(response.isSuccessful){
             response.body()?.let { res ->
