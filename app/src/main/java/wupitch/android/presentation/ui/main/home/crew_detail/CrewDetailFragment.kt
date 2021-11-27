@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -34,7 +36,8 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
-import wupitch.android.data.remote.dto.CrewDetailResult
+import wupitch.android.data.remote.dto.CrewDetailResultDto
+import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
@@ -221,9 +224,9 @@ class CrewDetailFragment : Fragment() {
                 ) {
                     // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
                     visitorBottomSheet = VisitorBottomSheetFragment(
-                        "1만원",
+                        crewState.guestDues,
                         listOf("21.00.00수", "21.00.00목", "21.00.00금")
-                    ) //"21.00.00수", "21.00.00목","21.00.00금"
+                    )
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
 
@@ -239,10 +242,7 @@ class CrewDetailFragment : Fragment() {
                     joinDialogOpenState.value = true
                 }
             }
-
-
         }
-
     }
 
 
@@ -265,6 +265,7 @@ class CrewDetailFragment : Fragment() {
                 color = colorResource(id = R.color.main_black),
                 fontSize = 16.sp
             )
+            //todo
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -285,6 +286,7 @@ class CrewDetailFragment : Fragment() {
                 color = colorResource(id = R.color.main_black),
                 fontSize = 16.sp
             )
+            //todo
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -319,7 +321,6 @@ class CrewDetailFragment : Fragment() {
                 fontSize = 16.sp
             )
 
-            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -335,7 +336,7 @@ class CrewDetailFragment : Fragment() {
                     maxLines = 1
                 )
                 Text(
-                    text = "여기에 인원수가 들어갑니다.",
+                    text = crewState.memberCount,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -345,7 +346,6 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
-            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -361,7 +361,7 @@ class CrewDetailFragment : Fragment() {
                     maxLines = 1
                 )
                 Text(
-                    text = "여기에 연령이 들어갑니다.",
+                    text = crewState.ageTable,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -436,9 +436,9 @@ class CrewDetailFragment : Fragment() {
             SportKeyword(
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
-                    .background(colorResource(id = Sport.getNumOf(crewState.sportsId-1).color))
+                    .background(colorResource(id = Sport.getNumOf(crewState.sportsId).color))
                     .padding(horizontal = 13.dp, vertical = 4.dp),
-                sportName = Sport.getNumOf(crewState.sportsId-1).sportName
+                sportName = Sport.getNumOf(crewState.sportsId).sportName
             )
 
             Text(
@@ -451,7 +451,6 @@ class CrewDetailFragment : Fragment() {
                 maxLines = 1
             )
 
-            //todo
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -461,31 +460,23 @@ class CrewDetailFragment : Fragment() {
                     painter = painterResource(id = R.drawable.ic_date_fill),
                     contentDescription = "calendar icon"
                 )
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = "수요일 20:00 - 22:00",
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        color = colorResource
-                            (id = R.color.main_black),
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "수요일 20:00 - 22:00",
-                        fontFamily = Roboto,
-                        fontWeight = FontWeight.Normal,
-                        color = colorResource
-                            (id = R.color.main_black),
-                        fontSize = 14.sp
-                    )
+                LazyColumn(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 8.dp))
+                {
+                    items(items = crewState.schedules, itemContent = { item ->
+                        Text(
+                            modifier = Modifier.padding(bottom = 6.dp),
+                            text = item,
+                            fontFamily = Roboto,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource
+                                (id = R.color.main_black),
+                            fontSize = 14.sp
+                        )
+                    })
                 }
             }
-
 
             Row(
                 modifier = Modifier
@@ -503,7 +494,7 @@ class CrewDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = crewState.areaName ?: "장소미정",
+                    text = crewState.areaName,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -513,31 +504,42 @@ class CrewDetailFragment : Fragment() {
                 )
             }
 
-            //todo
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if(crewState.dues.isNotEmpty()) {
 
-                Image(
-                    painter = painterResource(id = R.drawable.ic_monetization_on),
-                    contentDescription = "won icon"
-                )
-
-                Text(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp),
-                    text =  crewState.dues.toString(),
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource
-                        (id = R.color.main_black),
-                    fontSize = 14.sp,
-                    maxLines = 1
-                )
+                        .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_monetization_on),
+                        contentDescription = "won icon"
+                    )
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp)
+                    )
+                    {
+                        items(items = crewState.dues, itemContent = { item ->
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp),
+                                text = item,
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal,
+                                color = colorResource
+                                    (id = R.color.main_black),
+                                fontSize = 14.sp,
+                                maxLines = 1
+                            )
+                        })
+                    }
+                }
             }
         }
     }
@@ -564,7 +566,7 @@ class CrewDetailFragment : Fragment() {
                     }
                 )
             } else {
-                rememberImagePainter(Sport.getNumOf(crewState.sportsId-1).detailImage)
+                rememberImagePainter(Sport.getNumOf(crewState.sportsId).detailImage)
             },
                 contentDescription = "crew sport icon",
                 modifier = Modifier
@@ -581,6 +583,7 @@ class CrewDetailFragment : Fragment() {
             )
 
 
+            //todo
             PinToggleButton(modifier = Modifier
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)

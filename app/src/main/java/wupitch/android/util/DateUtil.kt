@@ -42,3 +42,11 @@ fun checkIfDateValid(milliseconds: Long) : Boolean {
 
     return milliseconds < maxDate && chosenCalendar.timeInMillis >= currentCalendar.timeInMillis
 }
+
+fun dateDashToCol(date : String) : String {
+    val splitted = date.split("-")
+    val year = splitted[0].toInt() - 2000
+    val month = splitted[1]
+    val day= splitted[2]
+    return "$year.$month.$day"
+}

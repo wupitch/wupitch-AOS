@@ -35,8 +35,8 @@ import wupitch.android.presentation.ui.components.RoundBtn
 
 
 class VisitorBottomSheetFragment(
-    val visitorCost: String,
-    val visitDateList: List<String>
+    private val visitorCost: String,
+    private val visitDateList: List<String>
 ) : BottomSheetDialogFragment() {
 
     private lateinit var selectedDate: String
