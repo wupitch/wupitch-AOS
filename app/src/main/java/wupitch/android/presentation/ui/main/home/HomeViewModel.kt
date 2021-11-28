@@ -92,7 +92,7 @@ class HomeViewModel @Inject constructor(
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
             page = 1,
-            sportId = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
+            sportsList = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
         )
         if(response.isSuccessful){
             response.body()?.let { res ->

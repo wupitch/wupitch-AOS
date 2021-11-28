@@ -112,6 +112,7 @@
     <string name="district">지역구</string>
     <string name="biweekly">(격)&#160;</string>
     <string name="moreThanOnceAWeek">&#160;+</string>
+    <string name="no_crew">%s에 크루가 없어요.</string>
 
 <!--    crew detail-->
     <string name="crew">크루</string>
@@ -238,7 +239,10 @@
     <string name="use_default_image">기본 이미지 사용</string>
     <string name="time_warning">종료시간이 시작시간보다 늦어야 해요!</string>
 
-<!--    impromptu detail-->
+<!--    impromptu -->
+    <string name="no_impromptu">%s에 번개가 없어요.</string>
+
+    <!--    impromptu detail-->
     <string name="join_success_impromptu">참여 신청이 완료됐습니다!\n문의를 통해 번개 리더와 연락할 수 있어요.</string>
     <string name="info_transferred_to_impromptu_leader">(번개리더에게 프로필이 전달됩니다.)</string>
     <string name="not_enough_info_impromptu">모든 프로필 정보가 기입되어야\n번개에 신청할 수 있습니다.</string>

@@ -36,7 +36,7 @@ interface CrewApi {
         @Query("days") days : List<Int>?,
         @Query("memberCountValue") memberCountValue : Int?,
         @Query("page") page : Int,
-        @Query("sportId") sportId : List<Int>?,
+        @Query("sportsList") sportsList : List<Int>?,
     ) : Response<GetCrewRes>
 
     @PATCH("app/clubs/{clubId}/pinUp-toggle")

@@ -31,9 +31,9 @@ class CrewRepositoryImpl @Inject constructor(
         days: List<Int>?,
         memberCountValue: Int?,
         page: Int,
-        sportId: List<Int>?
+        sportsList: List<Int>?
     ) = retrofit.create(CrewApi::class.java).getCrews(ageList = ageList,
-    areaId= areaId, days = days, memberCountValue = memberCountValue, page = page, sportId = sportId)
+    areaId= areaId, days = days, memberCountValue = memberCountValue, page = page, sportsList = sportsList)
 
     override suspend fun changePinStatus(id : Int): Response<BaseRes>
     =retrofit.create(CrewApi::class.java).changePinStatus(id)

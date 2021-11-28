@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
@@ -65,7 +66,7 @@ class ImpromptuFragment : Fragment() {
                             .background(Color.White)
                     ) {
 
-                        val (toolbar, homeList, fab, progressbar) = createRefs()
+                        val (toolbar, homeList, fab, progressbar, noResult) = createRefs()
 
                         ImpromptuToolbar(
                             modifier = Modifier.constrainAs(toolbar) {
@@ -97,6 +98,46 @@ class ImpromptuFragment : Fragment() {
                                             bundle
                                         )
                                 })
+                        }else {
+                             if(!imprtState.value.isLoading) {
+
+                                ConstraintLayout(Modifier.constrainAs(noResult) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(toolbar.bottom)
+                                    bottom.linkTo(parent.bottom, margin = 36.dp)
+                                }) {
+
+                                    val (image, text) = createRefs()
+                                    val guildLine = createGuidelineFromTop(0.75f)
+
+
+                                    Image(
+                                        modifier = Modifier
+                                            .constrainAs(image){
+                                                start.linkTo(parent.start)
+                                                end.linkTo(parent.end)
+                                                bottom.linkTo(text.top, margin = 24.dp)
+                                            }
+                                            .width(130.dp)
+                                            .height(210.dp),
+                                        painter = painterResource(id = R.drawable.img_chrt_02),
+                                        contentDescription = null
+                                    )
+                                    Text(
+                                        modifier = Modifier.constrainAs(text){
+                                            start.linkTo(parent.start)
+                                            end.linkTo(parent.end)
+                                            bottom.linkTo(guildLine)
+                                        },
+                                        text = stringResource(R.string.no_impromptu, districtNameState.value),
+                                        color = colorResource(id = R.color.gray02),
+                                        fontFamily = Roboto,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Normal
+                                    )
+                                }
+                            }
                         }
                         CreateFab(
                             modifier = Modifier
