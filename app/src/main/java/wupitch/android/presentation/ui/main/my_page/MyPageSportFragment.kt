@@ -163,12 +163,12 @@ class MyPageSportFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (userSportListState.isNotEmpty()) R.color.main_orange
+                            btnColor = if (userSportListState.toList() != viewModel.initList) R.color.main_orange
                             else R.color.gray03,
                             textString = R.string.done,
                             fontSize = 16.sp
                         ) {
-                            if (userSportListState.isNotEmpty()) {
+                            if (userSportListState.toList() != viewModel.initList) {
                                 viewModel.setUserSportList(userSportListState)
                                 viewModel.changeUserSport()
                             }

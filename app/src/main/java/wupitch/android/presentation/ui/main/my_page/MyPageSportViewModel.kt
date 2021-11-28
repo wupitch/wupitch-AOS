@@ -22,20 +22,33 @@ class MyPageSportViewModel @Inject constructor(
     private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
-    //sports
+    private var _updateState = mutableStateOf(BaseState())
+    val updateState: State<BaseState> = _updateState
+
     private var _userSportList = mutableStateListOf<Int>()
     val userSportList: SnapshotStateList<Int> = _userSportList
+
 
     private var _sportsList = mutableStateOf(SportState())
     val sportsList: State<SportState> = _sportsList
 
-    private var _userSportId = mutableStateOf(-1)
-    val userSportId: State<Int> = _userSportId
+    var initList = listOf<Int>()
 
-    fun getUserSport() = viewModelScope.launch {
+
+    private fun getUserSport() = viewModelScope.launch {
         val response = profileRepository.getUserSports()
 
-
+        if (response.isSuccessful) {
+            response.body()?.let { res ->
+                if (res.isSuccess) {
+                    res.result.list?.forEach { _userSportList.add(it.sportsId - 1) }
+                    initList = _userSportList.toList()
+                    res.result.list?.forEachIndexed { index, item ->
+                        _sportsList.value.data[item.sportsId - 1].state.value = true
+                    }
+                } else _updateState.value = BaseState(error = res.message)
+            }
+        } else _updateState.value = BaseState(error = "관심 스포츠 조회에 실패했습니다.")
     }
 
 
@@ -50,11 +63,13 @@ class MyPageSportViewModel @Inject constructor(
                     _sportsList.value =
                         SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }
                             .map { it.toFilterItem() })
-                    _sportsList.value.data.forEachIndexed { index, filterItem ->
-                        if (_userSportId.value == index) {
-                            filterItem.state.value = true
-                        }
-                    }
+                    getUserSport()
+
+//                    _sportsList.value.data.forEachIndexed { index, filterItem ->
+//                        if (_userSportId.value == index) {
+//                            filterItem.state.value = true
+//                        }
+//                    }
                 } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
             }
         } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
@@ -64,21 +79,19 @@ class MyPageSportViewModel @Inject constructor(
     fun setUserSportList(list: SnapshotStateList<Int>) {
         _userSportList = list
     }
-    private var _updateState = mutableStateOf(BaseState())
-    val updateState : State<BaseState> = _updateState
 
-    //todo
+
     fun changeUserSport() = viewModelScope.launch {
         _updateState.value = BaseState(isLoading = true)
         val req = UpdateUserInfoReq(
-            sportsList = _userSportList.map { it +1 }//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
+            sportsList = _userSportList.map { it + 1 }
         )
         val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
+                if (it.isSuccess) _updateState.value = BaseState(isSuccess = true)
                 else _updateState.value = BaseState(error = it.message)
             }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
+        } else _updateState.value = BaseState(error = "정보 변경에 실패했습니다.")
     }
 }

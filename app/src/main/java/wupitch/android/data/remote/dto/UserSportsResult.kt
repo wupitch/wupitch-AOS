@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class UserSportsResult(
     val accountId: Int,
-    val list: List<UserSport>
+    val list: List<UserSport>?
 )
