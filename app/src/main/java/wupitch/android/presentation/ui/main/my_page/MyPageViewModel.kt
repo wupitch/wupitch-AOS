@@ -39,7 +39,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
-    private val getSportRepository: GetSportRepository,
     private val profileRepository: ProfileRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
@@ -60,21 +59,6 @@ class MyPageViewModel @Inject constructor(
     private var _userIntroduce = MutableLiveData<String>()
     val userIntroduce: LiveData<String> = _userIntroduce
 
-
-
-    //sports
-    private var _userSportList = mutableStateListOf<Int>()
-    val userSportList: SnapshotStateList<Int> = _userSportList
-
-    private var _sportsList = mutableStateOf(SportState())
-    val sportsList: State<SportState> = _sportsList
-
-    private var _userSportId = mutableStateOf(-1)
-    val userSportId: State<Int> = _userSportId
-
-    //age group
-    private var _userAge = MutableLiveData<Int>()
-    val userAge: LiveData<Int> = _userAge
 
     //contact
     var userPhoneNum = mutableStateOf("")
@@ -165,68 +149,9 @@ class MyPageViewModel @Inject constructor(
 
     }
 
-    //todo sport without etc and edit this.
-    fun getSports() = viewModelScope.launch {
-        _sportsList.value = SportState(isLoading = true)
 
-        val response = getSportRepository.getSport()
-        if (response.isSuccessful) {
-            response.body()?.let { sportRes ->
-                if (sportRes.isSuccess) {
-                    _sportsList.value =
-                        SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }
-                            .map { it.toFilterItem() })
-                    _sportsList.value.data.forEachIndexed { index, filterItem ->
-                        if (_userSportId.value == index) {
-                            filterItem.state.value = true
-                        }
-                    }
-                } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
-            }
-        } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
 
-    }
 
-    fun setUserSportList(list: SnapshotStateList<Int>) {
-        _userSportList = list
-    }
-
-    //todo
-    fun changeUserSport() = viewModelScope.launch {
-        getUserInfo()
-        _updateState.value = BaseState(isLoading = true)
-        val req = UpdateUserInfoReq(
-            sportsList = _userSportList.map { it +1 }//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
-        )
-        val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
-            response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
-                else _updateState.value = BaseState(error = it.message)
-            }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
-    }
-
-    fun setUserAge(ageCode: Int) {
-        _userAge.value = ageCode
-        Log.d("{SignupViewModel.setUserAge}", _userAge.value.toString())
-    }
-
-    //todo
-    fun changeUserAgeGroup() = viewModelScope.launch {
-        getUserInfo()
-        _updateState.value = BaseState(isLoading = true)
-        val req = UpdateUserInfoReq(
-            ageNum = _userAge.value!! + 1//if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
-        )
-        val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
-            response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
-                else _updateState.value = BaseState(error = it.message)
-            }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
-    }
 
 
     fun setUserPhoneNum(phoneNum: String) {

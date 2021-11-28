@@ -49,7 +49,7 @@ import wupitch.android.presentation.ui.components.*
 class MyPageSportFragment : Fragment() {
 
 
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageSportViewModel by viewModels()
 
 
     override fun onCreateView(

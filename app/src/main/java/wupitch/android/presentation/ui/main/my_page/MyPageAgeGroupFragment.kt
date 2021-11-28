@@ -12,6 +12,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -48,9 +49,14 @@ import wupitch.android.presentation.ui.components.StopWarningDialog
 @AndroidEntryPoint
 class MyPageAgeGroupFragment : Fragment() {
 
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageAgeGroupViewModel by viewModels()
     private var checkedRadioButton: MutableState<Boolean>? = null
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getUserAgeGroup()
+    }
 
 
     override fun onCreateView(
@@ -69,7 +75,7 @@ class MyPageAgeGroupFragment : Fragment() {
                     val checkedState4 = remember { mutableStateOf(false) }
                     val checkedState5 = remember { mutableStateOf(false) }
 
-                    val ageList = listOf<AgeRadioButton>(
+                    val ageList = arrayListOf<AgeRadioButton>(
                         AgeRadioButton("10대", checkedState1),
                         AgeRadioButton("20대", checkedState2),
                         AgeRadioButton("30대", checkedState3),
@@ -86,6 +92,10 @@ class MyPageAgeGroupFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                    val userAgeGroup = remember {viewModel.userAge}
+                    if(userAgeGroup.value != null){
+                        ageList[userAgeGroup.value!!].checkedState.value = true
+                    }
 
 
                     ConstraintLayout(
@@ -97,7 +107,7 @@ class MyPageAgeGroupFragment : Fragment() {
                                 )
                             )
                     ) {
-                        val (toolbar, title, radioGroup, nextBtn) = createRefs()
+                        val (toolbar, title, radioGroup, nextBtn, progressbar) = createRefs()
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -143,6 +153,18 @@ class MyPageAgeGroupFragment : Fragment() {
                             }
                         }
 
+                        if(updateState.value.isLoading){
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(title.bottom)
+                                    bottom.linkTo(nextBtn.top)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
+
                         RoundBtn(
                             modifier = Modifier
                                 .constrainAs(nextBtn) {
@@ -158,7 +180,6 @@ class MyPageAgeGroupFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(checkedRadioButtonState.value) {
-                                //todo : viewmodel 에 선택된 연령값 보내기.
                                 var checkedAge = -1
                                 ageList.forEachIndexed { index, ageRadioButton ->
                                     if(ageRadioButton.checkedState == checkedRadioButton)
@@ -182,6 +203,8 @@ class MyPageAgeGroupFragment : Fragment() {
         textString: String,
         checkedRadioButtonState : MutableState<Boolean>
     ) {
+        if(checkedState.value) checkedRadioButton = checkedState
+
         Box(
             modifier = modifier
                 .selectable(
