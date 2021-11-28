@@ -58,7 +58,7 @@ class CreateImprtLocationFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        val bundle = Bundle().apply { putInt("tab_id", 1) }
+                        val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
                         findNavController().navigate(R.id.action_createImprtLocationFragment_to_mainFragment, bundle)
                     }
                     if (dialogOpenState.value) {
@@ -70,7 +70,10 @@ class CreateImprtLocationFragment : Fragment() {
                     }
                     BackHandler {
                         if (viewModel.imprtDistrictId.value != null) dialogOpenState.value = true
-                        else findNavController().navigateUp()
+                        else {
+                            val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
+                            findNavController().navigate(R.id.action_createImprtLocationFragment_to_mainFragment, bundle)
+                        }
                     }
 
 

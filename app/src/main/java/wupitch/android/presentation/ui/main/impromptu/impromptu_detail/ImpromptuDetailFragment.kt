@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
@@ -46,7 +47,7 @@ import wupitch.android.util.Sport
 @AndroidEntryPoint
 class ImpromptuDetailFragment : Fragment() {
 
-    private val viewModel : ImprtDetailViewModel by viewModels()
+    private val viewModel: ImprtDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,28 +74,37 @@ class ImpromptuDetailFragment : Fragment() {
                     val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val pinToggleState = remember { mutableStateOf(false)}//todo init value : crewState.value.isPinned
-                    if(viewModel.pinState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                    val pinToggleState =
+                        remember { mutableStateOf(false) }//todo init value : crewState.value.isPinned
+                    if (viewModel.pinState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            viewModel.pinState.value.error,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
 
 
                     val joinState = viewModel.joinImpromptuState.value
 
-                    if(joinState.isSuccess == true){
+                    if (joinState.isSuccess == true) {
                         joinSuccessDialogOpenState.value = true
                         viewModel.initJoinImpromptuState()
-                    }else if(joinState.isSuccess == false){
+                    } else if (joinState.isSuccess == false) {
                         notEnoughInfoDialogOpenState.value = true
                         viewModel.initJoinImpromptuState()
                     }
 
-                    if(joinState.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.joinImpromptuState.value.error, Toast.LENGTH_SHORT).show()
+                    if (joinState.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            viewModel.joinImpromptuState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
-                    if (joinSuccessDialogOpenState.value){
+                    if (joinSuccessDialogOpenState.value) {
                         JoinSuccessDialog(
                             dialogOpen = joinSuccessDialogOpenState,
                             titleString = R.string.join_success_impromptu,
@@ -102,13 +112,24 @@ class ImpromptuDetailFragment : Fragment() {
                         )
                     }
 
+                    BackHandler {
+                        val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
+                        findNavController().navigate(
+                            R.id.action_impromptuDetailFragment_to_mainFragment,
+                            bundle
+                        )
+                    }
+
                     if (notEnoughInfoDialogOpenState.value)
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_impromptu),
-                        ){
-                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
-                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
+                        ) {
+                            val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
+                            findNavController().navigate(
+                                R.id.action_impromptuDetailFragment_to_mainFragment,
+                                bundle
+                            )
                         }
 
                     ConstraintLayout(
@@ -155,7 +176,7 @@ class ImpromptuDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(pinToggleState, imprtInfo){
+                                CrewImageCard(pinToggleState, imprtInfo) {
                                     pinToggleState.value = it
                                     viewModel.changePinStatus()
                                 }
@@ -221,7 +242,7 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun ImpromptuExtraInfo(
-        imprtInfo : ImprtDetailResult
+        imprtInfo: ImprtDetailResult
     ) {
         Column(
             modifier = Modifier
@@ -231,7 +252,7 @@ class ImpromptuDetailFragment : Fragment() {
                 .padding(horizontal = 25.dp)
         ) {
 
-            if(imprtInfo.materials != null){
+            if (imprtInfo.materials != null) {
                 Text(
                     text = stringResource(id = R.string.supplies),
                     fontFamily = Roboto,
@@ -276,7 +297,7 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun ImpromptuIntroCard(
-        imprtInfo : ImprtDetailResult
+        imprtInfo: ImprtDetailResult
     ) {
         Column(
             modifier = Modifier
@@ -309,7 +330,7 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun ImpromptuInfo(
-        imprtInfo : ImprtDetailResult
+        imprtInfo: ImprtDetailResult
     ) {
         Column(
             modifier = Modifier
@@ -401,7 +422,7 @@ class ImpromptuDetailFragment : Fragment() {
                 )
             }
 
-            if(imprtInfo.dues != null){
+            if (imprtInfo.dues != null) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -459,9 +480,9 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun CrewImageCard(
-        pinToggleState : MutableState<Boolean>,
-        imprtInfo : ImprtDetailResult,
-        onValueChange : (Boolean) -> Unit
+        pinToggleState: MutableState<Boolean>,
+        imprtInfo: ImprtDetailResult,
+        onValueChange: (Boolean) -> Unit
 
     ) {
         ConstraintLayout(
@@ -475,7 +496,7 @@ class ImpromptuDetailFragment : Fragment() {
                 rememberImagePainter(
                     imprtInfo.impromptuImage,
                     builder = {
-                        placeholder( R.drawable.img_bungae_thumb)
+                        placeholder(R.drawable.img_bungae_thumb)
                         build()
                     }
                 )
@@ -500,7 +521,7 @@ class ImpromptuDetailFragment : Fragment() {
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                } , toggleState = pinToggleState ,
+                }, toggleState = pinToggleState,
                 onValueChange = onValueChange)
 
 

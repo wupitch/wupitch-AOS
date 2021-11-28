@@ -54,7 +54,8 @@ class CreateImprtSizeFragment : Fragment() {
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
                     if (stopSignupState.value) {
-                        findNavController().navigate(R.id.action_createImprtSizeFragment_to_mainFragment)
+                        val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
+                        findNavController().navigate(R.id.action_createImprtSizeFragment_to_mainFragment, bundle)
                     }
                     if (dialogOpenState.value) {
                         StopWarningDialog(
