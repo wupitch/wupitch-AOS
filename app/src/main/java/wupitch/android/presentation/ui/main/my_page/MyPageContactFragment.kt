@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,7 +50,12 @@ import wupitch.android.presentation.ui.components.RoundBtn
 @AndroidEntryPoint
 class MyPageContactFragment : Fragment() {
 
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageContactViewModel by viewModels()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getUserPhoneNum()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +66,8 @@ class MyPageContactFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val textState = remember { viewModel.userPhoneNum }
+                    val textState = remember { mutableStateOf("") }
+
                     val updateState = remember { viewModel.updateState }
                     if (updateState.value.isSuccess) findNavController().navigateUp()
                     if (updateState.value.error.isNotEmpty()) {
@@ -70,6 +77,7 @@ class MyPageContactFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -79,7 +87,7 @@ class MyPageContactFragment : Fragment() {
                                 )
                             )
                     ) {
-                        val (toolbar, title, textField, nextBtn) = createRefs()
+                        val (toolbar, title, textField, nextBtn, progressbar) = createRefs()
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -105,8 +113,23 @@ class MyPageContactFragment : Fragment() {
                         PhoneNumberTextField(modifier = Modifier.constrainAs(textField) {
                             top.linkTo(title.bottom, margin = 24.dp)
                             start.linkTo(title.start)
-                        }, textState = textState)
+                        }, textState = textState,
+                            hintState = viewModel.userPhoneNum
+                        )
 
+                        if(updateState.value.isLoading){
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    top.linkTo(title.bottom)
+                                    bottom.linkTo(nextBtn.top)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
+
+                        //todo
                         RoundBtn(
                             modifier = Modifier
                                 .constrainAs(nextBtn) {
@@ -136,7 +159,8 @@ class MyPageContactFragment : Fragment() {
     @Composable
     private fun PhoneNumberTextField(
         modifier: Modifier,
-        textState: MutableState<String>
+        textState: MutableState<String>,
+        hintState : MutableState<String>
     ) {
 
         val customTextSelectionColors = TextSelectionColors(
@@ -195,7 +219,7 @@ class MyPageContactFragment : Fragment() {
                                         top.linkTo(parent.top)
                                         bottom.linkTo(parent.bottom)
                                     },
-                                    text = stringResource(id = R.string.contact_hint),
+                                    text = hintState.value,
                                     color = colorResource(id = R.color.gray03),
                                     fontSize = 16.sp,
                                     fontFamily = Roboto,

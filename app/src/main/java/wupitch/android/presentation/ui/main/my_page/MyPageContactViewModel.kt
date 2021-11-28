@@ -12,34 +12,34 @@ import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class MyPageAgeGroupViewModel @Inject constructor(
+class MyPageContactViewModel @Inject constructor(
     private val profileRepository: ProfileRepository
-): ViewModel() {
+) : ViewModel() {
 
-    private var _userAge = mutableStateOf<Int?>(null)
-    val userAge: State<Int?> = _userAge
+    var userPhoneNum = mutableStateOf("")
+
+    fun setUserPhoneNum(phoneNum: String) {
+        userPhoneNum.value = phoneNum
+    }
 
     private var _updateState = mutableStateOf(BaseState())
     val updateState : State<BaseState> = _updateState
 
-    fun setUserAge(ageCode: Int) {
-        _userAge.value = ageCode
-    }
 
-    fun getUserAgeGroup() = viewModelScope.launch {
-        val response = profileRepository.getUserAgeGroup()
-        if(response.isSuccessful) {
+    fun getUserPhoneNum() = viewModelScope.launch {
+        val response = profileRepository.getUserPhoneNum()
+        if(response.isSuccessful){
             response.body()?.let { res ->
-                if(res.isSuccess) _userAge.value = if(res.result.ageIdx == null) null else res.result.ageIdx -1
+                if(res.isSuccess) userPhoneNum.value = res.result.phoneNumber ?: "000-0000-0000"
                 else _updateState.value = BaseState(error = res.message)
             }
-        }else _updateState.value = BaseState(error = "연령대 조회에 실패했습니다.")
+        } else _updateState.value = BaseState(error = "핸드폰 번호 조회에 실패했습니다.")
     }
 
-    fun changeUserAgeGroup() = viewModelScope.launch {
+    fun changeUserPhoneNum() = viewModelScope.launch {
         _updateState.value = BaseState(isLoading = true)
         val req = UpdateUserInfoReq(
-            ageNum = _userAge.value!! + 1
+            phoneNumber = userPhoneNum.value
         )
         val response = profileRepository.updateUserInfo(req)
         if(response.isSuccessful){
@@ -49,7 +49,4 @@ class MyPageAgeGroupViewModel @Inject constructor(
             }
         }else _updateState.value = BaseState(error = "정보 변경에 실패했습니다.")
     }
-
-
-
 }

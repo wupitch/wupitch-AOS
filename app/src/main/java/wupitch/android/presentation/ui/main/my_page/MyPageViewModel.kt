@@ -60,9 +60,6 @@ class MyPageViewModel @Inject constructor(
     val userIntroduce: LiveData<String> = _userIntroduce
 
 
-    //contact
-    var userPhoneNum = mutableStateOf("")
-
     //password
     private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
     val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
@@ -149,30 +146,10 @@ class MyPageViewModel @Inject constructor(
 
     }
 
+    /*
+    * logout and unregister
+    * */
 
-
-
-
-
-    fun setUserPhoneNum(phoneNum: String) {
-        userPhoneNum.value = phoneNum
-    }
-
-    //todo
-    fun changeUserPhoneNum() = viewModelScope.launch {
-        getUserInfo()
-        _updateState.value = BaseState(isLoading = true)
-        val req = UpdateUserInfoReq(
-            phoneNumber = userPhoneNum.value //if(_userDistrictId.value == _userInfo.value.data.) null else _userDistrictId.value + 1,
-        )
-        val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
-            response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
-                else _updateState.value = BaseState(error = it.message)
-            }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
-    }
 
     fun logoutUser() = viewModelScope.launch {
 
@@ -205,6 +182,11 @@ class MyPageViewModel @Inject constructor(
             }
         }else _unregisterState.value = BaseState(error = "회원 탈퇴를 실패했습니다.")
     }
+
+
+    /*
+    * password
+    * */
 
     fun checkCurrentPwValid(pw : String) = viewModelScope.launch {
         if (pw.isEmpty()) {
@@ -241,13 +223,17 @@ class MyPageViewModel @Inject constructor(
     fun changePw() = viewModelScope.launch {
         _changePwState.value = BaseState(isLoading = true)
         val response = profileRepository.changePw(PwReq(password = _userNewPw.value))
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             response.body()?.let { baseRes ->
-                if(baseRes.isSuccess)  _changePwState.value = BaseState(isSuccess = true)
-                else  _changePwState.value = BaseState(error = baseRes.message)
+                if (baseRes.isSuccess) _changePwState.value = BaseState(isSuccess = true)
+                else _changePwState.value = BaseState(error = baseRes.message)
             }
-        }else  _changePwState.value = BaseState(error = "비밀번호 변경을 실패했습니다.")
+        } else _changePwState.value = BaseState(error = "비밀번호 변경을 실패했습니다.")
     }
+
+    /*
+    * Image
+    * */
 
     private var _userImageState = mutableStateOf(BaseState())
     val userImageState : State<BaseState> = _userImageState
