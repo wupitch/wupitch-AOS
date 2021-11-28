@@ -19,16 +19,22 @@ class MyActivityViewModel : ViewModel(){
     private var _myCrewState : MutableState<MyCrewState> = mutableStateOf(MyCrewState())
     val myCrewState : State<MyCrewState> = _myCrewState
 
-    var crewReportState = mutableStateOf(false)
 
-    private var _imprtReportState = mutableStateOf(false)
-    val imprtReportState : State<Boolean> = _imprtReportState
 
     fun getMyCrew() = viewModelScope.launch {
         _myCrewState.value = MyCrewState(isLoading = true)
         delay(500L)
-//        _myCrewState.value = MyCrewState()
-        _myCrewState.value = MyCrewState(data = listOf<CrewCardInfo>())
+        _myCrewState.value = MyCrewState(data = listOf<CrewCardInfo>(
+            CrewCardInfo(
+            id = 10,
+            sportId = 1,
+                crewImage = null,
+                isPinned = true,
+                title = "크루입니다.",
+                time  = "수요일 2:00 - 4:00",
+                isMoreThanOnceAWeek = true,
+                detailAddress = "상세주소임당"
+        )))
 
     }
 
@@ -40,11 +46,5 @@ class MyActivityViewModel : ViewModel(){
         ))
     }
 
-    fun setCrewReportState() {
-        crewReportState.value = true
-    }
 
-    fun postCrewReport(content : String) {
-
-    }
 }

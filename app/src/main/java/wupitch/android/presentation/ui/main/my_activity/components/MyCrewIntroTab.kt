@@ -5,9 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,58 +35,107 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import wupitch.android.R
+import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.crew_detail.VisitorBottomSheetFragment
 import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
+import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
 import wupitch.android.util.Sport
 
 @Composable
-fun MyCrewIntroTab() {
+fun MyCrewIntroTab(
+    viewModel: MyCrewViewModel = hiltViewModel()
+) {
 
-    lateinit var visitorBottomSheet: VisitorBottomSheetFragment
-
-
+    viewModel.getCrewDetail()
     WupitchTheme {
         val scrollState = rememberScrollState(0)
 
+        val crewState = remember { viewModel.crewDetailState }
+        if (crewState.value.error.isNotEmpty()) {
+            Log.d("{MyCrewIntroTab}", crewState.value.error)
+        }
 
-        Column(
+        ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
-
+                .background(Color.White)
         ) {
-            Image(
-                painter = painterResource(id = Sport.getNumOf(0).detailImage),
-                contentDescription = "crew sport icon",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(202.dp),
-                contentScale = ContentScale.Crop
-            )
-            CrewInfo()
-            GrayDivider()
+            val ( crewInfoCol, progressbar) = createRefs()
 
-            CrewIntroCard()
-            GrayDivider()
+            crewState.value.data?.let { crewInfo ->
 
-            CrewExtraInfo()
-            GrayDivider()
+                Column(
+                    modifier = Modifier.constrainAs(crewInfoCol) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
 
-            CrewGuidance()
+                ) {
+                    Image(
+                        painter = if (crewInfo.crewImage != null) {
+                            rememberImagePainter(
+                                crewInfo.crewImage,
+                                builder = {
+                                    placeholder(Sport.getNumOf(crewInfo.sportsId).detailImage)
+                                    build()
+                                }
+                            )
+                        } else {
+                            rememberImagePainter(Sport.getNumOf(crewInfo.sportsId).detailImage)
+                        },
+                        contentDescription = "crew sport icon",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(202.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                    CrewInfo(crewInfo)
+                    GrayDivider()
+
+                    CrewIntroCard(crewInfo)
+                    GrayDivider()
+
+                    CrewExtraInfo(crewInfo)
+                    GrayDivider()
+
+                    CrewGuidance()
+                }
+            }
+
+            if (crewState.value.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.constrainAs(progressbar) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    },
+                    color = colorResource(id = R.color.main_orange)
+                )
+            }
         }
+
     }
 }
 
 
 @Composable
-fun CrewExtraInfo() {
+fun CrewExtraInfo(
+    crewState: CrewDetailResult
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -93,24 +144,27 @@ fun CrewExtraInfo() {
             .padding(horizontal = 25.dp)
     ) {
 
-        Text(
-            text = stringResource(id = R.string.supplies),
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.main_black),
-            fontSize = 16.sp
-        )
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp, bottom = 36.dp),
-            text = "준비물이 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
-            fontSize = 16.sp,
-            fontFamily = Roboto,
-            fontWeight = FontWeight.Normal,
-            color = colorResource(id = R.color.main_black),
-            lineHeight = 24.sp
-        )
+         if(crewState.materials != null) {
+                Text(
+                    text = stringResource(id = R.string.supplies),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.main_black),
+                    fontSize = 16.sp
+                )
+
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 36.dp),
+                    text = crewState.materials,
+                    fontSize = 16.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 24.sp
+                )
+            }
         VisitorDefLayout(Modifier)
         Text(
             modifier = Modifier.padding(top = 36.dp),
@@ -124,7 +178,7 @@ fun CrewExtraInfo() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
-            text = "문의가 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
+            text = crewState.inquiries ?: "",
             fontSize = 16.sp,
             fontFamily = Roboto,
             fontWeight = FontWeight.Normal,
@@ -135,7 +189,9 @@ fun CrewExtraInfo() {
 }
 
 @Composable
-fun CrewIntroCard() {
+fun CrewIntroCard(
+    crewState: CrewDetailResult
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -167,7 +223,7 @@ fun CrewIntroCard() {
                 maxLines = 1
             )
             Text(
-                text = "여기에 인원수가 들어갑니다.",
+                text = crewState.memberCount,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
                 color = colorResource
@@ -192,7 +248,7 @@ fun CrewIntroCard() {
                 maxLines = 1
             )
             Text(
-                text = "여기에 연령이 들어갑니다.",
+                text =crewState.ageTable,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
                 color = colorResource
@@ -202,11 +258,11 @@ fun CrewIntroCard() {
             )
         }
 
-        CrewIntroKeyword()
+        CrewIntroKeyword(crewState)
 
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "크루 소개가 이 부분에 들어갑니다." + stringResource(id = R.string.long_text),
+            text = crewState.introduction,
             fontSize = 16.sp,
             fontFamily = Roboto,
             fontWeight = FontWeight.Normal,
@@ -217,19 +273,10 @@ fun CrewIntroCard() {
 }
 
 @Composable
-fun CrewIntroKeyword() {
+fun CrewIntroKeyword(
+    crewState: CrewDetailResult
+) {
 
-    //todo : 소개 키워드 받기.
-    val keywordList = listOf<String>(
-        "크루 키워드",
-        "이 부분에",
-        "들어갑니다.",
-        "초보 중심",
-        "코치님과 훈련",
-        "레슨 운영",
-        "훈련 중심",
-        "경기 중심"
-    )
     FlowRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -237,8 +284,8 @@ fun CrewIntroKeyword() {
         mainAxisSpacing = 12.dp,
         crossAxisSpacing = 14.dp
     ) {
-        if (keywordList.isNotEmpty()) {
-            keywordList.forEach {
+        if (crewState.extraList.isNotEmpty()) {
+            crewState.extraList.forEach {
 
                 Box(
                     modifier = Modifier
@@ -261,7 +308,9 @@ fun CrewIntroKeyword() {
 }
 
 @Composable
-fun CrewInfo() {
+fun CrewInfo(
+    crewState: CrewDetailResult
+) {
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -274,14 +323,14 @@ fun CrewInfo() {
         SportKeyword(
             modifier = Modifier
                 .clip(RoundedCornerShape(14.dp))
-                .background(colorResource(id = Sport.getNumOf(0).color))
+                .background(colorResource(id = Sport.getNumOf(crewState.sportsId).color))
                 .padding(horizontal = 13.dp, vertical = 4.dp),
-            sportName = Sport.getNumOf(0).sportName
+            sportName = Sport.getNumOf(crewState.sportsId).sportName
         )
 
         Text(
             modifier = Modifier.padding(top = 16.dp),
-            text = "크루 이름이 이곳에 들어갑니다.",
+            text = crewState.crewName,
             fontSize = 18.sp,
             fontFamily = Roboto,
             fontWeight = FontWeight.Bold,
@@ -304,22 +353,17 @@ fun CrewInfo() {
                     .fillMaxWidth()
                     .padding(start = 8.dp)
             ) {
-                Text(
-                    text = "수요일 20:00 - 22:00",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource
-                        (id = R.color.main_black),
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = "수요일 20:00 - 22:00",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource
-                        (id = R.color.main_black),
-                    fontSize = 14.sp
-                )
+                crewState.schedules.forEach { item ->
+                    Text(
+                        modifier = Modifier.padding(bottom = 6.dp),
+                        text = item,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource
+                            (id = R.color.main_black),
+                        fontSize = 14.sp
+                    )
+                }
             }
         }
 
@@ -340,7 +384,7 @@ fun CrewInfo() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 8.dp),
-                text = "구체적 위치가 여기에 들어갑니다.",
+                text = crewState.areaName,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
                 color = colorResource
@@ -350,32 +394,39 @@ fun CrewInfo() {
             )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        if (crewState.dues.isNotEmpty()) {
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_monetization_on),
-                contentDescription = "won icon"
-            )
-
-            Text(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp),
-                text = "정기회비 15,000",
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                color = colorResource
-                    (id = R.color.main_black),
-                fontSize = 14.sp,
-                maxLines = 1
-            )
+                    .padding(top = 8.dp)
+            ) {
+
+                Image(
+                    painter = painterResource(id = R.drawable.ic_monetization_on),
+                    contentDescription = "won icon"
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 8.dp)
+                ) {
+                    crewState.dues.forEach { item ->
+                        Text(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 6.dp),
+                            text = item,
+                            fontFamily = Roboto,
+                            fontWeight = FontWeight.Normal,
+                            color = colorResource
+                                (id = R.color.main_black),
+                            fontSize = 14.sp,
+                            maxLines = 1
+                        )
+                    }
+                }
+            }
         }
-
-
     }
 }

@@ -37,7 +37,7 @@ import wupitch.android.presentation.ui.main.my_activity.components.*
 @AndroidEntryPoint
 class MyCrewDetailFragment : Fragment() {
 
-    private val viewModel: MyActivityViewModel by viewModels()
+    private val viewModel: MyCrewViewModel by viewModels()
 
     private var selectedTab: Int = 0
     private val tabs = listOf<TabItem>(
@@ -53,6 +53,7 @@ class MyCrewDetailFragment : Fragment() {
         arguments?.getParcelable<MyCrewArg>("myCrewInfo")?.let { crewInfo ->
             //todo : get crew from viewModel with the crewInfo.crewId
             selectedTab = crewInfo.selectedTab
+            viewModel.crewId = crewInfo.crewId
         }
     }
 

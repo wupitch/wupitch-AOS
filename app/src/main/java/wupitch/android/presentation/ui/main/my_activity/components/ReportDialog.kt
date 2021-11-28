@@ -28,6 +28,7 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.main.my_activity.MyActivityViewModel
+import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
 
 @ExperimentalPagerApi
 @Composable
@@ -89,7 +90,7 @@ fun ReportDialog(
                     textString = R.string.done,
                     fontSize = 14.sp
                 ) {
-                    if(viewModel is MyActivityViewModel){
+                    if(viewModel is MyCrewViewModel){
                         viewModel.postCrewReport(textState.value)
                     }
                     dialogOpen.value = false

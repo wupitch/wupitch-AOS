@@ -1,34 +1,35 @@
-package wupitch.android.presentation.ui.main.home.crew_detail
+package wupitch.android.presentation.ui.main.my_activity
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.data.remote.dto.Schedule
 import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
+import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
 import wupitch.android.util.doubleToTime
-import wupitch.android.util.formatToWon
 import java.lang.StringBuilder
 import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
-class CrewDetailViewModel @Inject constructor(
+class MyCrewViewModel @Inject constructor(
     private val crewRepository: CrewRepository
-) : ViewModel() {
+) : ViewModel(){
+
+    var crewId = -1
 
     private var _crewDetailState = mutableStateOf(CrewDetailState())
     val crewDetailState: State<CrewDetailState> = _crewDetailState
 
-    fun getCrewDetail(id: Int) = viewModelScope.launch {
+    fun getCrewDetail() = viewModelScope.launch {
         _crewDetailState.value = CrewDetailState(isLoading = true)
 
-        val response = crewRepository.getCrewDetail(id)
+        val response = crewRepository.getCrewDetail(crewId)
         if (response.isSuccessful) {
             response.body()?.let { res ->
                 if (res.isSuccess) _crewDetailState.value = CrewDetailState(
@@ -83,7 +84,7 @@ class CrewDetailViewModel @Inject constructor(
             list.add("손님비 $formattedMoney 원")
         }
 
-       return list.toList()
+        return list.toList()
     }
 
     private fun convertedAge(ageTable: List<String>): String {
@@ -112,8 +113,23 @@ class CrewDetailViewModel @Inject constructor(
                 }
             }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
         }
-
     }
 
 
+    /*
+    * report
+    * */
+
+    var crewReportState = mutableStateOf(false)
+
+    private var _imprtReportState = mutableStateOf(false)
+    val imprtReportState : State<Boolean> = _imprtReportState
+
+    fun setCrewReportState() {
+        crewReportState.value = true
+    }
+
+    fun postCrewReport(content : String) {
+
+    }
 }

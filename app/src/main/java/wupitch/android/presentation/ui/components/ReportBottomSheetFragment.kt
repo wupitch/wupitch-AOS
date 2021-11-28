@@ -23,6 +23,7 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
 import wupitch.android.presentation.ui.main.my_activity.MyActivityViewModel
+import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
 
 
 class ReportBottomSheetFragment(
@@ -52,7 +53,7 @@ class ReportBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if(viewModel is MyActivityViewModel) {
+                                if(viewModel is MyCrewViewModel) {
                                     viewModel.setCrewReportState()
                                 }
                                 dismiss()
