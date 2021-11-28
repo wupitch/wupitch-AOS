@@ -36,7 +36,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
     }
 
     private lateinit var navController: NavController
-    private val viewModel : FcmViewModel by viewModels()
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,21 +53,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
             binding.bottomNavView.selectedItemId = tabId
         }
 
-        initFcm()
 
-    }
-
-    private fun initFcm() {
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.d("{FcmService.onCreate}", task.exception.toString())
-                return@OnCompleteListener
-            }
-
-            val token = task.result
-
-            Log.d("{MainFragment.initFcm}", token.toString())
-            viewModel.registerToken(token.toString())
-        })
     }
 }

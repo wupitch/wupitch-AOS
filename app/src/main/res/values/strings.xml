@@ -297,6 +297,7 @@
     <string name="report_crew">크루 신고하기</string>
     <string name="report">신고하기</string>
     <string name="input_report">신고 내용을 입력해주세요.</string>
+    <string name="report_impromptu">번개 신고하기</string>
     
 <!--    my page-->
     <string name="interested_activity">관심 크루 및 번개</string>

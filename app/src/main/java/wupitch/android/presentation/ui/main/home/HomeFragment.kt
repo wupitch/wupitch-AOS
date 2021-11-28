@@ -2,6 +2,7 @@ package wupitch.android.presentation.ui.main.home
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +27,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.Constants.PAGE_SIZE
+import wupitch.android.fcm.FcmViewModel
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.CreateFab
@@ -40,6 +45,7 @@ import wupitch.android.presentation.ui.main.home.components.CrewCard
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by activityViewModels()
+    private val fcmViewModel : FcmViewModel by viewModels()
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
 
     @OptIn(ExperimentalMaterialApi::class)
@@ -296,5 +302,21 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getDistricts()
         viewModel.getCrew()
+        initFcm()
+
+    }
+
+    private fun initFcm() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.d("{FcmService.onCreate}", task.exception.toString())
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+
+            Log.d("{MainFragment.initFcm}", token.toString())
+            fcmViewModel.registerToken(token.toString())
+        })
     }
 }

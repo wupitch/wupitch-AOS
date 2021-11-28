@@ -13,7 +13,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,10 +22,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -34,30 +30,31 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import coil.compose.rememberImagePainter
+import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
-import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
-import wupitch.android.presentation.ui.main.impromptu.ImpromptuViewModel
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
 import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailViewModel
+import wupitch.android.presentation.ui.main.my_activity.components.ReportDialog
 
 @AndroidEntryPoint
 class MyImpromptuDetailFragment : Fragment() {
 
-    private val viewModel : ImprtDetailViewModel by viewModels()
+    private val viewModel : MyImpromptuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("impromptu_id")?.let { id ->
-            Log.d("{CrewDetailFragment.onCreate}", id.toString())
+        arguments?.getInt("impromptuId")?.let { id ->
             viewModel.getImprtDetail(id)
         }
     }
 
+    @ExperimentalPagerApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,57 +64,35 @@ class MyImpromptuDetailFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
+                    val reportDialogOpenState = remember { viewModel.crewReportState }
+
+                    if (reportDialogOpenState.value)
+                        ReportDialog(dialogOpen = reportDialogOpenState, viewModel)
+
+                    val imprtState = remember { viewModel.imprtDetailState }
+                    if (imprtState.value.error.isNotEmpty()) {
+                        Toast.makeText(requireContext(), imprtState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
                     val scrollState = rememberScrollState(0)
-                    val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
-                    val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
-
-                    val pinToggleState = remember { mutableStateOf(false)}
-
-                    val joinState = viewModel.joinImpromptuState.value
-
-                    if(joinState.isSuccess == true){
-                        joinSuccessDialogOpenState.value = true
-                        viewModel.initJoinImpromptuState()
-                    }else if(joinState.isSuccess == false){
-                        notEnoughInfoDialogOpenState.value = true
-                        viewModel.initJoinImpromptuState()
-                    }
-
-                    if(joinState.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.joinImpromptuState.value.error, Toast.LENGTH_SHORT).show()
-                    }
-
-                    if (joinSuccessDialogOpenState.value){
-                        JoinSuccessDialog(
-                            dialogOpen = joinSuccessDialogOpenState,
-                            titleString = R.string.join_success_impromptu,
-                            isImpromptu = true
-                        )
-                    }
-
-                    if (notEnoughInfoDialogOpenState.value)
-                        NotEnoughInfoDialog(
-                            dialogOpen = notEnoughInfoDialogOpenState,
-                            subtitleString = stringResource(id = R.string.not_enough_info_impromptu),
-                        ){
-                            //todo to profile edit screen?
-                        }
 
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White)
                     ) {
-                        val (toolbar, topDivider, infoContent, joinButton, bottomDivider, progressbar) = createRefs()
+                        val (toolbar, topDivider, infoContent, progressbar) = createRefs()
 
-                        TitleToolbar(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                        FullToolBar(
+                            modifier = Modifier .fillMaxWidth()
                                 .constrainAs(toolbar) {
                                     top.linkTo(parent.top)
                                     start.linkTo(parent.start)
                                 },
+                            icon = R.drawable.more,
                             onLeftIconClick = { findNavController().navigateUp() },
+                            onRightIconClick = { showReportBottomSheet() },
                             textString = R.string.impromptu
                         )
 
@@ -132,65 +107,40 @@ class MyImpromptuDetailFragment : Fragment() {
                                 .background(colorResource(id = R.color.gray01))
                             )
                         }
+                        imprtState.value.data?.let { imprtInfo ->
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .constrainAs(infoContent) {
+                                        top.linkTo(toolbar.bottom)
+                                        bottom.linkTo(parent.bottom)
+                                        height = Dimension.fillToConstraints
+                                    }
+                                    .verticalScroll(scrollState)
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .constrainAs(infoContent) {
-                                    top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(bottomDivider.top)
-                                    height = Dimension.fillToConstraints
-                                }
-                                .verticalScroll(scrollState)
+                            ) {
+                                ImprtImageCard(imprtInfo)
 
-                        ) {
-                            CrewImageCard(pinToggleState)
+                                ImpromptuInfo(imprtInfo)
+                                GrayDivider()
 
-                            ImpromptuInfo()
-                            GrayDivider()
+                                ImpromptuIntroCard(imprtInfo)
+                                GrayDivider()
 
-                            ImpromptuIntroCard()
-                            GrayDivider()
+                                ImpromptuExtraInfo(imprtInfo)
+                                GrayDivider()
 
-                            ImpromptuExtraInfo()
-                            GrayDivider()
-
-                            ImpromptuGuidance()
-                        }
-
-                        Divider(Modifier
-                            .constrainAs(bottomDivider) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(joinButton.top, margin = 11.dp)
-                                width = Dimension.fillToConstraints
+                                ImpromptuGuidance()
                             }
-                            .height(1.dp)
-                            .background(colorResource(id = R.color.gray01)))
-
-                        RoundBtn(
-                            modifier = Modifier
-                                .constrainAs(joinButton) {
-                                    start.linkTo(parent.start, margin = 20.dp)
-                                    end.linkTo(parent.end, margin = 20.dp)
-                                    bottom.linkTo(parent.bottom, margin = 12.dp)
-                                    width = Dimension.fillToConstraints
-                                }
-                                .height(44.dp),
-                            btnColor = R.color.main_orange,
-                            textString = R.string.join_impromptu,
-                            fontSize = 16.sp
-                        ){
-                            viewModel.joinImpromptu()
                         }
 
-                        if(joinState.isLoading){
+                        if(imprtState.value.isLoading){
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
                                     top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(bottomDivider.top)
+                                    bottom.linkTo(parent.bottom)
                                 },
                                 color = colorResource(id = R.color.main_orange)
                             )
@@ -201,11 +151,18 @@ class MyImpromptuDetailFragment : Fragment() {
         }
     }
 
+    private fun showReportBottomSheet() {
+        val reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
+    }
+
     private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
     @Composable
-    fun ImpromptuExtraInfo() {
+    fun ImpromptuExtraInfo(
+        imprtInfo: ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -214,24 +171,27 @@ class MyImpromptuDetailFragment : Fragment() {
                 .padding(horizontal = 25.dp)
         ) {
 
-            Text(
-                text = stringResource(id = R.string.supplies),
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.main_black),
-                fontSize = 16.sp
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                text = "준비물이 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
-                fontSize = 16.sp,
-                fontFamily = Roboto,
-                fontWeight = FontWeight.Normal,
-                color = colorResource(id = R.color.main_black),
-                lineHeight = 24.sp
-            )
+             if (imprtInfo.materials != null) {
+                Text(
+                    text = stringResource(id = R.string.supplies),
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Bold,
+                    color = colorResource(id = R.color.main_black),
+                    fontSize = 16.sp
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    text = imprtInfo.materials,
+                    fontSize = 16.sp,
+                    fontFamily = Roboto,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.main_black),
+                    lineHeight = 24.sp
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+            }
             Text(
                 modifier = Modifier.padding(top = 32.dp),
                 text = stringResource(id = R.string.inquiry),
@@ -244,7 +204,7 @@ class MyImpromptuDetailFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                text = "문의가 이 부분에 들어갑니다." + stringResource(id = R.string.medium_text),
+                text = imprtInfo.inquiries,
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -255,7 +215,9 @@ class MyImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun ImpromptuIntroCard() {
+    fun ImpromptuIntroCard(
+        imprtInfo: ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -275,7 +237,7 @@ class MyImpromptuDetailFragment : Fragment() {
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "크루 소개가 이 부분에 들어갑니다." + stringResource(id = R.string.long_text),
+                text = imprtInfo.introduction,
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
@@ -286,7 +248,9 @@ class MyImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun ImpromptuInfo() {
+    fun ImpromptuInfo(
+        imprtInfo: ImprtDetailResult
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -298,13 +262,13 @@ class MyImpromptuDetailFragment : Fragment() {
         ) {
             RemainingDays(
                 modifier = Modifier,
-                remainingDays = 1,
+                remainingDays = imprtInfo.dday,
                 isDetail = true
             )
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),
-                text = "번개 이름이 이곳에 들어갑니다.",
+                text = imprtInfo.title,
                 fontSize = 18.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
@@ -330,7 +294,7 @@ class MyImpromptuDetailFragment : Fragment() {
                         .padding(start = 8.dp)
                 ) {
                     Text(
-                        text = "수요일 20:00 - 22:00",
+                        text = imprtInfo.date,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         color = colorResource
@@ -338,7 +302,8 @@ class MyImpromptuDetailFragment : Fragment() {
                         fontSize = 14.sp
                     )
                     Text(
-                        text = "수요일 20:00 - 22:00",
+                        modifier = Modifier.padding(top = 6.dp),
+                        text = imprtInfo.time,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
                         color = colorResource
@@ -366,7 +331,7 @@ class MyImpromptuDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "구체적 위치가 여기에 들어갑니다.",
+                    text = imprtInfo.location,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource
@@ -376,30 +341,32 @@ class MyImpromptuDetailFragment : Fragment() {
                 )
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = R.drawable.ic_monetization_on),
-                    contentDescription = "won icon"
-                )
-
-                Text(
+            if (imprtInfo.dues != null) {
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 8.dp),
-                    text = "정기회비 15,000",
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.main_black),
-                    fontSize = 14.sp,
-                    maxLines = 1
-                )
+                        .padding(top = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Image(
+                        modifier = Modifier.size(24.dp),
+                        painter = painterResource(id = R.drawable.ic_monetization_on),
+                        contentDescription = "won icon"
+                    )
+
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        text = imprtInfo.dues,
+                        fontFamily = Roboto,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.main_black),
+                        fontSize = 14.sp,
+                        maxLines = 1
+                    )
+                }
             }
             Row(
                 modifier = Modifier
@@ -418,7 +385,7 @@ class MyImpromptuDetailFragment : Fragment() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    text = "2/3명 참여",
+                    text = imprtInfo.recruitStatus,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     color = colorResource(id = R.color.main_black),
@@ -430,37 +397,33 @@ class MyImpromptuDetailFragment : Fragment() {
     }
 
     @Composable
-    fun CrewImageCard(
-        pinToggleState : MutableState<Boolean>
-    ) {
+    fun ImprtImageCard(
+        imprtInfo: ImprtDetailResult
+        ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(202.dp)
         ) {
-            val (image, pin) = createRefs()
 
-            Image(painter = painterResource(id = R.drawable.img_bungae_thumb),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            Image(
                 modifier = Modifier
-                    .constrainAs(image) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    }
-                    .size(76.dp))
-
-//            PinToggleButton(modifier = Modifier
-//                .constrainAs(pin) {
-//                    top.linkTo(parent.top, margin = 16.dp)
-//                    end.linkTo(parent.end, margin = 16.dp)
-//                } , toggleState = pinToggleState )
-
-
+                    .fillMaxWidth()
+                    .height(202.dp),
+                painter = if (imprtInfo.impromptuImage != null) {
+                    rememberImagePainter(
+                        imprtInfo.impromptuImage,
+                        builder = {
+                            placeholder(R.drawable.img_bungae_thumb)
+                            build()
+                        }
+                    )
+                } else {
+                    painterResource(id = R.drawable.img_bungae_thumb)
+                },
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
         }
     }
 }

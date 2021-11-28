@@ -24,6 +24,7 @@ import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
 import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
 import wupitch.android.presentation.ui.main.my_activity.MyActivityViewModel
 import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.MyImpromptuViewModel
 
 
 class ReportBottomSheetFragment(
@@ -55,12 +56,18 @@ class ReportBottomSheetFragment(
                             .clickable {
                                 if(viewModel is MyCrewViewModel) {
                                     viewModel.setCrewReportState()
+                                }else if(viewModel is MyImpromptuViewModel) {
+                                    viewModel.setCrewReportState()
                                 }
                                 dismiss()
                             }){
                             Text(
                                 modifier = Modifier.padding(vertical = 16.dp),
-                                text = stringResource(id = R.string.report_crew),
+                                text = if(viewModel is MyCrewViewModel) {
+                                    stringResource(id = R.string.report_crew)
+                                }else {
+                                    stringResource(id = R.string.report_impromptu)
+                                },
                                 color = colorResource(id = R.color.main_black),
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = Roboto,
