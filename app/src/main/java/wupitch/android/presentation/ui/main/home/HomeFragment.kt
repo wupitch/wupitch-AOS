@@ -114,24 +114,6 @@ class HomeFragment : Fragment() {
                                     }
                                 }
                             }
-
-//                            CrewList(
-//                                modifier = Modifier.constrainAs(homeList) {
-//                                    top.linkTo(toolbar.bottom)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    bottom.linkTo(parent.bottom)
-//                                    height = Dimension.fillToConstraints
-//                                },
-//                                crewList = crewState.value.data,
-//                                navigationToCrewDetailScreen = {
-//                                    val bundle = Bundle().apply { putInt("crewId", it) }
-//                                    activity?.findNavController(R.id.main_nav_container_view)
-//                                        ?.navigate(
-//                                            R.id.action_mainFragment_to_crewDetailFragment,
-//                                            bundle
-//                                        )
-//                                })
                         }else {
                             if(!loading.value) {
 

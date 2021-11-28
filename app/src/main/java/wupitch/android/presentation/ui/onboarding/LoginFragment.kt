@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.ComposeView
@@ -44,7 +45,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
@@ -54,6 +59,7 @@ class LoginFragment : Fragment() {
 
     private val viewModel: OnboardingViewModel by viewModels()
 
+    @ExperimentalFoundationApi
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,101 +69,107 @@ class LoginFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val emailTextState = remember { viewModel.userEmail }
-                    val pwTextState = remember { viewModel.userPw }
+                        val scrollState = rememberScrollState()
+                        val emailTextState = remember { viewModel.userEmail }
+                        val pwTextState = remember { viewModel.userPw }
 
-                    if(viewModel.loginState.value.isSuccess){
-                        findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
-                    }
-
-                    if(viewModel.loginState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.loginState.value.error, Toast.LENGTH_SHORT).show()
-                    }
-
-                    ConstraintLayout(
-                        Modifier
-                            .fillMaxSize()
-                            .background(Color.White)
-                            .padding(horizontal = 20.dp)
-                    ) {
-                        val (logo, signupText, signupBtn, inputCol, progressbar) = createRefs()
-
-
-                        Image(
-                            modifier = Modifier
-                                .constrainAs(logo) {
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    top.linkTo(parent.top, margin = 104.dp)
-                                }
-                                .width(159.dp)
-                                .height(138.dp),
-                            painter = painterResource(id = R.drawable.login_logo),
-                            contentDescription = null
-                        )
-
-                        Column(Modifier.constrainAs(inputCol) {
-                            start.linkTo(parent.start)
-                            end.linkTo(parent.end)
-                            top.linkTo(logo.bottom, margin = 36.dp)
-                            width = Dimension.fillToConstraints
-                        }) {
-                            LoginTextField(
-                                isEmail = true,
-                                hintString = stringResource(id = R.string.email),
-                                textState = emailTextState
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            LoginTextField(
-                                hintString = stringResource(id = R.string.login_pw),
-                                textState = pwTextState
-                            )
-
-                            Spacer(modifier = Modifier.height(32.dp))
-                            LoginButton(
-                                isLoginBtn = true,
-                                onClick = {
-                                if (emailTextState.value.isNotEmpty() && pwTextState.value.isNotEmpty()) {
-                                    viewModel.tryLogin()
-                                }
-                            })
+                        if (viewModel.loginState.value.isSuccess) {
+                            findNavController().navigate(R.id.action_loginFragment_to_mainFragment)
                         }
 
-                        Text(
-                            modifier = Modifier.constrainAs(signupText) {
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(signupBtn.top, margin = 8.dp)
-                            },
-                            text = stringResource(id = R.string.not_member_yet),
-                            fontFamily = Roboto,
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 12.sp,
-                            color = colorResource(id = R.color.gray03)
-                        )
-                        LoginButton(
-                            modifier = Modifier.constrainAs(signupBtn){
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom, margin = 32.dp)
-                            },
-                            onClick = {
-                                findNavController().navigate(R.id.action_loginFragment_to_serviceAgreementFragment)
-                        })
+                        if (viewModel.loginState.value.error.isNotEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                viewModel.loginState.value.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
 
-                        if(viewModel.loginState.value.isLoading){
-                            CircularProgressIndicator(
-                                modifier = Modifier.constrainAs(progressbar) {
+                        ConstraintLayout(
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.White)
+                                .padding(horizontal = 20.dp)
+                                .verticalScroll(scrollState)
+                        ) {
+                            val (logo, signupText, signupBtn, inputCol, progressbar) = createRefs()
+
+
+                            Image(
+                                modifier = Modifier
+                                    .constrainAs(logo) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        top.linkTo(parent.top, margin = 104.dp)
+                                    }
+                                    .width(159.dp)
+                                    .height(138.dp),
+                                painter = painterResource(id = R.drawable.login_logo),
+                                contentDescription = null
+                            )
+
+                            Column(Modifier.constrainAs(inputCol) {
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                top.linkTo(logo.bottom, margin = 36.dp)
+                                width = Dimension.fillToConstraints
+                            }) {
+                                LoginTextField(
+                                    isEmail = true,
+                                    hintString = stringResource(id = R.string.email),
+                                    textState = emailTextState
+                                )
+                                Spacer(modifier = Modifier.height(12.dp))
+                                LoginTextField(
+                                    hintString = stringResource(id = R.string.login_pw),
+                                    textState = pwTextState
+                                )
+
+                                Spacer(modifier = Modifier.height(32.dp))
+                                LoginButton(
+                                    isLoginBtn = true,
+                                    onClick = {
+                                        if (emailTextState.value.isNotEmpty() && pwTextState.value.isNotEmpty()) {
+                                            viewModel.tryLogin()
+                                        }
+                                    })
+                            }
+
+                            Text(
+                                modifier = Modifier.constrainAs(signupText) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
+                                    bottom.linkTo(signupBtn.top, margin = 8.dp)
                                 },
-                                color = colorResource(id = R.color.main_orange)
+                                text = stringResource(id = R.string.not_member_yet),
+                                fontFamily = Roboto,
+                                fontWeight = FontWeight.Normal,
+                                fontSize = 12.sp,
+                                color = colorResource(id = R.color.gray03)
                             )
+                            LoginButton(
+                                modifier = Modifier.constrainAs(signupBtn) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(parent.bottom, margin = 32.dp)
+                                },
+                                onClick = {
+                                    findNavController().navigate(R.id.action_loginFragment_to_serviceAgreementFragment)
+                                })
+
+                            if (viewModel.loginState.value.isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.constrainAs(progressbar) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        top.linkTo(parent.top)
+                                        bottom.linkTo(parent.bottom)
+                                    },
+                                    color = colorResource(id = R.color.main_orange)
+                                )
+                            }
                         }
                     }
-                }
             }
         }
     }
@@ -193,6 +205,7 @@ class LoginFragment : Fragment() {
         }
     }
 
+    @ExperimentalFoundationApi
     @Composable
     fun LoginTextField(
         isEmail: Boolean = false,
@@ -200,6 +213,8 @@ class LoginFragment : Fragment() {
         textState: MutableState<String>
     ) {
 
+        val scope = rememberCoroutineScope()
+        val bringIntoViewRequester = BringIntoViewRequester()
         val customTextSelectionColors = TextSelectionColors(
             handleColor = colorResource(id = R.color.gray03),
             backgroundColor = colorResource(id = R.color.gray03)
@@ -209,6 +224,17 @@ class LoginFragment : Fragment() {
 
 
             BasicTextField(
+//                modifier = Modifier
+//                    .navigationBarsWithImePadding()
+//                    .bringIntoViewRequester(bringIntoViewRequester)
+//                    .onFocusEvent {
+//                        if (it.isFocused) {
+//                            scope.launch {
+//                                delay(200)
+//                                bringIntoViewRequester.bringIntoView()
+//                            }
+//                        }
+//                    },
                 value = textState.value,
                 textStyle = TextStyle(
                     color = Color.Black,
@@ -266,6 +292,11 @@ class LoginFragment : Fragment() {
         }
 
     }
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//    }
 
     private fun setKeyboardDown() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager

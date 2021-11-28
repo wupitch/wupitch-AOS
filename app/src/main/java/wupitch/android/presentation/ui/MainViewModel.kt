@@ -21,8 +21,6 @@ class MainViewModel @Inject constructor(
     private val getDistrictRepository : GetDistrictRepository,
     private val getSportRepository: GetSportRepository
 ) : ViewModel() {
-    @ExperimentalPagerApi
 
-    var pagerState : PagerState? = null
 
 }

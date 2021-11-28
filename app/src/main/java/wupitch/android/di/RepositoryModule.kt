@@ -14,12 +14,6 @@ import javax.inject.Singleton
 object RepositoryModule {
 
     @Provides
-    @Singleton //왜 싱클턴??
-    fun provideKakaoLoginRepository(retrofit: Retrofit) : KakaoLoginRepository {
-        return KakaoLoginRepositoryImpl(retrofit)
-    }
-
-    @Provides
     @Singleton
     fun provideGetDistrictRepository(retrofit: Retrofit) : GetDistrictRepository {
         return GetDistrictRepositoryImpl(retrofit)
