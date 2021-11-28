@@ -40,8 +40,10 @@ fun GallerySelect(
         }
     }
 
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         Permission(
+            permission = listOf(android.Manifest.permission.ACCESS_MEDIA_LOCATION, android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
             permissionNotAvailableContent = {
 
                 //imageChosenState.value = false
@@ -75,6 +77,11 @@ fun GallerySelect(
             LaunchGallery()
         }
     } else {
-        LaunchGallery()
+        Permission(
+            permission =  listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            permissionNotAvailableContent = {},
+        ) {
+            LaunchGallery()
+        }
     }
 }

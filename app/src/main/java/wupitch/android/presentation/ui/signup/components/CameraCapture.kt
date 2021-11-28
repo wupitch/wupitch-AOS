@@ -46,7 +46,6 @@ import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.Permission
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @ExperimentalCoroutinesApi
 @Composable
@@ -57,7 +56,7 @@ fun CameraCapture(
     val context = LocalContext.current
 
     Permission(
-        permission = Manifest.permission.CAMERA,
+        permission = listOf(Manifest.permission.CAMERA),
         permissionNotAvailableContent = {},
     ) {
         ConstraintLayout(
