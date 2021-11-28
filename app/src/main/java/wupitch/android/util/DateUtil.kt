@@ -30,6 +30,29 @@ fun koreanDay (day : Int) : String {
     }
 }
 
+fun koreanFullDay (day : Int) : String {
+    return when(day) {
+        1 -> "일요일"
+        2-> "월요일"
+        3-> "화요일"
+        4-> "수요일"
+        5->"목요일"
+        6->"금요일"
+        else -> "토요일"
+    }
+}
+fun convertDay(day : Int) : Int {
+    return when(day) {
+        1-> 2
+        2 -> 3
+        3 -> 4
+        4 -> 5
+        5 -> 6
+        6 -> 7
+        else -> 1
+    }
+}
+
 fun checkIfDateValid(milliseconds: Long) : Boolean {
     val chosenCalendar : Calendar = Calendar.getInstance()
     chosenCalendar.timeInMillis = milliseconds

@@ -302,7 +302,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getDistricts()
         viewModel.getCrew()
-        initFcm()
+        //initFcm()
 
     }
 

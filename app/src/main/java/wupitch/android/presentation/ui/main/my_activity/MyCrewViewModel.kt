@@ -48,7 +48,8 @@ class MyCrewViewModel @Inject constructor(
                         schedules = convertedSchedule(res.result.schedules),
                         sportsId = res.result.sportsId-1,
                         materials = res.result.materials,
-                        inquiries = res.result.inquiries
+                        inquiries = res.result.inquiries,
+                        visitDays = emptyList()
                     )
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)
