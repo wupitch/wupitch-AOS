@@ -22,4 +22,5 @@ object Constants {
     const val SUPPLY_MAX_LENGTH = 100
 
     val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
+    val PAGE_SIZE = 10
 }

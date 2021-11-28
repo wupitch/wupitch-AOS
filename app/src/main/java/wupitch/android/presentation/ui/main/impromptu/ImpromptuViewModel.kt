@@ -8,7 +8,9 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.Constants
 import wupitch.android.common.Resource
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.model.ImpromptuCardInfo
@@ -28,8 +30,14 @@ class ImpromptuViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _imprtState = mutableStateOf(ImprtState())
-    val imprtState : State<ImprtState> = _imprtState
+    val loading = mutableStateOf(false)
+    val error = mutableStateOf("")
+
+    val page = mutableStateOf(1)
+    private var scrollPosition = 0
+
+    private var _imprtState = mutableStateListOf<ImpromptuCardInfo>()
+    val imprtState : SnapshotStateList<ImpromptuCardInfo> = _imprtState
 
     //district
     private var _districtList = mutableStateOf(DistrictState())
@@ -52,6 +60,36 @@ class ImpromptuViewModel @Inject constructor(
     //schedule
     private var _imprtScheduleState = mutableStateOf<Int?>(null)
     val imprtScheduleState : State<Int?> = _imprtScheduleState
+
+
+    /*
+    * pagination
+    * */
+
+    private fun appendList(list : List<ImpromptuCardInfo>) {
+        _imprtState.addAll(list)
+    }
+
+    fun getNewPage() = viewModelScope.launch {
+        if((scrollPosition + 1) >= (page.value * Constants.PAGE_SIZE)) {
+            incrementPage()
+            Log.d("{HomeViewModel.newPage}", "${page.value}")
+
+            if(page.value >1){
+                getImprt()
+            }
+        }
+    }
+
+    private fun incrementPage() {
+        page.value = page.value +1
+    }
+
+    fun onChangeScrollPosition(position : Int) {
+        scrollPosition = position
+    }
+
+
 
     fun setImprtDayList(list: SnapshotStateList<Int>) {
         _imprtDayList = list
@@ -76,7 +114,7 @@ class ImpromptuViewModel @Inject constructor(
 
 
     fun getImprt () = viewModelScope.launch {
-        _imprtState.value = ImprtState(isLoading = true)
+        loading.value = true
 
         val response = imprtRepository.getImpromptu(
             areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
@@ -86,23 +124,28 @@ class ImpromptuViewModel @Inject constructor(
             scheduleIndex = if(_imprtScheduleState.value == null) null else _imprtScheduleState.value!! +1
         )
 
-        if(response.isSuccessful){
+        if(response.isSuccessful) {
             response.body()?.let { res ->
-                if(res.isSuccess) _imprtState.value = ImprtState(data = res.result.content.map {
-                    ImpromptuCardInfo(
-                        id = it.impromptuId,
-                        remainingDays = it.dday,
-                        title = it.title,
-                        isPinned = it.isPinUp,
-                        time = "${dateDashToCol(it.date)} ${it.day} ${doubleToTime(it.startTime)}",
-                        detailAddress = it.location ?: "장소 미정",
-                        imprtImage = it.impromptuImage,
-                        gatheredPeople = it.nowMemberCount,
-                        totalCount = it.recruitmentCount
-                    )
-                })else _imprtState.value = ImprtState(error = res.message)
+                if(res.isSuccess) {
+                    loading.value = false
+                    appendList(res.result.content.map {
+                        ImpromptuCardInfo(
+                            id = it.impromptuId,
+                            remainingDays = it.dday,
+                            title = it.title,
+                            isPinned = it.isPinUp,
+                            time = "${dateDashToCol(it.date)} ${it.day} ${doubleToTime(it.startTime)}",
+                            detailAddress = it.location ?: "장소 미정",
+                            imprtImage = it.impromptuImage,
+                            gatheredPeople = it.nowMemberCount,
+                            totalCount = it.recruitmentCount
+                        )
+                    })
+                }else {
+                    error.value = res.message
+                }
             }
-        }else _imprtState.value = ImprtState(error = "번개 조회에 실패했습니다.")
+        }else error.value = "번개 조회에 실패했습니다."
     }
 
     fun setUserDistrict(districtId : Int, districtName : String) {

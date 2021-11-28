@@ -2,16 +2,16 @@ package wupitch.android.presentation.ui.main.home
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,17 +26,15 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.common.Constants.PAGE_SIZE
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.CreateFab
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
-import wupitch.android.presentation.ui.main.MainFragment
-import wupitch.android.presentation.ui.main.home.components.CrewList
-import wupitch.android.presentation.ui.main.search.components.checkKeywordLen
+import wupitch.android.presentation.ui.main.home.components.CrewCard
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -56,13 +54,15 @@ class HomeFragment : Fragment() {
                 WupitchTheme {
 
 
+                    val page = remember {viewModel.page.value}
                     val districtNameState = remember { viewModel.userDistrictName }
 
                     val crewState = remember { viewModel.crewState }
-                    if (crewState.value.error.isNotEmpty()) {
-                        Toast.makeText(requireContext(), crewState.value.error, Toast.LENGTH_SHORT)
+                    if (viewModel.error.value.isNotEmpty()) {
+                        Toast.makeText(requireContext(), viewModel.error.value, Toast.LENGTH_SHORT)
                             .show()
                     }
+                    val loading = remember {viewModel.loading }
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -85,27 +85,55 @@ class HomeFragment : Fragment() {
 
                             })
 
-                        if (crewState.value.data.isNotEmpty()) {
+                        if (crewState.isNotEmpty()) {
 
-                            CrewList(
-                                modifier = Modifier.constrainAs(homeList) {
-                                    top.linkTo(toolbar.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom)
-                                    height = Dimension.fillToConstraints
-                                },
-                                crewList = crewState.value.data,
-                                navigationToCrewDetailScreen = {
-                                    val bundle = Bundle().apply { putInt("crewId", it) }
-                                    activity?.findNavController(R.id.main_nav_container_view)
-                                        ?.navigate(
-                                            R.id.action_mainFragment_to_crewDetailFragment,
-                                            bundle
-                                        )
-                                })
+                            Box(modifier = Modifier.constrainAs(homeList) {
+                                top.linkTo(toolbar.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                height = Dimension.fillToConstraints
+                            }.background(Color.White)) {
+
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = crewState
+                                    ) { index, crew ->
+                                        viewModel.onChangeScrollPosition(index)
+                                        if((index +1) >= (page * PAGE_SIZE) && !loading.value){
+                                            viewModel.getNewPage()
+                                        }
+                                        CrewCard(crewCard = crew) {
+                                            val bundle = Bundle().apply { putInt("crewId", crew.id) }
+                                            activity?.findNavController(R.id.main_nav_container_view)
+                                                ?.navigate(
+                                                    R.id.action_mainFragment_to_crewDetailFragment,
+                                                    bundle
+                                                )
+                                        }
+                                    }
+                                }
+                            }
+
+//                            CrewList(
+//                                modifier = Modifier.constrainAs(homeList) {
+//                                    top.linkTo(toolbar.bottom)
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    bottom.linkTo(parent.bottom)
+//                                    height = Dimension.fillToConstraints
+//                                },
+//                                crewList = crewState.value.data,
+//                                navigationToCrewDetailScreen = {
+//                                    val bundle = Bundle().apply { putInt("crewId", it) }
+//                                    activity?.findNavController(R.id.main_nav_container_view)
+//                                        ?.navigate(
+//                                            R.id.action_mainFragment_to_crewDetailFragment,
+//                                            bundle
+//                                        )
+//                                })
                         }else {
-                            if(!crewState.value.isLoading) {
+                            if(!loading.value) {
 
                                ConstraintLayout(Modifier.constrainAs(noResult) {
                                     start.linkTo(parent.start)
@@ -156,7 +184,7 @@ class HomeFragment : Fragment() {
                                     ?.navigate(R.id.action_mainFragment_to_createCrewSport)
                             })
 
-                        if (crewState.value.isLoading) {
+                        if (loading.value) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)

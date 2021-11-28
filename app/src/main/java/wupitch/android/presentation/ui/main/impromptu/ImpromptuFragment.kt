@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,11 +30,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.CreateFab
 import wupitch.android.presentation.ui.components.DistrictBottomSheetFragment
-import wupitch.android.presentation.ui.main.impromptu.components.ImpromptuList
+import wupitch.android.presentation.ui.main.impromptu.components.ImpromptuCard
 
 @AndroidEntryPoint
 class ImpromptuFragment : Fragment() {
@@ -52,12 +55,14 @@ class ImpromptuFragment : Fragment() {
                 WupitchTheme {
 
                     val districtNameState = remember { viewModel.userDistrictName }
+                    val page = remember {viewModel.page.value}
 
                     val imprtState = remember { viewModel.imprtState }
-                    if (imprtState.value.error.isNotEmpty()) {
-                        Toast.makeText(requireContext(), imprtState.value.error, Toast.LENGTH_SHORT)
+                    if (viewModel.error.value.isNotEmpty()) {
+                        Toast.makeText(requireContext(), viewModel.error.value, Toast.LENGTH_SHORT)
                             .show()
                     }
+                    val loading = remember {viewModel.loading }
 
 
                     ConstraintLayout(
@@ -79,27 +84,55 @@ class ImpromptuFragment : Fragment() {
                                 showDistrictBottomSheet()
                             })
 
-                        if (imprtState.value.data.isNotEmpty()) {
+                        if (imprtState.isNotEmpty()) {
 
-                            ImpromptuList(
-                                modifier = Modifier.constrainAs(homeList) {
-                                    top.linkTo(toolbar.bottom)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom)
-                                    height = Dimension.fillToConstraints
-                                },
-                                list = imprtState.value.data,
-                                navigationToCrewDetailScreen = {
-                                    val bundle = Bundle().apply { putInt("impromptuId", it) }
-                                    activity?.findNavController(R.id.main_nav_container_view)
-                                        ?.navigate(
-                                            R.id.action_mainFragment_to_impromptuDetailFragment,
-                                            bundle
-                                        )
-                                })
+                            Box(modifier = Modifier.constrainAs(homeList) {
+                                top.linkTo(toolbar.bottom)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                height = Dimension.fillToConstraints
+                            }.background(Color.White)) {
+
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = imprtState
+                                    ) { index, item ->
+                                        viewModel.onChangeScrollPosition(index)
+                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
+                                            viewModel.getNewPage()
+                                        }
+                                        ImpromptuCard(cardInfo = item) {
+                                            val bundle = Bundle().apply { putInt("impromptuId", item.id) }
+                                            activity?.findNavController(R.id.main_nav_container_view)
+                                                ?.navigate(
+                                                    R.id.action_mainFragment_to_impromptuDetailFragment,
+                                                    bundle
+                                                )
+                                        }
+                                    }
+                                }
+                            }
+
+//                            ImpromptuList(
+//                                modifier = Modifier.constrainAs(homeList) {
+//                                    top.linkTo(toolbar.bottom)
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    bottom.linkTo(parent.bottom)
+//                                    height = Dimension.fillToConstraints
+//                                },
+//                                list = imprtState.value.data,
+//                                navigationToCrewDetailScreen = {
+//                                    val bundle = Bundle().apply { putInt("impromptuId", it) }
+//                                    activity?.findNavController(R.id.main_nav_container_view)
+//                                        ?.navigate(
+//                                            R.id.action_mainFragment_to_impromptuDetailFragment,
+//                                            bundle
+//                                        )
+//                                })
                         }else {
-                             if(!imprtState.value.isLoading) {
+                             if(!loading.value) {
 
                                 ConstraintLayout(Modifier.constrainAs(noResult) {
                                     start.linkTo(parent.start)
@@ -150,7 +183,7 @@ class ImpromptuFragment : Fragment() {
                                     ?.navigate(R.id.action_mainFragment_to_createImprtLocationFragment)
                             })
 
-                        if (imprtState.value.isLoading) {
+                        if (loading.value) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)

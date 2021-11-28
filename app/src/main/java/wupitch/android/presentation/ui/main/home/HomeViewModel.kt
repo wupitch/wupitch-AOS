@@ -10,7 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.Constants.PAGE_SIZE
 import wupitch.android.common.Resource
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.repository.CrewRepository
@@ -26,8 +28,14 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private var _crewState = mutableStateOf(CrewState())
-    val crewState : State<CrewState> = _crewState
+    val loading = mutableStateOf(false)
+    val error = mutableStateOf("")
+
+    val page = mutableStateOf(1)
+    private var scrollPosition = 0
+
+    private var _crewState = mutableStateListOf<CrewCardInfo>()
+    val crewState : SnapshotStateList<CrewCardInfo> = _crewState
 
     //district
     private var _districtList = mutableStateOf(DistrictState())
@@ -53,6 +61,33 @@ class HomeViewModel @Inject constructor(
     //size
     private var _crewSizeState = mutableStateOf<Int?>(null)
     val crewSizeState : State<Int?> = _crewSizeState
+
+    /*
+    * pagination
+    * */
+
+    private fun appendList(list : List<CrewCardInfo>) {
+        _crewState.addAll(list)
+    }
+
+    fun getNewPage() = viewModelScope.launch {
+        if((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+            incrementPage()
+            Log.d("{HomeViewModel.newPage}", "${page.value}")
+
+            if(page.value >1){
+                getCrew()
+            }
+        }
+    }
+
+    private fun incrementPage() {
+        page.value = page.value +1
+    }
+
+    fun onChangeScrollPosition(position : Int) {
+        scrollPosition = position
+    }
 
     fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
         _crewAgeGroupList = list
@@ -84,33 +119,36 @@ class HomeViewModel @Inject constructor(
 
 
     fun getCrew() = viewModelScope.launch {
-        _crewState.value = CrewState(isLoading = true)
+        loading.value = true
 
         val response = crewRepository.getCrew(
             ageList = if(_crewAgeGroupList.isEmpty())null else _crewAgeGroupList.map { it +1 },
             areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
-            page = 1,
+            page = page.value,
             sportsList = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
         )
-        if(response.isSuccessful){
+        if(response.isSuccessful) {
             response.body()?.let { res ->
-                if(res.isSuccess) _crewState.value = CrewState(data = res.result.content.map {
-                    CrewCardInfo(
-                        id = it.clubId,
-                        sportId = it.sportsId -1,
-                        isPinned = it.isPinUp,
-                        time = "${it.schedules[0].day} ${doubleToTime(it.schedules[0].startTime)}-${doubleToTime(it.schedules[0].endTime)}",
-                        isMoreThanOnceAWeek = it.schedules.size >1,
-                        detailAddress = it.areaName ?: "장소 미정",
-                        crewImage = it.crewImage,
-                        title = it.clubTitle
-                )})else _crewState.value = CrewState(error = res.message)
+                if(res.isSuccess) {
+                    loading.value = false
+                    appendList(res.result.content.map {
+                        CrewCardInfo(
+                            id = it.clubId,
+                            sportId = it.sportsId -1,
+                            isPinned = it.isPinUp,
+                            time = "${it.schedules[0].day} ${doubleToTime(it.schedules[0].startTime)}-${doubleToTime(it.schedules[0].endTime)}",
+                            isMoreThanOnceAWeek = it.schedules.size >1,
+                            detailAddress = it.areaName ?: "장소 미정",
+                            crewImage = it.crewImage,
+                            title = it.clubTitle
+                        )})
+                } else {
+                    error.value = res.message
+                }
             }
-        }else _crewState.value = CrewState(error = "크루 조회에 실패했습니다.")
-
-
+        }else error.value = "크루 조회에 실패했습니다."
     }
 
 
