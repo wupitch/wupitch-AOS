@@ -23,6 +23,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -33,7 +34,7 @@ import wupitch.android.presentation.ui.components.*
 @AndroidEntryPoint
 class CreateCrewFeeFragment : Fragment() {
 
-    private val viewModel : CreateCrewViewModel by activityViewModels()
+    private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
 
     @ExperimentalPagerApi
     override fun onCreateView(

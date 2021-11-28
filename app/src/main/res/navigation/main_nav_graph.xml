@@ -25,7 +25,7 @@
             app:destination="@id/notificationFragment" />
         <action
             android:id="@+id/action_mainFragment_to_createCrewSport"
-            app:destination="@id/createCrewSport" />
+            app:destination="@id/create_crew_nav" />
         <action
             android:id="@+id/action_mainFragment_to_impromptuDetailFragment"
             app:destination="@id/impromptuDetailFragment" />
@@ -34,7 +34,7 @@
             app:destination="@id/impromptuFilterFragment" />
         <action
             android:id="@+id/action_mainFragment_to_createImprtLocationFragment"
-            app:destination="@id/createImprtLocationFragment" />
+            app:destination="@id/create_impromptu_nav" />
 
         <action
             android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
@@ -78,77 +78,15 @@
         <action
             android:id="@+id/action_splashFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_serviceAgreementFragment"
-            app:destination="@id/serviceAgreementFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_createCrewScheduleFragment"
-            app:destination="@id/createCrewScheduleFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_idCardFragment"
-            app:destination="@id/idCardFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_createCrewFeeFragment"
-            app:destination="@id/createCrewFeeFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_createCrewInfoFragment"
-            app:destination="@id/createCrewInfoFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_createCrewImageFragment"
-            app:destination="@id/createCrewImageFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/serviceAgreementFragment"
-        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
-        android:label="ServiceAgreementFragment">
-        <action
-            android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
-            app:destination="@id/serviceAgreementDetailFragment" />
-        <action
-            android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
-            app:destination="@id/useOfPersonalInfoDetailFragment" />
-        <action
-            android:id="@+id/action_serviceAgreementFragment_to_emailPwFragment"
-            app:destination="@id/emailPwFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="wupitch.android.presentation.ui.signup.ProfileFragment"
-        android:label="ProfileFragment" >
-        <action
-            android:id="@+id/action_profileFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_profileFragment_to_idCardFragment"
-            app:destination="@id/idCardFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/serviceAgreementDetailFragment"
-        android:name="wupitch.android.presentation.ui.signup.ServiceAgreementDetailFragment"
-        android:label="ServiceAgreementDetailFragment" />
-    <fragment
-        android:id="@+id/useOfPersonalInfoDetailFragment"
-        android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
-        android:label="UseOfPersonalInfoDetailFragment" />
-    <fragment
-        android:id="@+id/reqIdCertiFragment"
-        android:name="wupitch.android.presentation.ui.signup.ReqIdCertiFragment"
-        android:label="ReqIdCertiFragment" />
+
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="wupitch.android.presentation.ui.onboarding.OnboardingFragment"
         android:label="OnboardingFragment" >
         <action
             android:id="@+id/action_onboardingFragment_to_serviceAgreementFragment"
-            app:destination="@id/serviceAgreementFragment" />
+            app:destination="@id/signup_nav" />
         <action
             android:id="@+id/action_onboardingFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -171,135 +109,12 @@
         android:name="wupitch.android.presentation.ui.main.notification.NotificationFragment"
         android:label="NotificationFragment" />
     <fragment
-        android:id="@+id/createCrewSport"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewSportFragment"
-        android:label="CreateCrewSport" >
-        <action
-            android:id="@+id/action_createCrewSport_to_createCrewLocationFragment"
-            app:destination="@id/createCrewLocationFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewLocationFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewLocationFragment"
-        android:label="CreateCrewLocationFragment" >
-        <action
-            android:id="@+id/action_createCrewLocationFragment_to_createCrewInfoFragment"
-            app:destination="@id/createCrewInfoFragment" />
-        <action
-            android:id="@+id/action_createCrewLocationFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewInfoFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewInfoFragment"
-        android:label="CreateCrewInfoFragment" >
-        <action
-            android:id="@+id/action_createCrewInfoFragment_to_createCrewScheduleFragment"
-            app:destination="@id/createCrewScheduleFragment" />
-        <action
-            android:id="@+id/action_createCrewInfoFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewScheduleFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewScheduleFragment"
-        android:label="CreateCrewScheduleFragment" >
-        <action
-            android:id="@+id/action_createCrewScheduleFragment_to_createCrewImageFragment"
-            app:destination="@id/createCrewImageFragment" />
-        <action
-            android:id="@+id/action_createCrewScheduleFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewImageFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewImageFragment"
-        android:label="CreateCrewImageFragment" >
-        <action
-            android:id="@+id/action_createCrewImageFragment_to_createCrewFeeFragment"
-            app:destination="@id/createCrewFeeFragment" />
-        <action
-            android:id="@+id/action_createCrewImageFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewFeeFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewFeeFragment"
-        android:label="CreateCrewFeeFragment" >
-        <action
-            android:id="@+id/action_createCrewFeeFragment_to_createCrewVisitorFeeFragment"
-            app:destination="@id/createCrewVisitorFeeFragment" />
-        <action
-            android:id="@+id/action_createCrewFeeFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createCrewVisitorFeeFragment"
-        android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewVisitorFeeFragment"
-        android:label="CreateCrewVisitorFeeFragment" >
-
-        <action
-            android:id="@+id/action_createCrewVisitorFeeFragment_to_crewDetailFragment"
-            app:destination="@id/crewDetailFragment"
-            app:popUpTo="@id/createCrewSport"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_createCrewVisitorFeeFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/emailPwFragment"
-        android:name="wupitch.android.presentation.ui.signup.EmailPwFragment"
-        android:label="EmailPwFragment" >
-        <action
-            android:id="@+id/action_emailPwFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_emailPwFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/idCardFragment"
-        android:name="wupitch.android.presentation.ui.signup.IdCardFragment"
-        android:label="IdCardFragment" >
-        <action
-            android:id="@+id/action_idCardFragment_to_idCardCameraFragment"
-            app:destination="@id/idCardCameraFragment" />
-        <action
-            android:id="@+id/action_idCardFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment"
-            app:popUpTo="@id/onboardingFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/idCardCameraFragment"
-        android:name="wupitch.android.presentation.ui.signup.IdCardCameraFragment"
-        android:label="idCardCameraFragment" >
-        <action
-            android:id="@+id/action_idCardCameraFragment_to_reqIdCertiFragment"
-            app:destination="@id/reqIdCertiFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/loginFragment"
         android:name="wupitch.android.presentation.ui.onboarding.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_serviceAgreementFragment"
-            app:destination="@id/serviceAgreementFragment" />
+            app:destination="@id/signup_nav" />
         <action
             android:id="@+id/action_loginFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
@@ -323,73 +138,6 @@
         android:id="@+id/impromptuFilterFragment"
         android:name="wupitch.android.presentation.ui.main.impromptu.filter.ImpromptuFilterFragment"
         android:label="ImpromptuFilterFragment" />
-    <fragment
-        android:id="@+id/createImprtLocationFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtLocationFragment"
-        android:label="CreateImprtLocationFragment" >
-        <action
-            android:id="@+id/action_createImprtLocationFragment_to_createImprtScheduleFragment"
-            app:destination="@id/createImprtScheduleFragment" />
-        <action
-            android:id="@+id/action_createImprtLocationFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createImprtScheduleFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtScheduleFragment"
-        android:label="CreateImprtScheduleFragment" >
-        <action
-            android:id="@+id/action_createImprtScheduleFragment_to_createImprtImageFragment"
-            app:destination="@id/createImprtImageFragment" />
-        <action
-            android:id="@+id/action_createImprtScheduleFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createImprtFeeFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtFeeFragment"
-        android:label="CreateImprtFeeFragment" >
-        <action
-            android:id="@+id/action_createImprtFeeFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_createImprtFeeFragment_to_impromptuDetailFragment"
-            app:destination="@id/impromptuDetailFragment"
-            app:popUpTo="@id/createImprtLocationFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/createImprtSizeFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtSizeFragment"
-        android:label="CreateImprtSizeFragment" >
-        <action
-            android:id="@+id/action_createImprtSizeFragment_to_createImprtFeeFragment"
-            app:destination="@id/createImprtFeeFragment" />
-        <action
-            android:id="@+id/action_createImprtSizeFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
-    <fragment
-        android:id="@+id/createImprtImageFragment"
-        android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtImageFragment"
-        android:label="CreateImprtImageFragment" >
-        <action
-            android:id="@+id/action_createImprtImageFragment_to_createImprtSizeFragment"
-            app:destination="@id/createImprtSizeFragment" />
-        <action
-            android:id="@+id/action_createImprtImageFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"/>
-    </fragment>
     <fragment
         android:id="@+id/myCrewDetailFragment"
         android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"
@@ -469,4 +217,242 @@
             app:argType="boolean"
             android:defaultValue="false" />
     </fragment>
+    <navigation android:id="@+id/create_impromptu_nav"
+        app:startDestination="@id/createImprtLocationFragment">
+        <fragment
+            android:id="@+id/createImprtLocationFragment"
+            android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtLocationFragment"
+            android:label="CreateImprtLocationFragment">
+            <action
+                android:id="@+id/action_createImprtLocationFragment_to_createImprtScheduleFragment"
+                app:destination="@id/createImprtScheduleFragment" />
+            <action
+                android:id="@+id/action_createImprtLocationFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createImprtScheduleFragment"
+            android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtScheduleFragment"
+            android:label="CreateImprtScheduleFragment">
+            <action
+                android:id="@+id/action_createImprtScheduleFragment_to_createImprtImageFragment"
+                app:destination="@id/createImprtImageFragment" />
+            <action
+                android:id="@+id/action_createImprtScheduleFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createImprtImageFragment"
+            android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtImageFragment"
+            android:label="CreateImprtImageFragment">
+            <action
+                android:id="@+id/action_createImprtImageFragment_to_createImprtSizeFragment"
+                app:destination="@id/createImprtSizeFragment" />
+            <action
+                android:id="@+id/action_createImprtImageFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createImprtSizeFragment"
+            android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtSizeFragment"
+            android:label="CreateImprtSizeFragment">
+            <action
+                android:id="@+id/action_createImprtSizeFragment_to_createImprtFeeFragment"
+                app:destination="@id/createImprtFeeFragment" />
+            <action
+                android:id="@+id/action_createImprtSizeFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createImprtFeeFragment"
+            android:name="wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtFeeFragment"
+            android:label="CreateImprtFeeFragment">
+            <action
+                android:id="@+id/action_createImprtFeeFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_createImprtFeeFragment_to_impromptuDetailFragment"
+                app:destination="@id/impromptuDetailFragment"
+                app:popUpTo="@id/createImprtLocationFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+    </navigation>
+    <navigation android:id="@+id/create_crew_nav"
+        app:startDestination="@id/createCrewSport">
+        <fragment
+            android:id="@+id/createCrewSport"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewSportFragment"
+            android:label="CreateCrewSport">
+            <action
+                android:id="@+id/action_createCrewSport_to_createCrewLocationFragment"
+                app:destination="@id/createCrewLocationFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewLocationFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewLocationFragment"
+            android:label="CreateCrewLocationFragment">
+            <action
+                android:id="@+id/action_createCrewLocationFragment_to_createCrewInfoFragment"
+                app:destination="@id/createCrewInfoFragment" />
+            <action
+                android:id="@+id/action_createCrewLocationFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewScheduleFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewScheduleFragment"
+            android:label="CreateCrewScheduleFragment">
+            <action
+                android:id="@+id/action_createCrewScheduleFragment_to_createCrewImageFragment"
+                app:destination="@id/createCrewImageFragment" />
+            <action
+                android:id="@+id/action_createCrewScheduleFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewImageFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewImageFragment"
+            android:label="CreateCrewImageFragment">
+            <action
+                android:id="@+id/action_createCrewImageFragment_to_createCrewFeeFragment"
+                app:destination="@id/createCrewFeeFragment" />
+            <action
+                android:id="@+id/action_createCrewImageFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewFeeFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewFeeFragment"
+            android:label="CreateCrewFeeFragment">
+            <action
+                android:id="@+id/action_createCrewFeeFragment_to_createCrewVisitorFeeFragment"
+                app:destination="@id/createCrewVisitorFeeFragment" />
+            <action
+                android:id="@+id/action_createCrewFeeFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewVisitorFeeFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewVisitorFeeFragment"
+            android:label="CreateCrewVisitorFeeFragment">
+
+            <action
+                android:id="@+id/action_createCrewVisitorFeeFragment_to_crewDetailFragment"
+                app:destination="@id/crewDetailFragment"
+                app:popUpTo="@id/createCrewSport"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_createCrewVisitorFeeFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/createCrewInfoFragment"
+            android:name="wupitch.android.presentation.ui.main.home.create_crew.CreateCrewInfoFragment"
+            android:label="CreateCrewInfoFragment">
+            <action
+                android:id="@+id/action_createCrewInfoFragment_to_createCrewScheduleFragment"
+                app:destination="@id/createCrewScheduleFragment" />
+            <action
+                android:id="@+id/action_createCrewInfoFragment_to_mainFragment"
+                app:destination="@id/mainFragment"
+                app:popUpTo="@id/mainFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+    </navigation>
+    <navigation android:id="@+id/signup_nav"
+        app:startDestination="@id/serviceAgreementFragment">
+        <fragment
+            android:id="@+id/serviceAgreementFragment"
+            android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
+            android:label="ServiceAgreementFragment">
+            <action
+                android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
+                app:destination="@id/serviceAgreementDetailFragment" />
+            <action
+                android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
+                app:destination="@id/useOfPersonalInfoDetailFragment" />
+            <action
+                android:id="@+id/action_serviceAgreementFragment_to_emailPwFragment"
+                app:destination="@id/emailPwFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/serviceAgreementDetailFragment"
+            android:name="wupitch.android.presentation.ui.signup.ServiceAgreementDetailFragment"
+            android:label="ServiceAgreementDetailFragment" />
+        <fragment
+            android:id="@+id/useOfPersonalInfoDetailFragment"
+            android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
+            android:label="UseOfPersonalInfoDetailFragment" />
+        <fragment
+            android:id="@+id/idCardFragment"
+            android:name="wupitch.android.presentation.ui.signup.IdCardFragment"
+            android:label="IdCardFragment">
+            <action
+                android:id="@+id/action_idCardFragment_to_idCardCameraFragment"
+                app:destination="@id/idCardCameraFragment" />
+            <action
+                android:id="@+id/action_idCardFragment_to_onboardingFragment"
+                app:destination="@id/onboardingFragment"
+                app:popUpTo="@id/onboardingFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/idCardCameraFragment"
+            android:name="wupitch.android.presentation.ui.signup.IdCardCameraFragment"
+            android:label="idCardCameraFragment">
+            <action
+                android:id="@+id/action_idCardCameraFragment_to_reqIdCertiFragment"
+                app:destination="@id/reqIdCertiFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/reqIdCertiFragment"
+            android:name="wupitch.android.presentation.ui.signup.ReqIdCertiFragment"
+            android:label="ReqIdCertiFragment" />
+        <fragment
+            android:id="@+id/emailPwFragment"
+            android:name="wupitch.android.presentation.ui.signup.EmailPwFragment"
+            android:label="EmailPwFragment">
+            <action
+                android:id="@+id/action_emailPwFragment_to_profileFragment"
+                app:destination="@id/profileFragment" />
+            <action
+                android:id="@+id/action_emailPwFragment_to_onboardingFragment"
+                app:destination="@id/onboardingFragment"
+                app:popUpTo="@id/onboardingFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/profileFragment"
+            android:name="wupitch.android.presentation.ui.signup.ProfileFragment"
+            android:label="ProfileFragment">
+            <action
+                android:id="@+id/action_profileFragment_to_onboardingFragment"
+                app:destination="@id/onboardingFragment"
+                app:popUpTo="@id/onboardingFragment"
+                app:popUpToInclusive="true" />
+            <action
+                android:id="@+id/action_profileFragment_to_idCardFragment"
+                app:destination="@id/idCardFragment" />
+        </fragment>
+    </navigation>
 </navigation>

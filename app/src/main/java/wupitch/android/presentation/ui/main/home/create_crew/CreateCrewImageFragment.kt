@@ -47,6 +47,7 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.util.Sport
 import android.provider.MediaStore
+import androidx.navigation.navGraphViewModels
 
 
 @ExperimentalPermissionsApi
@@ -55,7 +56,7 @@ import android.provider.MediaStore
 class CreateCrewImageFragment : Fragment() {
 
     private lateinit var uploadImageBottomSheet: UploadImageBottomSheetFragment
-    private val viewModel: CreateCrewViewModel by activityViewModels()
+    private val viewModel: CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,

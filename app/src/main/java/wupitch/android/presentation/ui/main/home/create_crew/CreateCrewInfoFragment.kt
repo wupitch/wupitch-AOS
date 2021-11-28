@@ -30,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -44,7 +45,7 @@ import wupitch.android.presentation.ui.components.NumberTextFieldLayout
 @AndroidEntryPoint
 class CreateCrewInfoFragment : Fragment() {
 
-    private val viewModel : CreateCrewViewModel by activityViewModels()
+    private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,

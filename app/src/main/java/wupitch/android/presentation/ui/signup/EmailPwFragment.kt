@@ -46,6 +46,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -59,7 +60,7 @@ import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class EmailPwFragment : Fragment() {
 
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by navGraphViewModels(R.id.signup_nav) {defaultViewModelProviderFactory}
     private var pwJob: Job? = null
     private var emailJob: Job? = null
 

@@ -38,6 +38,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ import wupitch.android.presentation.ui.components.StopWarningDialog
 
 class ProfileFragment : Fragment() {
 
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by navGraphViewModels(R.id.signup_nav) {defaultViewModelProviderFactory}
     private var job: Job? = null
 
     override fun onCreateView(

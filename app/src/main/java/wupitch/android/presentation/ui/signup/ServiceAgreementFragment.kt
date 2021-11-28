@@ -23,6 +23,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
@@ -37,7 +38,7 @@ import wupitch.android.presentation.ui.signup.components.ToggleIcon
 @AndroidEntryPoint
 class ServiceAgreementFragment : Fragment() {
 
-    private val viewModel: SignupViewModel by activityViewModels()
+    private val viewModel: SignupViewModel by navGraphViewModels(R.id.signup_nav) {defaultViewModelProviderFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,

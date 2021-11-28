@@ -32,6 +32,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -43,7 +44,7 @@ import wupitch.android.presentation.ui.components.*
 class CreateImprtLocationFragment : Fragment() {
 
     private lateinit var districtBottomSheet: DistrictBottomSheetFragment
-    private val viewModel: CreateImprtViewModel by activityViewModels()
+    private val viewModel: CreateImprtViewModel by navGraphViewModels(R.id.create_impromptu_nav) {defaultViewModelProviderFactory}
 
     @ExperimentalPagerApi
     override fun onCreateView(

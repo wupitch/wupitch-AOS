@@ -34,6 +34,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -52,7 +53,7 @@ import wupitch.android.presentation.ui.components.*
 class CreateImprtImageFragment : Fragment() {
 
     private lateinit var uploadImageBottomSheet: UploadImageBottomSheetFragment
-    private val viewModel: CreateImprtViewModel by activityViewModels()
+    private val viewModel: CreateImprtViewModel by navGraphViewModels(R.id.create_impromptu_nav) {defaultViewModelProviderFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,

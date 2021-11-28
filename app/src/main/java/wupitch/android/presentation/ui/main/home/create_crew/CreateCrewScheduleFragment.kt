@@ -35,6 +35,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -48,7 +49,7 @@ import wupitch.android.presentation.ui.components.*
 class CreateCrewScheduleFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
-    private val viewModel : CreateCrewViewModel by activityViewModels()
+    private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
 
 
     override fun onCreateView(

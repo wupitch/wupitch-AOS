@@ -36,6 +36,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.navGraphViewModels
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
@@ -49,7 +50,7 @@ import wupitch.android.presentation.ui.components.TitleToolbar
 class CreateCrewSportFragment : Fragment() {
 
 
-    private val viewModel: CreateCrewViewModel by activityViewModels()
+    private val viewModel: CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
     private var checkedRadioButton: MutableState<Boolean>? = null
 
 
@@ -66,7 +67,8 @@ class CreateCrewSportFragment : Fragment() {
                 val stopSignupState = remember { mutableStateOf(false) }
                 val dialogOpenState = remember { mutableStateOf(false) }
 
-                if (stopSignupState.value) { findNavController().navigateUp() }
+                if (stopSignupState.value) {
+                    findNavController().navigateUp() }
                 if (dialogOpenState.value) {
                     StopWarningDialog(
                         dialogOpenState = dialogOpenState,
@@ -78,7 +80,7 @@ class CreateCrewSportFragment : Fragment() {
                 val sportSelectedState = remember { viewModel.crewSportId }
 
                 BackHandler {
-                    if (viewModel.crewDistrictId.value != null) dialogOpenState.value = true
+                    if (viewModel.crewSportId.value != -1) dialogOpenState.value = true
                     else findNavController().navigateUp()
                 }
 
@@ -100,7 +102,7 @@ class CreateCrewSportFragment : Fragment() {
                             "{CreateCrewSportFragment.onCreateView}",
                             viewModel.crewDistrictId.value.toString()
                         )
-                        if (viewModel.crewDistrictId.value != null) {
+                        if (viewModel.crewSportId.value != -1) {
                             dialogOpenState.value = true
                         } else {
                             findNavController().navigateUp()
