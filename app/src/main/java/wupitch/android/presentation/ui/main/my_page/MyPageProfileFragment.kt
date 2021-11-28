@@ -52,8 +52,13 @@ import wupitch.android.presentation.ui.components.RoundBtn
 @AndroidEntryPoint
 class MyPageProfileFragment : Fragment() {
 
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageProfileViewModel by viewModels()
     private var job: Job? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getUserInfo()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,13 +76,13 @@ class MyPageProfileFragment : Fragment() {
                     ) {
                         val (toolbar, title, nicknameEt, introEt, nicknameValidation, introCounter, nextBtn) = createRefs()
 
-                        //todo 처음에 유저 정보 가져오기.
                         val nicknameState =
-                            remember { mutableStateOf(viewModel.userNickname.value ?: "") }
+                            remember { mutableStateOf("") }
                         val introState =
-                            remember { mutableStateOf(viewModel.userIntroduce.value ?: "") }
+                            remember { mutableStateOf("") }
 
-                        val isNicknameValidState = viewModel.isNicknameValid.observeAsState()
+                        val isNicknameValidState = remember {viewModel.isNicknameValid}
+
                         val updateState = remember { viewModel.updateState }
                         if (updateState.value.isSuccess) findNavController().navigateUp()
                         if (updateState.value.error.isNotEmpty()) {
@@ -119,7 +124,7 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .width(152.dp)
                                 .height(44.dp),
-                            textString = R.string.input_nickname,
+                            textString = viewModel.userNickname.value,
                             stringState = nicknameState,
                             maxLength = 6,
                             validateNickname = true
@@ -135,7 +140,7 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(164.dp),
-                            textString = R.string.input_introduction,
+                            textString = viewModel.userIntroduce.value,
                             stringState = introState,
                             maxLength = 100
                         )
@@ -181,16 +186,13 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (introState.value.isNotEmpty() && isNicknameValidState.value == true && nicknameState.value.isNotEmpty()) R.color.main_orange
+                            btnColor = if (introState.value.isNotEmpty() || (isNicknameValidState.value == true && nicknameState.value.isNotEmpty())) R.color.main_orange
                             else R.color.gray03,
                             textString = R.string.done,
                             fontSize = 16.sp
                         ) {
-                            if (introState.value.isNotEmpty() &&
-                                isNicknameValidState.value == true &&
-                                nicknameState.value.isNotEmpty()
-                            ) {
-                                viewModel.setUserIntroduce(introState.value)
+                            if (introState.value.isNotEmpty() || (isNicknameValidState.value == true && nicknameState.value.isNotEmpty())) {
+                                if(introState.value.isNotEmpty())viewModel.setUserIntroduce(introState.value)
                                 viewModel.changeUserNicknameOrIntro()
                             }
                         }
@@ -203,7 +205,7 @@ class MyPageProfileFragment : Fragment() {
     @Composable
     fun ProfileTextField(
         modifier: Modifier,
-        @StringRes textString: Int,
+        textString: String,
         stringState: MutableState<String>,
         maxLength: Int,
         validateNickname: Boolean = false
@@ -260,7 +262,7 @@ class MyPageProfileFragment : Fragment() {
                                     start.linkTo(parent.start)
                                     top.linkTo(parent.top)
                                 },
-                                text = stringResource(id = textString),
+                                text = textString,
                                 color = colorResource(
                                     id = R.color.gray03
                                 ),

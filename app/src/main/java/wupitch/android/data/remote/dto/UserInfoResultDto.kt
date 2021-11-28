@@ -6,7 +6,7 @@ import wupitch.android.domain.model.UserInfoResult
 data class UserInfoResultDto(
     val accountId: Int,
     val email: String,
-    val introduce: String?,
+    val introduce: String,
     val isPushAgree: Boolean?,
     val jwt: String,
     val nickname: String,
@@ -15,7 +15,7 @@ data class UserInfoResultDto(
 
 fun UserInfoResultDto.toResult() : UserInfoResult {
     return UserInfoResult(
-        introduce = introduce ?: "",
+        introduce = introduce,
         isPushAgree = isPushAgree ?: false,
         nickname = nickname,
         profileImageUrl = profileImageUrl

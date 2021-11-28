@@ -38,39 +38,16 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-    private val checkValidRepository: CheckValidRepository,
     private val profileRepository: ProfileRepository,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
+    /*
+    * user info
+    * */
     private var _userInfo = mutableStateOf(UserInfoState())
     val userInfo : State<UserInfoState> = _userInfo
 
-    private var _userNotiState = mutableStateOf(NotiState())
-    val userNotiState : State<NotiState> = _userNotiState
-
-    //profile
-    private var _isNicknameValid = MutableLiveData<Boolean?>()
-    val isNicknameValid: LiveData<Boolean?> = _isNicknameValid
-
-    private var _userNickname = MutableLiveData<String?>()
-    val userNickname: LiveData<String?> = _userNickname
-
-    private var _userIntroduce = MutableLiveData<String>()
-    val userIntroduce: LiveData<String> = _userIntroduce
-
-
-    //password
-    private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
-    val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
-
-    private var _isNewPwValid = mutableStateOf<Boolean?>(null)
-    val isNewPwValid : State<Boolean?> = _isNewPwValid
-
-    private var _userNewPw = mutableStateOf("")
-
-    private var _changePwState = mutableStateOf(BaseState())
-    val changePwState : State<BaseState> = _changePwState
 
     fun getUserInfo() = viewModelScope.launch {
         _userInfo.value = UserInfoState(isLoading = true)
@@ -83,6 +60,36 @@ class MyPageViewModel @Inject constructor(
             }
         }else  _userInfo.value = UserInfoState(error = "유저 정보 조회를 실패했습니다.")
     }
+
+    /*
+    * update state
+    * */
+    private var _updateState = mutableStateOf(BaseState())
+    val updateState : State<BaseState> = _updateState
+
+
+
+   /*
+   * password
+   * */
+    private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
+    val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
+
+    private var _isNewPwValid = mutableStateOf<Boolean?>(null)
+    val isNewPwValid : State<Boolean?> = _isNewPwValid
+
+    private var _userNewPw = mutableStateOf("")
+
+    private var _changePwState = mutableStateOf(BaseState())
+    val changePwState : State<BaseState> = _changePwState
+
+    /*
+    *
+    * notification
+    * */
+    private var _userNotiState = mutableStateOf(NotiState())
+    val userNotiState : State<NotiState> = _userNotiState
+
 
     fun setUserNotiState(value : Boolean){
         _userNotiState.value = NotiState(data = value)
@@ -101,56 +108,9 @@ class MyPageViewModel @Inject constructor(
     }
 
 
-    fun checkNicknameValid(nickname: String) = viewModelScope.launch {
-        Log.d("{SignupViewModel.checkNicknameValid}", nickname)
-        if (nickname.isEmpty()) {
-            _isNicknameValid.value = null
-            return@launch
-        }
-
-        val response = checkValidRepository.checkNicknameValidation(NicknameValidReq(nickname))
-        if (response.isSuccessful) {
-            response.body()?.let { validRes ->
-                if (validRes.isSuccess) {
-                    _isNicknameValid.value = true
-                    _userNickname.value = nickname
-                } else {
-                    _isNicknameValid.value = false
-                }
-            }
-        } else _isNicknameValid.value = false
-
-    }
-
-    fun setUserIntroduce(introduce: String) {
-        _userIntroduce.value = introduce
-    }
-
-    private var _updateState = mutableStateOf(BaseState())
-    val updateState : State<BaseState> = _updateState
-
-    fun changeUserNicknameOrIntro() = viewModelScope.launch {
-        getUserInfo()
-        _updateState.value = BaseState(isLoading = true)
-        val req = UpdateUserInfoReq(
-            nickname = if(_userNickname.value == _userInfo.value.data.nickname) null else _userNickname.value,
-            introduce = if(_userIntroduce.value == _userInfo.value.data.introduce) null else _userIntroduce.value
-        )
-        val response = profileRepository.updateUserInfo(req)
-        if(response.isSuccessful){
-            response.body()?.let {
-                if(it.isSuccess) _updateState.value = BaseState(isSuccess = true)
-                else _updateState.value = BaseState(error = it.message)
-            }
-        }else _updateState.value = BaseState(error = "update failed") //todo to korean!!!
-
-    }
-
     /*
     * logout and unregister
     * */
-
-
     fun logoutUser() = viewModelScope.launch {
 
         context.dataStore.edit { settings ->
@@ -187,7 +147,6 @@ class MyPageViewModel @Inject constructor(
     /*
     * password
     * */
-
     fun checkCurrentPwValid(pw : String) = viewModelScope.launch {
         if (pw.isEmpty()) {
             _isCurrentPwValid.value = null
@@ -234,7 +193,6 @@ class MyPageViewModel @Inject constructor(
     /*
     * Image
     * */
-
     private var _userImageState = mutableStateOf(BaseState())
     val userImageState : State<BaseState> = _userImageState
 

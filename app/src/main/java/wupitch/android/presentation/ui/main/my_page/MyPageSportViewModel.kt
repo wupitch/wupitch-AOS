@@ -64,12 +64,6 @@ class MyPageSportViewModel @Inject constructor(
                         SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }
                             .map { it.toFilterItem() })
                     getUserSport()
-
-//                    _sportsList.value.data.forEachIndexed { index, filterItem ->
-//                        if (_userSportId.value == index) {
-//                            filterItem.state.value = true
-//                        }
-//                    }
                 } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
             }
         } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
