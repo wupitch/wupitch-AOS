@@ -217,6 +217,8 @@ class CreateImprtLocationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getDistricts()
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
     }
 
     private fun showDistrictBottomSheet(districtList: Array<String>) {

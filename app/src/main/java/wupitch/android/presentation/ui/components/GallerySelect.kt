@@ -34,7 +34,6 @@ fun GallerySelect(
 
     @Composable
     fun LaunchGallery() {
-        Log.d("{LaunchGallery}", "gallery")
         SideEffect {
             launcher.launch("image/*")
         }
