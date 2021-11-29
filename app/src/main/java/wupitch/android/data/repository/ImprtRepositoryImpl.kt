@@ -48,5 +48,8 @@ class ImprtRepositoryImpl @Inject constructor(
     override suspend fun changePinStatus(id: Int): Response<BaseRes>
     = retrofit.create(ImprtApi::class.java).changePinStatus(id)
 
+    override suspend fun joinImprt(id: Int): Response<BaseRes>
+    = retrofit.create(ImprtApi::class.java).participateImprt(id)
+
 
 }

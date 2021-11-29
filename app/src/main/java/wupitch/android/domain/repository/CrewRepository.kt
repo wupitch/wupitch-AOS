@@ -28,4 +28,5 @@ interface CrewRepository {
     ): Response<GetCrewRes>
 
     suspend fun changePinStatus(id : Int) : Response<BaseRes>
+    suspend fun joinCrew(id : Int) : Response<BaseRes>
 }

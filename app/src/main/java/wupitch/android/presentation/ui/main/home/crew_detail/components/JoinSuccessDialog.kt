@@ -31,7 +31,7 @@ fun JoinSuccessDialog(
 ) {
     Dialog(
         onDismissRequest = { dialogOpen.value = false },
-        DialogProperties(dismissOnClickOutside = true, dismissOnBackPress = true),
+        DialogProperties(dismissOnClickOutside = false, dismissOnBackPress = false),
     ) {
 
         if (dialogOpen.value) {

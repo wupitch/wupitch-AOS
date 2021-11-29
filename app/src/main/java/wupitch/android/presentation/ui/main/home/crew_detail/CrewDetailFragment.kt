@@ -1,15 +1,12 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -36,7 +33,6 @@ import coil.compose.rememberImagePainter
 import com.google.accompanist.flowlayout.FlowRow
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
-import wupitch.android.data.remote.dto.CrewDetailResultDto
 import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
@@ -54,7 +50,6 @@ class CrewDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("crewId")?.let { id ->
-            Log.d("{CrewDetailFragment.onCreate}", id.toString())
             viewModel.getCrewDetail(id)
         }
     }
@@ -74,17 +69,33 @@ class CrewDetailFragment : Fragment() {
                     }
 
                     val scrollState = rememberScrollState(0)
+
                     val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
                     val joinDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
                     val isPinnedState = remember { mutableStateOf(false) } //todo init value : crewState.value.isPinned
-
-
                     if(viewModel.pinState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
                             .show()
                     }
+
+                    val joinState = remember {viewModel.joinState } //todo remember?
+                    if(joinState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    if(joinState.value.isSuccess){
+                        joinDialogOpenState.value = true
+                    }else {
+                        when(joinState.value.code){
+                            //todo fix code
+                            0 -> {
+                                notEnoughInfoDialogOpenState.value = true
+                            }
+                        }
+                    }
+
 
                     if (joinVisitorDialogOpenState.value)
                         JoinSuccessDialog(
@@ -99,14 +110,11 @@ class CrewDetailFragment : Fragment() {
                             subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
                         ) {
                             viewModel.setNotEnoughInfo()
-                            val bundle = Bundle().apply {
-                                putInt("tabId", R.id.myPageFragment)
-                            }
-                            findNavController().navigate(
-                                R.id.action_crewDetailFragment_to_mainFragment,
-                                bundle
-                            )
+                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
+                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
                         }
+
+
                     ConstraintLayout(
                         modifier = Modifier
                             .fillMaxSize()
@@ -176,13 +184,10 @@ class CrewDetailFragment : Fragment() {
                                         bottom.linkTo(parent.bottom)
                                     },
                                 crewState = crewInfo,
-                                //todo: bottom dialog 구현 후 분기처리.
-                                joinVisitorDialogOpenState = notEnoughInfoDialogOpenState, //joinVisitorDialogOpenState
-                                joinDialogOpenState = joinDialogOpenState
                             )
                         }
 
-                        if (crewState.value.isLoading) {
+                        if (crewState.value.isLoading|| joinState.value.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
@@ -199,14 +204,12 @@ class CrewDetailFragment : Fragment() {
         }
     }
 
-    fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
+    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
     @Composable
     fun JoinCrewBtns(
         modifier: Modifier,
-        joinVisitorDialogOpenState: MutableState<Boolean>,
-        joinDialogOpenState: MutableState<Boolean>,
         crewState: CrewDetailResult
     ) {
 
@@ -217,17 +220,13 @@ class CrewDetailFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp)
-                    .background(
-                        colorResource(id = R.color.gray01)
-                    )
+                    .background(colorResource(id = R.color.gray01))
             )
-
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 12.dp)
             ) {
-
                 WhiteRoundBtn(
                     modifier = Modifier
                         .weight(1f)
@@ -243,9 +242,7 @@ class CrewDetailFragment : Fragment() {
                     )
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
-
                 Spacer(modifier = Modifier.width(12.dp))
-
                 RoundBtn(
                     modifier = Modifier
                         .weight(1f)
@@ -253,14 +250,11 @@ class CrewDetailFragment : Fragment() {
                     btnColor = R.color.main_orange,
                     textString = R.string.join, fontSize = 16.sp
                 ) {
-//                    joinDialogOpenState.value = true
-                    joinVisitorDialogOpenState.value = true
-
+                    viewModel.participateCrew()
                 }
             }
         }
     }
-
 
     @Composable
     fun CrewExtraInfo(
@@ -295,8 +289,6 @@ class CrewDetailFragment : Fragment() {
                     lineHeight = 24.sp
                 )
             }
-
-
             VisitorDefLayout(Modifier)
             Text(
                 modifier = Modifier.padding(top = 36.dp),
@@ -497,7 +489,6 @@ class CrewDetailFragment : Fragment() {
                         )
                     }
                 }
-
             }
 
             Row(

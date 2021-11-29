@@ -36,6 +36,10 @@ class CrewRepositoryImpl @Inject constructor(
     areaId= areaId, days = days, memberCountValue = memberCountValue, page = page, sportsList = sportsList)
 
     override suspend fun changePinStatus(id : Int): Response<BaseRes>
-    =retrofit.create(CrewApi::class.java).changePinStatus(id)
+    = retrofit.create(CrewApi::class.java).changePinStatus(id)
+
+    override suspend fun joinCrew(id: Int): Response<BaseRes>
+    = retrofit.create(CrewApi::class.java).participateCrew(id)
+
 
 }

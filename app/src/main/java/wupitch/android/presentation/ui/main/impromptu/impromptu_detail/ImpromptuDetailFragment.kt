@@ -81,28 +81,25 @@ class ImpromptuDetailFragment : Fragment() {
                             requireContext(),
                             viewModel.pinState.value.error,
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
-
-
-                    val joinState = viewModel.joinImpromptuState.value
-
-                    if (joinState.isSuccess == true) {
-                        joinSuccessDialogOpenState.value = true
-                        viewModel.initJoinImpromptuState()
-                    } else if (joinState.isSuccess == false) {
-                        notEnoughInfoDialogOpenState.value = true
-                        viewModel.initJoinImpromptuState()
-                    }
-
-                    if (joinState.error.isNotEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            viewModel.joinImpromptuState.value.error,
-                            Toast.LENGTH_SHORT
                         ).show()
                     }
+
+                    val joinState = viewModel.joinState //todo not remember ?
+                    if(joinState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    if(joinState.value.isSuccess){
+                        joinSuccessDialogOpenState.value = true
+                    }else {
+                        when(joinState.value.code){
+                            //todo fix code
+                            0 -> {
+                                notEnoughInfoDialogOpenState.value = true
+                            }
+                        }
+                    }
+
 
                     if (joinSuccessDialogOpenState.value) {
                         JoinSuccessDialog(
@@ -114,10 +111,7 @@ class ImpromptuDetailFragment : Fragment() {
 
                     BackHandler {
                         val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
-                        findNavController().navigate(
-                            R.id.action_impromptuDetailFragment_to_mainFragment,
-                            bundle
-                        )
+                        findNavController().navigate(R.id.action_impromptuDetailFragment_to_mainFragment, bundle)
                     }
 
                     if (notEnoughInfoDialogOpenState.value)
@@ -216,10 +210,10 @@ class ImpromptuDetailFragment : Fragment() {
                                 textString = R.string.join_impromptu,
                                 fontSize = 16.sp
                             ) {
-                                viewModel.joinImpromptu()
+                                viewModel.joinImprt()
                             }
 
-                            if (joinState.isLoading || imprtState.value.isLoading) {
+                            if (joinState.value.isLoading || imprtState.value.isLoading) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.constrainAs(progressbar) {
                                         start.linkTo(parent.start)

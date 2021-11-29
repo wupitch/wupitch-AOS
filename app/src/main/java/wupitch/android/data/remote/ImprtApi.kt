@@ -39,4 +39,9 @@ interface ImprtApi {
     suspend fun changePinStatus(
         @Path("impromptuId") impromptuId : Int
     ): Response<BaseRes>
+
+    @POST("app/impromptus/{impromptuId}/participation-toggle")
+    suspend fun participateImprt(
+        @Path("impromptuId") impromptuId : Int
+    ): Response<BaseRes>
 }

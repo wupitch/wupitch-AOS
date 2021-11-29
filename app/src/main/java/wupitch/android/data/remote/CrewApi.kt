@@ -43,4 +43,9 @@ interface CrewApi {
     suspend fun changePinStatus(
         @Path("clubId") crewId : Int
     ): Response<BaseRes>
+
+    @POST("app/clubs/{clubId}/participation-toggle")
+    suspend fun participateCrew(
+        @Path("clubId") crewId : Int
+    ): Response<BaseRes>
 }

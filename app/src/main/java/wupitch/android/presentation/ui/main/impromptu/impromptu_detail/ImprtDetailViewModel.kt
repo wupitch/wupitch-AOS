@@ -5,12 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
-import wupitch.android.data.remote.dto.ImprtDetailResultDto
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
+import wupitch.android.presentation.ui.main.home.crew_detail.JoinState
 import wupitch.android.util.dateDashToCol
 import wupitch.android.util.doubleToTime
 import java.text.DecimalFormat
@@ -59,20 +58,10 @@ class ImprtDetailViewModel @Inject constructor(
         return "참여비 ${formatter.format(guestDues)}원"
     }
 
-    //todo
-    private var _joinImpromptuState = mutableStateOf(JoinImpromptuState())
-    val joinImpromptuState : State<JoinImpromptuState> = _joinImpromptuState
 
-    fun initJoinImpromptuState() {
-        _joinImpromptuState.value = JoinImpromptuState()
-    }
-
-    fun joinImpromptu() = viewModelScope.launch {
-        _joinImpromptuState.value = JoinImpromptuState(isLoading = true)
-        delay(1200L)
-        //todo
-        _joinImpromptuState.value = JoinImpromptuState(isSuccess = true)
-    }
+    /*
+    * pin up
+    * */
 
     private var _pinState = mutableStateOf(BaseState())
     val pinState : State<BaseState> = _pinState
@@ -88,6 +77,32 @@ class ImprtDetailViewModel @Inject constructor(
             }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
         }
 
+    }
+
+    /*
+    * participate
+    * */
+
+    private var _joinState = mutableStateOf(JoinState())
+    val joinState : State<JoinState> = _joinState
+
+    fun joinImprt() = viewModelScope.launch {
+        _joinState.value = JoinState(isLoading = true)
+        _imprtDetailState.value.data?.impromptuId?.let {
+            val response = imprtRepository.joinImprt(it)
+            if(response.isSuccessful){
+                response.body()?.let { res ->
+                    if(res.isSuccess) _joinState.value = JoinState(isSuccess = true)
+                    else {
+                        _joinState.value = JoinState(error = res.message, code = res.code)
+                    }
+                }
+            }else _joinState.value = JoinState(error = "번개 참여에 실패했습니다.")
+        }
+    }
+
+    fun initJoinState() {
+        _joinState.value = JoinState()
     }
 
 }

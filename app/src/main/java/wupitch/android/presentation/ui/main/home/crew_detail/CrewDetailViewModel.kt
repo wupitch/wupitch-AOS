@@ -1,7 +1,6 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
@@ -9,8 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
@@ -21,7 +18,6 @@ import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.util.*
 import java.lang.StringBuilder
 import java.text.DecimalFormat
-import java.time.Year
 import java.util.*
 import javax.inject.Inject
 
@@ -158,6 +154,28 @@ class CrewDetailViewModel @Inject constructor(
 
         context.dataStore.edit { settings ->
             settings[Constants.FIRST_COMER] = true
+        }
+    }
+
+    /*
+    * participate
+    * */
+
+    private var _joinState = mutableStateOf(JoinState())
+    val joinState : State<JoinState> = _joinState
+
+    fun participateCrew() = viewModelScope.launch {
+        _joinState.value = JoinState(isLoading = true)
+        _crewDetailState.value.data?.clubId?.let {
+            val response = crewRepository.joinCrew(it)
+            if(response.isSuccessful){
+                response.body()?.let { res ->
+                    if(res.isSuccess) _joinState.value = JoinState(isSuccess = true)
+                    else {
+                        _joinState.value = JoinState(error = res.message, code = res.code)
+                    }
+                }
+            }else _joinState.value = JoinState(error = "크루 참여에 실패했습니다.")
         }
     }
 }
