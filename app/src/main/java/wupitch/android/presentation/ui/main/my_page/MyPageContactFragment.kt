@@ -182,7 +182,7 @@ class MyPageContactFragment : Fragment() {
                 ),
                 visualTransformation = KoreanPhoneNumVT(),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
+                    keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(onDone = {

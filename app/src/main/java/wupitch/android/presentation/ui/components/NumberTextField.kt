@@ -1,6 +1,7 @@
 package wupitch.android.presentation.ui.components
 
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.accompanist.pager.ExperimentalPagerApi
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.util.MoneyVT
 import wupitch.android.util.NumberTransformation
 import wupitch.android.util.formatToWon
 
@@ -58,9 +60,9 @@ fun NumberTextField(
                 fontSize = 16.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Start
+                textAlign = TextAlign.End
             ),
-//        visualTransformation = NumberTransformation(),
+//            visualTransformation = MoneyVT(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
@@ -72,7 +74,10 @@ fun NumberTextField(
 //                    textState.value = value.replace("[\$&+,:;=\\\\\\\\?@#|/'<>.^*()%!-]".toRegex(), "")
 //                    textState.value = value.replace("\\s".toRegex(), "")
                         textState.value = value.filter { it.isDigit() }
-                        if(textState.value.isNotEmpty()) textState.value = textState.value.formatToWon()
+                        if(textState.value.isNotEmpty()) {
+                                textState.value = textState.value.formatToWon()
+//                            Log.d("{NumberTextField}", textState.value)
+                        }
                     } else if (value.isEmpty()) {
                         textState.value = value
                     }

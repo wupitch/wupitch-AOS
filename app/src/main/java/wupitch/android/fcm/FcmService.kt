@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -37,10 +38,16 @@ class FcmService : FirebaseMessagingService() {
     }
 
     @Inject
-    lateinit var  fcmRepository : FcmRepository
-
+    lateinit var fcmRepository : FcmRepository
     private var registerTokenState = mutableStateOf(BaseState())
 
+    override fun onNewToken(p0: String) {
+        super.onNewToken(p0)
+
+        registerToken(p0)
+
+    }
+    //todo connect to patch token api
     private fun registerToken(token : String) = CoroutineScope(Dispatchers.IO).launch {
         val response = fcmRepository.postToken(FcmReq("hallo test content", token, "hello title"))
         if(response.isSuccessful){
@@ -50,19 +57,8 @@ class FcmService : FirebaseMessagingService() {
         }else  registerTokenState.value = BaseState(error = "토큰 등록에 실패했습니다.")
     }
 
-    override fun onNewToken(p0: String) {
-        super.onNewToken(p0)
-
-        Log.d("{FcmService.onNewToken}", p0.toString())
-
-        registerToken(p0)
-
-    }
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        //fcm에서 message 를 수신할 때마다 호출된다.
-        Log.d("{FcmService.onMessageReceived}", remoteMessage.toString())
         createNotificationChannel()
 
         val title = remoteMessage.notification?.title
@@ -108,6 +104,7 @@ class FcmService : FirebaseMessagingService() {
             .setSmallIcon(R.drawable.logo2)
             .setContentTitle(title)
             .setContentText(message)
+            .setColor(ContextCompat.getColor(this, R.color.main_orange))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDefaults(Notification.DEFAULT_ALL)
             .setContentIntent(pendingIntent)
@@ -115,26 +112,5 @@ class FcmService : FirebaseMessagingService() {
 
         return notificationBuilder.build()
     }
-
-
-    override fun onCreate() {
-        super.onCreate()
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.d("{FcmService.onCreate}", task.exception.toString())
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            // Log and toast
-            Log.d("{FcmService.onCreate}", token.toString())
-            registerToken(token.toString())
-        })
-    }
-
-
-
 
 }

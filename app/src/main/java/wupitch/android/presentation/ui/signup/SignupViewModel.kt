@@ -14,6 +14,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
@@ -37,7 +39,7 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val signupRepository: SignupRepository,
-    @ApplicationContext val context: Context
+    @ApplicationContext val context: Context,
 ) : ViewModel() {
 
     private var _allToggleState = mutableStateOf<Boolean>(false)
@@ -93,6 +95,14 @@ class SignupViewModel @Inject constructor(
         _pushToggleState.value = state
     }
 
+    fun setUserIntroduce(introduce: String) {
+        _userIntroduce.value = introduce
+    }
+
+
+    /*
+    * validation
+    * */
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
         Log.d("{SignupViewModel.checkNicknameValid}", nickname)
         if (nickname.isEmpty()) {
@@ -114,9 +124,6 @@ class SignupViewModel @Inject constructor(
 
     }
 
-    fun setUserIntroduce(introduce: String) {
-        _userIntroduce.value = introduce
-    }
 
     fun checkEmailValid(email: String) = viewModelScope.launch {
         Log.d("{SignupViewModel.checkEmailValid}", email)
@@ -155,16 +162,41 @@ class SignupViewModel @Inject constructor(
 
     }
 
-    fun postSignup() = viewModelScope.launch {
 
+
+    /*
+    * fcm
+    * */
+    fun initFcm() {
         _signupState.value = BaseState(isLoading = true)
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
+                return@OnCompleteListener
+            }
+
+            val token = task.result
+
+            // todo call signup
+            postSignup(token.toString())
+        })
+    }
+
+    /*
+   * signup
+   * */
+
+    private fun postSignup(token : String) = viewModelScope.launch {
+
 
         val signupReq = SignupReq(
             email = _userEmail.value!!,
             introduce = _userIntroduce.value!!,
             isPushAgree = _pushToggleState.value!!,
             nickname = _userNickname.value!!,
-            password = _userPw.value!!
+            password = _userPw.value!!,
+            deviceToken = token
         )
         val response = signupRepository.signup(signupReq)
 
@@ -185,6 +217,10 @@ class SignupViewModel @Inject constructor(
         } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
     }
 
+    /*
+       * image
+       * */
+
     private var _idCardImage = mutableStateOf<Uri>(Constants.EMPTY_IMAGE_URI)
 
     fun setIdCardImage(uri: Uri) {
@@ -201,7 +237,6 @@ class SignupViewModel @Inject constructor(
 
             if (bitmap != null) {
                 val internalFile = saveFileInAppDirectory(bitmap)
-                Log.d("{SignupViewModel.postIdCardImage}", internalFile.toString())
 
                 val file = getImageBody(internalFile)
 
@@ -213,7 +248,7 @@ class SignupViewModel @Inject constructor(
                     }
                 } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
             } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
-        }
+        }else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
     }
 
     private fun convertUriToBitmap(): Bitmap? {
@@ -263,4 +298,6 @@ class SignupViewModel @Inject constructor(
             body = file.asRequestBody("image/*".toMediaType())
         )
     }
+
+
 }

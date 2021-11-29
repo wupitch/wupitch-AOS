@@ -6,12 +6,12 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\PC\.android\avd\Galaxy_S10e_API_28.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="ce081718758a950305" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2021-11-29T08:27:14.987012900Z" />
+    <timeTargetWasSelectedWithDropDown value="2021-11-29T14:35:21.517431600Z" />
   </component>
 </project>

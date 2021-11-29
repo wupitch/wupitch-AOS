@@ -8,5 +8,6 @@ data class SignupReq(
     val introduce: String,
     val isPushAgree: Boolean,
     val nickname: String,
-    val password: String
+    val password: String,
+    val deviceToken: String
 )

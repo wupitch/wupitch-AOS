@@ -81,6 +81,9 @@
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_createCrewFeeFragment"
+            app:destination="@id/createCrewFeeFragment" />
     </fragment>
 
     <fragment

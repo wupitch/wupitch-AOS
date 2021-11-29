@@ -1,27 +1,14 @@
 package wupitch.android.presentation.ui.main
 
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.navigation.NavigationBarView
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentMainBinding
-import wupitch.android.fcm.FcmViewModel
-import wupitch.android.presentation.ui.main.home.HomeViewModel
 
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main)
