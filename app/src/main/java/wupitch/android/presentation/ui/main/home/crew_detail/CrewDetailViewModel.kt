@@ -1,14 +1,20 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
+import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import wupitch.android.data.remote.dto.Schedule
 import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
@@ -21,7 +27,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CrewDetailViewModel @Inject constructor(
-    private val crewRepository: CrewRepository
+    private val crewRepository: CrewRepository,
+    @ApplicationContext val context: Context
 ) : ViewModel() {
 
     private var _crewDetailState = mutableStateOf(CrewDetailState())
@@ -65,7 +72,7 @@ class CrewDetailViewModel @Inject constructor(
         val visitDays = arrayListOf<String>()
         schedules.forEachIndexed { index, item ->
 
-            if(index <3){
+            if (index < 3) {
                 val diff = convertDay(item.dayIdx) - today
                 val tempCal: Calendar = Calendar.getInstance()
                 tempCal.add(Calendar.DAY_OF_YEAR, diff)
@@ -145,8 +152,12 @@ class CrewDetailViewModel @Inject constructor(
                 }
             } else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
         }
-
     }
 
+    fun setNotEnoughInfo() = viewModelScope.launch {
 
+        context.dataStore.edit { settings ->
+            settings[Constants.FIRST_COMER] = true
+        }
+    }
 }

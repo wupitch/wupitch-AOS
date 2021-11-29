@@ -2,6 +2,7 @@ package wupitch.android.common
 
 import android.content.Context
 import android.net.Uri
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -16,6 +17,7 @@ object Constants {
     val USER_NICKNAME = stringPreferencesKey("user_nickname")
     val USER_EMAIL = stringPreferencesKey("user_email")
     val USER_ID = intPreferencesKey("user_id")
+    val FIRST_COMER = booleanPreferencesKey("is_first_comer")
 
     const val SEARCH_PAGE_NUM = 2
     const val INTRO_MAX_LENGTH = 500

@@ -177,6 +177,7 @@ class SignupViewModel @Inject constructor(
                         settings[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
                         settings[Constants.USER_ID] = signupRes.result.accountId
                         settings[Constants.USER_NICKNAME] = signupRes.result.nickname
+                        settings[Constants.FIRST_COMER] = true
                     }
                     postIdCardImage()
                 } else _signupState.value = BaseState(error = signupRes.message)

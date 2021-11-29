@@ -52,10 +52,6 @@
             android:name="tabId"
             app:argType="integer"
             android:defaultValue="-1" />
-        <argument
-            android:name="notEnoughInfo"
-            app:argType="boolean"
-            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"

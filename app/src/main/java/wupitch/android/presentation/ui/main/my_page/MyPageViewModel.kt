@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -46,52 +47,75 @@ class MyPageViewModel @Inject constructor(
     * user info
     * */
     private var _userInfo = mutableStateOf(UserInfoState())
-    val userInfo : State<UserInfoState> = _userInfo
+    val userInfo: State<UserInfoState> = _userInfo
 
 
     fun getUserInfo() = viewModelScope.launch {
         _userInfo.value = UserInfoState(isLoading = true)
 
         val response = profileRepository.getUserInfo()
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             response.body()?.let { infoRes ->
-                if(infoRes.isSuccess) _userInfo.value = UserInfoState(data = infoRes.result.toResult())
-                else  _userInfo.value = UserInfoState(error = infoRes.message)
+                if (infoRes.isSuccess) _userInfo.value =
+                    UserInfoState(data = infoRes.result.toResult())
+                else _userInfo.value = UserInfoState(error = infoRes.message)
             }
-        }else  _userInfo.value = UserInfoState(error = "유저 정보 조회를 실패했습니다.")
+        } else _userInfo.value = UserInfoState(error = "유저 정보 조회를 실패했습니다.")
+    }
+
+    /**
+     * snack bar
+     */
+    private var _notEnoughInfo = mutableStateOf(false)
+    val notEnoughInfo: State<Boolean> = _notEnoughInfo
+
+    fun checkNotEnoughInfo() = viewModelScope.launch {
+        val jwtPreferenceFlow = context.dataStore.data.first()
+        jwtPreferenceFlow[Constants.FIRST_COMER]?.let {
+            if (it) {
+                _notEnoughInfo.value = true
+            }
+        }
+    }
+
+    fun setNotEnoughInfo() = viewModelScope.launch {
+        delay(2200L)
+        _notEnoughInfo.value = false
+        context.dataStore.edit { settings ->
+            settings[Constants.FIRST_COMER] = false
+        }
     }
 
     /*
     * update state
     * */
     private var _updateState = mutableStateOf(BaseState())
-    val updateState : State<BaseState> = _updateState
+    val updateState: State<BaseState> = _updateState
 
 
-
-   /*
-   * password
-   * */
+    /*
+    * password
+    * */
     private var _isCurrentPwValid = mutableStateOf<Boolean?>(null)
-    val isCurrentPwValid : State<Boolean?> = _isCurrentPwValid
+    val isCurrentPwValid: State<Boolean?> = _isCurrentPwValid
 
     private var _isNewPwValid = mutableStateOf<Boolean?>(null)
-    val isNewPwValid : State<Boolean?> = _isNewPwValid
+    val isNewPwValid: State<Boolean?> = _isNewPwValid
 
     private var _userNewPw = mutableStateOf("")
 
     private var _changePwState = mutableStateOf(BaseState())
-    val changePwState : State<BaseState> = _changePwState
+    val changePwState: State<BaseState> = _changePwState
 
     /*
     *
     * notification
     * */
     private var _userNotiState = mutableStateOf(NotiState())
-    val userNotiState : State<NotiState> = _userNotiState
+    val userNotiState: State<NotiState> = _userNotiState
 
 
-    fun setUserNotiState(value : Boolean){
+    fun setUserNotiState(value: Boolean) {
         _userNotiState.value = NotiState(data = value)
     }
 
@@ -99,11 +123,11 @@ class MyPageViewModel @Inject constructor(
         _userNotiState.value = NotiState(isLoading = true)
 
         val response = profileRepository.changeNotiStatus()
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             response.body()?.let { baseRes ->
-                if(!baseRes.isSuccess) _userNotiState.value = NotiState(error = baseRes.message)
+                if (!baseRes.isSuccess) _userNotiState.value = NotiState(error = baseRes.message)
             }
-        }else _userNotiState.value = NotiState(error = "푸시 알림 상태 변경에 실패했습니다.")
+        } else _userNotiState.value = NotiState(error = "푸시 알림 상태 변경에 실패했습니다.")
     }
 
 
@@ -120,33 +144,32 @@ class MyPageViewModel @Inject constructor(
     }
 
     private var _unregisterState = mutableStateOf(BaseState())
-    val unregisterState : State<BaseState> = _unregisterState
+    val unregisterState: State<BaseState> = _unregisterState
 
     fun unregisterUser() = viewModelScope.launch {
 
         _unregisterState.value = BaseState(isLoading = true)
 
         val response = profileRepository.unregisterUser()
-        if(response.isSuccessful){
+        if (response.isSuccessful) {
             response.body()?.let { baseRes ->
-                if(baseRes.isSuccess) {
+                if (baseRes.isSuccess) {
                     _unregisterState.value = BaseState(isSuccess = true)
                     context.dataStore.edit { settings ->
                         settings[Constants.JWT_PREFERENCE_KEY] = ""
                         settings[Constants.USER_ID] = -1
                         settings[Constants.USER_NICKNAME] = ""
                     }
-                }
-                else _unregisterState.value = BaseState(error = baseRes.message)
+                } else _unregisterState.value = BaseState(error = baseRes.message)
             }
-        }else _unregisterState.value = BaseState(error = "회원 탈퇴를 실패했습니다.")
+        } else _unregisterState.value = BaseState(error = "회원 탈퇴를 실패했습니다.")
     }
 
 
     /*
     * password
     * */
-    fun checkCurrentPwValid(pw : String) = viewModelScope.launch {
+    fun checkCurrentPwValid(pw: String) = viewModelScope.launch {
         if (pw.isEmpty()) {
             _isCurrentPwValid.value = null
             return@launch
@@ -164,7 +187,7 @@ class MyPageViewModel @Inject constructor(
         } else _isCurrentPwValid.value = false
     }
 
-    fun checkNewPwValid(pw : String) {
+    fun checkNewPwValid(pw: String) {
         if (pw.isEmpty()) {
             _isNewPwValid.value = null
             return
@@ -193,9 +216,9 @@ class MyPageViewModel @Inject constructor(
     * Image
     * */
     private var _userImageState = mutableStateOf(BaseState())
-    val userImageState : State<BaseState> = _userImageState
+    val userImageState: State<BaseState> = _userImageState
 
-    fun setUserImage(uri : Uri) = viewModelScope.launch {
+    fun setUserImage(uri: Uri) = viewModelScope.launch {
         val path = getRealPathFromURIForGallery(uri)
 
         if (path != null) {
@@ -203,13 +226,13 @@ class MyPageViewModel @Inject constructor(
 
             val file = getImageBody(File(path))
 
-            val response = profileRepository.postProfileImage( file.body, file)
+            val response = profileRepository.postProfileImage(file.body, file)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
                     if (res.isSuccess) _userImageState.value = BaseState(isSuccess = true)
-                    else  _userImageState.value = BaseState(error = res.message)
+                    else _userImageState.value = BaseState(error = res.message)
                 }
-            } else  _userImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
+            } else _userImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
         }
 
     }

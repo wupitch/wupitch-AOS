@@ -98,9 +98,9 @@ class CrewDetailFragment : Fragment() {
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
                         ) {
+                            viewModel.setNotEnoughInfo()
                             val bundle = Bundle().apply {
                                 putInt("tabId", R.id.myPageFragment)
-                                putBoolean("notEnoughInfo", true)
                             }
                             findNavController().navigate(
                                 R.id.action_crewDetailFragment_to_mainFragment,
