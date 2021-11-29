@@ -52,6 +52,12 @@ import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 class MyPageFragment : Fragment() {
 
     private val viewModel : MyPageViewModel by viewModels()
+    private var notEnoughInfo = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.getBoolean("notEnoughInfo")?.let { notEnoughInfo = it}
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,6 +73,7 @@ class MyPageFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
 
+                val notEnoughInfoState = remember { mutableStateOf(notEnoughInfo)}
                 val snackbarHostState = remember { SnackbarHostState() }
                 val userInfoState = remember {viewModel.userInfo}
                 val openGallery = remember { mutableStateOf(false)}
@@ -81,12 +88,16 @@ class MyPageFragment : Fragment() {
                     Toast.makeText(requireContext(), userInfoState.value.error, Toast.LENGTH_SHORT).show()
                 }
 
-                LaunchedEffect(key1 = snackbarHostState, block = {
+                if(notEnoughInfoState.value){
+                   LaunchedEffect(key1 = snackbarHostState, block = {
                     snackbarHostState.showSnackbar(
                         message = getString(R.string.fill_info_guide),
                         duration = SnackbarDuration.Short
                     )
                 })
+                }
+
+
 
                 Column(
                     modifier = Modifier

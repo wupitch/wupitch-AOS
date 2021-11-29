@@ -24,15 +24,18 @@ import wupitch.android.fcm.FcmViewModel
 import wupitch.android.presentation.ui.main.home.HomeViewModel
 
 @AndroidEntryPoint
-class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main)
+class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind,R.layout.fragment_main),
+        NavigationBarView.OnItemSelectedListener
 {
     private var tabId = -1
+    private var notEnoughInfo = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("tabId")?.let { id ->
             if(id != -1) tabId = id
         }
+        arguments?.getBoolean("notEnoughInfo")?.let { notEnoughInfo = it }
     }
 
     private lateinit var navController: NavController
@@ -49,10 +52,25 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
         navController = navHostFragment.navController
 
         binding.bottomNavView.setupWithNavController(navController)
+        binding.bottomNavView.setOnItemSelectedListener(this)
         if(tabId != -1){
             binding.bottomNavView.selectedItemId = tabId
         }
 
 
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//        val arguments = argumentsByFragmentId[fragmentId] // custom mutableMapOf<Int, Bundle?>() with arguments
+
+        when(item.itemId){
+            R.id.myPageFragment -> {
+                val bundle2 = Bundle().apply { putBoolean("notEnoughInfo", notEnoughInfo)}
+                navController.navigate(item.itemId, bundle2)
+            }
+           else -> navController.navigate(item.itemId)
+
+        }
+        return true
     }
 }

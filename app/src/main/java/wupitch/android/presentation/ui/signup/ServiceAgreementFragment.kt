@@ -183,7 +183,7 @@ class ServiceAgreementFragment : Fragment() {
                                 },
                                 textString = R.string.terms_of_service_agreement,
                                 onDetailClick = {
-//                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
+                                    openBrowser("https://candle-mulberry-ea5.notion.site/264733a76f5f43eeb396442acc96b600")
                                 }
                             )
 
@@ -201,8 +201,7 @@ class ServiceAgreementFragment : Fragment() {
                                 },
                                 textString = R.string.terms_of_privacy_policy,
                                 onDetailClick = {
-                                    openBrowser("https://helix-comb-432.notion.site/9086e6ac72e748d193d127dffea7b8d4")
-//                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
+                                    openBrowser("https://candle-mulberry-ea5.notion.site/a75a7eaaaa5e4ff7b665df903cfe6095")
                                 }
                             )
 
@@ -219,9 +218,7 @@ class ServiceAgreementFragment : Fragment() {
                                     }
                                 },
                                 textString = R.string.push_notification_agreement,
-                                onDetailClick = {
-                                    //todo 푸시 알림 동의 약관 페이지로 이동!!!
-                                }
+                                onDetailClick = null
                             )
 
                         }

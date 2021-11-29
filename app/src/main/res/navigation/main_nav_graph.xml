@@ -52,6 +52,10 @@
             android:name="tabId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <argument
+            android:name="notEnoughInfo"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -389,23 +393,9 @@
             android:name="wupitch.android.presentation.ui.signup.ServiceAgreementFragment"
             android:label="ServiceAgreementFragment">
             <action
-                android:id="@+id/action_serviceAgreementFragment_to_serviceAgreementDetailFragment"
-                app:destination="@id/serviceAgreementDetailFragment" />
-            <action
-                android:id="@+id/action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment"
-                app:destination="@id/useOfPersonalInfoDetailFragment" />
-            <action
                 android:id="@+id/action_serviceAgreementFragment_to_emailPwFragment"
                 app:destination="@id/emailPwFragment" />
         </fragment>
-        <fragment
-            android:id="@+id/serviceAgreementDetailFragment"
-            android:name="wupitch.android.presentation.ui.signup.ServiceAgreementDetailFragment"
-            android:label="ServiceAgreementDetailFragment" />
-        <fragment
-            android:id="@+id/useOfPersonalInfoDetailFragment"
-            android:name="wupitch.android.presentation.ui.signup.UseOfPersonalInfoDetailFragment"
-            android:label="UseOfPersonalInfoDetailFragment" />
         <fragment
             android:id="@+id/idCardFragment"
             android:name="wupitch.android.presentation.ui.signup.IdCardFragment"

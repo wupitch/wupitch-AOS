@@ -98,12 +98,14 @@ class CrewDetailFragment : Fragment() {
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
                         ) {
-                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
+                            val bundle = Bundle().apply {
+                                putInt("tabId", R.id.myPageFragment)
+                                putBoolean("notEnoughInfo", true)
+                            }
                             findNavController().navigate(
                                 R.id.action_crewDetailFragment_to_mainFragment,
                                 bundle
                             )
-
                         }
                     ConstraintLayout(
                         modifier = Modifier
@@ -251,7 +253,9 @@ class CrewDetailFragment : Fragment() {
                     btnColor = R.color.main_orange,
                     textString = R.string.join, fontSize = 16.sp
                 ) {
-                    joinDialogOpenState.value = true
+//                    joinDialogOpenState.value = true
+                    joinVisitorDialogOpenState.value = true
+
                 }
             }
         }
