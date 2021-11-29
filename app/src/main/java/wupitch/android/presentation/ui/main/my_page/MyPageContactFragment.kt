@@ -46,6 +46,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.IconToolBar
 import wupitch.android.presentation.ui.components.RoundBtn
+import wupitch.android.util.KoreanPhoneNumVT
 
 @AndroidEntryPoint
 class MyPageContactFragment : Fragment() {
@@ -155,7 +156,6 @@ class MyPageContactFragment : Fragment() {
         }
     }
 
-    //todo 핸드폰 번호 식으로 입력되게 하기!!!!!!! + 핸드폰 형식 유효성 검사???는 그럼 필요 없을듯!
     @Composable
     private fun PhoneNumberTextField(
         modifier: Modifier,
@@ -180,7 +180,7 @@ class MyPageContactFragment : Fragment() {
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Start
                 ),
-//        visualTransformation = NumberTransformation(),
+                visualTransformation = KoreanPhoneNumVT(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
@@ -190,7 +190,7 @@ class MyPageContactFragment : Fragment() {
                 }),
                 maxLines = 1,
                 onValueChange = { value ->
-                    textState.value = value
+                    if(value.length < 12) textState.value = value
                 },
                 cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
                 decorationBox = { innerTextField ->

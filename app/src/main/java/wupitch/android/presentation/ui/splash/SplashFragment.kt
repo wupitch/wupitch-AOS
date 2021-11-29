@@ -69,7 +69,7 @@ class SplashFragment : Fragment() {
             withContext(Dispatchers.Main){
 
 //                if(jwt != null && jwt.isNotEmpty())
-                   // findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+                   findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
 //                else
                            //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
@@ -81,7 +81,7 @@ class SplashFragment : Fragment() {
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewScheduleFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_profileFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_idCardFragment)
-                findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                //findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                 //findNavController().navigate(R.id.action_splashFragment_to_createCrewFeeFragment)
 
             }
