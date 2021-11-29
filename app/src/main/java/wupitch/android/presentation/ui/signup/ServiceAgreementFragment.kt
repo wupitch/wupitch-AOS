@@ -1,5 +1,8 @@
 package wupitch.android.presentation.ui.signup
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -180,7 +183,7 @@ class ServiceAgreementFragment : Fragment() {
                                 },
                                 textString = R.string.terms_of_service_agreement,
                                 onDetailClick = {
-                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
+//                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_serviceAgreementDetailFragment)
                                 }
                             )
 
@@ -198,7 +201,8 @@ class ServiceAgreementFragment : Fragment() {
                                 },
                                 textString = R.string.terms_of_privacy_policy,
                                 onDetailClick = {
-                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
+                                    openBrowser("https://helix-comb-432.notion.site/9086e6ac72e748d193d127dffea7b8d4")
+//                                    findNavController().navigate(R.id.action_serviceAgreementFragment_to_useOfPersonalInfoDetailFragment)
                                 }
                             )
 
@@ -249,5 +253,11 @@ class ServiceAgreementFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun openBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW)
+        browserIntent.data = Uri.parse(url)
+        startActivity(browserIntent)
     }
 }

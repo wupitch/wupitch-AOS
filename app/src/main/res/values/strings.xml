@@ -53,7 +53,7 @@
     <string name="pw">비밀번호 (8자 이상 영문/숫자)</string>
     <string name="not_allowed_pw">사용하실 수 없는 비밀번호입니다.</string>
     <string name="certify_idcard">신분증을\n인증해주세요.</string>
-    <string name="certify_idcard_subtitle">(주민등록증 원본을 이용해 촬영해주세요.)</string>
+    <string name="certify_idcard_subtitle">(주민등록증, 운전면허증, 청소년증)</string>
     <string name="certify_idcard_guide1">이름과 생년월일, 성별숫자가 꼭 보여야합니다.</string>
     <string name="certify_idcard_guide2">식별이 불가능할 경우 승인이 거부될 수 있습니다.</string>
     <string name="certify_idcard_guide3">신분증 정보는 성별 확인 후 즉시 폐기됩니다.</string>
@@ -244,7 +244,7 @@
 
     <!--    impromptu detail-->
     <string name="join_success_impromptu">참여 신청이 완료됐습니다!\n문의를 통해 번개 리더와 연락할 수 있어요.</string>
-    <string name="info_transferred_to_impromptu_leader">(번개리더에게 프로필이 전달됩니다.)</string>
+    <string name="info_transferred_to_impromptu_leader">페이지 하단 문의를 통해\n번개리더에게 연락해주세요.</string>
     <string name="not_enough_info_impromptu">모든 프로필 정보가 기입되어야\n번개에 신청할 수 있습니다.</string>
     <string name="join_impromptu">참여하기</string>
     <string name="impromptu_guide_dot">&#160;&#160;&#8226;&#160;&#160;</string>
@@ -303,6 +303,8 @@
     <string name="interested_activity">관심 크루 및 번개</string>
     <string name="my_record">작성글 및 사진</string>
     <string name="announcement">공지사항</string>
+    <string name="mypage_inquiry">문의하기</string>
+    <string name="dev_info">개발자 정보</string>
     <string name="faq">FAQ</string>
     <string name="settings">설정</string>
     <string name="fill_info_guide">크루 및 번개 신청을 위해\n모든 프로필 항목을 채워야해요!</string>

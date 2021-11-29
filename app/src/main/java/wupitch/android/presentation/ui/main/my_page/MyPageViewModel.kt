@@ -101,8 +101,7 @@ class MyPageViewModel @Inject constructor(
         val response = profileRepository.changeNotiStatus()
         if(response.isSuccessful){
             response.body()?.let { baseRes ->
-                if(baseRes.isSuccess) _userNotiState.value = NotiState(data = !_userNotiState.value.data)
-                else _userNotiState.value = NotiState(error = baseRes.message)
+                if(!baseRes.isSuccess) _userNotiState.value = NotiState(error = baseRes.message)
             }
         }else _userNotiState.value = NotiState(error = "푸시 알림 상태 변경에 실패했습니다.")
     }

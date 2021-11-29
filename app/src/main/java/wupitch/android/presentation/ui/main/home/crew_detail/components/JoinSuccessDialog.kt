@@ -38,7 +38,7 @@ fun JoinSuccessDialog(
             Column(
                 modifier = Modifier
                     .width(280.dp)
-                    .height(236.dp)
+                    .height(252.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(Color.White)
                     .padding(top = 36.dp, bottom = 28.dp),

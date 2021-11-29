@@ -34,7 +34,8 @@ fun CrewSearchTab(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        val (progressbar, noResultCol) = createRefs()
+        val (progressbar, text, chrt) = createRefs()
+        val guildLine = createGuidelineFromTop(0.65f)
 
         if (searchState.data.isNotEmpty()) {
             //todo show list.
@@ -42,28 +43,30 @@ fun CrewSearchTab(
         } else {
             if(searchKeyword.isNotEmpty() && !searchState.isLoading) {
 
-                Column(Modifier.constrainAs(noResultCol) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom, margin = 36.dp)
-                }, horizontalAlignment = Alignment.CenterHorizontally) {
                     Image(
                         modifier = Modifier
-                            .width(130.dp)
-                            .height(210.dp),
+                            .constrainAs(chrt) {
+                                bottom.linkTo(text.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                            }
+                            .size(130.dp, 210.dp),
                         painter = painterResource(id = R.drawable.img_chrt_02),
                         contentDescription = null
                     )
                     Text(
-                        modifier = Modifier.padding(top = 24.dp),
+                        modifier = Modifier.constrainAs(text) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(guildLine)
+                                }
+                                .padding(top = 24.dp),
                         text = stringResource(R.string.no_search_result, checkKeywordLen(searchKeyword)),
                         color = colorResource(id = R.color.gray02),
                         fontFamily = Roboto,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Normal
                     )
-                }
             }
 
         }

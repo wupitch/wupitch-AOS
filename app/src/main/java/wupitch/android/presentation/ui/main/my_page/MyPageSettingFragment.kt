@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -60,6 +59,7 @@ class MyPageSettingFragment : Fragment() {
                 WupitchTheme {
 
                     val switchState = remember { viewModel.userNotiState }
+                    val toggleState = remember { mutableStateOf(viewModel.userNotiState.value.data)}
 
                     if (switchState.value.error.isNotEmpty()) {
                         Toast.makeText(
@@ -103,7 +103,8 @@ class MyPageSettingFragment : Fragment() {
                                 findNavController().navigateUp()
                             }
 
-                            NotificationSettingLayout(switchState) {
+                            NotificationSettingLayout(toggleState) {
+                                toggleState.value = it
                                 viewModel.changeUserNotiState()
                             }
 
@@ -147,7 +148,7 @@ class MyPageSettingFragment : Fragment() {
 
     @Composable
     private fun NotificationSettingLayout(
-        switchState: State<NotiState>,
+        switchState: MutableState<Boolean>,
         onCheckedChange: (Boolean) -> Unit
     ) {
 
@@ -183,7 +184,7 @@ class MyPageSettingFragment : Fragment() {
                         bottom.linkTo(parent.bottom)
                     }
                     .size(50.dp, 30.dp),
-                checked = switchState.value.data,
+                checked = switchState.value,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color.White,

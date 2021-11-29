@@ -201,11 +201,23 @@ class MyPageFragment : Fragment() {
                     }
                     MyPageText(
                         modifier = Modifier.padding(start = 20.dp),
+                        textString = stringResource(id = R.string.mypage_inquiry)
+                    ){
+
+                    }
+                    MyPageText(
+                        modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.settings)
                     ){
                         val bundle = Bundle().apply { putBoolean("isPushAgreed", userInfoState.value.data.isPushAgree) }
                         activity?.findNavController(R.id.main_nav_container_view)
                             ?.navigate(R.id.action_mainFragment_to_myPageSettingFragment, bundle)
+                    }
+                    MyPageText(
+                        modifier = Modifier.padding(start = 20.dp),
+                        textString = stringResource(id = R.string.dev_info)
+                    ){
+
                     }
                 }
             }

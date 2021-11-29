@@ -238,7 +238,6 @@ class CrewDetailFragment : Fragment() {
                     // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
                     visitorBottomSheet = VisitorBottomSheetFragment(
                         crewState.guestDues, crewState.visitDays
-//                        listOf("21.00.00수", "21.00.00목", "21.00.00금")
                     )
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
