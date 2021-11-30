@@ -11,6 +11,6 @@ import javax.inject.Inject
 class FcmRepositoryImpl @Inject constructor(
     private val retrofit: Retrofit
 ) : FcmRepository{
-    override suspend fun postToken(fcmReq: FcmReq): Response<BaseRes>
-    =  retrofit.create(FcmApi::class.java).postToken(fcmReq)
+    override suspend fun patchFcmToken(fcmReq: FcmReq): Response<BaseRes>
+    =  retrofit.create(FcmApi::class.java).patchFcmToken(fcmReq)
 }

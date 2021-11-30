@@ -5,5 +5,5 @@ import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.FcmReq
 
 interface FcmRepository {
-    suspend fun postToken(fcmReq: FcmReq) : Response<BaseRes>
+    suspend fun patchFcmToken(fcmReq: FcmReq) : Response<BaseRes>
 }

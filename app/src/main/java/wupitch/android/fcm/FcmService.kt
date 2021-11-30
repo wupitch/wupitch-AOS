@@ -47,9 +47,8 @@ class FcmService : FirebaseMessagingService() {
         registerToken(p0)
 
     }
-    //todo connect to patch token api
     private fun registerToken(token : String) = CoroutineScope(Dispatchers.IO).launch {
-        val response = fcmRepository.postToken(FcmReq("hallo test content", token, "hello title"))
+        val response = fcmRepository.patchFcmToken(FcmReq(token))
         if(response.isSuccessful){
             response.body()?.let {
                 if(!it.isSuccess) registerTokenState.value = BaseState(error = it.message)
@@ -64,7 +63,6 @@ class FcmService : FirebaseMessagingService() {
         val title = remoteMessage.notification?.title
         val message = remoteMessage.notification?.body
 
-        Log.d("{FcmService.onMessageReceived}", "title : $title, message : $message")
 
         NotificationManagerCompat.from(this)
             .notify(0, createNotification(title, message))
