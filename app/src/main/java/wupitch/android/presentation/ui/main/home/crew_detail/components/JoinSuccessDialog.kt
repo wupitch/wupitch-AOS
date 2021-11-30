@@ -27,7 +27,8 @@ import wupitch.android.presentation.ui.components.RoundBtn
 fun JoinSuccessDialog(
     dialogOpen: MutableState<Boolean>,
     @StringRes titleString : Int,
-    isImpromptu : Boolean = false
+    isImpromptu : Boolean = false,
+    onClick : () -> Unit
 ) {
     Dialog(
         onDismissRequest = { dialogOpen.value = false },
@@ -78,8 +79,8 @@ fun JoinSuccessDialog(
                     btnColor = R.color.main_orange,
                     textString = R.string.confirmed,
                     fontSize = 14.sp
-                ) {
-                    dialogOpen.value = false
+                ){
+                    onClick()
                 }
             }
         }

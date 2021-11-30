@@ -5,6 +5,7 @@ import retrofit2.Retrofit
 import wupitch.android.data.remote.FcmApi
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.FcmReq
+import wupitch.android.data.remote.dto.NotiRes
 import wupitch.android.domain.repository.FcmRepository
 import javax.inject.Inject
 
@@ -13,4 +14,7 @@ class FcmRepositoryImpl @Inject constructor(
 ) : FcmRepository{
     override suspend fun patchFcmToken(fcmReq: FcmReq): Response<BaseRes>
     =  retrofit.create(FcmApi::class.java).patchFcmToken(fcmReq)
+
+    override suspend fun getNotifications(): Response<NotiRes>
+    = retrofit.create(FcmApi::class.java).getNotifications()
 }

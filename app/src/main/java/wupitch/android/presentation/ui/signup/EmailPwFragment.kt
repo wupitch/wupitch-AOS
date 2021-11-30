@@ -238,7 +238,7 @@ class EmailPwFragment : Fragment() {
 
                     emailJob?.cancel()
                     emailJob = lifecycleScope.launch {
-                        delay(1200L)
+                        delay(2200L)
                         viewModel.checkEmailValid(value)
                     }
                 },

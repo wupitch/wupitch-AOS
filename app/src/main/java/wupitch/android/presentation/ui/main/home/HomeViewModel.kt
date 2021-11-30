@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
 import wupitch.android.common.Constants.PAGE_SIZE
 import wupitch.android.common.Resource
 import wupitch.android.domain.model.CrewCardInfo
@@ -108,31 +110,48 @@ class HomeViewModel @Inject constructor(
         _crewSizeState.value = size
     }
 
+    /*
+    * filter
+    * */
+
     fun applyFilter() {
-        //todo save in data store
         getCrew()
     }
 
+    private var _resetState = mutableStateOf(false)
+    val resetState : State<Boolean> = _resetState
+
     fun resetFilter() {
-        //todo
+        _resetState.value = true
+        _crewEventList.clear()
+        _crewDayList.clear()
+        _crewAgeGroupList.clear()
+        _userDistrictId.value = null
+        _userDistrictName.value = "지역구"
+        _crewSizeState.value = null
+        getCrew()
     }
 
+    /*
+    * get crew, get crew filter
+    * */
 
-    fun getCrew() = viewModelScope.launch {
+    private fun getCrew(pageArg : Int = page.value) = viewModelScope.launch {
         loading.value = true
 
         val response = crewRepository.getCrew(
-            ageList = if(_crewAgeGroupList.isEmpty())null else _crewAgeGroupList.map { it +1 },
+            ageList = if(_crewAgeGroupList.isEmpty()) null else _crewAgeGroupList.map { it +1 },
             areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
-            page = page.value,
+            page = pageArg,
             sportsList = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
         )
         if(response.isSuccessful) {
             response.body()?.let { res ->
                 if(res.isSuccess) {
                     loading.value = false
+                    if(res.result.first) _crewState.clear()
                     appendList(res.result.content.map {
                         CrewCardInfo(
                             id = it.clubId,
@@ -151,11 +170,34 @@ class HomeViewModel @Inject constructor(
         }else error.value = "크루 조회에 실패했습니다."
     }
 
+    private val _getCrewFilterState = mutableStateOf(BaseState())
+    var getCrewFilterState : State<BaseState> = _getCrewFilterState
+
+    fun getCrewFilter() = viewModelScope.launch {
+        val response = crewRepository.getCrewFilter()
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess){
+                    res.result.crewPickAgeList?.forEach { if(!_crewAgeGroupList.contains(it-1))_crewAgeGroupList.add(it -1) }
+                    res.result.crewPickDays?.forEach {if(!_crewDayList.contains(it-1)) _crewDayList.add(it-1) }
+                    res.result.crewPickSportsList?.forEach { if(!_crewEventList.contains(it-1))_crewEventList.add(it-1) }
+                    _userDistrictName.value = res.result.crewPickAreaName  ?: "지역구"
+                    _crewSizeState.value = res.result.crewPickMemberCountValue?.let { it -1 }
+                    getCrew(1)
+
+                }else _getCrewFilterState.value = BaseState(error = res.message )
+            }
+        }else _getCrewFilterState.value = BaseState(error = "필터 조회에 실패했습니다." )
+    }
+
+    /*
+    * district
+    * */
 
     fun setUserDistrict(districtId : Int, districtName : String) {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
-        getCrew()
+        getCrew(1)
     }
 
     fun getDistricts () = viewModelScope.launch {

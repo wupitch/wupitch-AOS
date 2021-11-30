@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
@@ -44,7 +45,7 @@ class ReqIdCertiFragment : Fragment() {
                 WupitchTheme {
 
                     ConstraintLayout(Modifier.background(Color.White).padding(horizontal = 20.dp)) {
-                        val (title, subtitle, image) = createRefs()
+                        val (title, subtitle, image, btn) = createRefs()
 
                         Text(
                             modifier = Modifier.constrainAs(title) {
@@ -75,7 +76,7 @@ class ReqIdCertiFragment : Fragment() {
                         Image(
                             modifier = Modifier.height(280.dp).constrainAs(image){
                                 top.linkTo(title.bottom)
-                                bottom.linkTo(parent.bottom)
+                                bottom.linkTo(btn.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                             },
@@ -83,6 +84,22 @@ class ReqIdCertiFragment : Fragment() {
                             contentDescription = null
                         )
 
+                        RoundBtn(
+                            modifier = Modifier
+                                .constrainAs(btn) {
+                                    bottom.linkTo(parent.bottom, 32.dp)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    width = Dimension.fillToConstraints
+                                }
+                                .fillMaxWidth()
+                                .height(52.dp),
+                            btnColor = R.color.main_orange,
+                            textString = R.string.done,
+                            fontSize = 16.sp
+                        ) {
+                            findNavController().navigate(R.id.action_reqIdCertiFragment_to_loginFragment)
+                        }
                     }
                 }
             }

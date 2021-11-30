@@ -21,86 +21,17 @@ class MyActivityViewModel : ViewModel() {
 
 
     fun getMyCrew() = viewModelScope.launch {
-        _myCrewState.value = MyCrewState(isLoading = true)
-        delay(500L)
-        _myCrewState.value = MyCrewState(
-            data = listOf<CrewCardInfo>(
-                CrewCardInfo(
-                    id = 10,
-                    sportId = 1,
-                    crewImage = null,
-                    isPinned = true,
-                    title = "크루입니다.",
-                    time = "수요일 2:00 - 4:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "상세주소임당"
-                ),
-                CrewCardInfo(
-                    id = 11,
-                    sportId = 1,
-                    crewImage = null,
-                    isPinned = true,
-                    title = "크루입니다ㅎㅎ",
-                    time = "수요일 2:00 - 4:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "상세주소임당"
-                ),
-                CrewCardInfo(
-                    id = 12,
-                    sportId = 1,
-                    crewImage = null,
-                    isPinned = true,
-                    title = "크루입니다ㅋㅋ",
-                    time = "수요일 2:00 - 4:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "상세주소임당"
-                )
-            )
-        )
+//        _myCrewState.value = MyCrewState(isLoading = true)
+//        delay(500L)
+        _myCrewState.value = MyCrewState()
 
     }
 
     fun getMyImpromptu() = viewModelScope.launch {
-        _myImprtState.value = ImprtState(isLoading = true)
-        delay(500L)
-        _myImprtState.value = ImprtState(
-            data = listOf<ImpromptuCardInfo>(
-                ImpromptuCardInfo(
-                    remainingDays = 1,
-                    id = 10,
-                    isPinned = false,
-                    title = "번개임당",
-                    time = "21.11.30 호요일 12:30",
-                    detailAddress = "우리집앞",
-                    gatheredPeople = 2,
-                    totalCount = 10,
-                    imprtImage = null
-                ),
-                ImpromptuCardInfo(
-                    remainingDays = 1,
-                    id = 11,
-                    isPinned = false,
-                    title = "번개임당ㅎㅎ",
-                    time = "21.11.30 호요일 12:30",
-                    detailAddress = "우리집앞",
-                    gatheredPeople = 2,
-                    totalCount = 10,
-                    imprtImage = null
-                ),
-                ImpromptuCardInfo(
-                    remainingDays = 1,
-                    id = 12,
-                    isPinned = false,
-                    title = "번개임당ㅋㅋ",
-                    time = "21.11.30 호요일 12:30",
-                    detailAddress = "우리집앞",
-                    gatheredPeople = 2,
-                    totalCount = 10,
-                    imprtImage = null
-                )
+//        _myImprtState.value = ImprtState(isLoading = true)
+//        delay(500L)
+        _myImprtState.value = ImprtState()
 
-            )
-        )
     }
 
 

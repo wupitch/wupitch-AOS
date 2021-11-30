@@ -38,10 +38,10 @@ interface ImprtApi {
     @PATCH("app/impromptus/{impromptuId}/pinUp-toggle")
     suspend fun changePinStatus(
         @Path("impromptuId") impromptuId : Int
-    ): Response<BaseRes>
+    ): Response<BaseResultRes>
 
     @POST("app/impromptus/{impromptuId}/participation-toggle")
     suspend fun participateImprt(
         @Path("impromptuId") impromptuId : Int
-    ): Response<BaseRes>
+    ): Response<BaseResultRes>
 }

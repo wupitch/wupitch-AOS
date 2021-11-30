@@ -128,6 +128,7 @@ class ImpromptuViewModel @Inject constructor(
             response.body()?.let { res ->
                 if(res.isSuccess) {
                     loading.value = false
+                    if(res.result.first) _imprtState.clear()
                     appendList(res.result.content.map {
                         ImpromptuCardInfo(
                             id = it.impromptuId,

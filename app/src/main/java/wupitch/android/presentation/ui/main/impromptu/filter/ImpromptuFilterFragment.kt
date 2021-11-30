@@ -44,7 +44,8 @@ import wupitch.android.util.TimeType
 @AndroidEntryPoint
 class ImpromptuFilterFragment : Fragment() {
 
-    private var checkedRadioButton: MutableState<Boolean>? = null
+    private var checkedScheduleRadioButton: MutableState<Boolean>? = null
+    private var checkedSizeRadioButton: MutableState<Boolean>? = null
     private val viewModel: ImpromptuViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -154,12 +155,11 @@ class ImpromptuFilterFragment : Fragment() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Spacer(modifier = Modifier.height(24.dp))
-                            NonRepetitionLayout(
+                            ScheduleNonRepetitionLayout(
                                 itemList = scheduleList,
                                 titleText = stringResource(id = R.string.schedule),
                             ) {
                                 viewModel.setImprtSchedule(it)
-                               Log.d("{ImpromptuFilterFragment.onCreateView}", "일정 : ${scheduleState.value}")
                             }
 
                             Spacer(modifier = Modifier.height(32.dp))
@@ -173,12 +173,11 @@ class ImpromptuFilterFragment : Fragment() {
                             )
 
                             Spacer(modifier = Modifier.height(32.dp))
-                            NonRepetitionLayout(
+                            SizeNonRepetitionLayout(
                                 itemList = recruitSizeList,
                                 titleText = stringResource(id = R.string.num_of_recruitment),
                             ) {
                                 viewModel.setImprtSize(it)
-                                Log.d("{ImpromptuFilterFragment.onCreateView}", "모집인원: ${recruitSizeState.value}")
                             }
                             Spacer(modifier = Modifier.height(60.dp))
 
@@ -205,7 +204,10 @@ class ImpromptuFilterFragment : Fragment() {
                                 viewModel.setImprtDayList(dayState)
                                 viewModel.setImprtSchedule(scheduleState.value)
 
-                                viewModel.applyFilter()},
+                                viewModel.applyFilter()
+                                findNavController().navigateUp()
+
+                                           },
                             onResetClick = {viewModel.resetFilter()}
                         )
 
@@ -218,7 +220,7 @@ class ImpromptuFilterFragment : Fragment() {
 
 
     @Composable
-    fun NonRepetitionLayout(
+    fun ScheduleNonRepetitionLayout(
         titleText : String,
         itemList: List<FilterItem>,
         onClick: (index: Int) -> Unit
@@ -239,7 +241,7 @@ class ImpromptuFilterFragment : Fragment() {
                 crossAxisSpacing = 16.dp
             ) {
                 itemList.forEachIndexed { index, item ->
-                    RadioButton(
+                    ScheduleRadioButton(
                         modifier = Modifier
                             .width(96.dp)
                             .height(48.dp),
@@ -254,7 +256,7 @@ class ImpromptuFilterFragment : Fragment() {
     }
 
     @Composable
-    fun RadioButton(
+    fun ScheduleRadioButton(
         modifier: Modifier,
         checkedState: MutableState<Boolean>,
         text: String,
@@ -269,9 +271,92 @@ class ImpromptuFilterFragment : Fragment() {
                     enabled = true,
                     role = Role.RadioButton,
                     onClick = {
-                        checkedRadioButton?.value = false
+                        checkedScheduleRadioButton?.value = false
                         checkedState.value = true
-                        checkedRadioButton = checkedState
+                        checkedScheduleRadioButton = checkedState
+                        onClick()
+                    }
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (checkedState.value) colorResource(id = R.color.orange02) else
+                        colorResource(id = R.color.gray01)
+                )
+                .border(
+                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                    else Color.Transparent,
+                    width = if (checkedState.value) 1.dp else 0.dp,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            )
+        }
+    }
+
+    @Composable
+    fun SizeNonRepetitionLayout(
+        titleText : String,
+        itemList: List<FilterItem>,
+        onClick: (index: Int) -> Unit
+    ) {
+        Column(Modifier.fillMaxWidth()) {
+
+            Text(
+                modifier = Modifier.align(Alignment.Start),
+                text = titleText,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+
+            FlowRow(
+                modifier = Modifier.padding(top = 12.dp),
+                mainAxisSpacing = 16.dp,
+                crossAxisSpacing = 16.dp
+            ) {
+                itemList.forEachIndexed { index, item ->
+                    SizeRadioButton(
+                        modifier = Modifier
+                            .width(96.dp)
+                            .height(48.dp),
+                        checkedState = item.state,
+                        text = item.name,
+                    ) {
+                        onClick(index)
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun SizeRadioButton(
+        modifier: Modifier,
+        checkedState: MutableState<Boolean>,
+        text: String,
+        onClick: () -> Unit
+    ) {
+        Box(
+            modifier = modifier
+                .selectable(
+                    selected = checkedState.value,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = true,
+                    role = Role.RadioButton,
+                    onClick = {
+                        checkedSizeRadioButton?.value = false
+                        checkedState.value = true
+                        checkedSizeRadioButton = checkedState
                         onClick()
                     }
                 )

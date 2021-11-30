@@ -86,6 +86,7 @@ class ImprtDetailViewModel @Inject constructor(
     private var _joinState = mutableStateOf(JoinState())
     val joinState : State<JoinState> = _joinState
 
+
     fun joinImprt() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
         _imprtDetailState.value.data?.impromptuId?.let {

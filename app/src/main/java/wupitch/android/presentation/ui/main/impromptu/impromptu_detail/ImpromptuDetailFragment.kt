@@ -106,7 +106,10 @@ class ImpromptuDetailFragment : Fragment() {
                             dialogOpen = joinSuccessDialogOpenState,
                             titleString = R.string.join_success_impromptu,
                             isImpromptu = true
-                        )
+                        ){
+                            joinSuccessDialogOpenState.value = false
+                            viewModel.initJoinState()
+                        }
                     }
 
                     BackHandler {

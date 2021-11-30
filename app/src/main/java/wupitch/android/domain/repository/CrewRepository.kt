@@ -5,10 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.CreateCrewRes
-import wupitch.android.data.remote.dto.CrewDetailRes
-import wupitch.android.data.remote.dto.GetCrewRes
+import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewRepository {
@@ -27,6 +24,7 @@ interface CrewRepository {
         page: Int, sportsList: List<Int>?
     ): Response<GetCrewRes>
 
-    suspend fun changePinStatus(id : Int) : Response<BaseRes>
-    suspend fun joinCrew(id : Int) : Response<BaseRes>
+    suspend fun changePinStatus(id : Int) : Response<BaseResultRes>
+    suspend fun joinCrew(id : Int) : Response<BaseResultRes>
+    suspend fun getCrewFilter() : Response<GetCrewFilterRes>
 }

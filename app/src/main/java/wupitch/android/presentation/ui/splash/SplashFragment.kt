@@ -5,14 +5,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,15 +43,37 @@ class SplashFragment : Fragment() {
             setContent {
 
                 SplashTheme {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(colorResource(id = R.color.main_orange)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(painter = painterResource(id = R.drawable.ic_logo), contentDescription = "spash screen logo")
 
-                    }
+                    val editable =  remember { mutableStateOf(true) }
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(colorResource(id = R.color.main_orange)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            AnimatedVisibility(
+                                visible = editable.value,
+//                                enter = slideInVertically(
+//                                    // Slide in from 40 dp from the top.
+////                                    initialOffsetY = { with(density) { -40.dp.roundToPx() } }
+//                                ) + expandVertically(
+//                                    // Expand from the top.
+//                                    expandFrom = Alignment.Top
+//                                ) + fadeIn(
+//                                    // Fade in with the initial alpha of 0.3f.
+//                                    initialAlpha = 0.3f
+//                                ),
+//                                exit = slideOutVertically() + shrinkVertically() + fadeOut()
+                            ){
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_logo),
+                                    contentDescription = "spash screen logo"
+                                )
+                            }
+                        }
+
+
                 }
             }
         }
@@ -59,19 +85,20 @@ class SplashFragment : Fragment() {
 
         lifecycleScope.launch {
 
-            //delay(1000L)
 
 
 
             val jwt = viewModel.readJwt()
-            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
+            delay(1300L)
+
+//            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main){
 
 //                if(jwt != null && jwt.isNotEmpty())
-                  findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+                  //findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
 //                else
-                           //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+                findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
 
                 //development 용도.

@@ -19,7 +19,7 @@ interface ImprtRepository {
         memberCountIdx: Int?,
         page: Int, scheduleIndex: Int?
     ): Response<GetImprtRes>
-    suspend fun changePinStatus( id : Int) : Response<BaseRes>
-    suspend fun joinImprt( id : Int) : Response<BaseRes>
+    suspend fun changePinStatus( id : Int) : Response<BaseResultRes>
+    suspend fun joinImprt( id : Int) : Response<BaseResultRes>
 
 }

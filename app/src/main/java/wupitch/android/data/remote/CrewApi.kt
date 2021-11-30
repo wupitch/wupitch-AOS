@@ -4,10 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.CreateCrewRes
-import wupitch.android.data.remote.dto.CrewDetailRes
-import wupitch.android.data.remote.dto.GetCrewRes
+import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewApi {
@@ -42,10 +39,13 @@ interface CrewApi {
     @PATCH("app/clubs/{clubId}/pinUp-toggle")
     suspend fun changePinStatus(
         @Path("clubId") crewId : Int
-    ): Response<BaseRes>
+    ): Response<BaseResultRes>
 
     @POST("app/clubs/{clubId}/participation-toggle")
     suspend fun participateCrew(
         @Path("clubId") crewId : Int
-    ): Response<BaseRes>
+    ): Response<BaseResultRes>
+
+    @GET("app/accounts/auth/crew-filter")
+    suspend fun getCrewFilter() : Response<GetCrewFilterRes>
 }

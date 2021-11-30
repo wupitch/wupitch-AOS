@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -43,6 +44,7 @@ class CrewFilterFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
     private val viewModel: HomeViewModel by activityViewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -129,11 +131,46 @@ class CrewFilterFragment : Fragment() {
                             remember { mutableStateOf(false) })
                     )
 
+                    val resetState = remember { viewModel.resetState }
+                    if (resetState.value) {
+                        sportsList.forEach { it.state.value = false }
+                        dayList.forEach { it.state.value = false }
+                        ageGroupList.forEach { it.state.value = false }
+                    }
+
+                    val filterState = remember { viewModel.getCrewFilterState }
+                    if (filterState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            filterState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                     val eventState = remember { viewModel.crewEventList }
+                    if (eventState.size > 0) {
+                        eventState.forEach { item ->
+                            sportsList[item].state.value = true
+                        }
+                    }
                     val dayState = remember { viewModel.crewDayList }
+                    if (dayState.size > 0) {
+                        dayState.forEach { item ->
+                            dayList[item].state.value = true
+                        }
+                    }
                     val ageGroupState = remember { viewModel.crewAgeGroupList }
+                    if (ageGroupState.size > 0) {
+                        ageGroupState.forEach { item ->
+                            ageGroupList[item].state.value = true
+                        }
+                    }
+
 
                     val crewSizeState = remember { viewModel.crewSizeState }
+                    if (crewSizeState.value != null) {
+                        crewSizeList[crewSizeState.value!!].state.value = true
+                    }
 
                     ConstraintLayout(
                         Modifier
@@ -236,9 +273,10 @@ class CrewFilterFragment : Fragment() {
                                 viewModel.setCrewAgeGroupList(ageGroupState)
                                 viewModel.setCrewDayList(dayState)
                                 viewModel.setCrewEventList(eventState)
-
-                                viewModel.applyFilter()},
-                            onResetClick = {viewModel.resetFilter()}
+                                viewModel.applyFilter()
+                                findNavController().navigateUp()
+                            },
+                            onResetClick = { viewModel.resetFilter() }
                         )
                     }
                 }
@@ -288,6 +326,8 @@ class CrewFilterFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
+        if (checkedState.value) checkedRadioButton = checkedState
+
         Box(
             modifier = modifier
                 .selectable(
@@ -329,14 +369,11 @@ class CrewFilterFragment : Fragment() {
     }
 
 
-
-
-
     @Composable
     fun FilterBottomButtons(
         modifier: Modifier,
-        onApplyClick : () -> Unit,
-        onResetClick : () -> Unit
+        onApplyClick: () -> Unit,
+        onResetClick: () -> Unit
     ) {
         Row(
             modifier = modifier

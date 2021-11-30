@@ -101,9 +101,14 @@ class CrewDetailFragment : Fragment() {
                         JoinSuccessDialog(
                             dialogOpen = joinVisitorDialogOpenState,
                             R.string.join_visitor_success
-                        )
+                        ){
+                            joinVisitorDialogOpenState.value  = false
+                        }
                     if (joinDialogOpenState.value)
-                        JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success)
+                        JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success){
+                            joinDialogOpenState.value = false
+                            viewModel.initJoinState()
+                        }
                     if (notEnoughInfoDialogOpenState.value)
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,

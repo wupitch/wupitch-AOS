@@ -1,12 +1,10 @@
 package wupitch.android.data.remote
 
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.FcmReq
+import wupitch.android.data.remote.dto.NotiRes
 
 interface FcmApi {
 
@@ -21,6 +19,9 @@ interface FcmApi {
     suspend fun patchFcmToken(
         @Body fcmReq : FcmReq
     ) : Response<BaseRes>
+
+    @GET("app/fcms/accounts/auth")
+    suspend fun getNotifications() : Response<NotiRes>
 
 
 }

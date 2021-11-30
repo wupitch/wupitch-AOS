@@ -68,18 +68,17 @@ class NotificationFragment : Fragment() {
                         }
 
                         NotificationList(notificationList = notificationState.data, onClick = {
-                            Log.d("{NotificationFragment.onCreateView}", "$it clicked!")
                         })
 
 
                         if (notificationState.data.isEmpty()) {
                             ConstraintLayout(Modifier.fillMaxSize()) {
                                 val (image, text) = createRefs()
+                                val guideline = createGuidelineFromTop(0.6f)
 
                                 Image(
                                     modifier = Modifier.constrainAs(image) {
-                                        top.linkTo(parent.top)
-                                        bottom.linkTo(parent.bottom)
+                                        bottom.linkTo(text.top, margin = 24.dp)
                                         start.linkTo(parent.start)
                                         end.linkTo(parent.end)
                                     },
@@ -90,7 +89,7 @@ class NotificationFragment : Fragment() {
                                     modifier = Modifier.constrainAs(text) {
                                         start.linkTo(parent.start)
                                         end.linkTo(parent.end)
-                                        top.linkTo(image.bottom, margin = 24.dp)
+                                        bottom.linkTo(guideline)
                                     },
                                     text = stringResource(id = R.string.no_notification),
                                     fontFamily = Roboto,
@@ -100,9 +99,7 @@ class NotificationFragment : Fragment() {
                                 )
                             }
                         }
-
                     }
-
                 }
             }
         }

@@ -164,6 +164,10 @@ class CrewDetailViewModel @Inject constructor(
     private var _joinState = mutableStateOf(JoinState())
     val joinState : State<JoinState> = _joinState
 
+    fun initJoinState () {
+        _joinState.value = JoinState()
+    }
+
     fun participateCrew() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
         _crewDetailState.value.data?.clubId?.let {

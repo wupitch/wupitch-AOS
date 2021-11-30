@@ -28,7 +28,11 @@
             app:destination="@id/create_crew_nav" />
         <action
             android:id="@+id/action_mainFragment_to_impromptuDetailFragment"
-            app:destination="@id/impromptuDetailFragment" />
+            app:destination="@id/impromptuDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_impromptuFilterFragment"
             app:destination="@id/impromptuFilterFragment" />
@@ -38,13 +42,25 @@
 
         <action
             android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
-            app:destination="@id/myCrewDetailFragment" />
+            app:destination="@id/myCrewDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_myImpromptuDetailFragment"
-            app:destination="@id/myImpromptuDetailFragment" />
+            app:destination="@id/myImpromptuDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_myPageInfoFragment"
-            app:destination="@id/myPageInfoFragment" />
+            app:destination="@id/myPageInfoFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_myPageSettingFragment"
             app:destination="@id/myPageSettingFragment" />
@@ -74,10 +90,14 @@
         android:label="SplashFragment" >
         <action
             android:id="@+id/action_splashFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_splashFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment" />
+            app:destination="@id/onboardingFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_splashFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -419,7 +439,13 @@
         <fragment
             android:id="@+id/reqIdCertiFragment"
             android:name="wupitch.android.presentation.ui.signup.ReqIdCertiFragment"
-            android:label="ReqIdCertiFragment" />
+            android:label="ReqIdCertiFragment" >
+            <action
+                android:id="@+id/action_reqIdCertiFragment_to_loginFragment"
+                app:destination="@id/loginFragment"
+                app:popUpTo="@id/loginFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
         <fragment
             android:id="@+id/emailPwFragment"
             android:name="wupitch.android.presentation.ui.signup.EmailPwFragment"
