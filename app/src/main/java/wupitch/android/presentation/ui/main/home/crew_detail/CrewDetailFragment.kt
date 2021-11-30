@@ -86,7 +86,12 @@ class CrewDetailFragment : Fragment() {
                             .show()
                     }
                     if(joinState.value.isSuccess){
-                        joinDialogOpenState.value = true
+                        if(joinState.value.result == true) joinDialogOpenState.value = true
+                        else if(joinState.value.result == false) Toast.makeText(
+                            requireContext(),
+                            "이미 가입한 크루입니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }else {
                         when(joinState.value.code){
                             //todo fix code

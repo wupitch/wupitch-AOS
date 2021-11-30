@@ -90,7 +90,12 @@ class ImpromptuDetailFragment : Fragment() {
                             .show()
                     }
                     if(joinState.value.isSuccess){
-                        joinSuccessDialogOpenState.value = true
+                        if(joinState.value.result == true) joinSuccessDialogOpenState.value = true
+                        else if(joinState.value.result == false) Toast.makeText(
+                            requireContext(),
+                            "이미 등록한 번개입니다.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }else {
                         when(joinState.value.code){
                             //todo fix code

@@ -29,6 +29,13 @@
             {
               "client_id": "292664998882-ldjrl8lbd42vgmnf05qgq3lbgsscqo6k.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "292664998882-3iv81oj2nikd024fni282gs88k9ulr34.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.wupitch.ios"
+              }
             }
           ]
         }

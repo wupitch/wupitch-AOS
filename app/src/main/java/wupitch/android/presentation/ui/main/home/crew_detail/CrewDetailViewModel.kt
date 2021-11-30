@@ -174,7 +174,10 @@ class CrewDetailViewModel @Inject constructor(
             val response = crewRepository.joinCrew(it)
             if(response.isSuccessful){
                 response.body()?.let { res ->
-                    if(res.isSuccess) _joinState.value = JoinState(isSuccess = true)
+                    if(res.isSuccess){
+                        if(res.result.result) _joinState.value = JoinState(isSuccess = true, result = true)
+                        else _joinState.value = JoinState(isSuccess = true, result = false)
+                    }
                     else {
                         _joinState.value = JoinState(error = res.message, code = res.code)
                     }

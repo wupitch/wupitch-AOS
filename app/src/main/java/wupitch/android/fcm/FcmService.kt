@@ -62,6 +62,7 @@ class FcmService : FirebaseMessagingService() {
 
         val title = remoteMessage.notification?.title
         val message = remoteMessage.notification?.body
+//        Log.d("{FcmService.onMessageReceived}", "$title $message")
 
 
         NotificationManagerCompat.from(this)
@@ -99,7 +100,7 @@ class FcmService : FirebaseMessagingService() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.logo2)
+            .setSmallIcon(R.drawable.aos_logo)
             .setContentTitle(title)
             .setContentText(message)
             .setColor(ContextCompat.getColor(this, R.color.main_orange))

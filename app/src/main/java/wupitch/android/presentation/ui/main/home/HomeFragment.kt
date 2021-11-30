@@ -38,6 +38,7 @@ import wupitch.android.R
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants.PAGE_SIZE
 import wupitch.android.data.remote.dto.FcmReq
+import wupitch.android.data.remote.dto.FcmReqTest
 import wupitch.android.domain.repository.FcmRepository
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
@@ -306,7 +307,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel.getDistricts()
         viewModel.getCrewFilter()
-        //initFcm()
+//        initFcm()
 
     }
     //test purpose
@@ -329,7 +330,7 @@ class HomeFragment : Fragment() {
 //        })
 //    }
 //    private fun registerToken(token : String) = CoroutineScope(Dispatchers.IO).launch {
-//        val response = fcmRepository.postToken(FcmReq("hallo test content", token, "hello title"))
+//        val response = fcmRepository.postToken(FcmReqTest("hallo test content", token, "hello title"))
 //        if(response.isSuccessful){
 //            response.body()?.let {
 //                if(!it.isSuccess) registerTokenState.value = BaseState(error = it.message)
