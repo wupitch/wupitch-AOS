@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.compose.animation.core.FloatTweenSpec
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,12 +35,14 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.navGraphViewModels
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.common.Constants.INTRO_MAX_LENGTH
@@ -88,6 +92,47 @@ class CreateImprtImageFragment : Fragment() {
                     val isUsingDefaultImage = remember { viewModel.isUsingDefaultImage }
                     val imageUri = remember { viewModel.imprtImage }
 
+                    val scope = rememberCoroutineScope()
+                    val titleFocusState = remember { mutableStateOf(false) }
+                    val introFocusState = remember { mutableStateOf(false) }
+                    val supplyFocusState = remember { mutableStateOf(false) }
+                    val inquiryFocusState = remember { mutableStateOf(false) }
+                    if (titleFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    210.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (introFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    280.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (supplyFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    462.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (inquiryFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    650.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
                     ConstraintLayout(
                         Modifier
                             .background(Color.White)
@@ -130,13 +175,19 @@ class CreateImprtImageFragment : Fragment() {
                         {
                             IntroImageLayout(imageChosenState, isUsingDefaultImage, imageUri)
 
-                            IntroTextLayout(titleTextState, introTextState)
+                            IntroTextLayout(titleTextState, introTextState,
+                                onTitleFocusChanged = {titleFocusState.value = it},
+                                onIntroFocusChanged = {introFocusState.value = it})
 
                             Spacer(modifier = Modifier.height(34.dp))
-                            SupplyLayout(supplyTextState)
+                            SupplyLayout(supplyTextState){
+                                supplyFocusState.value = it
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
-                            InquiryLayout(inquiryTextState)
+                            InquiryLayout(inquiryTextState){
+                                inquiryFocusState.value = it
+                            }
 
                             Spacer(modifier = Modifier.height(40.dp))
 
@@ -186,6 +237,8 @@ class CreateImprtImageFragment : Fragment() {
             }
         }
     }
+    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
+
 
     private fun openUploadImageBottomSheet() {
         uploadImageBottomSheet = UploadImageBottomSheetFragment(viewModel)
@@ -193,7 +246,10 @@ class CreateImprtImageFragment : Fragment() {
     }
 
     @Composable
-    fun InquiryLayout(inquiryTextState: MutableState<String>) {
+    fun InquiryLayout(
+        inquiryTextState: MutableState<String>,
+        onFocusChanged : (Boolean) -> Unit
+        ) {
         Text(
             text = stringResource(id = R.string.create_inquiry),
             fontFamily = Roboto,
@@ -206,14 +262,15 @@ class CreateImprtImageFragment : Fragment() {
             textState = inquiryTextState,
             hintText = stringResource(id = R.string.inquiry_hint),
             maxLength = SUPPLY_MAX_LENGTH,
-            onFocusChanged = {}
+            onFocusChanged = onFocusChanged
         )
 
     }
 
     @Composable
     fun SupplyLayout(
-        supplyTextState: MutableState<String>
+        supplyTextState: MutableState<String>,
+        focusState : (Boolean) -> Unit
     ) {
         Text(
             text = stringResource(id = R.string.create_supply),
@@ -227,7 +284,7 @@ class CreateImprtImageFragment : Fragment() {
             textState = supplyTextState,
             hintText = stringResource(id = R.string.input_supplies),
             maxLength = SUPPLY_MAX_LENGTH,
-            onFocusChanged = {}
+            onFocusChanged = focusState
         )
 
     }
@@ -237,6 +294,8 @@ class CreateImprtImageFragment : Fragment() {
     fun IntroTextLayout(
         titleTextState: MutableState<String>,
         introTextState: MutableState<String>,
+        onTitleFocusChanged : (Boolean) -> Unit,
+        onIntroFocusChanged : (Boolean) -> Unit
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         SimpleTextField(
@@ -244,14 +303,14 @@ class CreateImprtImageFragment : Fragment() {
             hintText = stringResource(id = R.string.input_title),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             keyboardActions = KeyboardActions.Default,
-            onFocusChanged = {}
+            onFocusChanged = onTitleFocusChanged
         )
         Spacer(modifier = Modifier.height(24.dp))
         LargeTextFieldWithCounter(
             textState = introTextState,
             hintText = stringResource(id = R.string.input_intro_impromptu),
             maxLength = INTRO_MAX_LENGTH,
-            onFocusChanged = {}
+            onFocusChanged = onIntroFocusChanged
         )
 
     }
