@@ -5,8 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.compose.animation.core.FloatSpringSpec
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -27,13 +29,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.navGraphViewModels
 import com.google.accompanist.flowlayout.FlowRow
@@ -62,6 +64,7 @@ class CreateCrewScheduleFragment : Fragment() {
                 WupitchTheme {
 
                     val scrollState = rememberScrollState(0)
+                    val scope = rememberCoroutineScope()
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -85,7 +88,7 @@ class CreateCrewScheduleFragment : Fragment() {
 
                     val snackbarHostState = remember { SnackbarHostState() }
 
-
+                    var heightToScroll = remember { mutableStateOf(0) }
 
                     ConstraintLayout(
                         Modifier
@@ -125,7 +128,10 @@ class CreateCrewScheduleFragment : Fragment() {
                                 width = Dimension.fillToConstraints
                             }
                             .verticalScroll(scrollState)
-                            .padding(horizontal = 20.dp))
+                            .padding(horizontal = 20.dp)
+                            .onGloballyPositioned { coordinates ->
+                                        heightToScroll.value = coordinates.size.height
+                                    })
                         {
                             Spacer(modifier = Modifier.height(24.dp))
                             Text(
@@ -157,12 +163,11 @@ class CreateCrewScheduleFragment : Fragment() {
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
                                     toggleState = secondBtnToggleState
                                 )
-//                                SideEffect {
-//                                    scope.launch {
-//                                        //todo 화면 끝까지 스크롤하기.
-//                                        scrollState.animateScrollTo(600)
-//                                    }
-//                                }
+                                SideEffect {
+                                    scope.launch {
+                                        scrollState.animateScrollTo(heightToScroll.value, FloatSpringSpec(1.5f, 40f))
+                                    }
+                                }
                             }else {
                                 if(scheduleList.size == 2){
                                     scheduleList.removeAt(1)
@@ -180,6 +185,11 @@ class CreateCrewScheduleFragment : Fragment() {
                                    2, scheduleList[2], snackbarHostState
                                 )
                                 Spacer(modifier = Modifier.height(60.dp))
+                                SideEffect {
+                                    scope.launch {
+                                        scrollState.animateScrollTo(heightToScroll.value, FloatSpringSpec(1.5f, 40f))
+                                    }
+                                }
                             }else {
                                 if(scheduleList.size == 3){
                                     scheduleList.removeAt(2)

@@ -215,6 +215,13 @@ class LoginFragment : Fragment() {
 
         val scope = rememberCoroutineScope()
         val bringIntoViewRequester = BringIntoViewRequester()
+
+//        val focused = source.collectIsFocusedAsState()
+//        val relocationRequester = remember { RelocationRequester() }
+//        val ime = LocalWindowInsets.current.ime
+//        if (ime.isVisible && focused.value) {
+//            relocationRequester.bringIntoView()
+//        }
         val customTextSelectionColors = TextSelectionColors(
             handleColor = colorResource(id = R.color.gray03),
             backgroundColor = colorResource(id = R.color.gray03)
