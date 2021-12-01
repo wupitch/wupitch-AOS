@@ -47,7 +47,11 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.util.Sport
 import android.provider.MediaStore
+import androidx.compose.animation.core.FloatTweenSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.fragment.app.viewModels
 import androidx.navigation.navGraphViewModels
+import kotlinx.coroutines.launch
 
 
 @ExperimentalPermissionsApi
@@ -73,6 +77,48 @@ class CreateCrewImageFragment : Fragment() {
                     val introTextState = remember { mutableStateOf(viewModel.crewIntro.value) }
                     val supplyTextState = remember { mutableStateOf(viewModel.crewSupplies.value) }
                     val inquiryTextState = remember { mutableStateOf(viewModel.crewInquiry.value) }
+
+                    val scope = rememberCoroutineScope()
+                    val titleFocusState = remember { mutableStateOf(false) }
+                    val introFocusState = remember { mutableStateOf(false) }
+                    val supplyFocusState = remember { mutableStateOf(false) }
+                    val inquiryFocusState = remember { mutableStateOf(false) }
+                    if (titleFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    210.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (introFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    280.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (supplyFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    462.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
+                    if (inquiryFocusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    650.dpToInt(), FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -132,13 +178,20 @@ class CreateCrewImageFragment : Fragment() {
                         {
                             IntroImageLayout(imageChosenState, isUsingDefaultImage, imageUri)
 
-                            IntroTextLayout(titleTextState, introTextState)
+                            IntroTextLayout(titleTextState, introTextState,
+                            onTitleFocusChanged = {titleFocusState.value = it},
+                            onIntroFocusChanged = {introFocusState.value = it})
+
 
                             Spacer(modifier = Modifier.height(34.dp))
-                            SupplyLayout(supplyTextState)
+                            SupplyLayout(supplyTextState){
+                                supplyFocusState.value = it
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
-                            InquiryLayout(inquiryTextState)
+                            InquiryLayout(inquiryTextState){
+                                inquiryFocusState.value = it
+                            }
 
                             Spacer(modifier = Modifier.height(40.dp))
 
@@ -188,6 +241,8 @@ class CreateCrewImageFragment : Fragment() {
             }
         }
     }
+    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
+
 
     private fun openUploadImageBottomSheet() {
         uploadImageBottomSheet = UploadImageBottomSheetFragment(viewModel)
@@ -195,7 +250,10 @@ class CreateCrewImageFragment : Fragment() {
     }
 
     @Composable
-    fun InquiryLayout(inquiryTextState: MutableState<String>) {
+    fun InquiryLayout(
+        inquiryTextState: MutableState<String>,
+        onFocusChanged : (Boolean) -> Unit,
+        ) {
         Text(
             text = stringResource(id = R.string.create_inquiry),
             fontFamily = Roboto,
@@ -207,14 +265,16 @@ class CreateCrewImageFragment : Fragment() {
         LargeTextFieldWithCounter(
             textState = inquiryTextState,
             hintText = stringResource(id = R.string.inquiry_hint),
-            maxLength = SUPPLY_MAX_LENGTH
+            maxLength = SUPPLY_MAX_LENGTH,
+            onFocusChanged = onFocusChanged
         )
 
     }
 
     @Composable
     fun SupplyLayout(
-        supplyTextState: MutableState<String>
+        supplyTextState: MutableState<String>,
+        focusState : (Boolean) -> Unit
     ) {
         Text(
             text = stringResource(id = R.string.create_supply),
@@ -227,7 +287,8 @@ class CreateCrewImageFragment : Fragment() {
         LargeTextFieldWithCounter(
             textState = supplyTextState,
             hintText = stringResource(id = R.string.input_supplies),
-            maxLength = SUPPLY_MAX_LENGTH
+            maxLength = SUPPLY_MAX_LENGTH,
+            onFocusChanged = focusState
         )
 
     }
@@ -237,19 +298,24 @@ class CreateCrewImageFragment : Fragment() {
     fun IntroTextLayout(
         titleTextState: MutableState<String>,
         introTextState: MutableState<String>,
+        onTitleFocusChanged : (Boolean) -> Unit,
+        onIntroFocusChanged : (Boolean) -> Unit
     ) {
+
         Spacer(modifier = Modifier.height(24.dp))
         SimpleTextField(
             textState = titleTextState,
             hintText = stringResource(id = R.string.input_title),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions.Default
+            keyboardActions = KeyboardActions.Default,
+            onFocusChanged = onTitleFocusChanged
         )
         Spacer(modifier = Modifier.height(24.dp))
         LargeTextFieldWithCounter(
             textState = introTextState,
             hintText = stringResource(id = R.string.input_introduce_crew),
-            maxLength = INTRO_MAX_LENGTH
+            maxLength = INTRO_MAX_LENGTH,
+            onFocusChanged = onIntroFocusChanged
         )
 
     }

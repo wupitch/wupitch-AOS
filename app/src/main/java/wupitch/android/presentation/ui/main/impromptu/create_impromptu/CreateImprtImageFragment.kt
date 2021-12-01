@@ -205,7 +205,8 @@ class CreateImprtImageFragment : Fragment() {
         LargeTextFieldWithCounter(
             textState = inquiryTextState,
             hintText = stringResource(id = R.string.inquiry_hint),
-            maxLength = SUPPLY_MAX_LENGTH
+            maxLength = SUPPLY_MAX_LENGTH,
+            onFocusChanged = {}
         )
 
     }
@@ -225,7 +226,8 @@ class CreateImprtImageFragment : Fragment() {
         LargeTextFieldWithCounter(
             textState = supplyTextState,
             hintText = stringResource(id = R.string.input_supplies),
-            maxLength = SUPPLY_MAX_LENGTH
+            maxLength = SUPPLY_MAX_LENGTH,
+            onFocusChanged = {}
         )
 
     }
@@ -241,13 +243,15 @@ class CreateImprtImageFragment : Fragment() {
             textState = titleTextState,
             hintText = stringResource(id = R.string.input_title),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions.Default
+            keyboardActions = KeyboardActions.Default,
+            onFocusChanged = {}
         )
         Spacer(modifier = Modifier.height(24.dp))
         LargeTextFieldWithCounter(
             textState = introTextState,
             hintText = stringResource(id = R.string.input_intro_impromptu),
-            maxLength = INTRO_MAX_LENGTH
+            maxLength = INTRO_MAX_LENGTH,
+            onFocusChanged = {}
         )
 
     }

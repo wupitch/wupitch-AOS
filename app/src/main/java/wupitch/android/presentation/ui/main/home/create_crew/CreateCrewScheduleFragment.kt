@@ -65,6 +65,8 @@ class CreateCrewScheduleFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
                     val scope = rememberCoroutineScope()
+                    val focusState = remember { mutableStateOf(false) }
+
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
@@ -88,7 +90,7 @@ class CreateCrewScheduleFragment : Fragment() {
 
                     val snackbarHostState = remember { SnackbarHostState() }
 
-                    var heightToScroll = remember { mutableStateOf(0) }
+                    val heightToScroll = remember { mutableStateOf(0) }
 
                     ConstraintLayout(
                         Modifier

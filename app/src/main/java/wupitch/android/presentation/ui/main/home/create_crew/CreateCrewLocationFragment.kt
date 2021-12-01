@@ -160,7 +160,8 @@ class CreateCrewLocationFragment : Fragment() {
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = {
                                         setKeyboardDown()
-                                    })
+                                    }),
+                                    onFocusChanged = {}
                                 )
 
                                 Spacer(modifier = Modifier.height(12.dp))

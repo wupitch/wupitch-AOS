@@ -1,9 +1,11 @@
 package wupitch.android.presentation.ui.components
 
+import android.inputmethodservice.Keyboard
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -26,14 +28,18 @@ fun NumberTextFieldLayout(
     textState : MutableState<String>,
     measureString : String,
     thousandIndicator : Boolean = false,
-    hintString: String
+    hintString: String,
+    keyboardActions : KeyboardActions,
+    onFocused : (Boolean)-> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         NumberTextField(
             modifier = modifier,
             textState = textState,
             thousandIndicator = thousandIndicator,
-            hintString = hintString
+            hintString = hintString,
+            keyboardActions = keyboardActions,
+            onFocused = onFocused
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(

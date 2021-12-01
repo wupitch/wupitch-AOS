@@ -18,6 +18,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
@@ -36,7 +37,8 @@ fun SimpleTextField(
     textState: MutableState<String>,
     hintText: String,
     keyboardOptions: KeyboardOptions,
-    keyboardActions: KeyboardActions
+    keyboardActions: KeyboardActions,
+    onFocusChanged : (Boolean) ->Unit
 ) {
 
     val customTextSelectionColors = TextSelectionColors(
@@ -46,6 +48,7 @@ fun SimpleTextField(
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         BasicTextField(
+            modifier = Modifier.onFocusEvent { onFocusChanged(it.isFocused) },
             value = textState.value,
             textStyle = TextStyle(
                 color = Color.Black,

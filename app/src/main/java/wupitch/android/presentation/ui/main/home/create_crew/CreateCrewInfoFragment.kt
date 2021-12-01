@@ -1,10 +1,14 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import androidx.compose.animation.core.FloatTweenSpec
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -26,13 +31,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.navGraphViewModels
+import com.google.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.navigationBarsPadding
+import com.google.accompanist.insets.navigationBarsWithImePadding
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
@@ -45,7 +55,7 @@ import wupitch.android.presentation.ui.components.NumberTextFieldLayout
 @AndroidEntryPoint
 class CreateCrewInfoFragment : Fragment() {
 
-    private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
+        private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,7 +67,20 @@ class CreateCrewInfoFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
+
+                    val scope = rememberCoroutineScope()
                     val scrollState = rememberScrollState(0)
+                    val focusState = remember { mutableStateOf(false) }
+                    if (focusState.value) {
+                        SideEffect {
+                            scope.launch {
+                                scrollState.animateScrollTo(
+                                    200.dpToInt(),
+                                    FloatTweenSpec(250, 0, LinearEasing)
+                                )
+                            }
+                        }
+                    }
 
                     val crewNameState = remember { mutableStateOf(viewModel.crewName.value) }
                     val crewSizeState = remember { mutableStateOf(viewModel.crewSize.value) }
@@ -67,13 +90,15 @@ class CreateCrewInfoFragment : Fragment() {
 
                     val stopSignupState = remember { mutableStateOf(false) }
                     val dialogOpenState = remember { mutableStateOf(false) }
-                    if(stopSignupState.value) {
+                    if (stopSignupState.value) {
                         findNavController().navigate(R.id.action_createCrewInfoFragment_to_mainFragment)
                     }
-                    if(dialogOpenState.value){
-                        StopWarningDialog(dialogOpenState = dialogOpenState,
+                    if (dialogOpenState.value) {
+                        StopWarningDialog(
+                            dialogOpenState = dialogOpenState,
                             stopSignupState = stopSignupState,
-                            textString = stringResource(id = R.string.stop_create_crew_warning))
+                            textString = stringResource(id = R.string.stop_create_crew_warning)
+                        )
                     }
 
                     ConstraintLayout(
@@ -130,7 +155,7 @@ class CreateCrewInfoFragment : Fragment() {
                             CrewName(crewNameState)
 
                             Spacer(modifier = Modifier.height(32.dp))
-                            CurrentCrewSize(crewSizeState)
+                            CurrentCrewSize(crewSizeState, focusState)
 
                             Spacer(modifier = Modifier.height(32.dp))
                             CrewAgeGroup(crewAgeGroupListState)
@@ -183,6 +208,8 @@ class CreateCrewInfoFragment : Fragment() {
             }
         }
     }
+    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
+
 
     @Composable
     private fun CrewExtraInfo(
@@ -190,16 +217,20 @@ class CreateCrewInfoFragment : Fragment() {
     ) {
 
         val extraInfoList = arrayListOf<FilterItem>(
-            FilterItem(getString(R.string.beginner_centered), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.semi_expert_centered), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.expert_centered), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.beginners_to_experts), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.train_with_coach), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.has_lesson), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.train_centered), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.game_centered), remember{ mutableStateOf(false)})
+            FilterItem(getString(R.string.beginner_centered), remember { mutableStateOf(false) }),
+            FilterItem(
+                getString(R.string.semi_expert_centered),
+                remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.expert_centered), remember { mutableStateOf(false) }),
+            FilterItem(
+                getString(R.string.beginners_to_experts),
+                remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.train_with_coach), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.has_lesson), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.train_centered), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.game_centered), remember { mutableStateOf(false) })
         )
-        if(crewExtraInfoListState.isNotEmpty()){
+        if (crewExtraInfoListState.isNotEmpty()) {
             crewExtraInfoListState.forEach {
                 extraInfoList[it].state.value = true
             }
@@ -234,14 +265,14 @@ class CreateCrewInfoFragment : Fragment() {
     ) {
 
         val ageGroupList = listOf<FilterItem>(
-            FilterItem(getString(R.string.teenager), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.twenties), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.thirties), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.forties), remember{ mutableStateOf(false)}),
-            FilterItem(getString(R.string.over_fifties), remember{ mutableStateOf(false)})
+            FilterItem(getString(R.string.teenager), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.twenties), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.thirties), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.forties), remember { mutableStateOf(false) }),
+            FilterItem(getString(R.string.over_fifties), remember { mutableStateOf(false) })
         )
 
-        if(crewAgeGroupState.isNotEmpty()) {
+        if (crewAgeGroupState.isNotEmpty()) {
             crewAgeGroupState.forEach {
                 ageGroupList[it].state.value = true
             }
@@ -276,7 +307,8 @@ class CreateCrewInfoFragment : Fragment() {
 
     @Composable
     private fun CurrentCrewSize(
-        textState: MutableState<String>
+        textState: MutableState<String>,
+        focusState: MutableState<Boolean>
     ) {
         Text(
             text = stringResource(id = R.string.current_crew_size),
@@ -293,9 +325,18 @@ class CreateCrewInfoFragment : Fragment() {
                 .height(44.dp),
             textState = textState,
             measureString = stringResource(id = R.string.people_count_measure),
-            hintString = stringResource(id = R.string.crew_size_hint)
+            hintString = stringResource(id = R.string.crew_size_hint),
+            keyboardActions = KeyboardActions(onDone = { setKeyboardDown() }),
+            onFocused = {
+                focusState.value = it
+            }
         )
 
+    }
+
+    private fun setKeyboardDown() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     @Composable
@@ -314,7 +355,8 @@ class CreateCrewInfoFragment : Fragment() {
             textState = textState,
             hintText = stringResource(id = R.string.input_crew_name),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-            keyboardActions = KeyboardActions.Default
+            keyboardActions = KeyboardActions.Default,
+            onFocusChanged = {}
         )
     }
 

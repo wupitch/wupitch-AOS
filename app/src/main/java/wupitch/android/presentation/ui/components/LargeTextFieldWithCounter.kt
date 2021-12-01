@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
@@ -32,7 +33,8 @@ import wupitch.android.presentation.theme.Roboto
 fun LargeTextFieldWithCounter(
     textState: MutableState<String>,
     hintText: String,
-    maxLength : Int
+    maxLength : Int,
+    onFocusChanged : (Boolean) -> Unit
 ) {
     Column(Modifier.fillMaxWidth()) {
 
@@ -44,6 +46,7 @@ fun LargeTextFieldWithCounter(
         CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
 
             BasicTextField(
+                modifier = Modifier.onFocusEvent { onFocusChanged(it.isFocused) },
                 value = textState.value,
                 textStyle = TextStyle(
                     color = Color.Black,

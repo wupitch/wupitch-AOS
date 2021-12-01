@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -17,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
@@ -43,7 +45,9 @@ fun NumberTextField(
     modifier: Modifier,
     textState: MutableState<String>,
     thousandIndicator : Boolean = false,
-    hintString : String
+    hintString : String,
+    keyboardActions: KeyboardActions,
+    onFocused : (Boolean) -> Unit
 ) {
 
     val customTextSelectionColors = TextSelectionColors(
@@ -54,6 +58,9 @@ fun NumberTextField(
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
 
         BasicTextField(
+            modifier = Modifier.onFocusEvent {
+                onFocused(it.isFocused)
+            },
             value = textState.value,
             textStyle = TextStyle(
                 color = Color.Black,
@@ -66,6 +73,7 @@ fun NumberTextField(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number,
                 imeAction = ImeAction.Done
             ),
+            keyboardActions = keyboardActions,
             maxLines = 1,
             onValueChange = { value ->
 

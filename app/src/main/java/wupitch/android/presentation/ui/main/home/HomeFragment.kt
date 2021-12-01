@@ -174,7 +174,7 @@ class HomeFragment : Fragment() {
                                 },
                             onClick = {
                                 activity?.findNavController(R.id.main_nav_container_view)
-                                    ?.navigate(R.id.action_mainFragment_to_createCrewSport)
+                                    ?.navigate(R.id.action_mainFragment_to_createCrewImageFragment)
                             })
 
                         if (loading.value) {

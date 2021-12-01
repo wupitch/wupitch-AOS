@@ -1,12 +1,15 @@
 package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -131,7 +134,9 @@ class CreateImprtFeeFragment : Fragment() {
                                 textState = feeState,
                                 measureString = stringResource(id = R.string.fee_measure),
                                 thousandIndicator = true, 
-                                hintString = stringResource(id = R.string.fee_hint)
+                                hintString = stringResource(id = R.string.fee_hint),
+                                keyboardActions = KeyboardActions(onDone = { setKeyboardDown()}),
+                                onFocused = {}
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                             NoToggleLayout(noFeeState, stringResource(id = R.string.no_participation_fee))
@@ -173,6 +178,9 @@ class CreateImprtFeeFragment : Fragment() {
             }
         }
     }
-
+    private fun setKeyboardDown() {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
 
 }
