@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.compose.animation.core.FloatSpringSpec
+import androidx.compose.animation.core.FloatTweenSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
@@ -42,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -66,8 +71,10 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return ComposeView(requireContext()).apply {
+            WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
             setContent {
                 WupitchTheme {
+                    ProvideWindowInsets {
 
                         val scrollState = rememberScrollState()
                         val emailTextState = remember { viewModel.userEmail }
@@ -113,16 +120,19 @@ class LoginFragment : Fragment() {
                                 end.linkTo(parent.end)
                                 top.linkTo(logo.bottom, margin = 36.dp)
                                 width = Dimension.fillToConstraints
-                            }) {
+                            }.navigationBarsWithImePadding()
+                            ) {
                                 LoginTextField(
                                     isEmail = true,
                                     hintString = stringResource(id = R.string.email),
-                                    textState = emailTextState
+                                    textState = emailTextState,
+                                    scrollState = scrollState
                                 )
                                 Spacer(modifier = Modifier.height(12.dp))
                                 LoginTextField(
                                     hintString = stringResource(id = R.string.login_pw),
-                                    textState = pwTextState
+                                    textState = pwTextState,
+                                    scrollState = scrollState
                                 )
 
                                 Spacer(modifier = Modifier.height(32.dp))
@@ -170,9 +180,12 @@ class LoginFragment : Fragment() {
                             }
                         }
                     }
+                }
             }
         }
     }
+
+
 
     @Composable
     private fun LoginButton(
@@ -204,24 +217,27 @@ class LoginFragment : Fragment() {
             )
         }
     }
+    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
+
 
     @ExperimentalFoundationApi
     @Composable
     fun LoginTextField(
         isEmail: Boolean = false,
         hintString: String,
-        textState: MutableState<String>
+        textState: MutableState<String>,
+        scrollState : ScrollState
     ) {
-
         val scope = rememberCoroutineScope()
-        val bringIntoViewRequester = BringIntoViewRequester()
 
-//        val focused = source.collectIsFocusedAsState()
-//        val relocationRequester = remember { RelocationRequester() }
-//        val ime = LocalWindowInsets.current.ime
-//        if (ime.isVisible && focused.value) {
-//            relocationRequester.bringIntoView()
-//        }
+        val focusState = remember { mutableStateOf(false) }
+        if (focusState.value && !isEmail) {
+            SideEffect {
+                scope.launch {
+                    scrollState.animateScrollTo(130.dpToInt(), FloatTweenSpec(250, 0, LinearEasing))
+                }
+            }
+        }
         val customTextSelectionColors = TextSelectionColors(
             handleColor = colorResource(id = R.color.gray03),
             backgroundColor = colorResource(id = R.color.gray03)
@@ -231,17 +247,10 @@ class LoginFragment : Fragment() {
 
 
             BasicTextField(
-//                modifier = Modifier
-//                    .navigationBarsWithImePadding()
-//                    .bringIntoViewRequester(bringIntoViewRequester)
-//                    .onFocusEvent {
-//                        if (it.isFocused) {
-//                            scope.launch {
-//                                delay(200)
-//                                bringIntoViewRequester.bringIntoView()
-//                            }
-//                        }
-//                    },
+                modifier = Modifier
+                    .onFocusEvent {
+                        focusState.value = it.isFocused
+                    },
                 value = textState.value,
                 textStyle = TextStyle(
                     color = Color.Black,
@@ -297,13 +306,7 @@ class LoginFragment : Fragment() {
                 }
             )
         }
-
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-//    }
 
     private fun setKeyboardDown() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
