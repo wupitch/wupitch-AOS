@@ -21,4 +21,7 @@ class FcmRepositoryImpl @Inject constructor(
 
     override suspend fun getNotifications(): Response<NotiRes>
     = retrofit.create(FcmApi::class.java).getNotifications()
+
+    override suspend fun patchNotificationStatus(fcmId: Int): Response<BaseRes>
+    = retrofit.create(FcmApi::class.java).patchNotificationStatus(fcmId)
 }

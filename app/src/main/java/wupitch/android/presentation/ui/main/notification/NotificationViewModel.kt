@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.main.notification
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -41,8 +42,20 @@ class NotificationViewModel @Inject constructor(
                             date  = dateDashToCol(it.dateTime)
                         )
                     })
+                    res.result.forEach {
+                        if(!it.isChecked) patchNotificationStatus(it.fcmId)
+                    }
                 }else _notificationState.value = NotificationState(error = res.message)
             }
         }else _notificationState.value = NotificationState(error = "알림 조회에 실패했습니다.")
+    }
+
+    private fun patchNotificationStatus(fcmId : Int) = viewModelScope.launch {
+        val response = fcmRepository.patchNotificationStatus(fcmId)
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(!res.isSuccess) Log.d("{NotificationViewModel.patchNotificationStatus}", "알림 조회 변경 실패")
+            }
+        }
     }
 }

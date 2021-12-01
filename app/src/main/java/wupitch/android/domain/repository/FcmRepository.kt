@@ -10,4 +10,5 @@ interface FcmRepository {
     suspend fun postToken(fcmReq : FcmReqTest): Response<BaseRes>
     suspend fun patchFcmToken(fcmReq: FcmReq) : Response<BaseRes>
     suspend fun getNotifications() : Response<NotiRes>
+    suspend fun patchNotificationStatus(fcmId : Int) : Response<BaseRes>
 }

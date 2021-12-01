@@ -10,7 +10,6 @@ import wupitch.android.data.remote.dto.NotiRes
 interface FcmApi {
 
     //test purpose
-
     @POST("app/fcm/test")
     suspend fun postToken(
      @Body fcmReq : FcmReqTest
@@ -23,6 +22,11 @@ interface FcmApi {
 
     @GET("app/fcms/accounts/auth")
     suspend fun getNotifications() : Response<NotiRes>
+
+    @PATCH("app/fcms/{fcmId}/view")
+    suspend fun patchNotificationStatus(
+        @Path("fcmId") fcmId : Int
+    ) : Response<BaseRes>
 
 
 }
