@@ -6,7 +6,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import wupitch.android.common.Constants.SEARCH_PAGE_NUM
 
 
-class SearchVPAdapter(fm : FragmentActivity) : FragmentStateAdapter(fm) {
+class SearchVPAdapter(fm : Fragment) : FragmentStateAdapter(fm) {
 
     override fun getItemCount(): Int = SEARCH_PAGE_NUM
 

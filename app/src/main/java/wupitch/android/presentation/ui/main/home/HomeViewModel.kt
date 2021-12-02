@@ -211,7 +211,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                         _userDistrictName.value = res.result.crewPickAreaName ?: "지역구"
-                        _userDistrictId.value = res.result.crewPickAreaId
+                        _userDistrictId.value = if(res.result.crewPickAreaId == null) null else res.result.crewPickAreaId -1
                         _crewSizeState.value =
                             if (res.result.crewPickMemberCountValue == null) null else res.result.crewPickMemberCountValue - 1
                         resetPage()

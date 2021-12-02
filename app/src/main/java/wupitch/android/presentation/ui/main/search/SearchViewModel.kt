@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchCrew() = viewModelScope.launch {
         loading.value = true
-        val response = crewRepository.getCrewSearch(districtId, _searchKeyword.value, _page.value)
+        val response = crewRepository.getCrewSearch(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _page.value)
 
         if(response.isSuccessful) {
             response.body()?.let { res ->

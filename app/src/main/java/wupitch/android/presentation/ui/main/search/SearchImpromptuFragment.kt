@@ -4,12 +4,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import wupitch.android.R
+import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 
+@AndroidEntryPoint
 class SearchImpromptuFragment : Fragment() {
+
+//    private val viewModel: SearchViewModel by viewModels({ requireParentFragment() })
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -18,8 +46,39 @@ class SearchImpromptuFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-                    Text(text = "this is impromptu")
 
+                    ConstraintLayout(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val (chrt, text) = createRefs()
+                        val guildLine = createGuidelineFromTop(0.65f)
+
+                        Image(
+                            modifier = Modifier
+                                .constrainAs(chrt) {
+                                    bottom.linkTo(text.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .size(130.dp, 210.dp),
+                            painter = painterResource(id = R.drawable.img_chrt_02),
+                            contentDescription = null)
+
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(text) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(guildLine)
+                                }
+                                .padding(top = 24.dp),
+                            text = stringResource(R.string.preparing),
+                            color = colorResource(id = R.color.gray02),
+                            fontFamily = Roboto,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
                 }
             }
         }

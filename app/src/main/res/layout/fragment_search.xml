@@ -60,7 +60,7 @@
         app:tabSelectedTextColor="@color/black"
         app:tabIndicatorHeight="3dp"
         app:tabIndicatorColor="@color/black"
-        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorFullWidth="true"
         app:tabTextColor="@color/black"
         app:tabMode="fixed"
         app:tabRippleColor="@android:color/transparent"

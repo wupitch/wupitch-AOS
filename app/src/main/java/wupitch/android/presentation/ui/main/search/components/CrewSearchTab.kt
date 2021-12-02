@@ -28,6 +28,7 @@ import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.main.home.components.CrewCard
 import wupitch.android.presentation.ui.main.search.SearchViewModel
+import wupitch.android.util.checkKeywordLen
 
 @Composable
 fun CrewSearchTab(
@@ -115,8 +116,4 @@ fun CrewSearchTab(
 
 }
 
-fun checkKeywordLen(searchKeyword: String): String {
-    return if(searchKeyword.length > 7) {
-        searchKeyword.substring(0, 7) + "..."
-    }else searchKeyword
-}
+

@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.main.search.SearchViewModel
+import wupitch.android.util.checkKeywordLen
 
 @Composable
 fun ImpromptuSearchTab(

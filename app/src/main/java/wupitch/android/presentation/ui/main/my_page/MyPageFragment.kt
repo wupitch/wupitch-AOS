@@ -157,8 +157,7 @@ class MyPageFragment : Fragment() {
                                 },
                             textString = stringResource(id = R.string.interested_activity)
                         ){
-
-                            //todo
+                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                         }
 
                         MyPageText(
@@ -169,8 +168,7 @@ class MyPageFragment : Fragment() {
                                 },
                             textString = stringResource(id = R.string.my_record)
                         ){
-
-                            //todo
+                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                         }
                         FillInfoSnackbar(
                             modifier = Modifier.constrainAs(alert){
@@ -199,19 +197,19 @@ class MyPageFragment : Fragment() {
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.announcement)
                     ){
-
+                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                     }
                     MyPageText(
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.faq)
                     ){
-
+                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                     }
                     MyPageText(
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.mypage_inquiry)
                     ){
-
+                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                     }
                     MyPageText(
                         modifier = Modifier.padding(start = 20.dp),
@@ -225,7 +223,7 @@ class MyPageFragment : Fragment() {
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.dev_info)
                     ){
-
+                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

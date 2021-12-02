@@ -98,12 +98,12 @@
             app:destination="@id/onboardingFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true"/>
-        <action
-            android:id="@+id/action_splashFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_splashFragment_to_createCrewFeeFragment"
-            app:destination="@id/createCrewFeeFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_splashFragment_to_loginFragment"-->
+<!--            app:destination="@id/loginFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_splashFragment_to_createCrewFeeFragment"-->
+<!--            app:destination="@id/createCrewFeeFragment" />-->
     </fragment>
 
     <fragment
@@ -119,7 +119,7 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="wupitch.android.presentation.ui.main.search.components.SearchFragment"
+        android:name="wupitch.android.presentation.ui.main.search.SearchFragment"
         android:label="SearchFragment" >
         <argument
             android:name="selected_tab"
@@ -128,6 +128,9 @@
         <argument android:name="districtId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_searchFragment_to_crewDetailFragment"
+            app:destination="@id/crewDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewFilterFragment"
@@ -476,12 +479,4 @@
                 app:destination="@id/idCardFragment" />
         </fragment>
     </navigation>
-    <fragment
-        android:id="@+id/crewSearchTab"
-        android:name="wupitch.android.presentation.ui.main.search.components.CrewSearchTab"
-        android:label="CrewSearchTab" >
-        <action
-            android:id="@+id/action_crewSearchTab_to_crewDetailFragment"
-            app:destination="@id/crewDetailFragment" />
-    </fragment>
 </navigation>
