@@ -74,26 +74,33 @@ class CrewDetailFragment : Fragment() {
                     val joinDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val isPinnedState = remember { mutableStateOf(false) } //todo init value : crewState.value.isPinned
-                    if(viewModel.pinState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                    if (viewModel.pinChangeState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            viewModel.pinChangeState.value.error,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
 
-                    val joinState = remember {viewModel.joinState } //todo remember?
-                    if(joinState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
+                    val joinState = remember { viewModel.joinState } //todo remember?
+                    if (joinState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            viewModel.pinChangeState.value.error,
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
                     }
-                    if(joinState.value.isSuccess){
-                        if(joinState.value.result == true) joinDialogOpenState.value = true
-                        else if(joinState.value.result == false) Toast.makeText(
+                    if (joinState.value.isSuccess) {
+                        if (joinState.value.result == true) joinDialogOpenState.value = true
+                        else if (joinState.value.result == false) Toast.makeText(
                             requireContext(),
                             "이미 가입한 크루입니다.",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }else {
-                        when(joinState.value.code){
+                    } else {
+                        when (joinState.value.code) {
                             //todo fix code
                             0 -> {
                                 notEnoughInfoDialogOpenState.value = true
@@ -106,11 +113,11 @@ class CrewDetailFragment : Fragment() {
                         JoinSuccessDialog(
                             dialogOpen = joinVisitorDialogOpenState,
                             R.string.join_visitor_success
-                        ){
-                            joinVisitorDialogOpenState.value  = false
+                        ) {
+                            joinVisitorDialogOpenState.value = false
                         }
                     if (joinDialogOpenState.value)
-                        JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success){
+                        JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success) {
                             joinDialogOpenState.value = false
                             viewModel.initJoinState()
                         }
@@ -121,7 +128,10 @@ class CrewDetailFragment : Fragment() {
                         ) {
                             viewModel.setNotEnoughInfo()
                             val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
-                            findNavController().navigate(R.id.action_crewDetailFragment_to_mainFragment, bundle)
+                            findNavController().navigate(
+                                R.id.action_crewDetailFragment_to_mainFragment,
+                                bundle
+                            )
                         }
 
 
@@ -169,8 +179,7 @@ class CrewDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(isPinnedState, crewInfo){
-                                    isPinnedState.value = it
+                                CrewImageCard(crewInfo) {
                                     viewModel.changePinStatus()
                                 }
                                 CrewInfo(crewInfo)
@@ -197,7 +206,7 @@ class CrewDetailFragment : Fragment() {
                             )
                         }
 
-                        if (crewState.value.isLoading|| joinState.value.isLoading) {
+                        if (crewState.value.isLoading || joinState.value.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
@@ -278,7 +287,7 @@ class CrewDetailFragment : Fragment() {
                 .padding(horizontal = 25.dp)
         ) {
 
-            if(crewState.materials != null) {
+            if (crewState.materials != null) {
                 Text(
                     text = stringResource(id = R.string.supplies),
                     fontFamily = Roboto,
@@ -566,9 +575,8 @@ class CrewDetailFragment : Fragment() {
 
     @Composable
     fun CrewImageCard(
-        pinToggleState: MutableState<Boolean>,
         crewState: CrewDetailResult,
-        onValueChange : (Boolean) -> Unit
+        onValueChange: (Boolean) -> Unit
     ) {
         ConstraintLayout(
             modifier = Modifier
@@ -603,16 +611,20 @@ class CrewDetailFragment : Fragment() {
                 contentScale = ContentScale.Crop
             )
 
+            val isPinnedState = remember { mutableStateOf(crewState.isPinUp) }
 
-            //todo
+
+
             PinToggleButton(modifier = Modifier
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
-                }, toggleState = pinToggleState,
-                onValueChange = onValueChange
+                }, toggleState = isPinnedState,
+                onValueChange = {
+                    isPinnedState.value = it
+                    onValueChange(it)
+                }
             )
-
         }
     }
 }

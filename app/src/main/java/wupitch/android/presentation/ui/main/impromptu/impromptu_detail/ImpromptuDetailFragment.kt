@@ -74,8 +74,7 @@ class ImpromptuDetailFragment : Fragment() {
                     val joinSuccessDialogOpenState = remember { mutableStateOf(false) }
                     val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
 
-                    val pinToggleState =
-                        remember { mutableStateOf(false) }//todo init value : crewState.value.isPinned
+
                     if (viewModel.pinState.value.error.isNotEmpty()) {
                         Toast.makeText(
                             requireContext(),
@@ -178,8 +177,7 @@ class ImpromptuDetailFragment : Fragment() {
                                     .verticalScroll(scrollState)
 
                             ) {
-                                CrewImageCard(pinToggleState, imprtInfo) {
-                                    pinToggleState.value = it
+                                CrewImageCard(imprtInfo) {
                                     viewModel.changePinStatus()
                                 }
 
@@ -482,7 +480,6 @@ class ImpromptuDetailFragment : Fragment() {
 
     @Composable
     fun CrewImageCard(
-        pinToggleState: MutableState<Boolean>,
         imprtInfo: ImprtDetailResult,
         onValueChange: (Boolean) -> Unit
 
@@ -518,13 +515,20 @@ class ImpromptuDetailFragment : Fragment() {
                     }
                     .size(76.dp))
 
-            //todo
+
+            val pinToggleState =
+                remember { mutableStateOf(imprtInfo.isPinUp) }
+
             PinToggleButton(modifier = Modifier
                 .constrainAs(pin) {
                     top.linkTo(parent.top, margin = 16.dp)
                     end.linkTo(parent.end, margin = 16.dp)
                 }, toggleState = pinToggleState,
-                onValueChange = onValueChange)
+                onValueChange = {
+                    pinToggleState.value = it
+                    onValueChange(it)
+                }
+            )
 
 
         }

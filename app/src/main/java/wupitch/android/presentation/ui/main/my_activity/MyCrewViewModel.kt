@@ -49,7 +49,9 @@ class MyCrewViewModel @Inject constructor(
                         sportsId = res.result.sportsId-1,
                         materials = res.result.materials,
                         inquiries = res.result.inquiries,
-                        visitDays = emptyList()
+                        visitDays = emptyList(),
+                        isPinUp = res.result.isPinUp,
+                        isSelect = res.result.isSelect
                     )
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)

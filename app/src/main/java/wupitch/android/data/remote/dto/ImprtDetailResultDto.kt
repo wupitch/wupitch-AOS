@@ -15,6 +15,8 @@ data class ImprtDetailResultDto(
     val introduction: String,
     val location: String?,
     val materials: String?,
+    val isPinUp : Boolean,
+    val isSelect : Boolean,
     val nowMemberCount: Int,
     val recruitmentCount: Int,
     val startTime: Double,

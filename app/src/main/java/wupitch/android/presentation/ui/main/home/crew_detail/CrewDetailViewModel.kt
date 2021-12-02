@@ -53,7 +53,9 @@ class CrewDetailViewModel @Inject constructor(
                         sportsId = res.result.sportsId - 1,
                         materials = res.result.materials,
                         inquiries = res.result.inquiries,
-                        visitDays = convertedVisitorDays(res.result.schedules)
+                        visitDays = convertedVisitorDays(res.result.schedules),
+                        isPinUp =  res.result.isPinUp,
+                        isSelect = res.result.isSelect
                     )
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)
@@ -135,18 +137,18 @@ class CrewDetailViewModel @Inject constructor(
         return stringBuilder.toString()
     }
 
-    private var _pinState = mutableStateOf(BaseState())
-    val pinState: State<BaseState> = _pinState
+    private var _pinChangeState = mutableStateOf(BaseState())
+    val pinChangeState: State<BaseState> = _pinChangeState
 
     fun changePinStatus() = viewModelScope.launch {
         _crewDetailState.value.data?.clubId?.let {
             val response = crewRepository.changePinStatus(it)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
-                    if (res.isSuccess) _pinState.value = BaseState(isSuccess = true)
-                    else _pinState.value = BaseState(error = res.message)
+                    if (res.isSuccess) _pinChangeState.value = BaseState(isSuccess = true)
+                    else _pinChangeState.value = BaseState(error = res.message)
                 }
-            } else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
+            } else _pinChangeState.value = BaseState(error = "핀업에 실패했습니다.")
         }
     }
 

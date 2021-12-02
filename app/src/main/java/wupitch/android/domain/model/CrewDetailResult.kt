@@ -15,6 +15,8 @@ data class CrewDetailResult(
     val extraList: List<String>,
     val introduction: String,
     val memberCount: String,
+    val isPinUp : Boolean,
+    val isSelect : Boolean,
     val schedules: List<String>,
     val sportsId: Int,
     val materials : String?,

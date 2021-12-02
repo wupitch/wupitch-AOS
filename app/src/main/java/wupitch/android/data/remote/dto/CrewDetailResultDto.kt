@@ -14,6 +14,8 @@ data class CrewDetailResultDto(
     val extraList: List<String>,
     val guestDues: Int?,
     val introduction: String,
+    val isPinUp : Boolean,
+    val isSelect : Boolean,
     val memberCount: Int,
     val schedules: List<Schedule>,
     val sportsId: Int,

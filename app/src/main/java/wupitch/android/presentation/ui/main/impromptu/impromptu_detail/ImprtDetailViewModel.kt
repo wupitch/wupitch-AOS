@@ -43,7 +43,9 @@ class ImprtDetailViewModel @Inject constructor(
                             location = res.result.location ?: "장소 미정",
                             materials = res.result.materials,
                             recruitStatus = "${res.result.nowMemberCount}/${res.result.recruitmentCount}명 참여",
-                            title = res.result.title
+                            title = res.result.title,
+                            isPinUp = res.result.isPinUp,
+                            isSelect = res.result.isSelect
                         )
                     )
                 }

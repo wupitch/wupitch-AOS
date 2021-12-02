@@ -12,6 +12,8 @@ data class ImprtDetailResult(
     val impromptuImage: String?,
     val inquiries: String,
     val introduction: String,
+    val isPinUp : Boolean,
+    val isSelect : Boolean,
     val location: String,
     val materials: String?,
     val recruitStatus : String,
