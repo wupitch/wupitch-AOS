@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.app.Person.fromBundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
@@ -50,11 +51,8 @@ class MyCrewDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.getParcelable<MyCrewArg>("myCrewInfo")?.let { crewInfo ->
-            //todo : get crew from viewModel with the crewInfo.crewId
-            selectedTab = crewInfo.selectedTab
-            viewModel.crewId = crewInfo.crewId
-        }
+        arguments?.getInt("selectedTab")?.let { selectedTab = it }
+        arguments?.getInt("crewId")?.let { viewModel.crewId = it }
     }
 
     override fun onCreateView(

@@ -34,7 +34,7 @@ class SearchFragment
             selectedTab = id
         }
         arguments?.getInt("districtId")?.let { id ->
-            viewModel.setDistrictId(if(id==-1) null else id)
+            viewModel.setDistrictId(if(id == -1) null else id)
         }
     }
 
@@ -46,6 +46,8 @@ class SearchFragment
         setEditTextListener()
         setEditTextButtons()
         setEditTextSearchListener()
+        binding.viewpagerSearch.currentItem = selectedTab
+        binding.tablayoutSearch.setScrollPosition(selectedTab, 0f, true)
 
     }
 

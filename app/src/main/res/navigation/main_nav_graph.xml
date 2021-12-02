@@ -68,6 +68,9 @@
             android:name="tabId"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_mainFragment_to_myCrewDetailFragmentTemp"
+            app:destination="@id/myCrewDetailFragmentTemp" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -174,9 +177,15 @@
         android:id="@+id/myCrewDetailFragment"
         android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"
         android:label="MyCrewDetailFragment" >
+
         <argument
-            android:name="myCrewInfo"
-            app:argType="wupitch.android.presentation.ui.main.my_activity.MyCrewArg" />
+            android:name="selectedTab"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="crewId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/myImpromptuDetailFragment"
@@ -479,4 +488,8 @@
                 app:destination="@id/idCardFragment" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/myCrewDetailFragmentTemp"
+        android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragmentTemp"
+        android:label="MyCrewDetailFragmentTemp" />
 </navigation>

@@ -20,6 +20,7 @@ object Constants {
     val FIRST_COMER = booleanPreferencesKey("is_first_comer")
 
     const val SEARCH_PAGE_NUM = 2
+    const val MY_CREW_DETAIL_PAGE_NUM = 4
     const val INTRO_MAX_LENGTH = 500
     const val SUPPLY_MAX_LENGTH = 100
 

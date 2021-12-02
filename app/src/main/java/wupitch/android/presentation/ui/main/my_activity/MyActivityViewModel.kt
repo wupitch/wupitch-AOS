@@ -21,9 +21,23 @@ class MyActivityViewModel : ViewModel() {
 
 
     fun getMyCrew() = viewModelScope.launch {
+        _myCrewState.value = MyCrewState()
 //        _myCrewState.value = MyCrewState(isLoading = true)
 //        delay(500L)
-        _myCrewState.value = MyCrewState()
+//        _myCrewState.value = MyCrewState(
+//            data = listOf(
+//                CrewCardInfo(
+//                id = 28,
+//                    sportId = 2,
+//                    crewImage = null,
+//                    isPinned = false,
+//                    title= "test crew",
+//                    time = "12:00",
+//                    isMoreThanOnceAWeek = true,
+//                    detailAddress = "울집 앞"
+//            ))
+//        )
+
 
     }
 

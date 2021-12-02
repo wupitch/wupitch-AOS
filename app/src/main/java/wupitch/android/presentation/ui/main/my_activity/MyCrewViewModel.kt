@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.main.my_activity
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
