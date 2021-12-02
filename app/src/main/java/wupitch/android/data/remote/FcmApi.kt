@@ -2,10 +2,7 @@ package wupitch.android.data.remote
 
 import retrofit2.Response
 import retrofit2.http.*
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.FcmReq
-import wupitch.android.data.remote.dto.FcmReqTest
-import wupitch.android.data.remote.dto.NotiRes
+import wupitch.android.data.remote.dto.*
 
 interface FcmApi {
 

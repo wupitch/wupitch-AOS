@@ -33,14 +33,14 @@ class ImprtRepositoryImpl @Inject constructor(
     override suspend fun getImpromptu(
         areaId: Int?,
         days: List<Int>?,
-        memberCountIdx: Int?,
+        memberCountIndex: Int?,
         page: Int,
         scheduleIndex: Int?
     ): Response<GetImprtRes>
     = retrofit.create(ImprtApi::class.java).getImprts(
         areaId = areaId,
         days = days,
-        memberCountIdx = memberCountIdx,
+        memberCountIndex = memberCountIndex,
         page = page,
         scheduleIndex = scheduleIndex
     )
@@ -50,6 +50,9 @@ class ImprtRepositoryImpl @Inject constructor(
 
     override suspend fun joinImprt(id: Int): Response<BaseResultRes>
     = retrofit.create(ImprtApi::class.java).participateImprt(id)
+
+    override suspend fun getImprtFilter(): Response<GetImprtFilterRes>
+    = retrofit.create(ImprtApi::class.java).getImprtFilter()
 
 
 }

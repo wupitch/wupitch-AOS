@@ -16,10 +16,12 @@ interface ImprtRepository {
     suspend fun getImprtDetail(id : Int) : Response<ImprtDetailRes>
     suspend fun getImpromptu(
         areaId: Int?, days: List<Int>?,
-        memberCountIdx: Int?,
+        memberCountIndex: Int?,
         page: Int, scheduleIndex: Int?
     ): Response<GetImprtRes>
     suspend fun changePinStatus( id : Int) : Response<BaseResultRes>
     suspend fun joinImprt( id : Int) : Response<BaseResultRes>
+    suspend fun getImprtFilter() : Response<GetImprtFilterRes>
+
 
 }

@@ -30,7 +30,7 @@ interface ImprtApi {
     suspend fun getImprts(
         @Query("areaId") areaId : Int?,
         @Query("days") days : List<Int>?,
-        @Query("memberCountIdx") memberCountIdx : Int?,
+        @Query("memberCountIndex") memberCountIndex : Int?,
         @Query("page") page : Int,
         @Query("scheduleIndex") scheduleIndex : Int?,
     ) : Response<GetImprtRes>
@@ -44,4 +44,7 @@ interface ImprtApi {
     suspend fun participateImprt(
         @Path("impromptuId") impromptuId : Int
     ): Response<BaseResultRes>
+
+    @GET("app/accounts/auth/impromptu-filter")
+    suspend fun getImprtFilter() : Response<GetImprtFilterRes>
 }

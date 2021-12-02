@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -111,8 +112,41 @@ class ImpromptuFilterFragment : Fragment() {
                     )
 
                     val scheduleState = remember {viewModel.imprtScheduleState }
+                    if(scheduleState.value != null) {
+                        Log.d("{ImpromptuFilterFragment.onCreateView}", scheduleState.value.toString())
+                        scheduleList[scheduleState.value!!].state.value = true
+                    }else {
+                        scheduleList.forEach { if(it.state.value) it.state.value = false }
+                    }
                     val dayState = remember { viewModel.imprtDayList }
+                    if (dayState.size > 0) {
+                        dayState.forEach { item ->
+                            dayList[item].state.value = true
+                        }
+                    }
                     val recruitSizeState = remember { viewModel.imprtSizeState }
+                    if(recruitSizeState.value != null) {
+                        recruitSizeList[recruitSizeState.value!!].state.value = true
+                    }else {
+                        recruitSizeList.forEach { if(it.state.value) it.state.value = false }
+                    }
+
+
+                    val resetState = remember { viewModel.resetState }
+                    if (resetState.value) {
+                        dayList.forEach { it.state.value = false }
+                    }
+
+                    val filterState = remember { viewModel.getImprtFilterState }
+                    if (filterState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            filterState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+
 
 
                     ConstraintLayout(
@@ -262,6 +296,8 @@ class ImpromptuFilterFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
+        if(checkedState.value) checkedScheduleRadioButton = checkedState
+
         Box(
             modifier = modifier
                 .selectable(
@@ -345,6 +381,7 @@ class ImpromptuFilterFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
+        if(checkedState.value) checkedSizeRadioButton = checkedState
         Box(
             modifier = modifier
                 .selectable(

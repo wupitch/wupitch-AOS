@@ -33,7 +33,9 @@ class HomeViewModel @Inject constructor(
     val loading = mutableStateOf(false)
     val error = mutableStateOf("")
 
-    val page = mutableStateOf(1)
+    private var _page = mutableStateOf(1)
+    val page : State<Int> = _page
+
     private var scrollPosition = 0
 
     private var _crewState = mutableStateListOf<CrewCardInfo>()
@@ -83,8 +85,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
+
+    private fun resetPage () {
+        _page.value = 1
+    }
+
     private fun incrementPage() {
-        page.value = page.value +1
+        _page.value = _page.value +1
     }
 
     fun onChangeScrollPosition(position : Int) {
@@ -114,9 +122,6 @@ class HomeViewModel @Inject constructor(
     * filter
     * */
 
-    fun applyFilter() {
-        getCrew()
-    }
 
     private var _resetState = mutableStateOf(false)
     val resetState : State<Boolean> = _resetState
@@ -129,6 +134,15 @@ class HomeViewModel @Inject constructor(
         _userDistrictId.value = null
         _userDistrictName.value = "지역구"
         _crewSizeState.value = null
+        resetPage()
+    }
+
+    private var _isAppliedFilter = false
+
+
+    fun applyFilter() {
+        _isAppliedFilter = true
+        resetPage()
         getCrew()
     }
 
@@ -136,21 +150,19 @@ class HomeViewModel @Inject constructor(
     * get crew, get crew filter
     * */
 
-    private fun getCrew(pageArg : Int = page.value) = viewModelScope.launch {
-        loading.value = true
+    private fun getCrew() = viewModelScope.launch {
 
         val response = crewRepository.getCrew(
             ageList = if(_crewAgeGroupList.isEmpty()) null else _crewAgeGroupList.map { it +1 },
             areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
-            page = pageArg,
+            page = _page.value,
             sportsList = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
         )
         if(response.isSuccessful) {
             response.body()?.let { res ->
                 if(res.isSuccess) {
-                    loading.value = false
                     if(res.result.first) _crewState.clear()
                     appendList(res.result.content.map {
                         CrewCardInfo(
@@ -168,26 +180,51 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }else error.value = "크루 조회에 실패했습니다."
+        loading.value = false
     }
 
     private val _getCrewFilterState = mutableStateOf(BaseState())
     var getCrewFilterState : State<BaseState> = _getCrewFilterState
 
     fun getCrewFilter() = viewModelScope.launch {
-        val response = crewRepository.getCrewFilter()
-        if(response.isSuccessful) {
-            response.body()?.let { res ->
-                if(res.isSuccess){
-                    res.result.crewPickAgeList?.forEach { if(!_crewAgeGroupList.contains(it-1))_crewAgeGroupList.add(it -1) }
-                    res.result.crewPickDays?.forEach {if(!_crewDayList.contains(it-1)) _crewDayList.add(it-1) }
-                    res.result.crewPickSportsList?.forEach { if(!_crewEventList.contains(it-1))_crewEventList.add(it-1) }
-                    _userDistrictName.value = res.result.crewPickAreaName  ?: "지역구"
-                    _crewSizeState.value = res.result.crewPickMemberCountValue?.let { it -1 }
-                    getCrew(1)
+        if(!_isAppliedFilter) {
+            loading.value = true
 
-                }else _getCrewFilterState.value = BaseState(error = res.message )
+            val response = crewRepository.getCrewFilter()
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    if (res.isSuccess) {
+                        res.result.crewPickAgeList?.forEach {
+                            if (!_crewAgeGroupList.contains(it - 1)) _crewAgeGroupList.add(
+                                it - 1
+                            )
+                        }
+                        res.result.crewPickDays?.forEach {
+                            if (!_crewDayList.contains(it - 1)) _crewDayList.add(
+                                it - 1
+                            )
+                        }
+                        res.result.crewPickSportsList?.forEach {
+                            if (!_crewEventList.contains(it - 1)) _crewEventList.add(
+                                it - 1
+                            )
+                        }
+                        _userDistrictName.value = res.result.crewPickAreaName ?: "지역구"
+                        _crewSizeState.value =
+                            if (res.result.crewPickMemberCountValue == null) null else res.result.crewPickMemberCountValue - 1
+                        resetPage()
+                        getCrew()
+
+                    } else {
+                        loading.value = false
+                        _getCrewFilterState.value = BaseState(error = res.message)
+                    }
+                }
+            } else {
+                loading.value = false
+                _getCrewFilterState.value = BaseState(error = "필터 조회에 실패했습니다.")
             }
-        }else _getCrewFilterState.value = BaseState(error = "필터 조회에 실패했습니다." )
+        }
     }
 
     /*
@@ -197,7 +234,8 @@ class HomeViewModel @Inject constructor(
     fun setUserDistrict(districtId : Int, districtName : String) {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
-        getCrew(1)
+        resetPage()
+        getCrew()
     }
 
     fun getDistricts () = viewModelScope.launch {
@@ -211,7 +249,5 @@ class HomeViewModel @Inject constructor(
             }
         } else _districtList.value =  DistrictState( error = "지역 가져오기를 실패했습니다.")
     }
-
-
 
 }

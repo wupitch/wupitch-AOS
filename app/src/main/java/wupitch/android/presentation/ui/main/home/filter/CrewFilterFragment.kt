@@ -170,6 +170,8 @@ class CrewFilterFragment : Fragment() {
                     val crewSizeState = remember { viewModel.crewSizeState }
                     if (crewSizeState.value != null) {
                         crewSizeList[crewSizeState.value!!].state.value = true
+                    }else {
+                        crewSizeList.forEach { if(it.state.value) it.state.value = false }
                     }
 
                     ConstraintLayout(

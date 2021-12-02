@@ -88,7 +88,6 @@ class HomeFragment : Fragment() {
                                 top.linkTo(parent.top)
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
-//                                    height = Dimension.fillToConstraints
                             },
                             districtNameState = districtNameState,
                             districtOnClick = {

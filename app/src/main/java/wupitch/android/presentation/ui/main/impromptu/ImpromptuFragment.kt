@@ -314,7 +314,6 @@ class ImpromptuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getDistricts()
-        viewModel.getImprt()
+        viewModel.getImprtFilter()
     }
 }
