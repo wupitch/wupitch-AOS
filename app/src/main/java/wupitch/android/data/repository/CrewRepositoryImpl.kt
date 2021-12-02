@@ -42,5 +42,8 @@ class CrewRepositoryImpl @Inject constructor(
     override suspend fun getCrewFilter(): Response<GetCrewFilterRes>
     = retrofit.create(CrewApi::class.java).getCrewFilter()
 
+    override suspend fun getCrewSearch(areaId: Int?, crewTitle: String, page : Int): Response<GetCrewRes>
+    = retrofit.create(CrewApi::class.java).getCrewSearch(areaId, crewTitle, page)
+
 
 }

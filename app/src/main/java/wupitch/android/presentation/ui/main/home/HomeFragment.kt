@@ -251,7 +251,10 @@ class HomeFragment : Fragment() {
                             }
                             .size(24.dp),
                         onClick = {
-                            val bundle = Bundle().apply { putInt("selected_tab", 0) }
+                            val bundle = Bundle().apply {
+                                putInt("selected_tab", 0)
+                                putInt("districtId", viewModel.userDistrictId.value?: -1)
+                            }
                             activity?.findNavController(R.id.main_nav_container_view)
                                 ?.navigate(R.id.action_mainFragment_to_searchFragment, bundle)
                         }

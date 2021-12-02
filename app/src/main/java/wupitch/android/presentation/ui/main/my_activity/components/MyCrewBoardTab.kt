@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.main.search.components.checkKeywordLen
 
 @Composable
 fun MyCrewBoardTab() {

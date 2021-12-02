@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.compose.hiltViewModel
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
@@ -28,7 +30,7 @@ fun ImpromptuSearchTab(
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     //todo 현재는 crew search 와 연결되어 있음
-    val searchState = viewModel.crewSearchState.value
+    val searchState = remember {viewModel.crewState}
     val searchKeyword = viewModel.searchKeyword.value
 
     ConstraintLayout(
@@ -39,11 +41,11 @@ fun ImpromptuSearchTab(
         val (progressbar, text, chrt) = createRefs()
         val guildLine = createGuidelineFromTop(0.65f)
 
-        if (searchState.data.isNotEmpty()) {
+        if (searchState.isNotEmpty()) {
             //todo show list.
 
         } else {
-            if(searchKeyword.isNotEmpty() && !searchState.isLoading) {
+            if(searchKeyword.isNotEmpty() && !viewModel.loading.value) {
 
                 Image(
                     modifier = Modifier
@@ -73,7 +75,7 @@ fun ImpromptuSearchTab(
 
         }
 
-        if (searchState.isLoading) {
+        if (viewModel.loading.value) {
             CircularProgressIndicator(
                 modifier = Modifier.constrainAs(progressbar) {
                     start.linkTo(parent.start)

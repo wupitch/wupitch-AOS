@@ -48,4 +48,11 @@ interface CrewApi {
 
     @GET("app/accounts/auth/crew-filter")
     suspend fun getCrewFilter() : Response<GetCrewFilterRes>
+
+    @GET("app/clubs/title")
+    suspend fun getCrewSearch(
+        @Query("areaId") areaId : Int?,
+        @Query("crewTitle") crewTitle : String,
+        @Query("page") page : Int,
+        ) : Response<GetCrewRes>
 }

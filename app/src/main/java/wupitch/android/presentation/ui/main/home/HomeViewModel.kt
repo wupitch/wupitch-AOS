@@ -46,6 +46,7 @@ class HomeViewModel @Inject constructor(
     val districtList : State<DistrictState> = _districtList
 
     private var _userDistrictId = mutableStateOf<Int?>(null)
+    val userDistrictId : State<Int?> = _userDistrictId
 
     private var _userDistrictName = mutableStateOf<String>("지역구")
     val userDistrictName : State<String> = _userDistrictName
@@ -210,6 +211,7 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                         _userDistrictName.value = res.result.crewPickAreaName ?: "지역구"
+                        _userDistrictId.value = res.result.crewPickAreaId
                         _crewSizeState.value =
                             if (res.result.crewPickMemberCountValue == null) null else res.result.crewPickMemberCountValue - 1
                         resetPage()

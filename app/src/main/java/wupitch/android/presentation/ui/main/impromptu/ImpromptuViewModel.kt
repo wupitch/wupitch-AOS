@@ -47,6 +47,7 @@ class ImpromptuViewModel @Inject constructor(
     val districtList: State<DistrictState> = _districtList
 
     private var _userDistrictId = mutableStateOf<Int?>(null)
+    val userDistrictId : State<Int?> =  _userDistrictId
 
     private var _userDistrictName = mutableStateOf<String>("지역구")
     val userDistrictName: State<String> = _userDistrictName

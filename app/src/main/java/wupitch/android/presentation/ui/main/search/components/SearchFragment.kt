@@ -40,9 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import com.google.accompanist.pager.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import wupitch.android.R
@@ -50,6 +53,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.search.SearchViewModel
 
+@AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var selectedTab : Int = 0
@@ -63,10 +67,10 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.getInt("selected_tab")?.let { id ->
-//            viewModel.onTriggerEvent(GetRecipeEvent(recipeId))
-            //todo : get crew from viewModel with the id.
             selectedTab = id
-            Log.d("{SearchFragment2.onCreate}", id.toString())
+        }
+        arguments?.getInt("districtId")?.let { id ->
+            viewModel.setDistrictId(if(id==-1) null else id)
         }
     }
 
@@ -154,7 +158,6 @@ class SearchFragment : Fragment() {
                     },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                 keyboardActions = KeyboardActions(onSearch = {
-                    //todo search !!
                     setKeyboardDown()
                     viewModel.performSearch(selectedTab, textState.value)
                     Log.d("{SearchFragment.SearchTextField}", "search  ${textState.value}")
@@ -327,7 +330,7 @@ class SearchFragment : Fragment() {
 sealed class TabItem(
     val index: Int,
     @StringRes val title: Int,
-    val screenToLoad: @Composable () -> Unit
+    val screenToLoad: @Composable () -> Unit,
 ) {
     object Crew : TabItem(0, R.string.crew, {
         CrewSearchTab()

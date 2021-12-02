@@ -125,6 +125,9 @@
             android:name="selected_tab"
             app:argType="integer"
             android:defaultValue="0" />
+        <argument android:name="districtId"
+            app:argType="integer"
+            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/crewFilterFragment"
@@ -473,4 +476,12 @@
                 app:destination="@id/idCardFragment" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/crewSearchTab"
+        android:name="wupitch.android.presentation.ui.main.search.components.CrewSearchTab"
+        android:label="CrewSearchTab" >
+        <action
+            android:id="@+id/action_crewSearchTab_to_crewDetailFragment"
+            app:destination="@id/crewDetailFragment" />
+    </fragment>
 </navigation>
