@@ -65,35 +65,7 @@ class CrewDetailViewModel @Inject constructor(
             }
         } else _crewDetailState.value = CrewDetailState(error = "크루 조회에 실패했습니다.")
     }
-
-    private fun convertedVisitorDays(schedules: List<Schedule>): List<String> {
-        val calendar: Calendar = Calendar.getInstance()
-        val today = calendar.get(Calendar.DAY_OF_WEEK)
-
-        val visitDays = arrayListOf<String>()
-        schedules.forEachIndexed { index, item ->
-
-            if (index < 3) {
-                val diff = convertDay(item.dayIdx) - today
-                val tempCal: Calendar = Calendar.getInstance()
-                tempCal.add(Calendar.DAY_OF_YEAR, diff)
-
-                if (diff <= 0) { //정기일정이 이미 지난 경우
-                    tempCal.add(Calendar.WEEK_OF_YEAR, 1)
-                }
-                val year = tempCal.get(Calendar.YEAR) - 2000
-                val month = tempCal.get(Calendar.MONTH) + 1
-                val date = tempCal.get(Calendar.DATE)
-                val day = koreanFullDay(tempCal.get(Calendar.DAY_OF_WEEK))
-
-                val newMonth = if (month < 10) "0$month" else "$month"
-                val newDate = if (date < 10) "0$date" else "$date"
-
-                visitDays.add("$year.$newMonth.$newDate $day")
-            }
-        }
-        return visitDays
-    }
+    
 
     private fun convertedSchedule(schedules: List<Schedule>): List<String> {
         val schedule = arrayListOf<String>()
