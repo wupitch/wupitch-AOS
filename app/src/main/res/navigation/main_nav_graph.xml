@@ -40,13 +40,13 @@
             android:id="@+id/action_mainFragment_to_createImprtLocationFragment"
             app:destination="@id/create_impromptu_nav" />
 
-        <action
-            android:id="@+id/action_mainFragment_to_myCrewDetailFragment"
-            app:destination="@id/myCrewDetailFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
+<!--        <action-->
+<!--            android:id="@+id/action_mainFragment_to_myCrewDetailFragment"-->
+<!--            app:destination="@id/myCrewDetailFragment"-->
+<!--            app:enterAnim="@anim/from_right"-->
+<!--            app:exitAnim="@anim/to_left"-->
+<!--            app:popEnterAnim="@anim/from_left"-->
+<!--            app:popExitAnim="@anim/to_right" />-->
         <action
             android:id="@+id/action_mainFragment_to_myImpromptuDetailFragment"
             app:destination="@id/myImpromptuDetailFragment"
@@ -70,7 +70,11 @@
             android:defaultValue="-1" />
         <action
             android:id="@+id/action_mainFragment_to_myCrewDetailFragmentTemp"
-            app:destination="@id/myCrewDetailFragmentTemp" />
+            app:destination="@id/myCrewDetailFragmentTemp"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -173,20 +177,20 @@
         android:id="@+id/impromptuFilterFragment"
         android:name="wupitch.android.presentation.ui.main.impromptu.filter.ImpromptuFilterFragment"
         android:label="ImpromptuFilterFragment" />
-    <fragment
-        android:id="@+id/myCrewDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"
-        android:label="MyCrewDetailFragment" >
+<!--    <fragment-->
+<!--        android:id="@+id/myCrewDetailFragment"-->
+<!--        android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragment"-->
+<!--        android:label="MyCrewDetailFragment" >-->
 
-        <argument
-            android:name="selectedTab"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument
-            android:name="crewId"
-            app:argType="integer"
-            android:defaultValue="-1" />
-    </fragment>
+<!--        <argument-->
+<!--            android:name="selectedTab"-->
+<!--            app:argType="integer"-->
+<!--            android:defaultValue="0" />-->
+<!--        <argument-->
+<!--            android:name="crewId"-->
+<!--            app:argType="integer"-->
+<!--            android:defaultValue="-1" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/myImpromptuDetailFragment"
         android:name="wupitch.android.presentation.ui.main.my_activity.MyImpromptuDetailFragment"
@@ -491,5 +495,14 @@
     <fragment
         android:id="@+id/myCrewDetailFragmentTemp"
         android:name="wupitch.android.presentation.ui.main.my_activity.MyCrewDetailFragmentTemp"
-        android:label="MyCrewDetailFragmentTemp" />
+        android:label="MyCrewDetailFragmentTemp" >
+        <argument
+            android:name="selectedTab"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="crewId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>
