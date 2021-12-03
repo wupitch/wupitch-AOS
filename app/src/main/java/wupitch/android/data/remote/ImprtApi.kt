@@ -47,4 +47,11 @@ interface ImprtApi {
 
     @GET("app/accounts/auth/impromptu-filter")
     suspend fun getImprtFilter() : Response<GetImprtFilterRes>
+
+    @GET("app/impromptus/title")
+    suspend fun getImprtSearch(
+        @Query("areaId") areaId : Int?,
+        @Query("title") title : String,
+        @Query("page") page : Int,
+    ): Response<GetImprtRes>
 }

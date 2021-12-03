@@ -27,12 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
 import wupitch.android.R
 import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
@@ -77,9 +74,9 @@ class SearchCrewFragment : Fragment() {
                                     itemsIndexed(
                                         items = searchState
                                     ) { index, crew ->
-                                        viewModel.onChangeScrollPosition(index)
-                                        if((index +1) >= (viewModel.page.value * Constants.PAGE_SIZE) && !viewModel.loading.value){
-                                            viewModel.getNewPage(0)
+                                        viewModel.onChangeCrewScrollPosition(index)
+                                        if((index +1) >= (viewModel.crewPage.value * Constants.PAGE_SIZE) && !viewModel.loading.value){
+                                            viewModel.getCrewNewPage()
                                         }
                                         CrewCard(crewCard = crew, onClick = {
                                             val bundle = Bundle().apply { putInt("crewId", crew.id) }

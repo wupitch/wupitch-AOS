@@ -138,6 +138,9 @@
         <action
             android:id="@+id/action_searchFragment_to_crewDetailFragment"
             app:destination="@id/crewDetailFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_impromptuDetailFragment"
+            app:destination="@id/impromptuDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewFilterFragment"

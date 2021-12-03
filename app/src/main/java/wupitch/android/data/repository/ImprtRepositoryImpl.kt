@@ -54,5 +54,12 @@ class ImprtRepositoryImpl @Inject constructor(
     override suspend fun getImprtFilter(): Response<GetImprtFilterRes>
     = retrofit.create(ImprtApi::class.java).getImprtFilter()
 
+    override suspend fun getSearchImprt(
+        areaId: Int?,
+        title: String,
+        page: Int
+    ): Response<GetImprtRes>
+    = retrofit.create(ImprtApi::class.java).getImprtSearch(areaId, title, page)
+
 
 }

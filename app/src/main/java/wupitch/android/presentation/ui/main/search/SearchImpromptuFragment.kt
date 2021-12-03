@@ -28,15 +28,20 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
+import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.main.home.components.CrewCard
+import wupitch.android.presentation.ui.main.impromptu.components.ImpromptuCard
+import wupitch.android.util.checkKeywordLen
 
 @AndroidEntryPoint
 class SearchImpromptuFragment : Fragment() {
 
-//    private val viewModel: SearchViewModel by viewModels({ requireParentFragment() })
+    private val viewModel: SearchViewModel by viewModels({ requireParentFragment() })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,38 +52,87 @@ class SearchImpromptuFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
+                    val searchState = remember { viewModel.imprtState }
+                    val searchKeyword = viewModel.searchKeyword.value
+
                     ConstraintLayout(
-                        modifier = Modifier.fillMaxSize()
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.White)
                     ) {
-                        val (chrt, text) = createRefs()
+                        val (progressbar, text, chrt, crewList) = createRefs()
                         val guildLine = createGuidelineFromTop(0.65f)
 
-                        Image(
-                            modifier = Modifier
-                                .constrainAs(chrt) {
-                                    bottom.linkTo(text.top)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                                .size(130.dp, 210.dp),
-                            painter = painterResource(id = R.drawable.img_chrt_02),
-                            contentDescription = null)
+                        if (searchState.isNotEmpty()) {
+                            Box(modifier = Modifier.constrainAs(crewList) {
+                                top.linkTo(parent.top)
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(parent.bottom)
+                                height = Dimension.fillToConstraints
+                            }.background(Color.White)) {
 
-                        Text(
-                            modifier = Modifier
-                                .constrainAs(text) {
+                                LazyColumn {
+                                    itemsIndexed(
+                                        items = searchState
+                                    ) { index, imprt ->
+                                        viewModel.onChangeImprtScrollPosition(index)
+                                        if((index +1) >= (viewModel.imprtPage.value * Constants.PAGE_SIZE) && !viewModel.loading.value){
+                                            viewModel.getImprtNewPage()
+                                        }
+                                        ImpromptuCard(cardInfo = imprt) {
+                                            val bundle = Bundle().apply { putInt("impromptuId", imprt.id) }
+                                            activity?.findNavController(R.id.main_nav_container_view)
+                                                ?.navigate(R.id.action_searchFragment_to_impromptuDetailFragment, bundle)
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            if(searchKeyword.isNotEmpty() && !viewModel.loading.value) {
+
+                                Image(
+                                    modifier = Modifier
+                                        .constrainAs(chrt) {
+                                            bottom.linkTo(text.top)
+                                            start.linkTo(parent.start)
+                                            end.linkTo(parent.end)
+                                        }
+                                        .size(130.dp, 210.dp),
+                                    painter = painterResource(id = R.drawable.img_chrt_02),
+                                    contentDescription = null
+                                )
+                                Text(
+                                    modifier = Modifier.constrainAs(text) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        bottom.linkTo(guildLine)
+                                    }
+                                        .padding(top = 24.dp),
+                                    text = stringResource(R.string.no_search_result, checkKeywordLen(searchKeyword)),
+                                    color = colorResource(id = R.color.gray02),
+                                    fontFamily = Roboto,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Normal
+                                )
+                            }
+
+                        }
+
+                        if (viewModel.loading.value) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                    bottom.linkTo(guildLine)
-                                }
-                                .padding(top = 24.dp),
-                            text = stringResource(R.string.preparing),
-                            color = colorResource(id = R.color.gray02),
-                            fontFamily = Roboto,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
-                        )
+                                    top.linkTo(parent.top)
+                                    bottom.linkTo(parent.bottom)
+                                },
+                                color = colorResource(id = R.color.main_orange)
+                            )
+                        }
                     }
+
                 }
             }
         }

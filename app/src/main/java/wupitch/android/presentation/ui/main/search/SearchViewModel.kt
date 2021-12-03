@@ -5,55 +5,63 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.domain.repository.CrewRepository
+import wupitch.android.domain.repository.ImprtRepository
+import wupitch.android.util.dateDashToCol
 import wupitch.android.util.doubleToTime
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val crewRepository: CrewRepository
+    private val crewRepository: CrewRepository,
+    private val imprtRepository: ImprtRepository
 ): ViewModel() {
 
     private var _searchKeyword = mutableStateOf<String>("")
     val searchKeyword : State<String> = _searchKeyword
 
 
-    private var _impromptuSearchState = mutableStateOf(ImpromptuSearchState())
-    val impromptuSearchState : State<ImpromptuSearchState> = _impromptuSearchState
 
+    /*
+    * district
+    * */
     private var districtId : Int? = null
 
     fun setDistrictId(id : Int?) {
         districtId = id
     }
 
+    /*
+    * search
+    * */
+    val loading = mutableStateOf(false)
+    val error = mutableStateOf("")
 
     fun performSearch(selectedTab : Int, keyword : String) {
         _searchKeyword.value = keyword
-        Log.d("{SearchViewModel.performSearch}", "category : $selectedTab keyword : $keyword")
 
         when(selectedTab){
             0 -> searchCrew()
             else -> searchImpromptu()
         }
     }
+    /*
+    * search crew
+    * */
 
     private var _crewState = mutableStateListOf<CrewCardInfo>()
     val crewState : SnapshotStateList<CrewCardInfo> = _crewState
 
     private fun searchCrew() = viewModelScope.launch {
         loading.value = true
-        val response = crewRepository.getCrewSearch(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _page.value)
+        val response = crewRepository.getCrewSearch(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _crewPage.value)
 
         if(response.isSuccessful) {
             response.body()?.let { res ->
@@ -79,46 +87,103 @@ class SearchViewModel @Inject constructor(
 
     }
 
-    private fun searchImpromptu() = viewModelScope.launch {
-        _impromptuSearchState.value = ImpromptuSearchState(isLoading = true)
-        delay(1200L)
-        _impromptuSearchState.value = ImpromptuSearchState()
+    /*
+    * search impromptu
+    * */
 
+    private var _imprtState = mutableStateListOf<ImpromptuCardInfo>()
+    val imprtState : SnapshotStateList<ImpromptuCardInfo> = _imprtState
+
+    private fun searchImpromptu() = viewModelScope.launch {
+        loading.value = true
+        val response = imprtRepository.getSearchImprt(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _imprtPage.value)
+
+        if (response.isSuccessful) {
+            response.body()?.let { res ->
+                if (res.isSuccess) {
+                    if (res.result.first) _imprtState.clear()
+                    appendImprtList(res.result.content.map {
+                        ImpromptuCardInfo(
+                            id = it.impromptuId,
+                            remainingDays = it.dday,
+                            title = it.title,
+                            isPinned = it.isPinUp,
+                            time = "${dateDashToCol(it.date)} ${it.day} ${doubleToTime(it.startTime)}",
+                            detailAddress = it.location ?: "장소 미정",
+                            imprtImage = it.impromptuImage,
+                            gatheredPeople = it.nowMemberCount,
+                            totalCount = it.recruitmentCount
+                        )
+                    })
+                } else {
+                    error.value = res.message
+                }
+            }
+        } else error.value = "번개 조회에 실패했습니다."
+        loading.value = false
     }
 
     /*
-    * pagination
+    * crew pagination
     * */
 
-    val loading = mutableStateOf(false)
-    val error = mutableStateOf("")
 
-    private var _page = mutableStateOf(1)
-    val page : State<Int> = _page
+    private var _crewPage = mutableStateOf(1)
+    val crewPage : State<Int> = _crewPage
 
-    private var scrollPosition = 0
+    private var crewScrollPosition = 0
 
     private fun appendCrewList(list: List<CrewCardInfo>) {
         _crewState.addAll(list)
     }
 
-    fun getNewPage(tabId : Int) = viewModelScope.launch {
-        if ((scrollPosition + 1) >= (page.value * Constants.PAGE_SIZE)) {
-            incrementPage()
-            Log.d("{HomeViewModel.newPage}", "${page.value}")
+    fun getCrewNewPage() = viewModelScope.launch {
+        if ((crewScrollPosition + 1) >= (crewPage.value * Constants.PAGE_SIZE)) {
+            incrementCrewPage()
 
-            if (page.value > 1) {
-                if(tabId == 0) searchCrew()
-                else searchImpromptu()
+            if (crewPage.value > 1) {
+                searchCrew()
             }
         }
     }
 
-    private fun incrementPage() {
-        _page.value = _page.value + 1
+    private fun incrementCrewPage() {
+        _crewPage.value = _crewPage.value + 1
     }
 
-    fun onChangeScrollPosition(position: Int) {
-        scrollPosition = position
+    fun onChangeCrewScrollPosition(position: Int) {
+        crewScrollPosition = position
+    }
+
+    /*
+   * impromptu pagination
+   * */
+
+
+    private var _imprtPage = mutableStateOf(1)
+    val imprtPage : State<Int> = _imprtPage
+
+    private var imprtScrollPosition = 0
+
+    private fun appendImprtList(list: List<ImpromptuCardInfo>) {
+        _imprtState.addAll(list)
+    }
+
+    fun getImprtNewPage() = viewModelScope.launch {
+        if ((imprtScrollPosition + 1) >= (imprtPage.value * Constants.PAGE_SIZE)) {
+            incrementImprtPage()
+
+            if (imprtPage.value > 1) {
+                searchImpromptu()
+            }
+        }
+    }
+
+    private fun incrementImprtPage() {
+        _imprtPage.value = _imprtPage.value + 1
+    }
+
+    fun onChangeImprtScrollPosition(position: Int) {
+        imprtScrollPosition = position
     }
 }

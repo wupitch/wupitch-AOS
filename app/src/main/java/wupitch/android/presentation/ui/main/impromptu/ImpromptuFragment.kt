@@ -113,24 +113,6 @@ class ImpromptuFragment : Fragment() {
                                     }
                                 }
                             }
-
-//                            ImpromptuList(
-//                                modifier = Modifier.constrainAs(homeList) {
-//                                    top.linkTo(toolbar.bottom)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    bottom.linkTo(parent.bottom)
-//                                    height = Dimension.fillToConstraints
-//                                },
-//                                list = imprtState.value.data,
-//                                navigationToCrewDetailScreen = {
-//                                    val bundle = Bundle().apply { putInt("impromptuId", it) }
-//                                    activity?.findNavController(R.id.main_nav_container_view)
-//                                        ?.navigate(
-//                                            R.id.action_mainFragment_to_impromptuDetailFragment,
-//                                            bundle
-//                                        )
-//                                })
                         }else {
                              if(!loading.value) {
 
