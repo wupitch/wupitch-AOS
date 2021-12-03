@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.data.remote.dto.Schedule
@@ -23,6 +24,10 @@ class MyCrewViewModel @Inject constructor(
 
     var crewId = -1
     var selectedTab = 0
+
+    /*
+    * crew intro (crew detail)
+    * */
 
     private var _crewDetailState = mutableStateOf(CrewDetailState())
     val crewDetailState: State<CrewDetailState> = _crewDetailState
@@ -134,6 +139,84 @@ class MyCrewViewModel @Inject constructor(
     }
 
     fun postCrewReport(content : String) {
+
+    }
+
+    /*
+    * crew board
+    * */
+
+    private var _crewPostState = mutableStateOf(CrewPostState())
+    val crewPostState : State<CrewPostState> = _crewPostState
+
+    fun getCrewPosts() = viewModelScope.launch {
+        _crewPostState.value = CrewPostState(isLoading = true)
+
+        delay(800L)
+        _crewPostState.value = CrewPostState(
+            data = listOf(
+                CrewPost(
+                    id = 1,
+                    isAnnounce = true,
+                    announceTitle = "회비 납부일은 매일 6월입니다.",
+                    userImage = null,
+                    userName = "베키짱",
+                    isLeader = true,
+                    content = "xx은행으로 입금해주시면 감사감사링하겠습니당~~!!! 여러분들 항상 즐거운 하루보내시구 담주에 봐용~",
+                    isLiked = true,
+                    likedNum = 30,
+                    date = "21.12.03"
+                ),
+                CrewPost(
+                    id = 2,
+                    isAnnounce = false,
+                    announceTitle = null,
+                    userImage = null,
+                    userName = "베키짱2",
+                    isLeader = true,
+                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
+                    isLiked = false,
+                    likedNum = 32,
+                    date = "21.11.12"
+                ),
+                CrewPost(
+                    id = 2,
+                    isAnnounce = false,
+                    announceTitle = null,
+                    userImage = null,
+                    userName = "베키짱2",
+                    isLeader = true,
+                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
+                    isLiked = false,
+                    likedNum = 32,
+                    date = "21.11.12"
+                ),
+                CrewPost(
+                    id = 2,
+                    isAnnounce = false,
+                    announceTitle = null,
+                    userImage = null,
+                    userName = "베키짱2",
+                    isLeader = true,
+                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
+                    isLiked = false,
+                    likedNum = 32,
+                    date = "21.11.12"
+                ),
+                CrewPost(
+                    id = 2,
+                    isAnnounce = false,
+                    announceTitle = null,
+                    userImage = null,
+                    userName = "베키짱2",
+                    isLeader = true,
+                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
+                    isLiked = false,
+                    likedNum = 32,
+                    date = "21.11.12"
+                )
+            )
+        )
 
     }
 }
