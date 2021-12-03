@@ -62,17 +62,33 @@ class CrewDetailFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
+
+                    val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
+                    val joinDialogOpenState = remember { mutableStateOf(false) }
+                    val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
+
+
                     val crewState = remember { viewModel.crewDetailState }
                     if (crewState.value.error.isNotEmpty()) {
                         Toast.makeText(requireContext(), crewState.value.error, Toast.LENGTH_SHORT)
                             .show()
                     }
 
+                    val postVisitState = remember { viewModel.postVisitState }
+                    if (postVisitState.value.isSuccess){
+                        joinVisitorDialogOpenState.value = true
+                    }
+                    if (postVisitState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            postVisitState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                     val scrollState = rememberScrollState(0)
 
-                    val joinVisitorDialogOpenState = remember { mutableStateOf(false) }
-                    val joinDialogOpenState = remember { mutableStateOf(false) }
-                    val notEnoughInfoDialogOpenState = remember { mutableStateOf(false) }
+
 
                     if (viewModel.pinChangeState.value.error.isNotEmpty()) {
                         Toast.makeText(
@@ -115,6 +131,7 @@ class CrewDetailFragment : Fragment() {
                             R.string.join_visitor_success
                         ) {
                             joinVisitorDialogOpenState.value = false
+                            viewModel.initPostVisitState()
                         }
                     if (joinDialogOpenState.value)
                         JoinSuccessDialog(dialogOpen = joinDialogOpenState, R.string.join_success) {
@@ -201,12 +218,11 @@ class CrewDetailFragment : Fragment() {
                                     .background(Color.White)
                                     .constrainAs(joinBtns) {
                                         bottom.linkTo(parent.bottom)
-                                    },
-                                crewState = crewInfo,
+                                    }
                             )
                         }
 
-                        if (crewState.value.isLoading || joinState.value.isLoading) {
+                        if (crewState.value.isLoading || joinState.value.isLoading || postVisitState.value.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
@@ -229,7 +245,6 @@ class CrewDetailFragment : Fragment() {
     @Composable
     fun JoinCrewBtns(
         modifier: Modifier,
-        crewState: CrewDetailResult
     ) {
 
         Column(
@@ -255,10 +270,7 @@ class CrewDetailFragment : Fragment() {
                     textColor = R.color.main_orange,
                     borderColor = R.color.main_orange
                 ) {
-                    // todo 손님 신청 완료시. joinVisitorDialogOpenState.value = true
-                    visitorBottomSheet = VisitorBottomSheetFragment(
-                        crewState.guestDues, crewState.visitDays
-                    )
+                    visitorBottomSheet = VisitorBottomSheetFragment(viewModel)
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
                 Spacer(modifier = Modifier.width(12.dp))

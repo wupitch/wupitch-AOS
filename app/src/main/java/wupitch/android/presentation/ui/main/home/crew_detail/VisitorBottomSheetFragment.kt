@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,8 +36,9 @@ import wupitch.android.presentation.ui.components.RoundBtn
 
 
 class VisitorBottomSheetFragment(
-    private val visitorCost: String,
-    private val visitDateList: List<String>
+//    private val visitorCost: String,
+//    private val visitDateList: List<String>
+    private val viewModel : CrewDetailViewModel
 ) : BottomSheetDialogFragment() {
 
     private lateinit var selectedDate: String
@@ -44,6 +46,12 @@ class VisitorBottomSheetFragment(
         super.onCreate(savedInstanceState)
         setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.CustomBottomSheetDialogTheme);
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getVisitorDates()
     }
 
     @ExperimentalMaterialApi
@@ -60,6 +68,13 @@ class VisitorBottomSheetFragment(
                     mutableStateOf("")
                 }
 
+                val visitorDatesState = remember {viewModel.visitDatesState}
+
+                if(visitorDatesState.value.error.isNotEmpty()){
+                    Toast.makeText(requireContext(), visitorDatesState.value.error, Toast.LENGTH_SHORT).show()
+                }
+
+
                 ConstraintLayout(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -69,7 +84,7 @@ class VisitorBottomSheetFragment(
                         .padding(horizontal = 20.dp)
                 ) {
 
-                    val (title, close, divider, step1Row, step2Box, step2Row, subtitle, step3Box, step3Row, radioGroup, registerBtn) = createRefs()
+                    val (progressbar, title, close, divider, step1Row, step2Box, step2Row, subtitle, step3Box, step3Row, radioGroup, registerBtn) = createRefs()
 
                     Text(
                         modifier = Modifier.constrainAs(title) {
@@ -111,138 +126,154 @@ class VisitorBottomSheetFragment(
                         thickness = 1.dp
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .constrainAs(step1Row) {
-                                start.linkTo(parent.start)
-                                top.linkTo(divider.bottom)
+                    visitorDatesState.value.data?.let { data ->
+
+
+                        Row(
+                            modifier = Modifier
+                                .constrainAs(step1Row) {
+                                    start.linkTo(parent.start)
+                                    top.linkTo(divider.bottom)
+                                }
+                                .padding(top = 28.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(23.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.Black),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.one),
+                                    color = Color.White,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
-                            .padding(top = 28.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                            Text(
+                                modifier = Modifier.padding(start = 10.dp),
+                                text = stringResource(id = R.string.join_visitor_step1),
+                                color = colorResource(id = R.color.main_black),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = Roboto
+                            )
+                        }
+
+
                         Box(
                             modifier = Modifier
+                                .constrainAs(step2Box) {
+                                    start.linkTo(parent.start)
+                                    top.linkTo(step1Row.bottom, margin = 20.dp)
+                                }
                                 .size(23.dp)
                                 .clip(CircleShape)
                                 .background(Color.Black),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = stringResource(id = R.string.one),
+                                text = stringResource(id = R.string.two),
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Row(
+                            modifier = Modifier.constrainAs(step2Row) {
+                                start.linkTo(step2Box.end, margin = 10.dp)
+                                top.linkTo(step2Box.top)
+                                bottom.linkTo(step2Box.bottom)
+                            }, verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Text(
+                                text = stringResource(id = R.string.join_visitor_step2),
+                                color = colorResource(id = R.color.main_black),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = Roboto
+                            )
+                            Text(
+                                text = data.dues,
+                                color = colorResource(id = R.color.main_orange),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = Roboto
+                            )
+                            Text(
+                                text = stringResource(id = R.string.end_sentence),
+                                color = colorResource(id = R.color.main_black),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = Roboto
+                            )
+                        }
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(subtitle) {
+                                    start.linkTo(step2Row.start)
+                                    top.linkTo(step2Row.bottom, margin = 4.dp)
+                                },
+                            text = stringResource(id = R.string.join_visitor_step2_subtitle),
+                            color = colorResource(id = R.color.gray02),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = Roboto
+                        )
+
+
+                        Box(
+                            modifier = Modifier
+                                .constrainAs(step3Box) {
+                                    start.linkTo(parent.start)
+                                    top.linkTo(subtitle.bottom, margin = 23.dp)
+                                }
+                                .size(23.dp)
+                                .clip(CircleShape)
+                                .background(Color.Black),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.three),
                                 color = Color.White,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                         Text(
-                            modifier = Modifier.padding(start = 10.dp),
-                            text = stringResource(id = R.string.join_visitor_step1),
-                            color = colorResource(id = R.color.main_black),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = Roboto
-                        )
-                    }
-
-
-                    Box(
-                        modifier = Modifier
-                            .constrainAs(step2Box) {
-                                start.linkTo(parent.start)
-                                top.linkTo(step1Row.bottom, margin = 20.dp)
-                            }
-                            .size(23.dp)
-                            .clip(CircleShape)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.two),
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Row(
-                        modifier = Modifier.constrainAs(step2Row) {
-                            start.linkTo(step2Box.end, margin = 10.dp)
-                            top.linkTo(step2Box.top)
-                            bottom.linkTo(step2Box.bottom)
-                        }, verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        Text(
-                            text = stringResource(id = R.string.join_visitor_step2),
-                            color = colorResource(id = R.color.main_black),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = Roboto
-                        )
-                        Text(
-                            text = visitorCost,
-                            color = colorResource(id = R.color.main_orange),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = Roboto
-                        )
-                        Text(
-                            text = stringResource(id = R.string.end_sentence),
-                            color = colorResource(id = R.color.main_black),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = Roboto
-                        )
-                    }
-                    Text(
-                        modifier = Modifier
-                            .constrainAs(subtitle) {
-                                start.linkTo(step2Row.start)
-                                top.linkTo(step2Row.bottom, margin = 4.dp)
+                            modifier = Modifier.constrainAs(step3Row) {
+                                start.linkTo(step3Box.end, margin = 10.dp)
+                                top.linkTo(step3Box.top)
+                                bottom.linkTo(step3Box.bottom)
                             },
-                        text = stringResource(id = R.string.join_visitor_step2_subtitle),
-                        color = colorResource(id = R.color.gray02),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = Roboto
-                    )
-
-
-                    Box(
-                        modifier = Modifier
-                            .constrainAs(step3Box) {
-                                start.linkTo(parent.start)
-                                top.linkTo(subtitle.bottom, margin = 23.dp)
-                            }
-                            .size(23.dp)
-                            .clip(CircleShape)
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.three),
-                            color = Color.White,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold
+                            text = stringResource(id = R.string.join_visitor_step3),
+                            color = colorResource(id = R.color.main_black),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = Roboto
                         )
+                        Column(modifier = Modifier.constrainAs(radioGroup) {
+                            top.linkTo(step3Row.bottom)
+                            start.linkTo(step3Row.start)
+                        }) {
+                            selectedDate = RadioGroup(selectedOption, data.dates)
+                        }
                     }
-                    Text(
-                        modifier = Modifier.constrainAs(step3Row) {
-                            start.linkTo(step3Box.end, margin = 10.dp)
-                            top.linkTo(step3Box.top)
-                            bottom.linkTo(step3Box.bottom)
-                        },
-                        text = stringResource(id = R.string.join_visitor_step3),
-                        color = colorResource(id = R.color.main_black),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = Roboto
-                    )
-                    Column(modifier = Modifier.constrainAs(radioGroup) {
-                        top.linkTo(step3Row.bottom)
-                        start.linkTo(step3Row.start)
-                    }) {
-                        selectedDate = RadioGroup(selectedOption)
+
+                    if (visitorDatesState.value.isLoading ) { //|| postVisitState.value.isLoading
+                        CircularProgressIndicator(
+                            modifier = Modifier.constrainAs(progressbar) {
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                            },
+                            color = colorResource(id = R.color.main_orange)
+                        )
                     }
 
                     RoundBtn(
@@ -260,10 +291,8 @@ class VisitorBottomSheetFragment(
                         fontSize = 16.sp
                     ) {
                         if(selectedOption.value != ""){
+                            viewModel.postVisit(selectedOption.value)
                             dismiss()
-                            //todo 손님신청 server connection. 성공시 손님 신청 완료 dialog
-                            //todo viewmodel 에 selectedDate 보내기.
-                            Log.d("{VisitorBottomSheetFragment.onCreateView}", selectedDate)
                         }
                     }
                 }
@@ -273,13 +302,14 @@ class VisitorBottomSheetFragment(
 
     @Composable
     fun RadioGroup(
-        selectedOption : MutableState<String>
+        selectedOption : MutableState<String>,
+        dates : List<String>
     ): String {
-        if (visitDateList.isNotEmpty()) {
+        if (dates.isNotEmpty()) {
 
 
             Column(modifier = Modifier.padding(top = 16.dp)) {
-                visitDateList.forEach { item ->
+                dates.forEach { item ->
                     Row(
                         modifier = Modifier.padding(bottom = 10.dp),
                         verticalAlignment = Alignment.CenterVertically

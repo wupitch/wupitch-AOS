@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
+import wupitch.android.data.remote.dto.CrewVisitorReq
 import wupitch.android.data.remote.dto.Schedule
 import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
@@ -27,11 +29,14 @@ class CrewDetailViewModel @Inject constructor(
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
+    private var crewId: Int = -1
+
     private var _crewDetailState = mutableStateOf(CrewDetailState())
     val crewDetailState: State<CrewDetailState> = _crewDetailState
 
     fun getCrewDetail(id: Int) = viewModelScope.launch {
         _crewDetailState.value = CrewDetailState(isLoading = true)
+        crewId = id
 
         val response = crewRepository.getCrewDetail(id)
         if (response.isSuccessful) {
@@ -45,7 +50,6 @@ class CrewDetailViewModel @Inject constructor(
                         crewImage = res.result.crewImage,
                         crewName = res.result.crewName ?: "",
                         dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                        guestDues = convertedGuestFee(res.result.guestDues),
                         extraList = res.result.extraList,
                         introduction = res.result.introduction,
                         memberCount = "${res.result.memberCount}명",
@@ -53,8 +57,7 @@ class CrewDetailViewModel @Inject constructor(
                         sportsId = res.result.sportsId - 1,
                         materials = res.result.materials,
                         inquiries = res.result.inquiries,
-                        visitDays = convertedVisitorDays(res.result.schedules),
-                        isPinUp =  res.result.isPinUp,
+                        isPinUp = res.result.isPinUp,
                         isSelect = res.result.isSelect
                     )
                 )
@@ -98,13 +101,6 @@ class CrewDetailViewModel @Inject constructor(
             schedule.add("${it.day} ${doubleToTime(it.startTime)} - ${doubleToTime(it.endTime)}")
         }
         return schedule.toList()
-    }
-
-    private fun convertedGuestFee(guestDues: Int?): String {
-        if (guestDues == null) return "0원"
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-        return "${formatter.format(guestDues)}원"
     }
 
     private fun convertedCrewFee(dues: Int?, guestDues: Int?): List<String> {
@@ -164,9 +160,9 @@ class CrewDetailViewModel @Inject constructor(
     * */
 
     private var _joinState = mutableStateOf(JoinState())
-    val joinState : State<JoinState> = _joinState
+    val joinState: State<JoinState> = _joinState
 
-    fun initJoinState () {
+    fun initJoinState() {
         _joinState.value = JoinState()
     }
 
@@ -174,17 +170,91 @@ class CrewDetailViewModel @Inject constructor(
         _joinState.value = JoinState(isLoading = true)
         _crewDetailState.value.data?.clubId?.let {
             val response = crewRepository.joinCrew(it)
-            if(response.isSuccessful){
+            if (response.isSuccessful) {
                 response.body()?.let { res ->
-                    if(res.isSuccess){
-                        if(res.result.result) _joinState.value = JoinState(isSuccess = true, result = true)
+                    if (res.isSuccess) {
+                        if (res.result.result) _joinState.value =
+                            JoinState(isSuccess = true, result = true)
                         else _joinState.value = JoinState(isSuccess = true, result = false)
-                    }
-                    else {
+                    } else {
                         _joinState.value = JoinState(error = res.message, code = res.code)
                     }
                 }
-            }else _joinState.value = JoinState(error = "크루 참여에 실패했습니다.")
+            } else _joinState.value = JoinState(error = "크루 참여에 실패했습니다.")
         }
+    }
+
+    /*
+    * visitor
+    * */
+
+    private var _visitDatesState = mutableStateOf(VisitDatesState())
+    val visitDatesState: State<VisitDatesState> = _visitDatesState
+
+    fun getVisitorDates() = viewModelScope.launch {
+        _visitDatesState.value = VisitDatesState(isLoading = true)
+
+        val response = crewRepository.getCrewVisitorDates(crewId)
+        if (response.isSuccessful) {
+            response.body()?.let { res ->
+                if (res.isSuccess) {
+                    _visitDatesState.value = VisitDatesState(
+                        data = VisitorInfo(
+                            dates = renderVisitDates(res.result.localDates, res.result.days),
+                            dues = convertedGuestFee(res.result.guestDue)
+                        )
+                    )
+                } else _visitDatesState.value = VisitDatesState(error = res.message)
+
+            }
+        } else _visitDatesState.value = VisitDatesState(error = "손님 참여 가능 날짜 조회를 실패했습니다.")
+
+    }
+
+    private fun renderVisitDates(dates: List<String>, days: List<String>): List<String> {
+        val outputList = arrayListOf<String>()
+
+        dates.forEachIndexed { index, s ->
+            outputList.add("${dateDashToCol(s)} ${days[index]}")
+        }
+
+        return outputList.toList()
+    }
+
+    private fun convertedGuestFee(guestDues: Int): String {
+        val formatter: DecimalFormat =
+            DecimalFormat("#,###")
+        return "${formatter.format(guestDues)}원"
+    }
+
+    //todo : response to be fixed in server
+    private var _postVisitState = mutableStateOf(BaseState())
+    val postVisitState : State<BaseState> = _postVisitState
+
+    fun postVisit(date : String) = viewModelScope.launch {
+        _postVisitState.value = BaseState(isLoading = true)
+
+        val req = CrewVisitorReq(
+            crewId = crewId,
+            date = convertedVisitDate(date)
+        )
+        val response = crewRepository.postVisit(req)
+
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess) _postVisitState.value = BaseState(isSuccess = true)
+                else _postVisitState.value = BaseState(error = res.message)
+            }
+        }else _postVisitState.value = BaseState(error = "손님신청에 실패했습니다.")
+
+    }
+
+    fun initPostVisitState() {
+        _postVisitState.value = BaseState()
+    }
+
+    private fun convertedVisitDate(date : String) : String{
+        val datePart = date.split(" ")[0]
+        return "20${datePart.replace(".", "-")}"
     }
 }

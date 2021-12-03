@@ -47,7 +47,6 @@ class MyCrewViewModel @Inject constructor(
                         crewImage = res.result.crewImage,
                         crewName = res.result.crewName ?: "",
                         dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                        guestDues = convertedGuestFee(res.result.guestDues),
                         extraList = res.result.extraList,
                         introduction = res.result.introduction,
                         memberCount = "${res.result.memberCount}명",
@@ -55,7 +54,6 @@ class MyCrewViewModel @Inject constructor(
                         sportsId = res.result.sportsId-1,
                         materials = res.result.materials,
                         inquiries = res.result.inquiries,
-                        visitDays = emptyList(),
                         isPinUp = res.result.isPinUp,
                         isSelect = res.result.isSelect
                     )
@@ -72,12 +70,7 @@ class MyCrewViewModel @Inject constructor(
         }
         return schedule.toList()
     }
-    private fun convertedGuestFee(guestDues: Int?):String{
-        if(guestDues == null) return "0원"
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-        return "${formatter.format(guestDues)}원"
-    }
+
 
     private fun convertedCrewFee(dues: Int?, guestDues: Int? ): List<String> {
         val list = arrayListOf<String>()

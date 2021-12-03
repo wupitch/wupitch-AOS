@@ -11,7 +11,6 @@ data class CrewDetailResult(
     val crewImage: String?,
     val crewName: String,
     val dues: List<String>,
-    val guestDues : String,
     val extraList: List<String>,
     val introduction: String,
     val memberCount: String,
@@ -20,6 +19,5 @@ data class CrewDetailResult(
     val schedules: List<String>,
     val sportsId: Int,
     val materials : String?,
-    val inquiries : String?,
-    val visitDays : List<String>
+    val inquiries : String?
 )

@@ -55,4 +55,14 @@ interface CrewApi {
         @Query("crewTitle") crewTitle : String,
         @Query("page") page : Int,
         ) : Response<GetCrewRes>
+
+    @GET("app/clubs/{clubId}/guest-info")
+    suspend fun getCrewVisitorDates(
+        @Path("clubId") crewId : Int
+    ) : Response<GetCrewVisitorDates>
+
+    @POST("app/clubs/guest-info")
+    suspend fun postVisit(
+        @Body visitReq : CrewVisitorReq
+    ) : Response<BaseRes>
 }
