@@ -27,22 +27,21 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
 ) {
 
     private val viewModel: MyCrewViewModel by viewModels()
-    private var selectedTab: Int = 0
     private lateinit var pagerAdapter: MyCrewDetailVPAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        arguments?.getInt("selectedTab")?.let { selectedTab = it }
+        arguments?.getInt("selectedTab")?.let { viewModel.selectedTab = it }
         arguments?.getInt("crewId")?.let { viewModel.crewId = it }
     }
 
     override fun onResume() {
         super.onResume()
         binding.viewpagerMycrewdetail.post {
-            binding.viewpagerMycrewdetail.currentItem = selectedTab
+            binding.viewpagerMycrewdetail.currentItem =  viewModel.selectedTab
         }
-        binding.tablayoutMycrewdetail.setScrollPosition(selectedTab, 0f, true)
+        binding.tablayoutMycrewdetail.setScrollPosition( viewModel.selectedTab, 0f, true)
 
     }
 
@@ -67,7 +66,6 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
         override fun onTabSelected(tab: TabLayout.Tab?) {
             tab?.position?.let {
                 binding.tablayoutMycrewdetail.changeTabFont(it)
-                Log.d("{MyCrewDetailFragmentTemp.onTabSelected}", it.toString())
             }
         }
 

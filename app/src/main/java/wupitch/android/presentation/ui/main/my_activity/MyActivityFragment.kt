@@ -159,10 +159,8 @@ class MyActivityFragment : Fragment() {
                             putInt("selectedTab", tabId)
                             putInt("crewId", item.id)
                         }
-//                        activity?.findNavController(R.id.main_nav_container_view)
-//                            ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                         activity?.findNavController(R.id.main_nav_container_view)
-                            ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragmentTemp, bundle)
+                            ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                     }
                 }
             }

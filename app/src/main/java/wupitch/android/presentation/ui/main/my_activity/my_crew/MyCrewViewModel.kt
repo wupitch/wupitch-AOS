@@ -22,6 +22,7 @@ class MyCrewViewModel @Inject constructor(
 ) : ViewModel(){
 
     var crewId = -1
+    var selectedTab = 0
 
     private var _crewDetailState = mutableStateOf(CrewDetailState())
     val crewDetailState: State<CrewDetailState> = _crewDetailState

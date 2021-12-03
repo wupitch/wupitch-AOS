@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.components.CreateFab
 
 @AndroidEntryPoint
 class MyCrewBoardFragment : Fragment() {
@@ -44,7 +46,7 @@ class MyCrewBoardFragment : Fragment() {
                         Modifier
                             .fillMaxSize()
                             .background(Color.White)) {
-                        val (chrt, text) = createRefs()
+                        val (chrt, text, fab) = createRefs()
                         val guildLine = createGuidelineFromTop(0.65f)
 
                         Image(
@@ -69,6 +71,18 @@ class MyCrewBoardFragment : Fragment() {
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         )
+
+                        CreateFab(
+                            modifier = Modifier
+                                .constrainAs(fab) {
+                                    end.linkTo(parent.end, margin = 24.dp)
+                                    bottom.linkTo(parent.bottom, margin = 20.dp)
+                                },
+                            onClick = {
+                                viewModel.selectedTab = 1
+                                val bundle = Bundle().apply { putInt("crewId", viewModel.crewId) }
+                                findNavController().navigate(R.id.action_myCrewDetailFragment_to_createMyCrewPostFragment, bundle)
+                            })
 
                     }
 
