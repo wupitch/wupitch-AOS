@@ -1,17 +1,14 @@
-package wupitch.android.presentation.ui.main.my_activity
+package wupitch.android.presentation.ui.main.my_activity.my_impromptu
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import wupitch.android.common.BaseState
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailState
-import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.JoinImpromptuState
 import wupitch.android.util.dateDashToCol
 import wupitch.android.util.doubleToTime
 import java.text.DecimalFormat

@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.my_activity
+package wupitch.android.presentation.ui.main.my_activity.my_crew
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

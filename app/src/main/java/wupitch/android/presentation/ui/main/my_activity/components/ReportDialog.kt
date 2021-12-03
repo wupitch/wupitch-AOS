@@ -27,9 +27,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.RoundBtn
-import wupitch.android.presentation.ui.main.my_activity.MyActivityViewModel
-import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
-import wupitch.android.presentation.ui.main.my_activity.MyImpromptuViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 
 @ExperimentalPagerApi
 @Composable

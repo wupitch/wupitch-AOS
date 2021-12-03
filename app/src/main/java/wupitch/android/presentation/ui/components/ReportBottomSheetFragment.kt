@@ -17,14 +17,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import wupitch.android.R
-import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewViewModel
-import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImprtViewModel
-import wupitch.android.presentation.ui.main.my_activity.MyActivityViewModel
-import wupitch.android.presentation.ui.main.my_activity.MyCrewViewModel
-import wupitch.android.presentation.ui.main.my_activity.MyImpromptuViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 
 
 class ReportBottomSheetFragment(

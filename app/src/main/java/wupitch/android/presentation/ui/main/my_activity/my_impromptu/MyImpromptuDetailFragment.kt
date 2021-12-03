@@ -1,7 +1,6 @@
-package wupitch.android.presentation.ui.main.my_activity
+package wupitch.android.presentation.ui.main.my_activity.my_impromptu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,7 +37,6 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
-import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.components.ReportDialog
 
 @AndroidEntryPoint

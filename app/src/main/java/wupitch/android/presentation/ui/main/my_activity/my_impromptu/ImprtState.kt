@@ -1,4 +1,4 @@
-package wupitch.android.presentation.ui.main.my_activity
+package wupitch.android.presentation.ui.main.my_activity.my_impromptu
 
 import wupitch.android.domain.model.ImpromptuCardInfo
 

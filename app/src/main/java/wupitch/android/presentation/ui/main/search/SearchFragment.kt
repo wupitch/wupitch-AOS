@@ -3,13 +3,11 @@ package wupitch.android.presentation.ui.main.search
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
@@ -30,7 +28,7 @@ class SearchFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.getInt("selected_tab")?.let { id ->
+        arguments?.getInt("selectedTab")?.let { id ->
             selectedTab = id
         }
         arguments?.getInt("districtId")?.let { id ->
@@ -46,7 +44,14 @@ class SearchFragment
         setEditTextListener()
         setEditTextButtons()
         setEditTextSearchListener()
-        binding.viewpagerSearch.currentItem = selectedTab
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.viewpagerSearch.post {
+            binding.viewpagerSearch.currentItem = selectedTab
+        }
         binding.tablayoutSearch.setScrollPosition(selectedTab, 0f, true)
 
     }

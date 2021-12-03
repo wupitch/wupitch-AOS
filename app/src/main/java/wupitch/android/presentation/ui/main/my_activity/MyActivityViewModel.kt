@@ -5,10 +5,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.domain.model.CrewCardInfo
-import wupitch.android.domain.model.ImpromptuCardInfo
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewState
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtState
 
 class MyActivityViewModel : ViewModel() {
 
@@ -21,22 +21,23 @@ class MyActivityViewModel : ViewModel() {
 
 
     fun getMyCrew() = viewModelScope.launch {
-        _myCrewState.value = MyCrewState()
+//        _myCrewState.value = MyCrewState()
 //        _myCrewState.value = MyCrewState(isLoading = true)
 //        delay(500L)
-//        _myCrewState.value = MyCrewState(
-//            data = listOf(
-//                CrewCardInfo(
-//                id = 28,
-//                    sportId = 2,
-//                    crewImage = null,
-//                    isPinned = false,
-//                    title= "test crew",
-//                    time = "12:00",
-//                    isMoreThanOnceAWeek = true,
-//                    detailAddress = "울집 앞"
-//            ))
-//        )
+        _myCrewState.value = MyCrewState(
+            data = listOf(
+                CrewCardInfo(
+                id = 28,
+                    sportId = 2,
+                    crewImage = null,
+                    isPinned = false,
+                    title= "test crew",
+                    time = "12:00",
+                    isMoreThanOnceAWeek = true,
+                    detailAddress = "울집 앞"
+            )
+            )
+        )
 
 
     }

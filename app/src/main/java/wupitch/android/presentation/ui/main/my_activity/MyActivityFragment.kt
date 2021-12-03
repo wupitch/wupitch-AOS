@@ -41,6 +41,8 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.NotiToolbar
 import wupitch.android.presentation.ui.main.impromptu.components.ImpromptuCard
 import wupitch.android.presentation.ui.main.my_activity.components.MyCrewCard
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewState
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtState
 
 @AndroidEntryPoint
 class MyActivityFragment : Fragment() {
