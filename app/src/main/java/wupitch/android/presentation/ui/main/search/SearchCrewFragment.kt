@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
@@ -62,15 +59,20 @@ class SearchCrewFragment : Fragment() {
                         val guildLine = createGuidelineFromTop(0.65f)
 
                         if (searchState.isNotEmpty()) {
-                            Box(modifier = Modifier.constrainAs(crewList) {
-                                top.linkTo(parent.top)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom)
-                                height = Dimension.fillToConstraints
-                            }.background(Color.White)) {
+                            Box(modifier = Modifier
+                                .constrainAs(crewList) {
+                                    top.linkTo(parent.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(parent.bottom)
+                                    height = Dimension.fillToConstraints
+                                }
+                                .background(Color.White)) {
 
                                 LazyColumn {
+                                    item {
+                                        Spacer(modifier = Modifier.height(24.dp))
+                                    }
                                     itemsIndexed(
                                         items = searchState
                                     ) { index, crew ->
@@ -82,6 +84,9 @@ class SearchCrewFragment : Fragment() {
                                             val bundle = Bundle().apply { putInt("crewId", crew.id) }
                                             findNavController().navigate(R.id.action_searchFragment_to_crewDetailFragment, bundle)
                                         })
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.height(22.dp))
                                     }
                                 }
                             }
@@ -101,11 +106,12 @@ class SearchCrewFragment : Fragment() {
                                     contentDescription = null
                                 )
                                 Text(
-                                    modifier = Modifier.constrainAs(text) {
-                                        start.linkTo(parent.start)
-                                        end.linkTo(parent.end)
-                                        bottom.linkTo(guildLine)
-                                    }
+                                    modifier = Modifier
+                                        .constrainAs(text) {
+                                            start.linkTo(parent.start)
+                                            end.linkTo(parent.end)
+                                            bottom.linkTo(guildLine)
+                                        }
                                         .padding(top = 24.dp),
                                     text = stringResource(R.string.no_search_result, checkKeywordLen(searchKeyword)),
                                     color = colorResource(id = R.color.gray02),

@@ -27,15 +27,35 @@ class MyActivityViewModel : ViewModel() {
         _myCrewState.value = MyCrewState(
             data = listOf(
                 CrewCardInfo(
-                id = 28,
-                    sportId = 2,
+                id = 76,
+                    sportId = 5,
                     crewImage = null,
                     isPinned = false,
-                    title= "test crew",
-                    time = "12:00",
+                    title= "뛰기만 합니다.",
+                    time = "일요일 12:00 - 14:00",
                     isMoreThanOnceAWeek = true,
                     detailAddress = "울집 앞"
-            )
+            ),
+                CrewCardInfo(
+                    id = 77,
+                    sportId = 1,
+                    crewImage = null,
+                    isPinned = false,
+                    title= " 축구만 합니다.",
+                    time = "일요일 12:00 - 14:00",
+                    isMoreThanOnceAWeek = true,
+                    detailAddress = "울집 앞"
+                ),
+                CrewCardInfo(
+                    id = 88,
+                    sportId = 3,
+                    crewImage = null,
+                    isPinned = false,
+                    title= "배구만 합니다.",
+                    time = "일요일 12:00 - 14:00",
+                    isMoreThanOnceAWeek = true,
+                    detailAddress = "울집 앞"
+                )
             )
         )
 

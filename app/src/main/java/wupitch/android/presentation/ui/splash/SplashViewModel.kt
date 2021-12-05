@@ -20,9 +20,9 @@ class SplashViewModel @Inject constructor(
 
         //development 용도
 //        context.dataStore.edit { settings ->
-//            settings[Constants.JWT_PREFERENCE_KEY] = ""
-//            settings[Constants.USER_ID] = -1
-//            settings[Constants.USER_NICKNAME] = ""
+//            settings[Constants.JWT_PREFERENCE_KEY] = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aXZpZHN3YW4xMkBuYXZlci5jb20iLCJyb2xlIjoiUk9MRV9VU0VSIiwiaWF0IjoxNjM4NTYwODg4LCJleHAiOjE2NDcyMDA4ODh9.MMR3wCQWCz97aouBuf8OwLKpeIHT31jchEbyu4PaFb4"
+//            settings[Constants.USER_ID] = 100
+//            settings[Constants.USER_NICKNAME] = "베키쨩"
 //        }
 
         val jwtPreferenceFlow = context.dataStore.data.first()

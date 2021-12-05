@@ -6,10 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.CircularProgressIndicator
@@ -73,6 +70,9 @@ class SearchImpromptuFragment : Fragment() {
                             }.background(Color.White)) {
 
                                 LazyColumn {
+                                    item {
+                                        Spacer(modifier = Modifier.height(24.dp))
+                                    }
                                     itemsIndexed(
                                         items = searchState
                                     ) { index, imprt ->
@@ -85,6 +85,9 @@ class SearchImpromptuFragment : Fragment() {
                                             activity?.findNavController(R.id.main_nav_container_view)
                                                 ?.navigate(R.id.action_searchFragment_to_impromptuDetailFragment, bundle)
                                         }
+                                    }
+                                    item {
+                                        Spacer(modifier = Modifier.height(22.dp))
                                     }
                                 }
                             }
