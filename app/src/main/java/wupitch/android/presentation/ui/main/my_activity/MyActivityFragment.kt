@@ -9,6 +9,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -200,6 +201,7 @@ class MyActivityFragment : Fragment() {
                             },
                         textString = stringResource(id = R.string.look_around_impromptu)
                     )
+                    Spacer(modifier = Modifier.height(60.dp))
                 }
             }else if(myImprtState.value.data.isNotEmpty()) {
                 itemsIndexed(
@@ -220,20 +222,12 @@ class MyActivityFragment : Fragment() {
         modifier: Modifier, 
         textString : String
     ) {
-        val stroke = Stroke(width = 1.dpToPxFloat,
-            pathEffect = PathEffect.dashPathEffect(floatArrayOf(17f, 17f), 0f)
-        )
-        
         Box(
-            modifier = modifier.padding(horizontal = 20.dp),
+            modifier = modifier.padding(horizontal = 20.dp)
+                .border(width = 1.dp, color = colorResource(id = R.color.main_orange), shape = RoundedCornerShape(16.dp)),
             contentAlignment = Alignment.Center)
         {
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                drawRoundRect(
-                    cornerRadius = CornerRadius(16.dpToPxFloat, 16.dpToPxFloat),
-                    color = Color(ContextCompat.getColor(requireContext(), R.color.main_orange)),
-                    style = stroke)
-            }
+
             Text(
                 textAlign = TextAlign.Center,
                 text = textString,
@@ -244,10 +238,5 @@ class MyActivityFragment : Fragment() {
             )
         }
     }
-
-
-
-    val Int.dpToPxFloat: Float
-        get() = (this * Resources.getSystem().displayMetrics.density)
 
 }

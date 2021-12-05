@@ -140,9 +140,8 @@ fun MyCrewCard(
             }
 
             Divider(
-                Modifier
-                    .height(1.dp)
-                    .background(colorResource(id = R.color.gray01))
+               color = colorResource(id = R.color.gray01),
+                thickness = 1.dp
             )
             ConstraintLayout(modifier = Modifier.fillMaxSize()) {
                 val (board, firstDivider, gallery, secondDivider, members) = createRefs()
