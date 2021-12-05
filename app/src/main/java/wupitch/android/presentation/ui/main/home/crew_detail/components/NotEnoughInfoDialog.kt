@@ -28,10 +28,12 @@ import wupitch.android.presentation.ui.components.RoundBtn
 fun NotEnoughInfoDialog(
     dialogOpen: MutableState<Boolean>,
     subtitleString: String,
+    onDismissReq : () -> Unit,
     navToProfile : () -> Unit
 ) {
     Dialog(
-        onDismissRequest = { dialogOpen.value = false },
+        onDismissRequest = {onDismissReq()
+            dialogOpen.value = false},
         DialogProperties(dismissOnClickOutside = true, dismissOnBackPress = true),
     ) {
 
@@ -50,6 +52,7 @@ fun NotEnoughInfoDialog(
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
+                                onDismissReq()
                                 dialogOpen.value = false
                             },
                         painter = painterResource(id = R.drawable.close),

@@ -77,6 +77,13 @@ class CrewDetailFragment : Fragment() {
                     val postVisitState = remember { viewModel.postVisitState }
                     if (postVisitState.value.isSuccess){
                         joinVisitorDialogOpenState.value = true
+                    }else {
+                        //todo
+//                        when (postVisitState.value.code) {
+//                            2014 -> {
+//                                notEnoughInfoDialogOpenState.value = true
+//                            }
+//                        }
                     }
                     if (postVisitState.value.error.isNotEmpty()) {
                         Toast.makeText(
@@ -95,30 +102,22 @@ class CrewDetailFragment : Fragment() {
                             requireContext(),
                             viewModel.pinChangeState.value.error,
                             Toast.LENGTH_SHORT
-                        )
-                            .show()
+                        ).show()
                     }
 
-                    val joinState = remember { viewModel.joinState } //todo remember?
-                    if (joinState.value.error.isNotEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            viewModel.pinChangeState.value.error,
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    }
+                    val joinState = remember { viewModel.joinState }
+
                     if (joinState.value.isSuccess) {
                         if (joinState.value.result == true) joinDialogOpenState.value = true
-                        else if (joinState.value.result == false) Toast.makeText(
+                        else if (joinState.value.result == false)
+                            Toast.makeText(
                             requireContext(),
                             "이미 가입한 크루입니다.",
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         when (joinState.value.code) {
-                            //todo fix code
-                            0 -> {
+                            2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
                         }
@@ -141,14 +140,11 @@ class CrewDetailFragment : Fragment() {
                     if (notEnoughInfoDialogOpenState.value)
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,
-                            subtitleString = stringResource(id = R.string.not_enough_info_subtitle)
+                            subtitleString = stringResource(id = R.string.not_enough_info_subtitle),
+                            onDismissReq = {viewModel.initJoinState() }
                         ) {
-                            viewModel.setNotEnoughInfo()
-                            val bundle = Bundle().apply { putInt("tabId", R.id.myPageFragment) }
-                            findNavController().navigate(
-                                R.id.action_crewDetailFragment_to_mainFragment,
-                                bundle
-                            )
+                            findNavController().navigate(R.id.action_crewDetailFragment_to_myPageInfoFragment)
+                            viewModel.initJoinState()
                         }
 
 

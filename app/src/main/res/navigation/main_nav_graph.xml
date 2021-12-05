@@ -77,11 +77,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
         <action
-            android:id="@+id/action_crewDetailFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true"
-            />
+            android:id="@+id/action_crewDetailFragment_to_myPageInfoFragment"
+            app:destination="@id/myPageInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
@@ -167,6 +164,10 @@
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true"
             />
+        <action
+            android:id="@+id/action_impromptuDetailFragment_to_myPageInfoFragment"
+            app:destination="@id/myPageInfoFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/impromptuFilterFragment"

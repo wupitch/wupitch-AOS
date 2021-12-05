@@ -120,12 +120,6 @@ class CrewDetailViewModel @Inject constructor(
         }
     }
 
-    fun setNotEnoughInfo() = viewModelScope.launch {
-
-        context.dataStore.edit { settings ->
-            settings[Constants.FIRST_COMER] = true
-        }
-    }
 
     /*
     * participate

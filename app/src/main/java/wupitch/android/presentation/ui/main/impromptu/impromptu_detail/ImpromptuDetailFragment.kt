@@ -83,7 +83,7 @@ class ImpromptuDetailFragment : Fragment() {
                         ).show()
                     }
 
-                    val joinState = viewModel.joinState //todo not remember ?
+                    val joinState = remember {viewModel.joinState}
                     if(joinState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
                             .show()
@@ -96,9 +96,9 @@ class ImpromptuDetailFragment : Fragment() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }else {
+                        //todo check server implemented
                         when(joinState.value.code){
-                            //todo fix code
-                            0 -> {
+                            2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
                         }
@@ -125,12 +125,10 @@ class ImpromptuDetailFragment : Fragment() {
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,
                             subtitleString = stringResource(id = R.string.not_enough_info_impromptu),
+                            onDismissReq = { viewModel.initJoinState() }
                         ) {
-                            val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
-                            findNavController().navigate(
-                                R.id.action_impromptuDetailFragment_to_mainFragment,
-                                bundle
-                            )
+                            findNavController().navigate(R.id.action_impromptuDetailFragment_to_myPageInfoFragment )
+                            viewModel.initJoinState()
                         }
 
                     ConstraintLayout(
