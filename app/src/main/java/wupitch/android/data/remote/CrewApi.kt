@@ -51,7 +51,6 @@ interface CrewApi {
 
     @GET("app/clubs/title")
     suspend fun getCrewSearch(
-        @Query("areaId") areaId : Int?,
         @Query("crewTitle") crewTitle : String,
         @Query("page") page : Int,
         ) : Response<GetCrewRes>

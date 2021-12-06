@@ -67,6 +67,9 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right"/>
+        <action
+            android:id="@+id/action_mainFragment_to_imageDetailFragment"
+            app:destination="@id/imageDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/crewDetailFragment"
@@ -121,9 +124,6 @@
             android:name="selectedTab"
             app:argType="integer"
             android:defaultValue="0" />
-        <argument android:name="districtId"
-            app:argType="integer"
-            android:defaultValue="-1" />
         <action
             android:id="@+id/action_searchFragment_to_crewDetailFragment"
             app:destination="@id/crewDetailFragment" />
@@ -489,6 +489,9 @@
         <action
             android:id="@+id/action_myCrewDetailFragment_to_createMyCrewPostFragment"
             app:destination="@id/createMyCrewPostFragment" />
+        <action
+            android:id="@+id/action_myCrewDetailFragment_to_imageDetailFragment"
+            app:destination="@id/imageDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/createMyCrewPostFragment"
@@ -499,4 +502,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>
+    <fragment
+        android:id="@+id/imageDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.my_crew.ImageDetailFragment"
+        android:label="ImageDetailFragment" />
 </navigation>

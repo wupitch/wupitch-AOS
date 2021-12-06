@@ -50,7 +50,6 @@ interface ImprtApi {
 
     @GET("app/impromptus/title")
     suspend fun getImprtSearch(
-        @Query("areaId") areaId : Int?,
         @Query("title") title : String,
         @Query("page") page : Int,
     ): Response<GetImprtRes>

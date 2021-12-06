@@ -31,9 +31,6 @@ class SearchFragment
         arguments?.getInt("selectedTab")?.let { id ->
             selectedTab = id
         }
-        arguments?.getInt("districtId")?.let { id ->
-            viewModel.setDistrictId(if(id == -1) null else id)
-        }
     }
 
 

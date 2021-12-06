@@ -133,11 +133,10 @@ class MyCrewGalleryFragment : Fragment() {
 //                                            bundle
 //                                        )
 //                                }
-                                GalleryImage(item, true) {
-                                    //todo
+                                GalleryImage(item, true) {         //todo
+                                    viewModel.selectedTab = 2
+                                    findNavController().navigate(R.id.action_myCrewDetailFragment_to_imageDetailFragment)
                                 }
-
-
                             }
                         }
 

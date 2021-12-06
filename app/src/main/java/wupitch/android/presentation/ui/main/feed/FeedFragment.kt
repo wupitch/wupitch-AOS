@@ -123,8 +123,8 @@ class FeedFragment : Fragment() {
 //                                            bundle
 //                                        )
 //                                }
-                                GalleryImage(item, true) {
-                                    //todo
+                                GalleryImage(item, true) { //todo
+                                    requireActivity().findNavController(R.id.main_nav_container_view).navigate(R.id.action_mainFragment_to_imageDetailFragment)
                                 }
 
 

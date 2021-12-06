@@ -28,16 +28,6 @@ class SearchViewModel @Inject constructor(
     val searchKeyword : State<String> = _searchKeyword
 
 
-
-    /*
-    * district
-    * */
-    private var districtId : Int? = null
-
-    fun setDistrictId(id : Int?) {
-        districtId = id
-    }
-
     /*
     * search
     * */
@@ -61,7 +51,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchCrew() = viewModelScope.launch {
         loading.value = true
-        val response = crewRepository.getCrewSearch(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _crewPage.value)
+        val response = crewRepository.getCrewSearch(_searchKeyword.value, _crewPage.value)
 
         if(response.isSuccessful) {
             response.body()?.let { res ->
@@ -96,7 +86,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchImpromptu() = viewModelScope.launch {
         loading.value = true
-        val response = imprtRepository.getSearchImprt(if(districtId==null) null else districtId!!+1, _searchKeyword.value, _imprtPage.value)
+        val response = imprtRepository.getSearchImprt( _searchKeyword.value, _imprtPage.value)
 
         if (response.isSuccessful) {
             response.body()?.let { res ->

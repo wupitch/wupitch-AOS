@@ -237,7 +237,6 @@ class ImpromptuFragment : Fragment() {
                         onClick = {
                             val bundle = Bundle().apply {
                                 putInt("selectedTab", 1)
-                                putInt("districtId", viewModel.userDistrictId.value?: -1)
                             }
                             activity?.findNavController(R.id.main_nav_container_view)
                                 ?.navigate(R.id.action_mainFragment_to_searchFragment, bundle)
