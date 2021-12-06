@@ -91,6 +91,7 @@ class CrewDetailFragment : Fragment() {
                             postVisitState.value.error,
                             Toast.LENGTH_SHORT
                         ).show()
+                        viewModel.initPostVisitState()
                     }
 
                     val scrollState = rememberScrollState(0)
@@ -119,6 +120,10 @@ class CrewDetailFragment : Fragment() {
                         when (joinState.value.code) {
                             2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
+                            }
+                            -100 -> {
+                                Toast.makeText(requireContext(), joinState.value.error, Toast.LENGTH_SHORT).show()
+                                viewModel.initJoinState()
                             }
                         }
                     }

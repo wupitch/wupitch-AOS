@@ -1,6 +1,7 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.preferences.core.edit
@@ -9,7 +10,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import wupitch.android.R
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
@@ -30,6 +33,7 @@ class CrewDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var crewId: Int = -1
+    private var creatorId : Int = -1
 
     private var _crewDetailState = mutableStateOf(CrewDetailState())
     val crewDetailState: State<CrewDetailState> = _crewDetailState
@@ -41,26 +45,29 @@ class CrewDetailViewModel @Inject constructor(
         val response = crewRepository.getCrewDetail(id)
         if (response.isSuccessful) {
             response.body()?.let { res ->
-                if (res.isSuccess) _crewDetailState.value = CrewDetailState(
-                    data = CrewDetailResult(
-                        ageTable = convertedAge(res.result.ageTable),
-                        areaName = res.result.areaName ?: "장소 미정",
-                        clubId = res.result.clubId,
-                        clubTitle = res.result.clubTitle,
-                        crewImage = res.result.crewImage,
-                        crewName = res.result.crewName ?: "",
-                        dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                        extraList = res.result.extraList,
-                        introduction = res.result.introduction,
-                        memberCount = "${res.result.memberCount}명",
-                        schedules = convertedSchedule(res.result.schedules),
-                        sportsId = res.result.sportsId - 1,
-                        materials = res.result.materials,
-                        inquiries = res.result.inquiries,
-                        isPinUp = res.result.isPinUp,
-                        isSelect = res.result.isSelect
+                if (res.isSuccess) {
+                    _crewDetailState.value = CrewDetailState(
+                        data = CrewDetailResult(
+                            ageTable = convertedAge(res.result.ageTable),
+                            areaName = res.result.areaName ?: "장소 미정",
+                            clubId = res.result.clubId,
+                            clubTitle = res.result.clubTitle,
+                            crewImage = res.result.crewImage,
+                            crewName = res.result.crewName ?: "",
+                            dues = convertedCrewFee(res.result.dues, res.result.guestDues),
+                            extraList = res.result.extraList,
+                            introduction = res.result.introduction,
+                            memberCount = "${res.result.memberCount}명",
+                            schedules = convertedSchedule(res.result.schedules),
+                            sportsId = res.result.sportsId - 1,
+                            materials = res.result.materials,
+                            inquiries = res.result.inquiries,
+                            isPinUp = res.result.isPinUp,
+                            isSelect = res.result.isSelect
+                        )
                     )
-                )
+                    creatorId = res.result.creatorAccountId
+                }
                 else _crewDetailState.value = CrewDetailState(error = res.message)
             }
         } else _crewDetailState.value = CrewDetailState(error = "크루 조회에 실패했습니다.")
@@ -134,6 +141,10 @@ class CrewDetailViewModel @Inject constructor(
 
     fun participateCrew() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
+        if(checkIsCreator()) {
+            _joinState.value = JoinState(code = -100, error = context.getString(R.string.cannot_apply_for_self_created_crew))
+            return@launch
+        }
         _crewDetailState.value.data?.clubId?.let {
             val response = crewRepository.joinCrew(it)
             if (response.isSuccessful) {
@@ -148,6 +159,11 @@ class CrewDetailViewModel @Inject constructor(
                 }
             } else _joinState.value = JoinState(error = "크루 참여에 실패했습니다.")
         }
+    }
+
+    private suspend fun checkIsCreator() : Boolean {
+        val flow = context.dataStore.data.first()
+        return flow[Constants.USER_ID] == creatorId
     }
 
     /*
@@ -199,7 +215,10 @@ class CrewDetailViewModel @Inject constructor(
 
     fun postVisit(date : String) = viewModelScope.launch {
         _postVisitState.value = BaseState(isLoading = true)
-
+        if(checkIsCreator()) {
+            _postVisitState.value = BaseState(error = context.getString(R.string.cannot_apply_for_self_created_crew))
+            return@launch
+        }
         val req = CrewVisitorReq(
             crewId = crewId,
             date = convertedVisitDate(date)
