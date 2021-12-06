@@ -83,7 +83,7 @@ fun ImpromptuCard(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 11.dp, start = 12.dp, end = 12.dp)
+                    .padding(top = 11.dp, end = 12.dp)
             ) {
                 ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
                     val (remainingDays, pin) = createRefs()
@@ -92,7 +92,7 @@ fun ImpromptuCard(
                         modifier = Modifier
                             .constrainAs(remainingDays) {
                                 top.linkTo(parent.top)
-                                start.linkTo(parent.start)
+                                start.linkTo(parent.start, margin = 12.dp)
                                 bottom.linkTo(parent.bottom)
                             },
                         remainingDays = cardInfo.remainingDays
@@ -111,6 +111,7 @@ fun ImpromptuCard(
                 }
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
+                    modifier = Modifier.padding(start = 12.dp),
                     text = cardInfo.title,
                     color = Color.Black,
                     fontFamily = Roboto,
@@ -122,7 +123,7 @@ fun ImpromptuCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    modifier = Modifier.padding(vertical = 3.dp),
+                    modifier = Modifier.padding(vertical = 3.dp).padding(start = 12.dp),
                     text = cardInfo.time,
                     color = colorResource(id = R.color.gray05),
                     fontFamily = Roboto,
@@ -132,7 +133,7 @@ fun ImpromptuCard(
 
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    modifier = Modifier.padding(bottom = 2.dp),
+                    modifier = Modifier.padding(bottom = 2.dp, start = 12.dp),
                     text = cardInfo.detailAddress,
                     color = colorResource(id = R.color.gray05),
                     fontFamily = Roboto,
@@ -142,7 +143,9 @@ fun ImpromptuCard(
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 22.sp
                 )
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.padding(start = 9.dp),
+                    verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         modifier = Modifier.size(20.dp),
                         painter = painterResource(id = R.drawable.user_circle),

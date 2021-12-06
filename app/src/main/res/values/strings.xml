@@ -331,6 +331,11 @@
     <string name="current_pw">현재 비밀번호</string>
     <string name="incorrect_pw">비밀번호가 일치하지 않습니다.</string>
     <string name="new_pw">변경할 비밀번호</string>
+    <string name="camera_emoji">&#128248;</string>
+    <string name="image_share_dialog_title">\‘피드에도 공유하기\'를 통해\n크루원 외 유저와 사진을 공유할 수 있어요!</string>
+    <string name="image_share_only_to_crew">크루에서만 보기</string>
+    <string name="image_share_to_feed">피드에도 공유하기</string>
+
 
 <!--    etc-->
     <string name="preparing">준비중이에요</string>
