@@ -5,14 +5,20 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.domain.model.CrewCardInfo
+import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewState
 import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtState
+import wupitch.android.util.doubleToTime
+import javax.inject.Inject
 
-class MyActivityViewModel : ViewModel() {
+@HiltViewModel
+class MyActivityViewModel @Inject constructor(
+    private val crewRepository: CrewRepository
+) : ViewModel() {
 
-    //todo isPinned 무조건 false
     private var _myImprtState: MutableState<ImprtState> = mutableStateOf(ImprtState())
     val myImprtState: State<ImprtState> = _myImprtState
 
@@ -21,45 +27,25 @@ class MyActivityViewModel : ViewModel() {
 
 
     fun getMyCrew() = viewModelScope.launch {
-//        _myCrewState.value = MyCrewState()
-//        _myCrewState.value = MyCrewState(isLoading = true)
-//        delay(500L)
-        _myCrewState.value = MyCrewState(
-            data = listOf(
-                CrewCardInfo(
-                id = 76,
-                    sportId = 5,
-                    crewImage = null,
-                    isPinned = false,
-                    title= "뛰기만 합니다.",
-                    time = "일요일 12:00 - 14:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "울집 앞"
-            ),
-                CrewCardInfo(
-                    id = 77,
-                    sportId = 1,
-                    crewImage = null,
-                    isPinned = false,
-                    title= " 축구만 합니다.",
-                    time = "일요일 12:00 - 14:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "울집 앞"
-                ),
-                CrewCardInfo(
-                    id = 88,
-                    sportId = 3,
-                    crewImage = null,
-                    isPinned = false,
-                    title= "배구만 합니다.",
-                    time = "일요일 12:00 - 14:00",
-                    isMoreThanOnceAWeek = true,
-                    detailAddress = "울집 앞"
-                )
-            )
-        )
+        _myCrewState.value = MyCrewState(isLoading = true)
 
-
+        val response = crewRepository.getMyCrews()
+        if (response.isSuccessful) {
+            response.body()?.let { res ->
+                if (res.isSuccess) _myCrewState.value = MyCrewState(data = res.result.map {
+                    CrewCardInfo(
+                        id = it.clubId,
+                        sportId = it.sportsId - 1,
+                        crewImage = it.crewImage,
+                        isPinned = false,
+                        title = it.clubTitle,
+                        time = "${it.schedules[0].day} ${doubleToTime(it.schedules[0].startTime)}-${doubleToTime(it.schedules[0].endTime)}",
+                        isMoreThanOnceAWeek = it.schedules.size > 1,
+                        detailAddress = it.areaName ?: "장소 미정"
+                    ) }
+                ) else _myCrewState.value = MyCrewState(error = res.message)
+            }
+        }else _myCrewState.value = MyCrewState(error = "내 크루 조회에 실패했습니다.")
     }
 
     fun getMyImpromptu() = viewModelScope.launch {

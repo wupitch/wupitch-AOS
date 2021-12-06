@@ -64,4 +64,7 @@ interface CrewApi {
     suspend fun postVisit(
         @Body visitReq : CrewVisitorReq
     ) : Response<BaseRes>
+
+    @GET("app/clubs/accounts/auth")
+    suspend fun getMyCrews() : Response<GetMyCrewRes>
 }

@@ -30,5 +30,6 @@ interface CrewRepository {
     suspend fun getCrewSearch(crewTitle: String, page : Int): Response<GetCrewRes>
     suspend fun getCrewVisitorDates(crewId : Int) : Response<GetCrewVisitorDates>
     suspend fun postVisit(visitReq : CrewVisitorReq) : Response<BaseRes>
+    suspend fun getMyCrews() : Response<GetMyCrewRes>
 
 }

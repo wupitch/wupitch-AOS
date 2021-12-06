@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.rememberImagePainter
 import wupitch.android.R
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
@@ -66,13 +68,21 @@ fun MyCrewCard(
                     }
 
             ) {
-                //todo sport 에 따라 image, keyword 수정
                 Image(
-                    painter = painterResource(id = Sport.VOLLEYBALL.thumbnailImage),
-                    contentDescription = "",
                     modifier = Modifier
                         .width(128.dp)
-                        .fillMaxHeight()
+                        .fillMaxHeight(),
+                    painter = if(crew.crewImage != null){
+                        rememberImagePainter(
+                            crew.crewImage,
+                            builder = {
+                                placeholder(R.color.gray04)
+                                build()
+                            }
+                        )
+                    } else painterResource(id = Sport.getNumOf(crew.sportId).thumbnailImage),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop
                 )
 
                 Column(
@@ -81,7 +91,7 @@ fun MyCrewCard(
                         .padding(top = 11.dp, start = 12.dp, end = 12.dp)
                 ) {
                     ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
-                        val (keyword, pin) = createRefs()
+                        val (keyword) = createRefs()
 
                         SportKeyword(
                             modifier = Modifier
@@ -91,9 +101,9 @@ fun MyCrewCard(
                                     bottom.linkTo(parent.bottom)
                                 }
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(colorResource(id = Sport.VOLLEYBALL.color))
+                                .background(colorResource(id = Sport.getNumOf(crew.sportId).color))
                                 .padding(horizontal = 8.dp, vertical = 1.dp),
-                            sportName = Sport.BASKETBALL.sportName
+                            sportName = Sport.getNumOf(crew.sportId).sportName
                         )
                     }
                     Spacer(modifier = Modifier.height(7.dp))

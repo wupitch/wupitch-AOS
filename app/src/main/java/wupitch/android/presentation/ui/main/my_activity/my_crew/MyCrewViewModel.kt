@@ -226,7 +226,7 @@ class MyCrewViewModel @Inject constructor(
     }
 
     /*
-    * gallery image
+    * post gallery image
     * */
     var shareOnlyToCrew = true
 

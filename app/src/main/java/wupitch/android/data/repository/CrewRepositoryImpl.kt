@@ -51,5 +51,8 @@ class CrewRepositoryImpl @Inject constructor(
     override suspend fun postVisit(visitReq: CrewVisitorReq): Response<BaseRes>
     = retrofit.create(CrewApi::class.java).postVisit(visitReq)
 
+    override suspend fun getMyCrews(): Response<GetMyCrewRes>
+    = retrofit.create(CrewApi::class.java).getMyCrews()
+
 
 }
