@@ -50,29 +50,10 @@ import wupitch.android.presentation.ui.main.my_activity.components.ImageShareDia
 @AndroidEntryPoint
 class MyCrewGalleryFragment : Fragment() {
     private val viewModel: MyCrewViewModel by viewModels({ requireParentFragment() })
-    private val dataList = listOf<String>(
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-    )
+//    private val dataList = listOf<String>(
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//    )
 
     @ExperimentalFoundationApi
     @ExperimentalPermissionsApi
@@ -115,78 +96,78 @@ class MyCrewGalleryFragment : Fragment() {
                         val (chrt, text, fab) = createRefs()
                         val guildLine = createGuidelineFromTop(0.65f)
 
-                        LazyVerticalGrid(
-                            cells = GridCells.Fixed(3)
-                        ) {
-                            itemsIndexed(
-                                items = dataList
-                            ) { index, item ->
-//                                viewModel.onChangeScrollPosition(index)
-//                                if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-//                                    viewModel.getNewPage()
+//                        LazyVerticalGrid(
+//                            cells = GridCells.Fixed(3)
+//                        ) {
+//                            itemsIndexed(
+//                                items = dataList
+//                            ) { index, item ->
+////                                viewModel.onChangeScrollPosition(index)
+////                                if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
+////                                    viewModel.getNewPage()
+////                                }
+////                                CrewCard(crewCard = crew) {
+////                                    val bundle = Bundle().apply { putInt("crewId", crew.id) }
+////                                    activity?.findNavController(R.id.main_nav_container_view)
+////                                        ?.navigate(
+////                                            R.id.action_mainFragment_to_crewDetailFragment,
+////                                            bundle
+////                                        )
+////                                }
+//                                GalleryImage(item, true) {         //todo
+//                                    viewModel.selectedTab = 2
+//                                    findNavController().navigate(R.id.action_myCrewDetailFragment_to_imageDetailFragment)
 //                                }
-//                                CrewCard(crewCard = crew) {
-//                                    val bundle = Bundle().apply { putInt("crewId", crew.id) }
-//                                    activity?.findNavController(R.id.main_nav_container_view)
-//                                        ?.navigate(
-//                                            R.id.action_mainFragment_to_crewDetailFragment,
-//                                            bundle
-//                                        )
-//                                }
-                                GalleryImage(item, true) {         //todo
-                                    viewModel.selectedTab = 2
-                                    findNavController().navigate(R.id.action_myCrewDetailFragment_to_imageDetailFragment)
-                                }
-                            }
-                        }
+//                            }
+//                        }
 
-//                        Image(
-//                            modifier = Modifier
-//                                .constrainAs(chrt) {
-//                                    bottom.linkTo(text.top)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                }
-//                                .size(130.dp, 210.dp),
-//                            painter = painterResource(id = R.drawable.img_chrt_02),
-//                            contentDescription = null)
-//
-//                        Text(
-//                            modifier = Modifier
-//                                .constrainAs(text) {
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    bottom.linkTo(guildLine)
-//                                }
-//                                .padding(top = 24.dp),
-//                            text = stringResource(R.string.preparing),
-//                            color = colorResource(id = R.color.gray02),
-//                            fontFamily = Roboto,
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Normal
-//                        )
-
-                        CreateFab(
+                        Image(
                             modifier = Modifier
-                                .constrainAs(fab) {
-                                    end.linkTo(parent.end, margin = 24.dp)
-                                    bottom.linkTo(parent.bottom, margin = 20.dp)
-                                },
-                            onClick = {
-                                imageShareDialog.value = true
-                            })
-
-                        if (openGallery.value) {
-                            GallerySelect(
-                                onImageUri = { uri ->
-                                    if (uri != Constants.EMPTY_IMAGE_URI) {
-                                        imageUri.value = uri
-                                        viewModel.setUserImage(uri)
-                                    }
-                                    openGallery.value = false
+                                .constrainAs(chrt) {
+                                    bottom.linkTo(text.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
                                 }
-                            )
-                        }
+                                .size(130.dp, 210.dp),
+                            painter = painterResource(id = R.drawable.img_chrt_02),
+                            contentDescription = null)
+
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(text) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(guildLine)
+                                }
+                                .padding(top = 24.dp),
+                            text = stringResource(R.string.preparing),
+                            color = colorResource(id = R.color.gray02),
+                            fontFamily = Roboto,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+
+//                        CreateFab(
+//                            modifier = Modifier
+//                                .constrainAs(fab) {
+//                                    end.linkTo(parent.end, margin = 24.dp)
+//                                    bottom.linkTo(parent.bottom, margin = 20.dp)
+//                                },
+//                            onClick = {
+//                                imageShareDialog.value = true
+//                            })
+//
+//                        if (openGallery.value) {
+//                            GallerySelect(
+//                                onImageUri = { uri ->
+//                                    if (uri != Constants.EMPTY_IMAGE_URI) {
+//                                        imageUri.value = uri
+//                                        viewModel.setUserImage(uri)
+//                                    }
+//                                    openGallery.value = false
+//                                }
+//                            )
+//                        }
 
                     }
 

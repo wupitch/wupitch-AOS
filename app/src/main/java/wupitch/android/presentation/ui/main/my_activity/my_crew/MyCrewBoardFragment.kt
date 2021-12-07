@@ -55,7 +55,7 @@ class MyCrewBoardFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val postState = remember { viewModel.crewPostState }
+//                    val postState = remember { viewModel.crewPostState }
 
                     ConstraintLayout(
                         Modifier
@@ -65,44 +65,44 @@ class MyCrewBoardFragment : Fragment() {
                         val (postList, chrt, text, fab, progressbar) = createRefs()
                         val guildLine = createGuidelineFromTop(0.65f)
 
-                        if (postState.value.data.isNotEmpty()) {
-
-                            Box(modifier = Modifier
-                                .constrainAs(postList) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(parent.bottom)
-                                    height = Dimension.fillToConstraints
-                                }
-                                .background(Color.White)) {
-
-                                LazyColumn {
-                                    itemsIndexed(
-                                        items = postState.value.data
-                                    ) { index, item ->
-//                                        viewModel.onChangeScrollPosition(index)
-//                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-//                                            viewModel.getNewPage()
+//                        if (postState.value.data.isNotEmpty()) {
+//
+//                            Box(modifier = Modifier
+//                                .constrainAs(postList) {
+//                                    top.linkTo(parent.top)
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    bottom.linkTo(parent.bottom)
+//                                    height = Dimension.fillToConstraints
+//                                }
+//                                .background(Color.White)) {
+//
+//                                LazyColumn {
+//                                    itemsIndexed(
+//                                        items = postState.value.data
+//                                    ) { index, item ->
+////                                        viewModel.onChangeScrollPosition(index)
+////                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
+////                                            viewModel.getNewPage()
+////                                        }
+//                                        MyCrewPostCard(post = item, onMoreClick = {
+//                                            //todo show more
+//                                            Log.d(
+//                                                "{MyCrewBoardFragment.onCreateView}",
+//                                                "more clicked!"
+//                                            )
+//                                        }) {
+//                                            //todo like change
+//                                            Log.d(
+//                                                "{MyCrewBoardFragment.onCreateView}",
+//                                                "post $it like changed!"
+//                                            )
 //                                        }
-                                        MyCrewPostCard(post = item, onMoreClick = {
-                                            //todo show more
-                                            Log.d(
-                                                "{MyCrewBoardFragment.onCreateView}",
-                                                "more clicked!"
-                                            )
-                                        }) {
-                                            //todo like change
-                                            Log.d(
-                                                "{MyCrewBoardFragment.onCreateView}",
-                                                "post $it like changed!"
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            if (!postState.value.isLoading) {
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            if (!postState.value.isLoading) {
                                 Image(
                                     modifier = Modifier
                                         .constrainAs(chrt) {
@@ -121,43 +121,42 @@ class MyCrewBoardFragment : Fragment() {
                                         end.linkTo(parent.end)
                                         bottom.linkTo(guildLine)
                                     },
-                                    text = "게시물이 없습니다.",
+                                    text = "준비중이에요",//"게시물이 없습니다.",
                                     color = colorResource(id = R.color.gray02),
                                     fontFamily = Roboto,
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal
                                 )
                             }
-                        }
+//                        }
 
-                        if(postState.value.isLoading){
-                            CircularProgressIndicator(
-                                modifier = Modifier.constrainAs(progressbar) {
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
-                                },
-                                color = colorResource(id = R.color.main_orange)
-                            )
-                        }
-                        CreateFab(
-                            modifier = Modifier
-                                .constrainAs(fab) {
-                                    end.linkTo(parent.end, margin = 24.dp)
-                                    bottom.linkTo(parent.bottom, margin = 20.dp)
-                                },
-                            onClick = {
-                                viewModel.selectedTab = 1
-                                val bundle = Bundle().apply { putInt("crewId", viewModel.crewId) }
-                                findNavController().navigate(
-                                    R.id.action_myCrewDetailFragment_to_createMyCrewPostFragment,
-                                    bundle
-                                )
-                            })
+//                        if(postState.value.isLoading){
+//                            CircularProgressIndicator(
+//                                modifier = Modifier.constrainAs(progressbar) {
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    top.linkTo(parent.top)
+//                                    bottom.linkTo(parent.bottom)
+//                                },
+//                                color = colorResource(id = R.color.main_orange)
+//                            )
+//                        }
+//                        CreateFab(
+//                            modifier = Modifier
+//                                .constrainAs(fab) {
+//                                    end.linkTo(parent.end, margin = 24.dp)
+//                                    bottom.linkTo(parent.bottom, margin = 20.dp)
+//                                },
+//                            onClick = {
+//                                viewModel.selectedTab = 1
+//                                val bundle = Bundle().apply { putInt("crewId", viewModel.crewId) }
+//                                findNavController().navigate(
+//                                    R.id.action_myCrewDetailFragment_to_createMyCrewPostFragment,
+//                                    bundle
+//                                )
+//                            })
                     }
                 }
             }
         }
     }
-}

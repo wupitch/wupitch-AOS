@@ -43,29 +43,12 @@ import wupitch.android.presentation.ui.main.my_activity.components.ImageShareDia
 
 class FeedFragment : Fragment() {
 
-    private val dataList = listOf<String>(
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-    )
+//    private val dataList = listOf<String>(
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
+//    )
 
     @ExperimentalFoundationApi
     override fun onCreateView(
@@ -100,62 +83,62 @@ class FeedFragment : Fragment() {
                                 ?.navigate(R.id.action_mainFragment_to_notificationFragment)
                         }
 
-                        LazyVerticalGrid(
-                            modifier = Modifier.constrainAs(images) {
-                                top.linkTo(toolbar.bottom)
-                                start.linkTo(parent.start, margin = 6.dp)
-                                end.linkTo(parent.end)
-                            },
-                            cells = GridCells.Fixed(3)
-                        ) {
-                            itemsIndexed(
-                                items = dataList
-                            ) { index, item ->
-//                                viewModel.onChangeScrollPosition(index)
-//                                if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-//                                    viewModel.getNewPage()
+//                        LazyVerticalGrid(
+//                            modifier = Modifier.constrainAs(images) {
+//                                top.linkTo(toolbar.bottom)
+//                                start.linkTo(parent.start, margin = 6.dp)
+//                                end.linkTo(parent.end)
+//                            },
+//                            cells = GridCells.Fixed(3)
+//                        ) {
+//                            itemsIndexed(
+//                                items = dataList
+//                            ) { index, item ->
+////                                viewModel.onChangeScrollPosition(index)
+////                                if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
+////                                    viewModel.getNewPage()
+////                                }
+////                                CrewCard(crewCard = crew) {
+////                                    val bundle = Bundle().apply { putInt("crewId", crew.id) }
+////                                    activity?.findNavController(R.id.main_nav_container_view)
+////                                        ?.navigate(
+////                                            R.id.action_mainFragment_to_crewDetailFragment,
+////                                            bundle
+////                                        )
+////                                }
+//                                GalleryImage(item, true) { //todo
+//                                    requireActivity().findNavController(R.id.main_nav_container_view).navigate(R.id.action_mainFragment_to_imageDetailFragment)
 //                                }
-//                                CrewCard(crewCard = crew) {
-//                                    val bundle = Bundle().apply { putInt("crewId", crew.id) }
-//                                    activity?.findNavController(R.id.main_nav_container_view)
-//                                        ?.navigate(
-//                                            R.id.action_mainFragment_to_crewDetailFragment,
-//                                            bundle
-//                                        )
-//                                }
-                                GalleryImage(item, true) { //todo
-                                    requireActivity().findNavController(R.id.main_nav_container_view).navigate(R.id.action_mainFragment_to_imageDetailFragment)
-                                }
-
-
-                            }
-                        }
-
-//                        Image(
-//                            modifier = Modifier
-//                                .constrainAs(chrt) {
-//                                    bottom.linkTo(text.top)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                }
-//                                .size(130.dp, 210.dp),
-//                            painter = painterResource(id = R.drawable.img_chrt_02),
-//                            contentDescription = null)
 //
-//                        Text(
-//                            modifier = Modifier
-//                                .constrainAs(text) {
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    bottom.linkTo(guildLine)
-//                                }
-//                                .padding(top = 24.dp),
-//                            text = stringResource(R.string.preparing),
-//                            color = colorResource(id = R.color.gray02),
-//                            fontFamily = Roboto,
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Normal
-//                        )
+//
+//                            }
+//                        }
+
+                        Image(
+                            modifier = Modifier
+                                .constrainAs(chrt) {
+                                    bottom.linkTo(text.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .size(130.dp, 210.dp),
+                            painter = painterResource(id = R.drawable.img_chrt_02),
+                            contentDescription = null)
+
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(text) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(guildLine)
+                                }
+                                .padding(top = 24.dp),
+                            text = stringResource(R.string.preparing),
+                            color = colorResource(id = R.color.gray02),
+                            fontFamily = Roboto,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
 
 
                     }
