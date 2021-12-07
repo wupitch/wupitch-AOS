@@ -2,6 +2,7 @@ package wupitch.android.presentation.ui.main.my_page
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,14 +94,25 @@ class MyPageProfileFragment : Fragment() {
                             ).show()
                         }
 
+                        val loadState = remember { viewModel.loadState }
+                        if (loadState.value.isSuccess) {
+                            nicknameState.value = viewModel.userNickname.value
+                            introState.value = viewModel.userIntroduce.value
+                            viewModel.initLoadState()
+                        }
+                        if (loadState.value.error.isNotEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                loadState.value.error,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                        }, onLeftIconClick = { findNavController().navigateUp() },
-                            hasRightIcon = true,
-                            onRightIconClick = { findNavController().navigateUp() }
-                        )
+                        }, onLeftIconClick = { findNavController().navigateUp() })
 
                         Text(
                             modifier = Modifier
@@ -124,7 +136,7 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .width(152.dp)
                                 .height(44.dp),
-                            textString = viewModel.userNickname.value,
+                            textString = stringResource(id = R.string.input_nickname),
                             stringState = nicknameState,
                             maxLength = 6,
                             validateNickname = true
@@ -140,7 +152,7 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(164.dp),
-                            textString = viewModel.userIntroduce.value,
+                            textString = stringResource(id = R.string.input_introduction),
                             stringState = introState,
                             maxLength = 100
                         )
@@ -186,19 +198,31 @@ class MyPageProfileFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if (introState.value.isNotEmpty() || (isNicknameValidState.value == true && nicknameState.value.isNotEmpty())) R.color.main_orange
-                            else R.color.gray03,
+                            btnColor = if (isValid(nicknameState, introState, isNicknameValidState)) R.color.main_orange else R.color.gray03,
                             textString = R.string.done,
                             fontSize = 16.sp
                         ) {
-                            if (introState.value.isNotEmpty() || (isNicknameValidState.value == true && nicknameState.value.isNotEmpty())) {
-                                if(introState.value.isNotEmpty())viewModel.setUserIntroduce(introState.value)
+                            if (isValid(nicknameState, introState, isNicknameValidState)) {
+                                viewModel.setUserIntroduce(introState.value)
+                                viewModel.setUserNickname(nicknameState.value)
                                 viewModel.changeUserNicknameOrIntro()
                             }
                         }
                     }
                 }
             }
+        }
+    }
+
+    private fun isValid (
+        nicknameState: MutableState<String>,
+        introState : MutableState<String>,
+        isNicknameValidState : State<Boolean?>
+    ) : Boolean {
+        return if(introState.value == viewModel.userIntroduce.value && nicknameState.value == viewModel.userNickname.value) {
+            false
+        }else {
+            nicknameState.value.isNotEmpty() && isNicknameValidState.value != false && introState.value.isNotEmpty()
         }
     }
 

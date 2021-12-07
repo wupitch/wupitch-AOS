@@ -37,9 +37,15 @@ class MyPageProfileViewModel @Inject constructor(
     private var _userIntroduce =  mutableStateOf<String>("")
     val userIntroduce: State<String> = _userIntroduce
 
+    private var _loadState = mutableStateOf(BaseState())
+    val loadState : State<BaseState> = _loadState
+
+    fun initLoadState () {
+        _loadState.value = BaseState()
+    }
 
     fun getUserInfo() = viewModelScope.launch {
-        _updateState.value = BaseState(isLoading = true)
+        _loadState.value = BaseState(isLoading = true)
 
         val response = profileRepository.getUserInfo()
         if(response.isSuccessful){
@@ -47,10 +53,11 @@ class MyPageProfileViewModel @Inject constructor(
                 if(infoRes.isSuccess) {
                     _userNickname.value = infoRes.result.nickname
                     _userIntroduce.value = infoRes.result.introduce
+                    _loadState.value = BaseState(isSuccess = true)
                 }
-                else   _updateState.value = BaseState(error = infoRes.message)
+                else   _loadState.value = BaseState(error = infoRes.message)
             }
-        }else  _updateState.value = BaseState(error = "유저 정보 조회를 실패했습니다.")
+        }else _loadState.value = BaseState(error = "유저 정보 조회를 실패했습니다.")
     }
 
     private var _updateState = mutableStateOf(BaseState())
@@ -69,15 +76,14 @@ class MyPageProfileViewModel @Inject constructor(
         val response = checkValidRepository.checkNicknameValidation(NicknameValidReq(nickname))
         if (response.isSuccessful) {
             response.body()?.let { validRes ->
-                if (validRes.isSuccess) {
-                    _isNicknameValid.value = true
-                    _userNickname.value = nickname
-                } else {
-                    _isNicknameValid.value = false
-                }
+                _isNicknameValid.value = validRes.isSuccess
             }
         } else _isNicknameValid.value = false
 
+    }
+
+    fun setUserNickname(nickname : String){
+        _userNickname.value = nickname
     }
 
     fun setUserIntroduce(introduce: String) {
