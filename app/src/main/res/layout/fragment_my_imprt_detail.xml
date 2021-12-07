@@ -19,11 +19,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/crew"
+            android:text="@string/impromptu"
             app:layout_constraintTop_toTopOf="@id/iv_left"
             app:layout_constraintBottom_toBottomOf="@id/iv_left"
             app:layout_constraintStart_toEndOf="@id/iv_left"
@@ -31,7 +31,7 @@
             android:fontFamily="@font/roboto_bold"
             android:textSize="16sp"
             android:textColor="@color/main_black"/>
-        
+
         <ImageView
             android:id="@+id/iv_more"
             android:layout_width="24dp"
@@ -43,9 +43,9 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tablayout_mycrewdetail"
+        android:id="@+id/tablayout_myimprtdetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         app:tabSelectedTextColor="@color/black"
         app:tabIndicatorHeight="3dp"
         app:tabIndicatorColor="@color/black"
@@ -57,10 +57,10 @@
         app:layout_constraintTop_toBottomOf="@id/cl_toolbar"/>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager_mycrewdetail"
+        android:id="@+id/viewpager_myimprtdetail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tablayout_mycrewdetail"
+        app:layout_constraintTop_toBottomOf="@id/tablayout_myimprtdetail"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

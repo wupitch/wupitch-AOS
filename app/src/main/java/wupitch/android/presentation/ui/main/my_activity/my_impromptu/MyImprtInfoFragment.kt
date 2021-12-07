@@ -40,16 +40,10 @@ import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
 import wupitch.android.presentation.ui.main.my_activity.components.ReportDialog
 
 @AndroidEntryPoint
-class MyImpromptuDetailFragment : Fragment() {
+class MyImprtInfoFragment : Fragment() {
 
-    private val viewModel : MyImpromptuViewModel by viewModels()
+    private val viewModel : MyImpromptuViewModel by viewModels({requireParentFragment()})
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.getInt("impromptuId")?.let { id ->
-            viewModel.getImprtDetail(id)
-        }
-    }
 
     @ExperimentalPagerApi
     override fun onCreateView(
@@ -60,11 +54,6 @@ class MyImpromptuDetailFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-
-                    val reportDialogOpenState = remember { viewModel.crewReportState }
-
-                    if (reportDialogOpenState.value)
-                        ReportDialog(dialogOpen = reportDialogOpenState, viewModel)
 
                     val imprtState = remember { viewModel.imprtDetailState }
                     if (imprtState.value.error.isNotEmpty()) {
@@ -79,37 +68,15 @@ class MyImpromptuDetailFragment : Fragment() {
                             .fillMaxSize()
                             .background(Color.White)
                     ) {
-                        val (toolbar, topDivider, infoContent, progressbar) = createRefs()
+                        val (infoContent, progressbar) = createRefs()
 
-                        FullToolBar(
-                            modifier = Modifier .fillMaxWidth()
-                                .constrainAs(toolbar) {
-                                    top.linkTo(parent.top)
-                                    start.linkTo(parent.start)
-                                },
-                            icon = R.drawable.more,
-                            onLeftIconClick = { findNavController().navigateUp() },
-                            onRightIconClick = { showReportBottomSheet() },
-                            textString = R.string.impromptu
-                        )
 
-                        if (scrollState.value > 202.dpToInt()) {
-                            Divider(Modifier
-                                .constrainAs(topDivider) {
-                                    top.linkTo(toolbar.bottom)
-                                    bottom.linkTo(infoContent.top)
-                                }
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(colorResource(id = R.color.gray01))
-                            )
-                        }
                         imprtState.value.data?.let { imprtInfo ->
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .constrainAs(infoContent) {
-                                        top.linkTo(toolbar.bottom)
+                                        top.linkTo(parent.top)
                                         bottom.linkTo(parent.bottom)
                                         height = Dimension.fillToConstraints
                                     }
@@ -136,7 +103,7 @@ class MyImpromptuDetailFragment : Fragment() {
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
                                     end.linkTo(parent.end)
-                                    top.linkTo(toolbar.bottom)
+                                    top.linkTo(parent.top)
                                     bottom.linkTo(parent.bottom)
                                 },
                                 color = colorResource(id = R.color.main_orange)
@@ -147,13 +114,6 @@ class MyImpromptuDetailFragment : Fragment() {
             }
         }
     }
-
-    private fun showReportBottomSheet() {
-        val reportBottomSheet = ReportBottomSheetFragment(viewModel)
-        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
-    }
-
-    private fun Int.dpToInt() = (this * requireContext().resources.displayMetrics.density).toInt()
 
 
     @Composable

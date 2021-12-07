@@ -175,7 +175,7 @@
         android:label="ImpromptuFilterFragment" />
     <fragment
         android:id="@+id/myImpromptuDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImprtDetailFragment"
         android:label="MyImpromptuDetailFragment" >
         <argument
             android:name="impromptu_id"

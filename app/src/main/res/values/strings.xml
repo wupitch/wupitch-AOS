@@ -304,6 +304,8 @@
     <string name="input_content">게시글을 작성해주세요.</string>
     <string name="input_announcement">공지 제목을 입력해주세요.</string>
     <string name="announcement_post">공지</string>
+    <string name="impromptu_members">번개멤버</string>
+
 
 <!--    my page-->
     <string name="interested_activity">관심 크루 및 번개</string>
