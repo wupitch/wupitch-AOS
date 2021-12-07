@@ -53,4 +53,7 @@ interface ImprtApi {
         @Query("title") title : String,
         @Query("page") page : Int,
     ): Response<GetImprtRes>
+
+    @GET("app/impromptus/accounts/auth")
+    suspend fun getMyImpromptus() : Response<GetMyImprt>
 }

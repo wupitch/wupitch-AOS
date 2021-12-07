@@ -60,5 +60,8 @@ class ImprtRepositoryImpl @Inject constructor(
     ): Response<GetImprtRes>
     = retrofit.create(ImprtApi::class.java).getImprtSearch(title, page)
 
+    override suspend fun getMyImprt(): Response<GetMyImprt>
+    = retrofit.create(ImprtApi::class.java).getMyImpromptus()
+
 
 }
