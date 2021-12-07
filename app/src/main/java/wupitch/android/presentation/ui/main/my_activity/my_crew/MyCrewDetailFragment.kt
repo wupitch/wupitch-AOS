@@ -17,6 +17,7 @@ import wupitch.android.R
 import wupitch.android.common.BaseFragment
 import wupitch.android.databinding.FragmentMyCrewDetailBinding
 import wupitch.android.presentation.ui.components.*
+import wupitch.android.presentation.ui.main.my_activity.ReportDialog
 import wupitch.android.presentation.ui.main.my_activity.components.*
 import wupitch.android.util.changeTabFont
 
@@ -27,6 +28,7 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
 ) {
 
     private val viewModel: MyCrewViewModel by viewModels()
+    private lateinit var reportDialog : ReportDialog
     private lateinit var pagerAdapter: MyCrewDetailVPAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,11 +56,12 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
     }
 
     private fun setToolbarButtons() {
+        reportDialog = ReportDialog(requireContext())
         binding.ivLeft.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.ivMore.setOnClickListener {
-            //todo 신고하기 기능
+            reportDialog.show()
         }
     }
 
