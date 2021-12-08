@@ -64,7 +64,7 @@ class SplashFragment : Fragment() {
             val jwt = viewModel.readJwt()
             delay(1000L)
 
-//            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
+            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main) {
 
@@ -73,7 +73,6 @@ class SplashFragment : Fragment() {
 
 
                 //development 용도.
-                //findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
             }
         }

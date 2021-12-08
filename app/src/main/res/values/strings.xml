@@ -239,6 +239,7 @@
     <string name="from_gallery">갤러리에서 고르기</string>
     <string name="use_default_image">기본 이미지 사용</string>
     <string name="time_warning">종료시간이 시작시간보다 늦어야 해요!</string>
+    <string name="same_day_warning">요일을 중복되지 않게 선택해주세요!</string>
 
 <!--    impromptu -->
     <string name="no_impromptu">%s에 번개가 없어요.</string>

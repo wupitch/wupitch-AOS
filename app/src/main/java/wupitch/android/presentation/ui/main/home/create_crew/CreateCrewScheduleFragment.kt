@@ -51,7 +51,10 @@ import wupitch.android.presentation.ui.components.*
 class CreateCrewScheduleFragment : Fragment() {
 
     private var checkedRadioButton: MutableState<Boolean>? = null
-    private val viewModel : CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) {defaultViewModelProviderFactory}
+    private var checkedRadioButton2: MutableState<Boolean>? = null
+    private var checkedRadioButton3: MutableState<Boolean>? = null
+
+    private val viewModel: CreateCrewViewModel by navGraphViewModels(R.id.create_crew_nav) { defaultViewModelProviderFactory }
 
 
     override fun onCreateView(
@@ -65,7 +68,6 @@ class CreateCrewScheduleFragment : Fragment() {
 
                     val scrollState = rememberScrollState(0)
                     val scope = rememberCoroutineScope()
-                    val focusState = remember { mutableStateOf(false) }
 
 
                     val stopSignupState = remember { mutableStateOf(false) }
@@ -82,15 +84,25 @@ class CreateCrewScheduleFragment : Fragment() {
                     }
 
 
-
                     val scheduleList = remember { viewModel.scheduleList }
 
-                    val firstBtnToggleState = remember{ mutableStateOf(scheduleList.size >1)}
-                    val secondBtnToggleState = remember{ mutableStateOf(scheduleList.size >2)}
+                    val firstBtnToggleState = remember { mutableStateOf(scheduleList.size > 1) }
+                    val secondBtnToggleState = remember { mutableStateOf(scheduleList.size > 2) }
 
                     val snackbarHostState = remember { SnackbarHostState() }
 
                     val heightToScroll = remember { mutableStateOf(0) }
+
+                    val warningState = remember { mutableStateOf(false) }
+                    if (warningState.value) {
+                        LaunchedEffect(key1 = snackbarHostState, block = {
+                            snackbarHostState.showSnackbar(
+                                message = getString(R.string.same_day_warning),
+                                duration = SnackbarDuration.Short
+                            )
+                            warningState.value = false
+                        })
+                    }
 
                     ConstraintLayout(
                         Modifier
@@ -132,8 +144,8 @@ class CreateCrewScheduleFragment : Fragment() {
                             .verticalScroll(scrollState)
                             .padding(horizontal = 20.dp)
                             .onGloballyPositioned { coordinates ->
-                                        heightToScroll.value = coordinates.size.height
-                                    })
+                                heightToScroll.value = coordinates.size.height
+                            })
                         {
                             Spacer(modifier = Modifier.height(24.dp))
                             Text(
@@ -147,19 +159,23 @@ class CreateCrewScheduleFragment : Fragment() {
 
 
                             scheduleLayout(
-                                0, scheduleList[0], snackbarHostState
+                                0, warningState, scheduleList, scheduleList[0], snackbarHostState
                             )
                             PlusButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 toggleState = firstBtnToggleState
                             )
 
-                            if(firstBtnToggleState.value) {
-                                if(scheduleList.size ==1){
+                            if (firstBtnToggleState.value) {
+                                if (scheduleList.size == 1) {
                                     viewModel.addCrewSchedule()
                                 }
                                 scheduleLayout(
-                                    1, scheduleList[1], snackbarHostState
+                                    1,
+                                    warningState,
+                                    scheduleList,
+                                    scheduleList[1],
+                                    snackbarHostState
                                 )
                                 PlusButton(
                                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -167,33 +183,43 @@ class CreateCrewScheduleFragment : Fragment() {
                                 )
                                 SideEffect {
                                     scope.launch {
-                                        scrollState.animateScrollTo(heightToScroll.value, FloatSpringSpec(1.5f, 40f))
+                                        scrollState.animateScrollTo(
+                                            heightToScroll.value,
+                                            FloatSpringSpec(1.5f, 40f)
+                                        )
                                     }
                                 }
-                            }else {
-                                if(scheduleList.size == 2){
+                            } else {
+                                if (scheduleList.size == 2) {
                                     scheduleList.removeAt(1)
-                                }else if (scheduleList.size ==3) {
+                                } else if (scheduleList.size == 3) {
                                     scheduleList.removeRange(1, 2)
                                 }
                             }
 
 
-                            if(secondBtnToggleState.value){
-                                if(scheduleList.size == 2){
+                            if (secondBtnToggleState.value) {
+                                if (scheduleList.size == 2) {
                                     viewModel.addCrewSchedule()
                                 }
                                 scheduleLayout(
-                                   2, scheduleList[2], snackbarHostState
+                                    2,
+                                    warningState,
+                                    scheduleList,
+                                    scheduleList[2],
+                                    snackbarHostState
                                 )
                                 Spacer(modifier = Modifier.height(60.dp))
                                 SideEffect {
                                     scope.launch {
-                                        scrollState.animateScrollTo(heightToScroll.value, FloatSpringSpec(1.5f, 40f))
+                                        scrollState.animateScrollTo(
+                                            heightToScroll.value,
+                                            FloatSpringSpec(1.5f, 40f)
+                                        )
                                     }
                                 }
-                            }else {
-                                if(scheduleList.size == 3){
+                            } else {
+                                if (scheduleList.size == 3) {
                                     scheduleList.removeAt(2)
                                 }
                             }
@@ -229,11 +255,14 @@ class CreateCrewScheduleFragment : Fragment() {
                                 }
                                 .fillMaxWidth()
                                 .height(52.dp),
-                            btnColor = if(checkValid(scheduleList)) R.color.main_orange else R.color.gray03,
+                            btnColor = if (checkValid(scheduleList)) R.color.main_orange else R.color.gray03,
                             textString = R.string.four_over_seven,
                             fontSize = 16.sp
                         ) {
-                            if(checkValid(scheduleList)){
+                            if (checkValid(scheduleList)) {
+//                                scheduleList.forEach {
+//                                    Log.d("{CreateCrewScheduleFragment.onCreateView}", it.toString())
+//                                }
                                 findNavController().navigate(R.id.action_createCrewScheduleFragment_to_createCrewImageFragment)
                             }
                         }
@@ -245,12 +274,12 @@ class CreateCrewScheduleFragment : Fragment() {
 
     private fun checkValid(
         scheduleList: SnapshotStateList<ScheduleState>
-    ) : Boolean {
+    ): Boolean {
         scheduleList.forEach {
-            if(it.day.value == -1){
+            if (it.day.value == -1) {
                 return false
             }
-            if(it.isStartTimeSet.value != true || it.isEndTimeSet.value != true){
+            if (it.isStartTimeSet.value != true || it.isEndTimeSet.value != true) {
                 return false
             }
         }
@@ -276,9 +305,9 @@ class CreateCrewScheduleFragment : Fragment() {
                 onValueChange = {
                     toggleState.value = it
                 }
-            ), contentAlignment = Alignment.Center){
+            ), contentAlignment = Alignment.Center) {
             Icon(
-                painter = if(toggleState.value) painterResource(id = R.drawable.ic_subtract)
+                painter = if (toggleState.value) painterResource(id = R.drawable.ic_subtract)
                 else painterResource(id = R.drawable.ic_btn_06_add),
                 contentDescription = "plus icon",
                 tint = Color.White,
@@ -291,9 +320,11 @@ class CreateCrewScheduleFragment : Fragment() {
     @Composable
     private fun scheduleLayout(
         index: Int,
+        warningState: MutableState<Boolean>,
+        scheduleList: SnapshotStateList<ScheduleState>,
         scheduleState: ScheduleState,
-        snackbarHostState : SnackbarHostState
-    ) : ScheduleState {
+        snackbarHostState: SnackbarHostState
+    ): ScheduleState {
 
         val dayList = arrayListOf<FilterItem>(
             FilterItem(stringResource(id = R.string.monday), remember { mutableStateOf(false) }),
@@ -309,11 +340,11 @@ class CreateCrewScheduleFragment : Fragment() {
             day = remember { day }
             startTime = remember { startTime }
             endTime = remember { endTime }
-            isStartTimeSet = remember {isStartTimeSet}
+            isStartTimeSet = remember { isStartTimeSet }
             isEndTimeSet = remember { isEndTimeSet }
         }
 
-        if(scheduleState.day.value != -1){
+        if (scheduleState.day.value != -1) {
             dayList[scheduleState.day.value].state.value = true
         }
 
@@ -326,8 +357,10 @@ class CreateCrewScheduleFragment : Fragment() {
                     message = getString(R.string.time_warning),
                     duration = SnackbarDuration.Short
                 )
-                if(scheduleState.isEndTimeSet.value == null) scheduleState.isEndTimeSet.value = false
-                if(scheduleState.isStartTimeSet.value == null) scheduleState.isStartTimeSet.value = false
+                if (scheduleState.isEndTimeSet.value == null) scheduleState.isEndTimeSet.value =
+                    false
+                if (scheduleState.isStartTimeSet.value == null) scheduleState.isStartTimeSet.value =
+                    false
             })
 
         }
@@ -341,13 +374,21 @@ class CreateCrewScheduleFragment : Fragment() {
             fontSize = 16.sp,
         )
         NonRepetitionLayout(
-            itemList = dayList
-        ){
+            itemList = dayList,
+            listIndex = index,
+            warningState = warningState,
+            scheduleList = scheduleList
+        ) {
             scheduleState.day.value = it
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        TimeFilter(scheduleState.startTime, scheduleState.endTime, scheduleState.isStartTimeSet, scheduleState.isEndTimeSet){
+        TimeFilter(
+            scheduleState.startTime,
+            scheduleState.endTime,
+            scheduleState.isStartTimeSet,
+            scheduleState.isEndTimeSet
+        ) {
             val timeBottomSheet = TimeBottomSheetFragment(index, it, viewModel)
             timeBottomSheet.show(childFragmentManager, "time bottom sheet fragment")
         }
@@ -359,6 +400,9 @@ class CreateCrewScheduleFragment : Fragment() {
     @Composable
     fun NonRepetitionLayout(
         itemList: List<FilterItem>,
+        listIndex: Int,
+        warningState: MutableState<Boolean>,
+        scheduleList: SnapshotStateList<ScheduleState>,
         onClick: (index: Int) -> Unit
     ) {
         FlowRow(
@@ -368,15 +412,51 @@ class CreateCrewScheduleFragment : Fragment() {
             mainAxisSpacing = 16.dp,
             crossAxisSpacing = 16.dp
         ) {
-            itemList.forEachIndexed { index, item ->
-                RadioButton(
-                    modifier = Modifier
-                        .width(48.dp)
-                        .height(48.dp),
-                    checkedState = item.state,
-                    text = item.name,
-                ) {
-                    onClick(index)
+            if (listIndex == 0) {
+                itemList.forEachIndexed { index, item ->
+                    RadioButton(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .height(48.dp),
+                        checkedState = item.state,
+                        text = item.name,
+                        index = index,
+                        warningState = warningState,
+                        scheduleList = scheduleList
+                    ) {
+                        onClick(index)
+                    }
+                }
+
+            } else if (listIndex == 1) {
+                itemList.forEachIndexed { index, item ->
+                    RadioButton2(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .height(48.dp),
+                        checkedState = item.state,
+                        text = item.name,
+                        index = index,
+                        warningState = warningState,
+                        scheduleList = scheduleList
+                    ) {
+                        onClick(index)
+                    }
+                }
+            } else {
+                itemList.forEachIndexed { index, item ->
+                    RadioButton3(
+                        modifier = Modifier
+                            .width(48.dp)
+                            .height(48.dp),
+                        checkedState = item.state,
+                        text = item.name,
+                        index = index,
+                        warningState = warningState,
+                        scheduleList = scheduleList
+                    ) {
+                        onClick(index)
+                    }
                 }
             }
         }
@@ -387,9 +467,12 @@ class CreateCrewScheduleFragment : Fragment() {
         modifier: Modifier,
         checkedState: MutableState<Boolean>,
         text: String,
+        index: Int,
+        warningState: MutableState<Boolean>,
+        scheduleList: SnapshotStateList<ScheduleState>,
         onClick: () -> Unit
     ) {
-        if(checkedState.value) {
+        if (checkedState.value) {
             checkedRadioButton = checkedState
         }
         Box(
@@ -401,10 +484,172 @@ class CreateCrewScheduleFragment : Fragment() {
                     enabled = true,
                     role = Role.RadioButton,
                     onClick = {
-                        checkedRadioButton?.value = false
-                        checkedState.value = true
-                        checkedRadioButton = checkedState
-                        onClick()
+
+                        when (scheduleList.size) {
+                            1 -> {
+                                checkedRadioButton?.value = false
+                                checkedState.value = true
+                                checkedRadioButton = checkedState
+                                onClick()
+                            }
+                            2 -> {
+                                if (index == scheduleList[1].day.value) {
+                                    warningState.value = true
+                                    return@selectable
+                                } else {
+                                    checkedRadioButton?.value = false
+                                    checkedState.value = true
+                                    checkedRadioButton = checkedState
+                                    onClick()
+                                }
+                            }
+                            3 -> {
+                                if (index == scheduleList[1].day.value || index == scheduleList[2].day.value) {
+                                    warningState.value = true
+                                    return@selectable
+                                } else {
+                                    checkedRadioButton?.value = false
+                                    checkedState.value = true
+                                    checkedRadioButton = checkedState
+                                    onClick()
+                                }
+                            }
+                        }
+
+                    }
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (checkedState.value) colorResource(id = R.color.orange02) else
+                        colorResource(id = R.color.gray01)
+                )
+                .border(
+                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                    else Color.Transparent,
+                    width = if (checkedState.value) 1.dp else 0.dp,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            )
+        }
+    }
+
+    @Composable
+    fun RadioButton2(
+        modifier: Modifier,
+        checkedState: MutableState<Boolean>,
+        text: String,
+        index: Int,
+        warningState: MutableState<Boolean>,
+        scheduleList: SnapshotStateList<ScheduleState>,
+        onClick: () -> Unit
+    ) {
+        if (checkedState.value) {
+            checkedRadioButton2 = checkedState
+        }
+        Box(
+            modifier = modifier
+                .selectable(
+                    selected = checkedState.value,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = true,
+                    role = Role.RadioButton,
+                    onClick = {
+
+                        when (scheduleList.size) {
+                            2 -> {
+                                if (index == scheduleList[0].day.value) {
+                                    warningState.value = true
+                                    return@selectable
+                                } else {
+                                    checkedRadioButton2?.value = false
+                                    checkedState.value = true
+                                    checkedRadioButton2 = checkedState
+                                    onClick()
+                                }
+                            }
+                            3 -> {
+                                if (index == scheduleList[0].day.value || index == scheduleList[2].day.value) {
+                                    warningState.value = true
+                                    return@selectable
+                                } else {
+                                    checkedRadioButton2?.value = false
+                                    checkedState.value = true
+                                    checkedRadioButton2 = checkedState
+                                    onClick()
+                                }
+                            }
+                        }
+
+                    }
+                )
+                .clip(RoundedCornerShape(8.dp))
+                .background(
+                    if (checkedState.value) colorResource(id = R.color.orange02) else
+                        colorResource(id = R.color.gray01)
+                )
+                .border(
+                    color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                    else Color.Transparent,
+                    width = if (checkedState.value) 1.dp else 0.dp,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                fontFamily = Roboto,
+                fontWeight = FontWeight.Bold,
+                color = if (checkedState.value) colorResource(id = R.color.main_orange)
+                else colorResource(id = R.color.gray02)
+            )
+        }
+    }
+
+    @Composable
+    fun RadioButton3(
+        modifier: Modifier,
+        checkedState: MutableState<Boolean>,
+        text: String,
+        index: Int,
+        warningState: MutableState<Boolean>,
+        scheduleList: SnapshotStateList<ScheduleState>,
+        onClick: () -> Unit
+    ) {
+        if (checkedState.value) {
+            checkedRadioButton3 = checkedState
+        }
+        Box(
+            modifier = modifier
+                .selectable(
+                    selected = checkedState.value,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    enabled = true,
+                    role = Role.RadioButton,
+                    onClick = {
+
+                        if (index == scheduleList[0].day.value || index == scheduleList[1].day.value) {
+                            warningState.value = true
+                            return@selectable
+                        } else {
+                            checkedRadioButton3?.value = false
+                            checkedState.value = true
+                            checkedRadioButton3 = checkedState
+                            onClick()
+                        }
                     }
                 )
                 .clip(RoundedCornerShape(8.dp))

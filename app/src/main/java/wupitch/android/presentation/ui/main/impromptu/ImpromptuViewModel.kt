@@ -44,7 +44,7 @@ class ImpromptuViewModel @Inject constructor(
     private var _userDistrictId = mutableStateOf<Int?>(null)
     val userDistrictId : State<Int?> =  _userDistrictId
 
-    private var _userDistrictName = mutableStateOf<String>("지역구")
+    private var _userDistrictName = mutableStateOf<String>("서울시")
     val userDistrictName: State<String> = _userDistrictName
 
 
@@ -72,7 +72,6 @@ class ImpromptuViewModel @Inject constructor(
     fun getNewPage() = viewModelScope.launch {
         if ((scrollPosition + 1) >= (page.value * Constants.PAGE_SIZE)) {
             incrementPage()
-            Log.d("{HomeViewModel.newPage}", "${page.value}")
 
             if (page.value > 1) {
                 getImprt()
@@ -95,7 +94,6 @@ class ImpromptuViewModel @Inject constructor(
 
     fun setImprtSize(size: Int?) {
         _imprtSizeState.value = size
-        Log.d("{ImpromptuViewModel.setImprtSize}", _imprtSizeState.value.toString())
 
     }
 
@@ -114,7 +112,7 @@ class ImpromptuViewModel @Inject constructor(
         _resetState.value = true
         _imprtDayList.clear()
         _userDistrictId.value = null
-        _userDistrictName.value = "지역구"
+        _userDistrictName.value = "서울시"
         _imprtScheduleState.value = null
         _imprtSizeState.value = null
         resetPage()
@@ -132,7 +130,7 @@ class ImpromptuViewModel @Inject constructor(
     private fun getImprt() = viewModelScope.launch {
 
         val response = imprtRepository.getImpromptu(
-            areaId = if (_userDistrictId.value == null) null else _userDistrictId.value!! + 1,
+            areaId = if (_userDistrictId.value == null) 1 else _userDistrictId.value!! + 1,
             days = if (_imprtDayList.isEmpty()) null else _imprtDayList.map { it + 1 },
             memberCountIndex = if (_imprtSizeState.value == null) null else _imprtSizeState.value!! + 1,
             page = _page.value,
@@ -186,9 +184,9 @@ class ImpromptuViewModel @Inject constructor(
                         }
                         _imprtSizeState.value =
                             if (res.result.impromptuPickMemberCountValue == null) null else res.result.impromptuPickMemberCountValue - 1
-                        _userDistrictName.value = res.result.impromptuPickAreaName ?: "지역구"
+                        _userDistrictName.value = res.result.impromptuPickAreaName ?: "서울시"
                         _userDistrictId.value =
-                            if (res.result.impromptuPickAreaId == null) null else res.result.impromptuPickAreaId - 1
+                            if (res.result.impromptuPickAreaId == null) 0 else res.result.impromptuPickAreaId - 1
                         resetPage()
                         getImprt()
 

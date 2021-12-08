@@ -116,12 +116,10 @@ class CreateImprtViewModel @Inject constructor(
     fun setImprtDistrict(districtId: Int, districtName: String) {
         _imprtDistrictId.value = districtId
         _imprtDistrictName.value = districtName
-        Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $districtId name : $districtName")
     }
 
     fun setImprtLocation(location: String) {
         _imprtLocation.value = location
-        Log.d("{CreateCrewViewModel.setCrewLocation}", _imprtLocation.value)
     }
 
 
@@ -163,7 +161,6 @@ class CreateImprtViewModel @Inject constructor(
     }
 
     fun setTimeFilter(type: TimeType, hour: Int, min: Int) {
-        Log.d("{CreateCrewViewModel.setTimeFilter}", "hour : $hour min : $min")
         var hourString = hour.toString()
         var minString = min.toString()
         if (hour < 10) hourString = "0$hour"
@@ -256,7 +253,6 @@ class CreateImprtViewModel @Inject constructor(
             _createImprtState.value = CreateImpromptuState(data = id)
         } else {
             val path = getRealPathFromURIForGallery(context,_imprtImage.value)
-            Log.d("{CreateImprtViewModel.postImprtImage}", path.toString())
 
             if (path != null) {
                 resizeImage(file = File(path))

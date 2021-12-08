@@ -48,7 +48,7 @@ class HomeViewModel @Inject constructor(
     private var _userDistrictId = mutableStateOf<Int?>(null)
     val userDistrictId : State<Int?> = _userDistrictId
 
-    private var _userDistrictName = mutableStateOf<String>("지역구")
+    private var _userDistrictName = mutableStateOf<String>("서울시")
     val userDistrictName : State<String> = _userDistrictName
 
     //event
@@ -133,7 +133,7 @@ class HomeViewModel @Inject constructor(
         _crewDayList.clear()
         _crewAgeGroupList.clear()
         _userDistrictId.value = null
-        _userDistrictName.value = "지역구"
+        _userDistrictName.value = "서울시"
         _crewSizeState.value = null
         resetPage()
     }
@@ -155,7 +155,7 @@ class HomeViewModel @Inject constructor(
 
         val response = crewRepository.getCrew(
             ageList = if(_crewAgeGroupList.isEmpty()) null else _crewAgeGroupList.map { it +1 },
-            areaId = if(_userDistrictId.value == null) null else _userDistrictId.value!! +1,
+            areaId = if(_userDistrictId.value == null) 1 else _userDistrictId.value!! +1,
             days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
             memberCountValue = _crewSizeState.value,
             page = _page.value,
@@ -210,8 +210,8 @@ class HomeViewModel @Inject constructor(
                                 it - 1
                             )
                         }
-                        _userDistrictName.value = res.result.crewPickAreaName ?: "지역구"
-                        _userDistrictId.value = if(res.result.crewPickAreaId == null) null else res.result.crewPickAreaId -1
+                        _userDistrictName.value = res.result.crewPickAreaName ?: "서울시"
+                        _userDistrictId.value = if(res.result.crewPickAreaId == null) 0 else res.result.crewPickAreaId -1
                         _crewSizeState.value =
                             if (res.result.crewPickMemberCountValue == null) null else res.result.crewPickMemberCountValue - 1
                         resetPage()

@@ -300,9 +300,9 @@ class CreateCrewViewModel @Inject constructor(
             memberCount = _crewSize.value.toInt(),
             scheduleList = _scheduleList.map {
                 Schedule(
-                    it.day.value + 1,
-                    it.startTime.value.stringToDouble(),
-                    it.endTime.value.stringToDouble()
+                    dayIdx  = it.day.value + 1,
+                    startTime =  it.startTime.value.stringToDouble(),
+                    endTime = it.endTime.value.stringToDouble()
                 )
             }
         )
