@@ -105,8 +105,7 @@ fun NumberTextField(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .background(colorResource(id = R.color.gray04))
-                        .padding(horizontal = 16.dp)
-                        .padding(top = 11.dp, bottom = 9.dp),
+                        .padding(top = 11.dp, bottom = 9.dp, start = 18.dp, end = 19.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 

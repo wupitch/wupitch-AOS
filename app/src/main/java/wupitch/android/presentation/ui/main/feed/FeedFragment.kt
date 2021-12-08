@@ -25,6 +25,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -43,12 +44,12 @@ import wupitch.android.presentation.ui.main.my_activity.components.ImageShareDia
 
 class FeedFragment : Fragment() {
 
-//    private val dataList = listOf<String>(
+    private val dataList = listOf<String>(
 //        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
 //        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
 //        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
 //        "https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg",
-//    )
+    )
 
     @ExperimentalFoundationApi
     override fun onCreateView(
@@ -67,7 +68,7 @@ class FeedFragment : Fragment() {
                             .background(Color.White)
                     ) {
                         val (toolbar, images, chrt, text, fab) = createRefs()
-                        val guildLine = createGuidelineFromTop(0.65f)
+                        val guildLine = createGuidelineFromTop(0.75f)
 
                         NotiToolbar(
                             modifier = Modifier
@@ -114,31 +115,60 @@ class FeedFragment : Fragment() {
 //                            }
 //                        }
 
-                        Image(
-                            modifier = Modifier
-                                .constrainAs(chrt) {
-                                    bottom.linkTo(text.top)
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                }
-                                .size(130.dp, 210.dp),
-                            painter = painterResource(id = R.drawable.img_chrt_02),
-                            contentDescription = null)
+                        if(dataList.isEmpty()){
+                            Image(
+                                modifier = Modifier
+                                    .constrainAs(chrt) {
+                                        bottom.linkTo(text.top)
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                    }
+                                    .size(130.dp, 210.dp),
+                                painter = painterResource(id = R.drawable.ic_img_chrt_03),
+                                contentDescription = null)
 
-                        Text(
-                            modifier = Modifier
-                                .constrainAs(text) {
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    bottom.linkTo(guildLine)
-                                }
-                                .padding(top = 24.dp),
-                            text = stringResource(R.string.preparing),
-                            color = colorResource(id = R.color.gray02),
-                            fontFamily = Roboto,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Normal
-                        )
+                            Text(
+                                modifier = Modifier
+                                    .constrainAs(text) {
+                                        start.linkTo(parent.start)
+                                        end.linkTo(parent.end)
+                                        bottom.linkTo(guildLine)
+                                    }
+                                    .padding(top = 24.dp),
+                                text = stringResource(R.string.no_feed_image),
+                                color = colorResource(id = R.color.gray02),
+                                fontFamily = Roboto,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+
+//                        Image(
+//                            modifier = Modifier
+//                                .constrainAs(chrt) {
+//                                    bottom.linkTo(text.top)
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                }
+//                                .size(130.dp, 210.dp),
+//                            painter = painterResource(id = R.drawable.img_chrt_02),
+//                            contentDescription = null)
+//
+//                        Text(
+//                            modifier = Modifier
+//                                .constrainAs(text) {
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    bottom.linkTo(guildLine)
+//                                }
+//                                .padding(top = 24.dp),
+//                            text = stringResource(R.string.preparing),
+//                            color = colorResource(id = R.color.gray02),
+//                            fontFamily = Roboto,
+//                            fontSize = 16.sp,
+//                            fontWeight = FontWeight.Normal
+//                        )
 
 
                     }
