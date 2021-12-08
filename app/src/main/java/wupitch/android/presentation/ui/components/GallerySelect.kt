@@ -4,17 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import wupitch.android.R
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 
 @ExperimentalPermissionsApi
@@ -27,7 +23,7 @@ fun GallerySelect(
 
     val settingDialogState = remember { mutableStateOf(false)}
     if(settingDialogState.value) {
-        NoGalleryPermissionDialog(settingDialogState){
+        NeedPermissionDialog(settingDialogState, stringResource(id = R.string.need_gallery_permission)){
             context.startActivity(Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.fromParts("package", context.packageName, null)
             })

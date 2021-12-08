@@ -3,10 +3,8 @@ package wupitch.android.presentation.ui.signup.components
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
@@ -26,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +42,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
+import wupitch.android.presentation.ui.components.NeedPermissionDialog
 import wupitch.android.presentation.ui.components.Permission
 
 @ExperimentalPermissionsApi
@@ -54,10 +53,20 @@ fun CameraCapture(
     onImageFile: (File) -> Unit = { }
 ) {
     val context = LocalContext.current
+    val settingDialogState = remember { mutableStateOf(false)}
+    if(settingDialogState.value) {
+        NeedPermissionDialog(settingDialogState, stringResource(id = R.string.need_camera_permission)){
+            context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            })
+        }
+    }
 
     Permission(
         permission = listOf(Manifest.permission.CAMERA),
-        permissionNotAvailableContent = {},
+        permissionNotAvailableContent = {
+            settingDialogState.value = true
+        },
     ) {
         ConstraintLayout(
             modifier = Modifier

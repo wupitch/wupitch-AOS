@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -105,7 +106,7 @@ class IdCardFragment : Fragment() {
                                 textAlign = TextAlign.Start,
                             )
                             Image(
-                                modifier = Modifier.height(228.dp),
+                                modifier = Modifier.height(228.dp).align(Alignment.CenterHorizontally),
                                 painter = painterResource(id = R.drawable.img_idcard),
                                 contentDescription = null
                             )

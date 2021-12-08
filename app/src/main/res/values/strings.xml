@@ -21,17 +21,6 @@
     <string name="login">로그인</string>
     <string name="login_pw">비밀번호</string>
 
-    <!--    카카오 로그인-->
-    <string name="kakao_native_app_key">b587874a0a178d33f63d9dd3a38b35b9</string>
-    <string name="login_kakao_access_denied_toast_message">접근이 거부 됨(동의 취소)</string>
-    <string name="login_kakao_invalid_client_toast_message">유효하지 않은 앱</string>
-    <string name="login_kakao_invalid_grant_toast_message">인증 수단이 유효하지 않아 인증할 수 없는 상태</string>
-    <string name="login_kakao_invalid_request_toast_message">요청 파라미터 오류</string>
-    <string name="login_kakao_invalid_scope_toast_message">유효하지 않은 scope ID</string>
-    <string name="login_kakao_misconfigured_toast_message">설정이 올바르지 않음(android key hash)</string>
-    <string name="login_kakao_server_error_toast_message">서버 내부 에러</string>
-    <string name="login_kakao_unauthorized_toast_message">앱이 요청 권한이 없음</string>
-    <string name="login_kakao_etc_toast_message">기타 오류</string>
 
 <!--    회원가입-->
     <string name="service_agreement_title_top">에 오신 것을</string>
@@ -62,6 +51,7 @@
     <string name="use_photo">사진 사용</string>
     <string name="requested_id_certification">인증 요청이\n완료됐어요.</string>
     <string name="id_certification_process_guide">신분증 인증 승인은 24시간 이내 처리되며,\n푸쉬알림을 통해 확인할 수 있습니다.</string>
+    <string name="need_camera_permission">사진업로드를 위해\n카메라 접근 승인이 필요합니다</string>
 
 
     <string name="done">완료</string>

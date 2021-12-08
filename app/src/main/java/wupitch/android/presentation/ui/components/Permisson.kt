@@ -25,13 +25,11 @@ fun Permission(
         PermissionRequired(
             permissionState = permissionState,
             permissionNotGrantedContent = { //허용이 안 되어 있어서 (처음이든 이후든) 요청할 때.
-                Log.d("{Permission}", "not granted")
                 SideEffect {
                     permissionState.launchPermissionRequest()
                 }
             },
            permissionNotAvailableContent = { //처음에 거부 버튼 눌렀을 때. & 거부된 상태일 때.
-                Log.d("{Permission}", "not available")
                permissionNotAvailableContent()
 //                SideEffect {
 //                    permissionState.launchPermissionRequest() //거부할 때든, 되어있든 하면 다시 리퀘스트 하지 않는다. 세팅으로 가게 해야 하는 듯.
