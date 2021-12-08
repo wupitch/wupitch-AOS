@@ -10,9 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -24,7 +22,18 @@ import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 fun GallerySelect(
     onImageUri: (Uri) -> Unit = { }
 ) {
+
     val context = LocalContext.current
+
+    val settingDialogState = remember { mutableStateOf(false)}
+    if(settingDialogState.value) {
+        NoGalleryPermissionDialog(settingDialogState){
+            context.startActivity(Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", context.packageName, null)
+            })
+        }
+    }
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
@@ -44,33 +53,7 @@ fun GallerySelect(
         Permission(
             permission = listOf(android.Manifest.permission.ACCESS_MEDIA_LOCATION, android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
             permissionNotAvailableContent = {
-
-                //imageChosenState.value = false
-//                Column(Modifier) {
-//                    Text("O noes! No Photo Gallery!")
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                    Row {
-//                        Button(
-//                            modifier = Modifier.padding(4.dp),
-//                            onClick = {
-//                                context.startActivity(Intent(ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-//                                    data = Uri.fromParts("package", context.packageName, null)
-//                                })
-//                            }
-//                        ) {
-//                            Text("Open Settings")
-//                        }
-//                        // If they don't want to grant permissions, this button will result in going back
-//                        Button(
-//                            modifier = Modifier.padding(4.dp),
-//                            onClick = {
-//                                onImageUri(EMPTY_IMAGE_URI)
-//                            }
-//                        ) {
-//                            Text("Use Camera")
-//                        }
-//                    }
-//                }
+                settingDialogState.value = true
             },
         ) {
             LaunchGallery()
@@ -78,7 +61,9 @@ fun GallerySelect(
     } else {
         Permission(
             permission =  listOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-            permissionNotAvailableContent = {},
+            permissionNotAvailableContent = {
+                settingDialogState.value = true
+            },
         ) {
             LaunchGallery()
         }
