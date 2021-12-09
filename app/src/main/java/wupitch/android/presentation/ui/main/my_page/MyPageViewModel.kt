@@ -6,14 +6,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,12 +23,7 @@ import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.common.Constants.dataStore
 import wupitch.android.data.remote.dto.*
-import wupitch.android.domain.repository.CheckValidRepository
-import wupitch.android.domain.repository.GetDistrictRepository
-import wupitch.android.domain.repository.GetSportRepository
 import wupitch.android.domain.repository.ProfileRepository
-import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
-import wupitch.android.presentation.ui.main.home.create_crew.SportState
 import java.io.File
 import javax.inject.Inject
 
@@ -215,10 +205,32 @@ class MyPageViewModel @Inject constructor(
     /*
     * Image
     * */
-    private var _userImageState = mutableStateOf(BaseState())
-    val userImageState: State<BaseState> = _userImageState
 
-    fun setUserImage(uri: Uri) = viewModelScope.launch {
+    private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
+    val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
+
+    private var _userImageState = mutableStateOf<Uri>(Constants.EMPTY_IMAGE_URI)
+    val userImageState: State<Uri> = _userImageState
+
+    private var _imageChosenState = mutableStateOf(false)
+    val imageChosenState: State<Boolean> = _imageChosenState
+
+    fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
+        _isUsingDefaultImage.value = isUsingDefaultImage
+        if(isUsingDefaultImage == true)  _userImageState.value = Constants.EMPTY_IMAGE_URI
+
+    }
+    fun setImageChosenState(isImageChosen: Boolean) {
+        _imageChosenState.value = isImageChosen
+    }
+
+    private var _uploadImageState = mutableStateOf(BaseState())
+    val uploadImageState: State<BaseState> = _uploadImageState
+
+    fun uploadUserImage(uri: Uri) = viewModelScope.launch {
+        _uploadImageState.value = BaseState(isLoading = true)
+
+        _userImageState.value = uri
         val path = getRealPathFromURIForGallery(uri)
 
         if (path != null) {
@@ -229,10 +241,10 @@ class MyPageViewModel @Inject constructor(
             val response = profileRepository.postProfileImage(file.body, file)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
-                    if (res.isSuccess) _userImageState.value = BaseState(isSuccess = true)
-                    else _userImageState.value = BaseState(error = res.message)
+                    if (res.isSuccess) _uploadImageState.value = BaseState(isSuccess = true)
+                    else _uploadImageState.value = BaseState(error = res.message)
                 }
-            } else _userImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
+            } else _uploadImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
         }
 
     }

@@ -93,7 +93,7 @@ fun ReportDialog(
                     if(viewModel is MyCrewViewModel){
                         viewModel.postCrewReport(textState.value)
                     }else if (viewModel is MyImpromptuViewModel){
-                        viewModel.postCrewReport(textState.value)
+                        viewModel.postImprtReport(textState.value)
                     }
                     dialogOpen.value = false
                 }

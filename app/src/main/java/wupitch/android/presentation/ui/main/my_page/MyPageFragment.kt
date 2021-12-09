@@ -2,7 +2,6 @@ package wupitch.android.presentation.ui.main.my_page
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +9,6 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -39,12 +36,12 @@ import coil.transform.CircleCropTransformation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
-import wupitch.android.common.Constants
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.GallerySelect
 import wupitch.android.presentation.ui.components.GrayDivider
 import wupitch.android.presentation.ui.components.NotiToolbar
+import wupitch.android.presentation.ui.components.UploadImageBottomSheetFragment
 import wupitch.android.presentation.ui.main.my_page.components.FillInfoSnackbar
 import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 
@@ -52,6 +49,7 @@ import wupitch.android.presentation.ui.main.my_page.components.MyPageText
 class MyPageFragment : Fragment() {
 
     private val viewModel : MyPageViewModel by viewModels()
+    private lateinit var uploadImageBottomSheet: UploadImageBottomSheetFragment
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +57,12 @@ class MyPageFragment : Fragment() {
         viewModel.checkNotEnoughInfo()
         viewModel.getUserInfo()
     }
+
+    private fun openUploadImageBottomSheet() {
+        uploadImageBottomSheet = UploadImageBottomSheetFragment(viewModel)
+        uploadImageBottomSheet.show(childFragmentManager, "upload image bottom sheet")
+    }
+
 
     @ExperimentalPermissionsApi
     override fun onCreateView(
@@ -72,12 +76,10 @@ class MyPageFragment : Fragment() {
                 val notEnoughInfoState = remember { viewModel.notEnoughInfo}
                 val snackbarHostState = remember { SnackbarHostState() }
                 val userInfoState = remember {viewModel.userInfo}
-                val openGallery = remember { mutableStateOf(false)}
-                val imageUri = remember { mutableStateOf<Uri>(EMPTY_IMAGE_URI)}
 
-                val userImageState = remember {viewModel.userImageState}
-                if(userImageState.value.error.isNotEmpty()){
-                    Toast.makeText(requireContext(), userImageState.value.error, Toast.LENGTH_SHORT).show()
+                val uploadImageState = remember {viewModel.uploadImageState}
+                if(uploadImageState.value.error.isNotEmpty()){
+                    Toast.makeText(requireContext(), uploadImageState.value.error, Toast.LENGTH_SHORT).show()
                 }
 
                 if(userInfoState.value.error.isNotEmpty()){
@@ -93,7 +95,9 @@ class MyPageFragment : Fragment() {
                     )
                 })
                 }
-
+                val imageChosenState = remember { viewModel.imageChosenState}
+                val isUsingDefaultImage = remember { viewModel.isUsingDefaultImage }
+                val imageUri = remember { viewModel.userImageState}
 
 
                 Column(
@@ -119,14 +123,14 @@ class MyPageFragment : Fragment() {
                         val (profile, alert, myActivity, myRecord, progressbar) = createRefs()
 
 
-                        if(openGallery.value) {
+                        if(isUsingDefaultImage.value == false) {
                             GallerySelect(
                                 onImageUri = { uri ->
                                     if(uri != EMPTY_IMAGE_URI){
-                                        imageUri.value = uri
-                                        viewModel.setUserImage(uri)
+                                        viewModel.uploadUserImage(uri)
+                                        viewModel.setImageChosenState(true)
                                     }
-                                    openGallery.value = false
+                                    viewModel.setIsUsingDefaultImage(null)
                                 }
                             )
                         }
@@ -140,8 +144,9 @@ class MyPageFragment : Fragment() {
                             },
                             userInfoState = userInfoState,
                             imageUri = imageUri,
+                            imageChosenState = imageChosenState,
                             onImageClick = {
-                                openGallery.value = true
+                                openUploadImageBottomSheet()
                             },
                             onDetailClick = {
                                 activity?.findNavController(R.id.main_nav_container_view)
@@ -178,7 +183,7 @@ class MyPageFragment : Fragment() {
                             snackbarHostState = snackbarHostState
                         )
 
-                        if (userInfoState.value.isLoading) {
+                        if (userInfoState.value.isLoading || uploadImageState.value.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.constrainAs(progressbar) {
                                     start.linkTo(parent.start)
@@ -238,10 +243,11 @@ class MyPageFragment : Fragment() {
     private fun ProfileBox(
         modifier: Modifier,
         userInfoState : State<UserInfoState>,
-        imageUri : MutableState<Uri>,
+        imageChosenState : State<Boolean>,
+        imageUri : State<Uri>,
         onImageClick : () -> Unit,
         onDetailClick : () -> Unit
-        ) {
+    ) {
 
         ConstraintLayout(
             modifier = modifier
@@ -256,40 +262,50 @@ class MyPageFragment : Fragment() {
         ) {
             val (image, camera, text, button) = createRefs()
 
-            Image(
-                modifier = Modifier
-                    .constrainAs(image) {
-                        top.linkTo(parent.top, margin = 18.dp)
-                        bottom.linkTo(parent.bottom, margin = 18.dp)
-                        start.linkTo(parent.start, margin = 24.dp)
-                    }
-                    .size(64.dp),
-                painter =
-                if (imageUri.value != EMPTY_IMAGE_URI) {
-                    rememberImagePainter(
-                        imageUri.value,
-                        builder = {
-                            placeholder(R.drawable.profile_basic)
-                            transformations(CircleCropTransformation())
-                            build()
-                        }
-                    )
-                }else if(userInfoState.value.data.profileImageUrl != null){
-                    rememberImagePainter(
-                        userInfoState.value.data.profileImageUrl,
-                        builder = {
-                            placeholder(R.drawable.profile_basic)
-                            transformations(CircleCropTransformation())
-                            build()
-                        }
-                    )
-                }else {
-                    rememberImagePainter(R.drawable.profile_basic,)
-                      },
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
-            
+            if (imageChosenState.value) {
+                Image(
+                    modifier = Modifier
+                        .constrainAs(image) {
+                            top.linkTo(parent.top, margin = 18.dp)
+                            bottom.linkTo(parent.bottom, margin = 18.dp)
+                            start.linkTo(parent.start, margin = 24.dp)
+                        }.size(64.dp),
+                    painter = if(imageUri.value != EMPTY_IMAGE_URI) {
+                        rememberImagePainter(
+                            imageUri.value,
+                            builder = {
+                                placeholder(R.color.white)
+                                transformations(CircleCropTransformation())
+                                build()
+                            }
+                        )
+                    }else { rememberImagePainter(R.drawable.profile_basic) },
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }else {
+                 Image(
+                    modifier = Modifier
+                        .constrainAs(image) {
+                            top.linkTo(parent.top, margin = 18.dp)
+                            bottom.linkTo(parent.bottom, margin = 18.dp)
+                            start.linkTo(parent.start, margin = 24.dp)
+                        }.size(64.dp),
+                    painter = if(userInfoState.value.data.profileImageUrl != null) {
+                        rememberImagePainter(
+                            userInfoState.value.data.profileImageUrl,
+                            builder = {
+                                placeholder(R.color.white)
+                                transformations(CircleCropTransformation())
+                                build()
+                            }
+                        )
+                    }else { rememberImagePainter(R.drawable.profile_basic) },
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
+
             IconButton(
                 modifier = Modifier
                     .constrainAs(camera) {

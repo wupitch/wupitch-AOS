@@ -54,7 +54,9 @@
         android:paddingVertical="15dp"
         android:paddingHorizontal="19dp"
         android:gravity="top|start"
-        android:maxLength="45"/>
+        android:maxLength="45"
+        android:textCursorDrawable="@drawable/cursor"
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_confirm"

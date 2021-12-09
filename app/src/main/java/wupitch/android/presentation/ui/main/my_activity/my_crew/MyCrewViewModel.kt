@@ -6,8 +6,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -134,17 +137,17 @@ class MyCrewViewModel @Inject constructor(
     * report
     * */
 
-    var crewReportState = mutableStateOf(false)
+    private var _showReportDialog = MutableLiveData<Boolean>()
+    val showReportDialog : LiveData<Boolean> = _showReportDialog
 
-    private var _imprtReportState = mutableStateOf(false)
-    val imprtReportState : State<Boolean> = _imprtReportState
-
-    fun setCrewReportState() {
-        crewReportState.value = true
+    fun setShowReportDialog() {
+        _showReportDialog.value = true
     }
 
     fun postCrewReport(content : String) {
-
+        //todo
+        _showReportDialog.value = false
+        Log.d("{MyCrewViewModel.postCrewReport}", content.toString())
     }
 
     /*

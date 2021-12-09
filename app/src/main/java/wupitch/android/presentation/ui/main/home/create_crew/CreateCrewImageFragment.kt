@@ -375,7 +375,6 @@ class CreateCrewImageFragment : Fragment() {
                             viewModel.setImageChosenState(true)
                         }
                         viewModel.setIsUsingDefaultImage(null)
-                        Log.d("{CreateCrewImageFragment.IntroImageLayout}", uri.toString())
                     }
                 )
             }

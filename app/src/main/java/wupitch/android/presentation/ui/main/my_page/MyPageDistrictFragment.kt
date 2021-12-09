@@ -54,7 +54,7 @@ class MyPageDistrictFragment : Fragment() {
 
 
                     val districtNameState = remember { viewModel.userDistrictName }
-                    val selectedDistrictId = remember { viewModel.userDistrictId }
+                    val selectedDistrictId = remember { viewModel.userNewDistrictId }
                     val districtState = remember { viewModel.districtState }
                     if(districtState.value.isSuccess){
                         findNavController().navigateUp()

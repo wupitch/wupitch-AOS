@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.accompanist.pager.*
 import com.google.android.material.tabs.TabLayout
@@ -30,6 +31,7 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
     private val viewModel: MyCrewViewModel by viewModels()
     private lateinit var reportDialog : ReportDialog
     private lateinit var pagerAdapter: MyCrewDetailVPAdapter
+    private lateinit var reportBottomSheet : ReportBottomSheetFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,16 +54,25 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
 
         setViewPager()
         setToolbarButtons()
+        viewModel.showReportDialog.observe(viewLifecycleOwner, Observer {
+            if(it) reportDialog.show()
+            else reportDialog.dismiss()
+        })
 
     }
 
+    private fun showReportBottomSheet() {
+        reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
+    }
+
     private fun setToolbarButtons() {
-        reportDialog = ReportDialog(requireContext())
+        reportDialog = ReportDialog(requireContext(), viewModel)
         binding.ivLeft.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.ivMore.setOnClickListener {
-            reportDialog.show()
+            showReportBottomSheet()
         }
     }
 

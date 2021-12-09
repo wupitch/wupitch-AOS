@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import coil.compose.rememberImagePainter
@@ -56,6 +57,8 @@ class MyImprtDetailFragment : BaseFragment<FragmentMyImprtDetailBinding>(
     private val viewModel : MyImpromptuViewModel by viewModels()
     private lateinit var reportDialog : ReportDialog
     private lateinit var pagerAdapter: MyImprtDetailVPAdapter
+    private lateinit var reportBottomSheet : ReportBottomSheetFragment
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,16 +72,24 @@ class MyImprtDetailFragment : BaseFragment<FragmentMyImprtDetailBinding>(
 
         setViewPager()
         setToolbarButtons()
+        viewModel.showReportDialog.observe(viewLifecycleOwner, Observer {
+            if(it) reportDialog.show()
+            else reportDialog.dismiss()
+        })
+    }
 
+    private fun showReportBottomSheet() {
+        reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 
     private fun setToolbarButtons() {
-        reportDialog = ReportDialog(requireContext())
+        reportDialog = ReportDialog(requireContext(), viewModel)
         binding.ivLeft.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.ivMore.setOnClickListener {
-            reportDialog.show()
+            showReportBottomSheet()
         }
     }
 

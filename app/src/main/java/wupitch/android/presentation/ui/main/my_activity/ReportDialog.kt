@@ -5,9 +5,12 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import androidx.lifecycle.ViewModel
 import wupitch.android.databinding.DialogReportBinding
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 
-class ReportDialog(context: Context) : Dialog(context) {
+class ReportDialog(context: Context, val viewModel : ViewModel) : Dialog(context) {
     private lateinit var binding : DialogReportBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +21,14 @@ class ReportDialog(context: Context) : Dialog(context) {
 
         binding.ivClose.setOnClickListener { dismiss() }
         binding.btnConfirm.setOnClickListener {
-            //todo viewModel 에 보내기
+            when(viewModel){
+                is MyCrewViewModel -> {
+                    viewModel.postCrewReport(binding.etReport.text.toString())
+                }
+                is MyImpromptuViewModel -> {
+                    viewModel.postImprtReport(binding.etReport.text.toString())
+                }
+            }
             dismiss()
         }
 

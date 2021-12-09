@@ -51,9 +51,9 @@ class ReportBottomSheetFragment(
                             .fillMaxWidth()
                             .clickable {
                                 if(viewModel is MyCrewViewModel) {
-                                    viewModel.setCrewReportState()
+                                    viewModel.setShowReportDialog()
                                 }else if(viewModel is MyImpromptuViewModel) {
-                                    viewModel.setCrewReportState()
+                                    viewModel.setShowReportDialog()
                                 }
                                 dismiss()
                             }){

@@ -59,7 +59,6 @@ class OnboardingFragment : Fragment() {
                 WupitchTheme {
 
 
-                    val scope = rememberCoroutineScope()
                     val pagerState = rememberPagerState()
 
                     setOnboardingList()
@@ -126,25 +125,27 @@ class OnboardingFragment : Fragment() {
                             }
                         }
 
-                            ClickableText(modifier = Modifier
+                        Box(
+                            modifier = Modifier
                                 .constrainAs(skip) {
                                     top.linkTo(bottomGuideLine, margin = 6.dp)
                                     end.linkTo(parent.end, margin = 6.dp)
 //                                    bottom.linkTo(parent.bottom, margin = 21.dp)
                                 }
-                                .padding(10.dp),
-                                text = AnnotatedString(
-                                    stringResource(id = R.string.skip_onboarding),
-                                    spanStyle = SpanStyle(
-                                        color = colorResource(id = R.color.main_orange),
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = Roboto,
-                                        fontSize = 14.sp
-                                    )
-                                ),
-                                onClick = {
-                                  findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
-                                })
+                                .clickable {
+                                    findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
+                                }
+                                .padding(vertical = 9.dp, horizontal = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.skip_onboarding),
+                                color = colorResource(id = R.color.main_orange),
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = Roboto,
+                                fontSize = 14.sp
+                            )
+                        }
                     }
 
                 }

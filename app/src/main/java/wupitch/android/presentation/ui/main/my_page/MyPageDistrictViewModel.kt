@@ -1,6 +1,5 @@
 package wupitch.android.presentation.ui.main.my_page
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -27,8 +26,8 @@ class MyPageDistrictViewModel @Inject constructor(
     private var _districtList = mutableStateOf(DistrictState())
     val districtList: State<DistrictState> = _districtList
 
-    private var _userDistrictId = mutableStateOf<Int?>(null)
-    val userDistrictId: State<Int?> = _userDistrictId
+    private var _userNewDistrictId = mutableStateOf<Int?>(null)
+    val userNewDistrictId: State<Int?> = _userNewDistrictId
 
     private var _userDistrictName = mutableStateOf<String?>(null)
     val userDistrictName: State<String?> = _userDistrictName
@@ -49,9 +48,8 @@ class MyPageDistrictViewModel @Inject constructor(
     }
 
     fun setUserDistrict(districtId: Int, districtName: String) {
-        _userDistrictId.value = districtId
+        _userNewDistrictId.value = districtId
         _userDistrictName.value = districtName
-        Log.d("{SignupViewModel.getUserRegion}", "id : $districtId name : $districtName")
     }
 
     fun getUserDistrict () = viewModelScope.launch {
@@ -60,7 +58,6 @@ class MyPageDistrictViewModel @Inject constructor(
         if(response.isSuccessful){
             response.body()?.let { res ->
                 if(res.isSuccess) {
-                    _userDistrictId.value = res.result.areaId
                     _userDistrictName.value = res.result.areaName
                 }
             }
@@ -70,7 +67,7 @@ class MyPageDistrictViewModel @Inject constructor(
     fun changeUserDistrict() = viewModelScope.launch {
         _districtState.value = BaseState(isLoading = true)
         val req = UpdateUserInfoReq(
-            areaId = _userDistrictId.value!! + 1
+            areaId = _userNewDistrictId.value!! + 1
         )
         val response = profileRepository.updateUserInfo(req)
         if(response.isSuccessful){
