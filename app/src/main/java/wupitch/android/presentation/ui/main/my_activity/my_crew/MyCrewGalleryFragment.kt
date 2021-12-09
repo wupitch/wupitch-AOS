@@ -121,58 +121,58 @@ class MyCrewGalleryFragment : Fragment() {
 //                            }
 //                        }
 
-                        if(dataList.isEmpty()){
-                            Image(
-                                modifier = Modifier
-                                    .constrainAs(chrt) {
-                                        bottom.linkTo(text.top)
-                                        start.linkTo(parent.start)
-                                        end.linkTo(parent.end)
-                                    }
-                                    .size(130.dp, 210.dp),
-                                painter = painterResource(id = R.drawable.ic_img_chrt_03),
-                                contentDescription = null)
-
-                            Text(
-                                modifier = Modifier
-                                    .constrainAs(text) {
-                                        start.linkTo(parent.start)
-                                        end.linkTo(parent.end)
-                                        bottom.linkTo(guildLine)
-                                    }
-                                    .padding(top = 24.dp),
-                                text = stringResource(R.string.no_crew_image),
-                                color = colorResource(id = R.color.gray02),
-                                fontFamily = Roboto,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal
-                            )
-                        }
-//                        Image(
-//                            modifier = Modifier
-//                                .constrainAs(chrt) {
-//                                    bottom.linkTo(text.top)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                }
-//                                .size(130.dp, 210.dp),
-//                            painter = painterResource(id = R.drawable.img_chrt_02),
-//                            contentDescription = null)
+//                        if(dataList.isEmpty()){
+//                            Image(
+//                                modifier = Modifier
+//                                    .constrainAs(chrt) {
+//                                        bottom.linkTo(text.top)
+//                                        start.linkTo(parent.start)
+//                                        end.linkTo(parent.end)
+//                                    }
+//                                    .size(130.dp, 210.dp),
+//                                painter = painterResource(id = R.drawable.ic_img_chrt_03),
+//                                contentDescription = null)
 //
-//                        Text(
-//                            modifier = Modifier
-//                                .constrainAs(text) {
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    bottom.linkTo(guildLine)
-//                                }
-//                                .padding(top = 24.dp),
-//                            text = stringResource(R.string.preparing),
-//                            color = colorResource(id = R.color.gray02),
-//                            fontFamily = Roboto,
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Normal
-//                        )
+//                            Text(
+//                                modifier = Modifier
+//                                    .constrainAs(text) {
+//                                        start.linkTo(parent.start)
+//                                        end.linkTo(parent.end)
+//                                        bottom.linkTo(guildLine)
+//                                    }
+//                                    .padding(top = 24.dp),
+//                                text = stringResource(R.string.no_crew_image),
+//                                color = colorResource(id = R.color.gray02),
+//                                fontFamily = Roboto,
+//                                fontSize = 16.sp,
+//                                fontWeight = FontWeight.Normal
+//                            )
+//                        }
+                        Image(
+                            modifier = Modifier
+                                .constrainAs(chrt) {
+                                    bottom.linkTo(text.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .size(130.dp, 210.dp),
+                            painter = painterResource(id = R.drawable.img_chrt_02),
+                            contentDescription = null)
+
+                        Text(
+                            modifier = Modifier
+                                .constrainAs(text) {
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(guildLine)
+                                }
+                                .padding(top = 24.dp),
+                            text = stringResource(R.string.preparing),
+                            color = colorResource(id = R.color.gray02),
+                            fontFamily = Roboto,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
 
 //                        CreateFab(
 //                            modifier = Modifier
