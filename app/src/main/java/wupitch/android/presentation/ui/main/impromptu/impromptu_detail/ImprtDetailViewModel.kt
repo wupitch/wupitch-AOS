@@ -1,12 +1,18 @@
 package wupitch.android.presentation.ui.main.impromptu.impromptu_detail
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import wupitch.android.R
 import wupitch.android.common.BaseState
+import wupitch.android.common.Constants
+import wupitch.android.common.Constants.dataStore
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.JoinState
@@ -17,8 +23,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImprtDetailViewModel @Inject constructor(
-    private val imprtRepository: ImprtRepository
+    private val imprtRepository: ImprtRepository,
+    @ApplicationContext val context : Context
 ) : ViewModel() {
+
+    private var creatorId : Int = -1
 
     private var _imprtDetailState = mutableStateOf(ImprtDetailState())
     val imprtDetailState : State<ImprtDetailState> = _imprtDetailState
@@ -48,6 +57,7 @@ class ImprtDetailViewModel @Inject constructor(
                             isSelect = res.result.isSelect
                         )
                     )
+                    creatorId = res.result.creatorAccountId
                 }
                 else _imprtDetailState.value = ImprtDetailState(error = res.message)
             }
@@ -91,6 +101,11 @@ class ImprtDetailViewModel @Inject constructor(
 
     fun joinImprt() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
+        if(checkIsCreator()) {
+            _joinState.value = JoinState(code = -100, error = context.getString(R.string.cannot_apply_for_self_created_imprt))
+            return@launch
+        }
+
         _imprtDetailState.value.data?.impromptuId?.let {
             val response = imprtRepository.joinImprt(it)
             if(response.isSuccessful){
@@ -109,6 +124,11 @@ class ImprtDetailViewModel @Inject constructor(
 
     fun initJoinState() {
         _joinState.value = JoinState()
+    }
+
+    private suspend fun checkIsCreator() : Boolean {
+        val flow = context.dataStore.data.first()
+        return flow[Constants.USER_ID] == creatorId
     }
 
 }

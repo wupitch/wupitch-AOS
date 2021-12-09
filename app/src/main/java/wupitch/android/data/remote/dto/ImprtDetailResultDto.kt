@@ -8,6 +8,7 @@ data class ImprtDetailResultDto(
     val day: String,
     val dday: Int,
     val dues: Int?,
+    val creatorAccountId: Int,
     val endTime: Double,
     val impromptuId: Int,
     val impromptuImage: String?,

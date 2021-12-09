@@ -101,6 +101,10 @@ class ImpromptuDetailFragment : Fragment() {
                             2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
+                            -100 -> {
+                                Toast.makeText(requireContext(), joinState.value.error, Toast.LENGTH_SHORT).show()
+                                viewModel.initJoinState()
+                            }
                         }
                     }
 
