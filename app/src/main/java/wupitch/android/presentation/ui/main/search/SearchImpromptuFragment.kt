@@ -93,7 +93,7 @@ class SearchImpromptuFragment : Fragment() {
                             }
 
                         } else {
-                            if(searchKeyword.isNotEmpty() && !viewModel.loading.value) {
+                            if(viewModel.searchedImprt && searchKeyword.isNotEmpty() && !viewModel.loading.value) {
 
                                 Image(
                                     modifier = Modifier

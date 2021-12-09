@@ -92,7 +92,7 @@ class SearchCrewFragment : Fragment() {
                             }
 
                         } else {
-                            if(searchKeyword.isNotEmpty() && !viewModel.loading.value) {
+                            if(viewModel.searchedCrew && searchKeyword.isNotEmpty() && !viewModel.loading.value) {
 
                                 Image(
                                     modifier = Modifier

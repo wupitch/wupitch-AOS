@@ -46,11 +46,14 @@ class SearchViewModel @Inject constructor(
     * search crew
     * */
 
+    var searchedCrew = false
     private var _crewState = mutableStateListOf<CrewCardInfo>()
     val crewState : SnapshotStateList<CrewCardInfo> = _crewState
 
     private fun searchCrew() = viewModelScope.launch {
+        Log.d("{SearchViewModel.searchCrew}", "crew")
         loading.value = true
+        searchedCrew = true
         val response = crewRepository.getCrewSearch(_searchKeyword.value, _crewPage.value)
 
         if(response.isSuccessful) {
@@ -81,11 +84,14 @@ class SearchViewModel @Inject constructor(
     * search impromptu
     * */
 
+    var searchedImprt = false
     private var _imprtState = mutableStateListOf<ImpromptuCardInfo>()
     val imprtState : SnapshotStateList<ImpromptuCardInfo> = _imprtState
 
     private fun searchImpromptu() = viewModelScope.launch {
+        Log.d("{SearchViewModel.searchImpromptu}", "impromptu")
         loading.value = true
+        searchedImprt = true
         val response = imprtRepository.getSearchImprt( _searchKeyword.value, _imprtPage.value)
 
         if (response.isSuccessful) {
