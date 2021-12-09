@@ -139,6 +139,7 @@ class LoginFragment : Fragment() {
                                 LoginButton(
                                     isLoginBtn = true,
                                     onClick = {
+                                        setKeyboardDown()
                                         if (emailTextState.value.isNotEmpty() && pwTextState.value.isNotEmpty()) {
                                             viewModel.tryLogin()
                                         }

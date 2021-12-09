@@ -40,15 +40,4 @@ abstract class BaseFragment<B : ViewBinding>(
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun setStatusBar(color: Int) {
-        activity?.window?.statusBarColor = ContextCompat.getColor(requireContext(), color)
-        activity?.window?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                WindowInsetsControllerCompat(it, it.decorView).isAppearanceLightStatusBars = true
-            } else {
-                it.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-        }
-    }
-
 }

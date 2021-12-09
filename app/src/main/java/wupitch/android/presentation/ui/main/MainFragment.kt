@@ -29,7 +29,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::bind
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setStatusBar(R.color.white)
 
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.main_fag_nav_container_view) as NavHostFragment
