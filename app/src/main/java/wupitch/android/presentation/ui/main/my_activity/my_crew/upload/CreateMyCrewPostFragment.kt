@@ -34,6 +34,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.common.Constants
+import wupitch.android.common.Constants.ANNOUNCE_TITLE_LENGTH
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
@@ -117,6 +118,7 @@ class CreateMyCrewPostFragment : Fragment() {
                                 SimpleTextField(
                                     textState = announceTitleState,
                                     hintText = stringResource(id = R.string.input_announcement),
+                                    maxLength = ANNOUNCE_TITLE_LENGTH,
                                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                                     keyboardActions = KeyboardActions(onDone = {
                                         setKeyboardDown()

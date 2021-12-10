@@ -66,7 +66,7 @@ class MyCrewBoardFragment : Fragment() {
                         val guildLine = createGuidelineFromTop(0.65f)
 
 //                        if (postState.value.data.isNotEmpty()) {
-//
+
 //                            Box(modifier = Modifier
 //                                .constrainAs(postList) {
 //                                    top.linkTo(parent.top)
@@ -127,36 +127,39 @@ class MyCrewBoardFragment : Fragment() {
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Normal
                                 )
-                            }
+//                            }
 //                        }
 
-//                        if(postState.value.isLoading){
-//                            CircularProgressIndicator(
-//                                modifier = Modifier.constrainAs(progressbar) {
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                    top.linkTo(parent.top)
-//                                    bottom.linkTo(parent.bottom)
-//                                },
-//                                color = colorResource(id = R.color.main_orange)
-//                            )
-//                        }
-//                        CreateFab(
-//                            modifier = Modifier
-//                                .constrainAs(fab) {
-//                                    end.linkTo(parent.end, margin = 24.dp)
-//                                    bottom.linkTo(parent.bottom, margin = 20.dp)
-//                                },
-//                            onClick = {
-//                                viewModel.selectedTab = 1
-//                                val bundle = Bundle().apply { putInt("crewId", viewModel.crewId) }
-//                                findNavController().navigate(
-//                                    R.id.action_myCrewDetailFragment_to_createMyCrewPostFragment,
-//                                    bundle
+//                            if (postState.value.isLoading) {
+//                                CircularProgressIndicator(
+//                                    modifier = Modifier.constrainAs(progressbar) {
+//                                        start.linkTo(parent.start)
+//                                        end.linkTo(parent.end)
+//                                        top.linkTo(parent.top)
+//                                        bottom.linkTo(parent.bottom)
+//                                    },
+//                                    color = colorResource(id = R.color.main_orange)
 //                                )
-//                            })
+//                            }
+//                            CreateFab(
+//                                modifier = Modifier
+//                                    .constrainAs(fab) {
+//                                        end.linkTo(parent.end, margin = 24.dp)
+//                                        bottom.linkTo(parent.bottom, margin = 20.dp)
+//                                    },
+//                                onClick = {
+//                                    viewModel.selectedTab = 1
+//                                    val bundle =
+//                                        Bundle().apply { putInt("crewId", viewModel.crewId) }
+//                                    findNavController().navigate(
+//                                        R.id.action_myCrewDetailFragment_to_createMyCrewPostFragment,
+//                                        bundle
+//                                    )
+//                                })
+
                     }
                 }
             }
         }
     }
+}

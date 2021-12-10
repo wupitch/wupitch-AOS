@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -40,7 +41,7 @@ fun MyCrewPostCard(
     onLikeClick: (id: Int) -> Unit
 ) {
 
-    val toggleState = remember { mutableStateOf(post.isLiked)}
+    val toggleState = remember { mutableStateOf(post.isLiked) }
     Column(
         Modifier
             .fillMaxWidth()
@@ -49,15 +50,9 @@ fun MyCrewPostCard(
         Spacer(modifier = Modifier.height(18.dp))
 
         if (post.isAnnounce) {
-            ConstraintLayout(Modifier.fillMaxWidth()) {
-                val (announceChip, announcement, more) = createRefs()
+            Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
 
                 Box(modifier = Modifier
-                    .constrainAs(announceChip) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start, margin = 20.dp)
-                        bottom.linkTo(parent.bottom)
-                    }
                     .clip(RoundedCornerShape(14.dp))
                     .border(
                         width = 1.dp,
@@ -77,42 +72,33 @@ fun MyCrewPostCard(
                     )
                 }
                 Text(
-                    modifier = Modifier.constrainAs(announcement) {
-                        start.linkTo(announceChip.end, margin = 8.dp)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                    },
+                    modifier = Modifier.padding(start = 8.dp),
                     text = post.announceTitle!!,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.main_black)
                 )
-
-                Icon(modifier = Modifier
-                    .constrainAs(more) {
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        end.linkTo(parent.end, margin = 20.dp)
-                    }
-                    .size(24.dp)
-                    .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null,
-                        onClick = onMoreClick
-                    ),
-                    painter = painterResource(id = R.drawable.more),
-                    contentDescription = null
-                )
             }
 
             Spacer(modifier = Modifier.height(17.dp))
-            Row(
-                modifier = Modifier.padding(start = 20.dp),
-                verticalAlignment = Alignment.CenterVertically) {
+            ConstraintLayout(Modifier.fillMaxWidth()) {
+
+                val (userImage, userName, leaderIcon, more) = createRefs()
+
                 Image(
-                    modifier = Modifier.size(28.dp)
-                        .border(width = 1.dp, color = colorResource(id = R.color.gray01), shape = CircleShape),
+                    modifier = Modifier
+                        .constrainAs(userImage) {
+                            start.linkTo(parent.start, margin = 20.dp)
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                        }
+                        .size(28.dp)
+                        .border(
+                            width = 1.dp,
+                            color = colorResource(id = R.color.gray01),
+                            shape = CircleShape
+                        ),
                     painter = if (post.userImage != null) {
                         rememberImagePainter(
                             post.userImage,
@@ -126,7 +112,11 @@ fun MyCrewPostCard(
                     contentDescription = null
                 )
                 Text(
-                    modifier = Modifier.padding(start = 6.dp),
+                    modifier = Modifier.constrainAs(userName) {
+                        start.linkTo(userImage.end, margin = 6.dp)
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                    },
                     text = post.userName,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
@@ -136,8 +126,28 @@ fun MyCrewPostCard(
 
                 Image(
                     modifier = Modifier
-                        .size(24.dp),
+                        .constrainAs(leaderIcon) {
+                            start.linkTo(userName.end)
+                            top.linkTo(userName.top)
+                            bottom.linkTo(userName.bottom)
+                        }.size(24.dp),
                     painter = painterResource(id = R.drawable.btn_03_leader),
+                    contentDescription = null
+                )
+
+                Image(modifier = Modifier
+                    .constrainAs(more) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(parent.end, margin = 20.dp)
+                    }
+                    .size(24.dp)
+                    .clickable(
+                        interactionSource = MutableInteractionSource(),
+                        indication = null,
+                        onClick = onMoreClick
+                    ),
+                    painter = painterResource(id = R.drawable.more),
                     contentDescription = null
                 )
             }
@@ -155,7 +165,11 @@ fun MyCrewPostCard(
                             bottom.linkTo(parent.bottom)
                         }
                         .size(28.dp)
-                        .border(width = 1.dp, color = colorResource(id = R.color.gray01), shape = CircleShape),
+                        .border(
+                            width = 1.dp,
+                            color = colorResource(id = R.color.gray01),
+                            shape = CircleShape
+                        ),
                     painter = if (post.userImage != null) {
                         rememberImagePainter(
                             post.userImage,
@@ -233,7 +247,9 @@ fun MyCrewPostCard(
                 ), verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     modifier = Modifier.size(24.dp),
-                    painter = if(toggleState.value) painterResource(id = R.drawable.react_heart) else painterResource(id = R.drawable.react_heart_inact),
+                    painter = if (toggleState.value) painterResource(id = R.drawable.react_heart) else painterResource(
+                        id = R.drawable.react_heart_inact
+                    ),
                     contentDescription = null
                 )
                 Text(
@@ -242,12 +258,14 @@ fun MyCrewPostCard(
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
-                    color = if (toggleState.value) colorResource(id = R.color.pink) else colorResource(id = R.color.gray03)
+                    color = if (toggleState.value) colorResource(id = R.color.pink) else colorResource(
+                        id = R.color.gray03
+                    )
                 )
             }
 
             Text(
-                modifier = Modifier.constrainAs(date){
+                modifier = Modifier.constrainAs(date) {
                     top.linkTo(parent.top)
                     bottom.linkTo(parent.bottom)
                     end.linkTo(parent.end, margin = 20.dp)

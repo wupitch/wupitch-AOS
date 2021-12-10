@@ -35,6 +35,7 @@ object Constants {
     const val MY_CREW_DETAIL_PAGE_NUM = 4
     const val INTRO_MAX_LENGTH = 500
     const val SUPPLY_MAX_LENGTH = 100
+    const val ANNOUNCE_TITLE_LENGTH = 30
 
     val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
     const val PAGE_SIZE = 10

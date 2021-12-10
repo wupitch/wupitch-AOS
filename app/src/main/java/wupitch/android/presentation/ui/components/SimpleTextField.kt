@@ -36,6 +36,7 @@ import wupitch.android.presentation.theme.Roboto
 fun SimpleTextField(
     textState: MutableState<String>,
     hintText: String,
+    maxLength : Int? = null,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions,
     onFocusChanged : (Boolean) ->Unit
@@ -60,7 +61,11 @@ fun SimpleTextField(
             keyboardActions = keyboardActions,
             maxLines = 1,
             onValueChange = { value ->
-                textState.value = value
+                if(maxLength != null) {
+                    if(value.length <= maxLength) textState.value = value
+                }else {
+                    textState.value = value
+                }
             },
             cursorBrush = SolidColor(colorResource(id = R.color.gray03)),
             decorationBox = { innerTextField ->

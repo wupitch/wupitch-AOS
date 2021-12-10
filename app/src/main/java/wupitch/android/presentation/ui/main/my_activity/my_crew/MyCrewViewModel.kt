@@ -160,13 +160,13 @@ class MyCrewViewModel @Inject constructor(
     fun getCrewPosts() = viewModelScope.launch {
         _crewPostState.value = CrewPostState(isLoading = true)
 
-        delay(800L)
+        delay(500L)
         _crewPostState.value = CrewPostState(
             data = listOf(
                 CrewPost(
                     id = 1,
                     isAnnounce = true,
-                    announceTitle = "회비 납부일은 매일 6월입니다.",
+                    announceTitle = "회비 납부일은 매일 6월입니다.회비 납부일은 매일 6월",
                     userImage = null,
                     userName = "베키짱",
                     isLeader = true,
