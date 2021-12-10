@@ -100,12 +100,13 @@ class FcmService : FirebaseMessagingService() {
         )
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.aos_logo)
+            .setSmallIcon(R.drawable.logo)
+            .setColor(ContextCompat.getColor(this, R.color.main_orange))
             .setContentTitle(title)
             .setContentText(message)
-            .setColor(ContextCompat.getColor(this, R.color.main_orange))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDefaults(Notification.DEFAULT_ALL)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
