@@ -440,23 +440,15 @@ class ImpromptuFilterFragment : Fragment() {
                 .padding(end = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-//            val (init, apply) = createRefs()
 
             Box(
                 modifier = Modifier
                     .weight(0.35f)
+                    .fillMaxHeight()
                     .background(Color.White)
                     .clickable(
-                        interactionSource = MutableInteractionSource(),
-                        indication = null,
                         onClick = onResetClick
                     ), contentAlignment = Alignment.Center
-//                    .constrainAs(init) {
-//                        start.linkTo(parent.start)
-//                        end.linkTo(apply.start)
-//                        top.linkTo(parent.top)
-//                        bottom.linkTo(parent.bottom)
-//                    }
 
 
             ) {
@@ -470,14 +462,6 @@ class ImpromptuFilterFragment : Fragment() {
             RoundBtn(
                 modifier = Modifier
                     .weight(0.65f)
-//                    .constrainAs(apply) {
-//                        end.linkTo(parent.end)
-////                        top.linkTo(parent.top)
-////                        bottom.linkTo(parent.bottom)
-////                        start.linkTo(init.end)
-//                        width = Dimension.fillToConstraints
-//                    }
-                    .width(208.dp)
                     .height(44.dp),
                 btnColor = R.color.main_orange,
                 textString = R.string.apply, fontSize = 16.sp,
