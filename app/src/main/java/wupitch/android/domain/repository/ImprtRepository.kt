@@ -21,7 +21,6 @@ interface ImprtRepository {
     ): Response<GetImprtRes>
     suspend fun changePinStatus( id : Int) : Response<BaseResultRes>
     suspend fun joinImprt( id : Int) : Response<BaseResultRes>
-    suspend fun getImprtFilter() : Response<GetImprtFilterRes>
     suspend fun getSearchImprt(title: String, page : Int) : Response<GetImprtRes>
     suspend fun getMyImprt() : Response<GetMyImprt>
 }

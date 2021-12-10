@@ -51,9 +51,6 @@ class ImprtRepositoryImpl @Inject constructor(
     override suspend fun joinImprt(id: Int): Response<BaseResultRes>
     = retrofit.create(ImprtApi::class.java).participateImprt(id)
 
-    override suspend fun getImprtFilter(): Response<GetImprtFilterRes>
-    = retrofit.create(ImprtApi::class.java).getImprtFilter()
-
     override suspend fun getSearchImprt(
         title: String,
         page: Int

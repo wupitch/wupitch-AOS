@@ -45,9 +45,6 @@ interface ImprtApi {
         @Path("impromptuId") impromptuId : Int
     ): Response<BaseResultRes>
 
-    @GET("app/accounts/auth/impromptu-filter")
-    suspend fun getImprtFilter() : Response<GetImprtFilterRes>
-
     @GET("app/impromptus/title")
     suspend fun getImprtSearch(
         @Query("title") title : String,
