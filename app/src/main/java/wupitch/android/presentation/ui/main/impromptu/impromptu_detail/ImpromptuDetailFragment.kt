@@ -120,11 +120,6 @@ class ImpromptuDetailFragment : Fragment() {
                         }
                     }
 
-                    BackHandler {
-                        val bundle = Bundle().apply { putInt("tabId", R.id.impromptuFragment) }
-                        findNavController().navigate(R.id.action_impromptuDetailFragment_to_mainFragment, bundle)
-                    }
-
                     if (notEnoughInfoDialogOpenState.value)
                         NotEnoughInfoDialog(
                             dialogOpen = notEnoughInfoDialogOpenState,

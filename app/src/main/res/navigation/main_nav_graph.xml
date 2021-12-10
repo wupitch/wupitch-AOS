@@ -55,7 +55,11 @@
             app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_mainFragment_to_myPageSettingFragment"
-            app:destination="@id/myPageSettingFragment" />
+            app:destination="@id/myPageSettingFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
         <argument
             android:name="tabId"
             app:argType="integer"
@@ -249,7 +253,11 @@
             android:label="CreateImprtLocationFragment">
             <action
                 android:id="@+id/action_createImprtLocationFragment_to_createImprtScheduleFragment"
-                app:destination="@id/createImprtScheduleFragment" />
+                app:destination="@id/createImprtScheduleFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createImprtLocationFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -262,7 +270,11 @@
             android:label="CreateImprtScheduleFragment">
             <action
                 android:id="@+id/action_createImprtScheduleFragment_to_createImprtImageFragment"
-                app:destination="@id/createImprtImageFragment" />
+                app:destination="@id/createImprtImageFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createImprtScheduleFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -275,7 +287,11 @@
             android:label="CreateImprtImageFragment">
             <action
                 android:id="@+id/action_createImprtImageFragment_to_createImprtSizeFragment"
-                app:destination="@id/createImprtSizeFragment" />
+                app:destination="@id/createImprtSizeFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createImprtImageFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -288,7 +304,11 @@
             android:label="CreateImprtSizeFragment">
             <action
                 android:id="@+id/action_createImprtSizeFragment_to_createImprtFeeFragment"
-                app:destination="@id/createImprtFeeFragment" />
+                app:destination="@id/createImprtFeeFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createImprtSizeFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -303,12 +323,17 @@
                 android:id="@+id/action_createImprtFeeFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
                 app:popUpTo="@id/mainFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                />
             <action
                 android:id="@+id/action_createImprtFeeFragment_to_impromptuDetailFragment"
                 app:destination="@id/impromptuDetailFragment"
                 app:popUpTo="@id/createImprtLocationFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
     </navigation>
     <navigation android:id="@+id/create_crew_nav"
@@ -319,7 +344,11 @@
             android:label="CreateCrewSport">
             <action
                 android:id="@+id/action_createCrewSport_to_createCrewLocationFragment"
-                app:destination="@id/createCrewLocationFragment" />
+                app:destination="@id/createCrewLocationFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
         <fragment
             android:id="@+id/createCrewLocationFragment"
@@ -327,7 +356,11 @@
             android:label="CreateCrewLocationFragment">
             <action
                 android:id="@+id/action_createCrewLocationFragment_to_createCrewInfoFragment"
-                app:destination="@id/createCrewInfoFragment" />
+                app:destination="@id/createCrewInfoFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createCrewLocationFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -340,7 +373,11 @@
             android:label="CreateCrewScheduleFragment">
             <action
                 android:id="@+id/action_createCrewScheduleFragment_to_createCrewImageFragment"
-                app:destination="@id/createCrewImageFragment" />
+                app:destination="@id/createCrewImageFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createCrewScheduleFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -353,7 +390,11 @@
             android:label="CreateCrewImageFragment">
             <action
                 android:id="@+id/action_createCrewImageFragment_to_createCrewFeeFragment"
-                app:destination="@id/createCrewFeeFragment" />
+                app:destination="@id/createCrewFeeFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createCrewImageFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -366,7 +407,11 @@
             android:label="CreateCrewFeeFragment">
             <action
                 android:id="@+id/action_createCrewFeeFragment_to_createCrewVisitorFeeFragment"
-                app:destination="@id/createCrewVisitorFeeFragment" />
+                app:destination="@id/createCrewVisitorFeeFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createCrewFeeFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -382,7 +427,11 @@
                 android:id="@+id/action_createCrewVisitorFeeFragment_to_crewDetailFragment"
                 app:destination="@id/crewDetailFragment"
                 app:popUpTo="@id/createCrewSport"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_createCrewVisitorFeeFragment_to_mainFragment"
                 app:destination="@id/mainFragment"
@@ -411,7 +460,11 @@
             android:label="ServiceAgreementFragment">
             <action
                 android:id="@+id/action_serviceAgreementFragment_to_emailPwFragment"
-                app:destination="@id/emailPwFragment" />
+                app:destination="@id/emailPwFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
         <fragment
             android:id="@+id/idCardFragment"
@@ -432,7 +485,11 @@
             android:label="idCardCameraFragment">
             <action
                 android:id="@+id/action_idCardCameraFragment_to_reqIdCertiFragment"
-                app:destination="@id/reqIdCertiFragment" />
+                app:destination="@id/reqIdCertiFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
         <fragment
             android:id="@+id/reqIdCertiFragment"
@@ -442,7 +499,11 @@
                 android:id="@+id/action_reqIdCertiFragment_to_loginFragment"
                 app:destination="@id/loginFragment"
                 app:popUpTo="@id/loginFragment"
-                app:popUpToInclusive="true" />
+                app:popUpToInclusive="true"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
         <fragment
             android:id="@+id/emailPwFragment"
@@ -450,7 +511,11 @@
             android:label="EmailPwFragment">
             <action
                 android:id="@+id/action_emailPwFragment_to_profileFragment"
-                app:destination="@id/profileFragment" />
+                app:destination="@id/profileFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
             <action
                 android:id="@+id/action_emailPwFragment_to_onboardingFragment"
                 app:destination="@id/onboardingFragment"
@@ -468,7 +533,11 @@
                 app:popUpToInclusive="true" />
             <action
                 android:id="@+id/action_profileFragment_to_idCardFragment"
-                app:destination="@id/idCardFragment" />
+                app:destination="@id/idCardFragment"
+                app:enterAnim="@anim/from_right"
+                app:exitAnim="@anim/to_left"
+                app:popEnterAnim="@anim/from_left"
+                app:popExitAnim="@anim/to_right"/>
         </fragment>
     </navigation>
     <fragment
