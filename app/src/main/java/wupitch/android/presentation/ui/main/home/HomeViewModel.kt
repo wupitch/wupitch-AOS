@@ -34,6 +34,9 @@ class HomeViewModel @Inject constructor(
     private val crewFilterDataStore : DataStore<CrewFilter>
 ) : ViewModel() {
 
+    /*
+    * pagination
+    * */
 
     val loading = mutableStateOf(false)
     val error = mutableStateOf("")
@@ -41,40 +44,18 @@ class HomeViewModel @Inject constructor(
     private var _page = mutableStateOf(1)
     val page : State<Int> = _page
 
+    fun resetPage () {
+        _page.value = 1
+    }
+    private fun incrementPage() {
+        _page.value = _page.value +1
+    }
+
     private var scrollPosition = 0
 
-    private var _crewState = mutableStateListOf<CrewCardInfo>()
-    val crewState : SnapshotStateList<CrewCardInfo> = _crewState
-
-    //district
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList : State<DistrictState> = _districtList
-
-    private var _userDistrictId = mutableStateOf<Int?>(null)
-    val userDistrictId : State<Int?> = _userDistrictId
-
-    private var _userDistrictName = mutableStateOf<String>("서울시")
-    val userDistrictName : State<String> = _userDistrictName
-
-    //event
-    private var _crewEventList = mutableStateListOf<Int>()
-    val crewEventList: SnapshotStateList<Int> = _crewEventList
-
-    //day
-    private var _crewDayList = mutableStateListOf<Int>()
-    val crewDayList: SnapshotStateList<Int> = _crewDayList
-
-    //age
-    private var _crewAgeGroupList = mutableStateListOf<Int>()
-    val crewAgeGroupList: SnapshotStateList<Int> = _crewAgeGroupList
-
-    //size
-    private var _crewSizeState = mutableStateOf<Int?>(null)
-    val crewSizeState : State<Int?> = _crewSizeState
-
-    /*
-    * pagination
-    * */
+    fun onChangeScrollPosition(position : Int) {
+        scrollPosition = position
+    }
 
     private fun appendList(list : List<CrewCardInfo>) {
         _crewState.addAll(list)
@@ -93,38 +74,38 @@ class HomeViewModel @Inject constructor(
 
 
 
-    fun resetPage () {
-        _page.value = 1
-    }
-
-    private fun incrementPage() {
-        _page.value = _page.value +1
-    }
-
-    fun onChangeScrollPosition(position : Int) {
-        scrollPosition = position
-    }
-
-    fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
-        _crewAgeGroupList = list
-    }
-
-    fun setCrewEventList(list: SnapshotStateList<Int>) {
-        _crewEventList = list
-    }
-
-    fun setCrewDayList(list: SnapshotStateList<Int>) {
-        _crewDayList = list
-    }
-
-    fun setCrewSize(size: Int?) {
-        _crewSizeState.value = size
-    }
-
     /*
     * filter
     * */
 
+    //event
+    private var _crewEventList = mutableStateListOf<Int>()
+    val crewEventList: SnapshotStateList<Int> = _crewEventList
+
+    fun setCrewEventList(list: SnapshotStateList<Int>) {
+        _crewEventList = list
+    }
+    //day
+    private var _crewDayList = mutableStateListOf<Int>()
+    val crewDayList: SnapshotStateList<Int> = _crewDayList
+
+    fun setCrewDayList(list: SnapshotStateList<Int>) {
+        _crewDayList = list
+    }
+    //age
+    private var _crewAgeGroupList = mutableStateListOf<Int>()
+    val crewAgeGroupList: SnapshotStateList<Int> = _crewAgeGroupList
+
+    fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
+        _crewAgeGroupList = list
+    }
+    //size
+    private var _crewSizeState = mutableStateOf<Int?>(null)
+    val crewSizeState : State<Int?> = _crewSizeState
+
+    fun setCrewSize(size: Int?) {
+        _crewSizeState.value = size
+    }
 
     private var _resetState = mutableStateOf(false)
     val resetState : State<Boolean> = _resetState
@@ -154,9 +135,12 @@ class HomeViewModel @Inject constructor(
                 .build()
         }
         filterApplied.value = true
-
-
     }
+
+    private val _getCrewFilterState = mutableStateOf(BaseState())
+    var getCrewFilterState : State<BaseState> = _getCrewFilterState
+
+
     fun getCrewFilter() = viewModelScope.launch { //filter view 에서 부름.
         loading.value = true
         val crewFilter = crewFilterDataStore.data.first()
@@ -177,6 +161,9 @@ class HomeViewModel @Inject constructor(
     /*
     * get crew
     * */
+
+    private var _crewState = mutableStateListOf<CrewCardInfo>()
+    val crewState : SnapshotStateList<CrewCardInfo> = _crewState
 
     fun getCrew() = viewModelScope.launch {
         loading.value = true
@@ -217,14 +204,17 @@ class HomeViewModel @Inject constructor(
         loading.value = false
     }
 
-    private val _getCrewFilterState = mutableStateOf(BaseState())
-    var getCrewFilterState : State<BaseState> = _getCrewFilterState
-
-
-
     /*
     * district
     * */
+
+    private var _districtList = mutableStateOf(DistrictState())
+    val districtList : State<DistrictState> = _districtList
+
+    private var _userDistrictId = mutableStateOf<Int?>(null)
+
+    private var _userDistrictName = mutableStateOf<String>("서울시")
+    val userDistrictName : State<String> = _userDistrictName
 
     fun setUserDistrict(districtId : Int, districtName : String) = viewModelScope.launch {
         _userDistrictId.value = districtId

@@ -12,3 +12,11 @@ message CrewFilter {
   repeated int32 sportList = 5;
   string areaName = 6;
 }
+
+message ImpromptuFilter {
+  int32 areaId = 1;
+  string areaName = 2;
+  int32 schedule = 3;
+  repeated int32 days = 4;
+  int32 recruitSize = 5;
+}

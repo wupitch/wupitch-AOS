@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.wupitch.android.CrewFilter
+import com.wupitch.android.ImpromptuFilter
 
 object Constants {
     const val API_URL = "https://prod.wupitch.site/"
@@ -19,6 +20,10 @@ object Constants {
     val Context.crewFilterStore : DataStore<CrewFilter> by dataStore(
         fileName = "crew_filter.pb",
         serializer = CrewFilterSerializer
+    )
+    val Context.impromptuFilterStore : DataStore<ImpromptuFilter> by dataStore(
+        fileName = "impromptu_filter.pb",
+        serializer = ImpromptuFilterSerializer
     )
     val JWT_PREFERENCE_KEY = stringPreferencesKey("jwt_token")
     val USER_NICKNAME = stringPreferencesKey("user_nickname")

@@ -5,9 +5,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
@@ -22,9 +25,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ImpromptuViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
-    private val imprtRepository: ImprtRepository
+    private val imprtRepository: ImprtRepository,
+    private val imprtFilterDataStore: DataStore<ImpromptuFilter>
 ) : ViewModel() {
 
+
+    /*
+    * pagination
+    * */
 
     val loading = mutableStateOf(false)
     val error = mutableStateOf("")
@@ -32,38 +40,18 @@ class ImpromptuViewModel @Inject constructor(
     private var _page = mutableStateOf(1)
     val page: State<Int> = _page
 
+    fun resetPage() {
+        _page.value = 1
+    }
+    private fun incrementPage() {
+        _page.value = _page.value + 1
+    }
+
     private var scrollPosition = 0
 
-    private var _imprtState = mutableStateListOf<ImpromptuCardInfo>()
-    val imprtState: SnapshotStateList<ImpromptuCardInfo> = _imprtState
-
-    //district
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList: State<DistrictState> = _districtList
-
-    private var _userDistrictId = mutableStateOf<Int?>(null)
-    val userDistrictId : State<Int?> =  _userDistrictId
-
-    private var _userDistrictName = mutableStateOf<String>("서울시")
-    val userDistrictName: State<String> = _userDistrictName
-
-
-    //day
-    private var _imprtDayList = mutableStateListOf<Int>()
-    val imprtDayList: SnapshotStateList<Int> = _imprtDayList
-
-    //size
-    private var _imprtSizeState = mutableStateOf<Int?>(null)
-    val imprtSizeState: State<Int?> = _imprtSizeState
-
-    //schedule
-    private var _imprtScheduleState = mutableStateOf<Int?>(null)
-    val imprtScheduleState: State<Int?> = _imprtScheduleState
-
-
-    /*
-    * pagination
-    * */
+    fun onChangeScrollPosition(position: Int) {
+        scrollPosition = position
+    }
 
     private fun appendList(list: List<ImpromptuCardInfo>) {
         _imprtState.addAll(list)
@@ -79,30 +67,35 @@ class ImpromptuViewModel @Inject constructor(
         }
     }
 
-    private fun incrementPage() {
-        _page.value = _page.value + 1
-    }
 
-    fun onChangeScrollPosition(position: Int) {
-        scrollPosition = position
-    }
+    /*
+    * filter
+    * */
 
+    //day
+    private var _imprtDayList = mutableStateListOf<Int>()
+    val imprtDayList: SnapshotStateList<Int> = _imprtDayList
 
     fun setImprtDayList(list: SnapshotStateList<Int>) {
         _imprtDayList = list
     }
+
+
+    //size
+    private var _imprtSizeState = mutableStateOf<Int?>(null)
+    val imprtSizeState: State<Int?> = _imprtSizeState
 
     fun setImprtSize(size: Int?) {
         _imprtSizeState.value = size
 
     }
 
+    //schedule
+    private var _imprtScheduleState = mutableStateOf<Int?>(null)
+    val imprtScheduleState: State<Int?> = _imprtScheduleState
+
     fun setImprtSchedule(size: Int?) {
         _imprtScheduleState.value = size
-    }
-
-    private fun resetPage() {
-        _page.value = 1
     }
 
     private var _resetState = mutableStateOf(false)
@@ -118,23 +111,62 @@ class ImpromptuViewModel @Inject constructor(
         resetPage()
     }
 
-    private var _isAppliedFilter = false
+    var filterApplied = mutableStateOf(false)
 
-    fun applyFilter() {
-        _isAppliedFilter = true
+    fun applyFilter() = viewModelScope.launch {
         resetPage()
-        getImprt()
+        imprtFilterDataStore.updateData {
+            it.toBuilder()
+                .setSchedule(_imprtScheduleState.value ?: -1)
+                .clearDays().addAllDays(_imprtDayList)
+                .setRecruitSize(_imprtSizeState.value ?: -1)
+                .setAreaId(_userDistrictId.value ?: 0) //area id, name 초기화 후에 적용하려면 저장 필요함.
+                .setAreaName(_userDistrictName.value)
+                .build()
+        }
+        filterApplied.value = true
     }
 
+    private val _getImprtFilterState = mutableStateOf(BaseState())
+    var getImprtFilterState: State<BaseState> = _getImprtFilterState
 
-    private fun getImprt() = viewModelScope.launch {
 
+    fun getImprtFilter() = viewModelScope.launch {
+        loading.value = true
+
+        val imprtFilter = imprtFilterDataStore.data.first()
+
+        imprtFilter.daysList.forEach {
+            if (!_imprtDayList.contains(it)) _imprtDayList.add(it)
+        }
+        _imprtSizeState.value = if(imprtFilter.recruitSize == -1) null else imprtFilter.recruitSize
+        _imprtScheduleState.value = if(imprtFilter.schedule == -1) null else imprtFilter.schedule
+
+        loading.value = false
+    }
+
+    /*
+    * get impromptu
+    * */
+
+    private var _imprtState = mutableStateListOf<ImpromptuCardInfo>()
+    val imprtState: SnapshotStateList<ImpromptuCardInfo> = _imprtState
+
+
+    fun getImprt() = viewModelScope.launch {
+        loading.value = true
+        val imprtFilter = imprtFilterDataStore.data.first()
+
+        //지역구 필터만 번개탭에서 세팅. 나머지는 필터뷰에서.
+        _userDistrictName.value = if(imprtFilter.areaName.isEmpty())"서울시" else imprtFilter.areaName
+
+        //필터 읽어서 그대로 get impromptu.
         val response = imprtRepository.getImpromptu(
-            areaId = if (_userDistrictId.value == null) 1 else _userDistrictId.value!! + 1,
-            days = if (_imprtDayList.isEmpty()) null else _imprtDayList.map { it + 1 },
-            memberCountIndex = if (_imprtSizeState.value == null) null else _imprtSizeState.value!! + 1,
+            areaId = imprtFilter.areaId +1,
+            days = if (imprtFilter.daysList.isEmpty()) null else imprtFilter.daysList.map { it+1 },
+            memberCountIndex = if (imprtFilter.recruitSize == -1) null else imprtFilter.recruitSize +1,
             page = _page.value,
-            scheduleIndex = if (_imprtScheduleState.value == null) null else _imprtScheduleState.value!! + 1
+            scheduleIndex = if (imprtFilter.schedule == -1) null else imprtFilter.schedule + 1
         )
 
         if (response.isSuccessful) {
@@ -159,56 +191,32 @@ class ImpromptuViewModel @Inject constructor(
                 }
             }
         } else error.value = "번개 조회에 실패했습니다."
+
         loading.value = false
-
     }
 
-    private val _getImprtFilterState = mutableStateOf(BaseState())
-    var getImprtFilterState: State<BaseState> = _getImprtFilterState
-
-
-    fun getImprtFilter() = viewModelScope.launch {
-        if (!_isAppliedFilter) {
-
-            loading.value = true
-            val response = imprtRepository.getImprtFilter()
-            if (response.isSuccessful) {
-                response.body()?.let { res ->
-                    if (res.isSuccess) {
-                        _imprtScheduleState.value =
-                            if (res.result.impromptuPickScheduleIndex == null) null else res.result.impromptuPickScheduleIndex - 1
-                        res.result.impromptuPickDays?.forEach {
-                            if (!_imprtDayList.contains(it - 1)) _imprtDayList.add(
-                                it - 1
-                            )
-                        }
-                        _imprtSizeState.value =
-                            if (res.result.impromptuPickMemberCountValue == null) null else res.result.impromptuPickMemberCountValue - 1
-                        _userDistrictName.value = res.result.impromptuPickAreaName ?: "서울시"
-                        _userDistrictId.value =
-                            if (res.result.impromptuPickAreaId == null) 0 else res.result.impromptuPickAreaId - 1
-                        resetPage()
-                        getImprt()
-
-                    } else {
-                        loading.value = false
-                        _getImprtFilterState.value = BaseState(error = res.message)
-                    }
-                }
-            } else {
-                loading.value = false
-                _getImprtFilterState.value = BaseState(error = "필터 조회에 실패했습니다.")
-            }
-        }
-    }
 
     /*
     * districts
     * */
 
-    fun setUserDistrict(districtId: Int, districtName: String) {
+    private var _districtList = mutableStateOf(DistrictState())
+    val districtList: State<DistrictState> = _districtList
+
+    private var _userDistrictId = mutableStateOf<Int?>(null)
+
+    private var _userDistrictName = mutableStateOf<String>("서울시")
+    val userDistrictName: State<String> = _userDistrictName
+
+    fun setUserDistrict(districtId: Int, districtName: String) = viewModelScope.launch {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
+        imprtFilterDataStore.updateData {
+            it.toBuilder()
+                .setAreaName(_userDistrictName.value)
+                .setAreaId(_userDistrictId.value!!)
+                .build()
+        }
         resetPage()
         getImprt()
     }

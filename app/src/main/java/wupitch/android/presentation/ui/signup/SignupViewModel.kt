@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.wupitch.android.CrewFilter
+import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
@@ -44,6 +45,7 @@ class SignupViewModel @Inject constructor(
     private val signupRepository: SignupRepository,
     private val userInfoDataStore : DataStore<Preferences>,
     private val crewFilterDataStore : DataStore<CrewFilter>,
+    private val imprtFilterDataStore : DataStore<ImpromptuFilter>,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
@@ -216,6 +218,12 @@ class SignupViewModel @Inject constructor(
                     crewFilterDataStore.updateData {
                         it.toBuilder()
                             .setSize(-1)
+                            .build()
+                    }
+                    imprtFilterDataStore.updateData {
+                        it.toBuilder()
+                            .setSchedule(-1)
+                            .setRecruitSize(-1)
                             .build()
                     }
                     postIdCardImage()

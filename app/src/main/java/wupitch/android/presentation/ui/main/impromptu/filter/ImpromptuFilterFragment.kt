@@ -49,6 +49,12 @@ class ImpromptuFilterFragment : Fragment() {
     private var checkedSizeRadioButton: MutableState<Boolean>? = null
     private val viewModel: ImpromptuViewModel by activityViewModels()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.getImprtFilter()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -111,12 +117,11 @@ class ImpromptuFilterFragment : Fragment() {
                             remember { mutableStateOf(false) })
                     )
 
-                    val scheduleState = remember {viewModel.imprtScheduleState }
-                    if(scheduleState.value != null) {
-                        Log.d("{ImpromptuFilterFragment.onCreateView}", scheduleState.value.toString())
+                    val scheduleState = remember { viewModel.imprtScheduleState }
+                    if (scheduleState.value != null) {
                         scheduleList[scheduleState.value!!].state.value = true
-                    }else {
-                        scheduleList.forEach { if(it.state.value) it.state.value = false }
+                    } else {
+                        scheduleList.forEach { if (it.state.value) it.state.value = false }
                     }
                     val dayState = remember { viewModel.imprtDayList }
                     if (dayState.size > 0) {
@@ -125,10 +130,10 @@ class ImpromptuFilterFragment : Fragment() {
                         }
                     }
                     val recruitSizeState = remember { viewModel.imprtSizeState }
-                    if(recruitSizeState.value != null) {
+                    if (recruitSizeState.value != null) {
                         recruitSizeList[recruitSizeState.value!!].state.value = true
-                    }else {
-                        recruitSizeList.forEach { if(it.state.value) it.state.value = false }
+                    } else {
+                        recruitSizeList.forEach { if (it.state.value) it.state.value = false }
                     }
 
 
@@ -146,7 +151,10 @@ class ImpromptuFilterFragment : Fragment() {
                         ).show()
                     }
 
-
+                    if (viewModel.filterApplied.value) {
+                        findNavController().navigateUp()
+                        viewModel.filterApplied.value = false
+                    }
 
 
                     ConstraintLayout(
@@ -239,10 +247,8 @@ class ImpromptuFilterFragment : Fragment() {
                                 viewModel.setImprtSchedule(scheduleState.value)
 
                                 viewModel.applyFilter()
-                                findNavController().navigateUp()
-
-                                           },
-                            onResetClick = {viewModel.resetFilter()}
+                            },
+                            onResetClick = { viewModel.resetFilter() }
                         )
 
                     }
@@ -252,10 +258,9 @@ class ImpromptuFilterFragment : Fragment() {
     }
 
 
-
     @Composable
     fun ScheduleNonRepetitionLayout(
-        titleText : String,
+        titleText: String,
         itemList: List<FilterItem>,
         onClick: (index: Int) -> Unit
     ) {
@@ -296,7 +301,7 @@ class ImpromptuFilterFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
-        if(checkedState.value) checkedScheduleRadioButton = checkedState
+        if (checkedState.value) checkedScheduleRadioButton = checkedState
 
         Box(
             modifier = modifier
@@ -340,7 +345,7 @@ class ImpromptuFilterFragment : Fragment() {
 
     @Composable
     fun SizeNonRepetitionLayout(
-        titleText : String,
+        titleText: String,
         itemList: List<FilterItem>,
         onClick: (index: Int) -> Unit
     ) {
@@ -381,7 +386,7 @@ class ImpromptuFilterFragment : Fragment() {
         text: String,
         onClick: () -> Unit
     ) {
-        if(checkedState.value) checkedSizeRadioButton = checkedState
+        if (checkedState.value) checkedSizeRadioButton = checkedState
         Box(
             modifier = modifier
                 .selectable(
@@ -425,8 +430,8 @@ class ImpromptuFilterFragment : Fragment() {
     @Composable
     fun FilterBottomButtons(
         modifier: Modifier,
-        onApplyClick : () -> Unit,
-        onResetClick : () -> Unit
+        onApplyClick: () -> Unit,
+        onResetClick: () -> Unit
     ) {
         Row(
             modifier = modifier
