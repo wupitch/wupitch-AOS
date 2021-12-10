@@ -306,7 +306,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getCrewFilter()
+        viewModel.resetPage()
+        viewModel.getCrew()
 //        initFcm()
 
     }

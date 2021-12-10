@@ -2,16 +2,23 @@ package wupitch.android.common
 
 import android.content.Context
 import android.net.Uri
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.wupitch.android.CrewFilter
 
 object Constants {
     const val API_URL = "https://prod.wupitch.site/"
-    const val PREFERENCES_NAME = "settings"
-    val Context.dataStore by preferencesDataStore(
-        name = PREFERENCES_NAME
+    val Context.userInfoStore : DataStore<Preferences> by preferencesDataStore(
+        name = "user_info"
+    )
+    val Context.crewFilterStore : DataStore<CrewFilter> by dataStore(
+        fileName = "crew_filter.pb",
+        serializer = CrewFilterSerializer
     )
     val JWT_PREFERENCE_KEY = stringPreferencesKey("jwt_token")
     val USER_NICKNAME = stringPreferencesKey("user_nickname")
@@ -25,5 +32,5 @@ object Constants {
     const val SUPPLY_MAX_LENGTH = 100
 
     val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
-    val PAGE_SIZE = 10
+    const val PAGE_SIZE = 10
 }

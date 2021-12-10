@@ -9,7 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.domain.model.LoginReq
 import wupitch.android.domain.repository.LoginRepository
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class OnboardingViewModel @Inject constructor(
             response.body()?.let { loginRes ->
                 if(loginRes.isSuccess) {
                     _loginState.value = LoginState(isSuccess = true)
-                    context.dataStore.edit { settings ->
+                    context.userInfoStore.edit { settings ->
                         settings[Constants.JWT_PREFERENCE_KEY] = loginRes.result.jwt
                         settings[Constants.USER_ID] = loginRes.result.accountId
                         settings[Constants.USER_EMAIL] = loginRes.result.email

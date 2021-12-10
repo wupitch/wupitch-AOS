@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "com.wupitch.android";
+option java_multiple_files = true;
+option java_outer_classname = "FilterProtos";
+
+message CrewFilter {
+  int32 areaId = 1;
+  int32 size = 2;
+  repeated int32 ageList = 3;
+  repeated int32 dayList = 4;
+  repeated int32 sportList = 5;
+  string areaName = 6;
+}

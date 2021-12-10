@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.JoinState
@@ -127,7 +127,7 @@ class ImprtDetailViewModel @Inject constructor(
     }
 
     private suspend fun checkIsCreator() : Boolean {
-        val flow = context.dataStore.data.first()
+        val flow = context.userInfoStore.data.first()
         return flow[Constants.USER_ID] == creatorId
     }
 

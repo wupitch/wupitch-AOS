@@ -7,6 +7,8 @@ plugins {
 }
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.protobuf' // add protobuf plugin
 
 android {
     compileSdk 31
@@ -102,13 +104,8 @@ dependencies {
 
     // Preference DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore:1.0.0")
 
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    kapt 'com.github.bumptech.glide:compiler:4.12.0'
-
-    //카카오 로그인
-//    implementation "com.kakao.sdk:v2-user:2.8.2"
 
     //compose
     def compose_version = "1.1.0-beta02"
@@ -161,4 +158,23 @@ dependencies {
     implementation("androidx.camera:camera-view:1.0.0-alpha30")
     // If you want to additionally use the CameraX Extensions library
     implementation("androidx.camera:camera-extensions:1.0.0-alpha30")
+
+    //proto buffer
+    implementation 'com.google.protobuf:protobuf-javalite:3.8.0'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.11.0"
+    }
+
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

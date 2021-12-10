@@ -46,9 +46,6 @@ interface CrewApi {
         @Path("clubId") crewId : Int
     ): Response<BaseResultRes>
 
-    @GET("app/accounts/auth/crew-filter")
-    suspend fun getCrewFilter() : Response<GetCrewFilterRes>
-
     @GET("app/clubs/title")
     suspend fun getCrewSearch(
         @Query("crewTitle") crewTitle : String,

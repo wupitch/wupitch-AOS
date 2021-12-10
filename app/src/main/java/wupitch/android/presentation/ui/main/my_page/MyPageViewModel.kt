@@ -21,7 +21,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.repository.ProfileRepository
 import java.io.File
@@ -60,7 +60,7 @@ class MyPageViewModel @Inject constructor(
     val notEnoughInfo: State<Boolean> = _notEnoughInfo
 
     fun checkNotEnoughInfo() = viewModelScope.launch {
-        val jwtPreferenceFlow = context.dataStore.data.first()
+        val jwtPreferenceFlow = context.userInfoStore.data.first()
         jwtPreferenceFlow[Constants.FIRST_COMER]?.let {
             if (it) {
                 _notEnoughInfo.value = true
@@ -71,7 +71,7 @@ class MyPageViewModel @Inject constructor(
     fun setNotEnoughInfo() = viewModelScope.launch {
         delay(2200L)
         _notEnoughInfo.value = false
-        context.dataStore.edit { settings ->
+        context.userInfoStore.edit { settings ->
             settings[Constants.FIRST_COMER] = false
         }
     }
@@ -126,7 +126,7 @@ class MyPageViewModel @Inject constructor(
     * */
     fun logoutUser() = viewModelScope.launch {
 
-        context.dataStore.edit { settings ->
+        context.userInfoStore.edit { settings ->
             settings[Constants.JWT_PREFERENCE_KEY] = ""
             settings[Constants.USER_ID] = -1
             settings[Constants.USER_NICKNAME] = ""
@@ -145,7 +145,7 @@ class MyPageViewModel @Inject constructor(
             response.body()?.let { baseRes ->
                 if (baseRes.isSuccess) {
                     _unregisterState.value = BaseState(isSuccess = true)
-                    context.dataStore.edit { settings ->
+                    context.userInfoStore.edit { settings ->
                         settings[Constants.JWT_PREFERENCE_KEY] = ""
                         settings[Constants.USER_ID] = -1
                         settings[Constants.USER_NICKNAME] = ""

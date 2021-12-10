@@ -1,18 +1,13 @@
 package wupitch.android.common
 
 import android.content.Context
-import android.util.Log
-import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import java.io.IOException
 
 class JwtTokenInterceptor(
@@ -25,7 +20,7 @@ class JwtTokenInterceptor(
         val builder: Request.Builder = chain.request().newBuilder()
 
         runBlocking {
-            val jwtPreferenceFlow = context.dataStore.data.first()
+            val jwtPreferenceFlow = context.userInfoStore.data.first()
             val token = jwtPreferenceFlow[Constants.JWT_PREFERENCE_KEY] ?: ""
             builder.addHeader("X-ACCESS-TOKEN", token)
         }

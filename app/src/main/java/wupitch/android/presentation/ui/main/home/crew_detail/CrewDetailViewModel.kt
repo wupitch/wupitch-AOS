@@ -1,21 +1,18 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.data.remote.dto.CrewVisitorReq
 import wupitch.android.data.remote.dto.Schedule
 import wupitch.android.domain.model.CrewDetailResult
@@ -162,7 +159,7 @@ class CrewDetailViewModel @Inject constructor(
     }
 
     private suspend fun checkIsCreator() : Boolean {
-        val flow = context.dataStore.data.first()
+        val flow = context.userInfoStore.data.first()
         return flow[Constants.USER_ID] == creatorId
     }
 

@@ -6,12 +6,16 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.datastore.core.DataStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wupitch.android.CrewFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants.PAGE_SIZE
@@ -26,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getDistrictRepository : GetDistrictRepository,
-    private val crewRepository: CrewRepository
+    private val crewRepository: CrewRepository,
+    private val crewFilterDataStore : DataStore<CrewFilter>
 ) : ViewModel() {
 
 
@@ -88,7 +93,7 @@ class HomeViewModel @Inject constructor(
 
 
 
-    private fun resetPage () {
+    fun resetPage () {
         _page.value = 1
     }
 
@@ -102,17 +107,14 @@ class HomeViewModel @Inject constructor(
 
     fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
         _crewAgeGroupList = list
-        Log.d("{CreateCrewViewModel.setCrewAgeGroupList}", _crewAgeGroupList.toList().toString())
     }
 
     fun setCrewEventList(list: SnapshotStateList<Int>) {
         _crewEventList = list
-        Log.d("{CreateCrewViewModel.setCrewEventList}", _crewEventList.toList().toString())
     }
 
     fun setCrewDayList(list: SnapshotStateList<Int>) {
         _crewDayList = list
-        Log.d("{CreateCrewViewModel.setCrewDayList}", _crewDayList.toList().toString())
     }
 
     fun setCrewSize(size: Int?) {
@@ -138,28 +140,59 @@ class HomeViewModel @Inject constructor(
         resetPage()
     }
 
-    private var _isAppliedFilter = false
-
-
-    fun applyFilter() {
-        _isAppliedFilter = true
+    var filterApplied = mutableStateOf(false)
+    fun applyFilter() = viewModelScope.launch {
         resetPage()
-        getCrew()
+        crewFilterDataStore.updateData {
+            it.toBuilder()
+                .setSize(_crewSizeState.value ?: -1)
+                .clearAgeList().addAllAgeList(_crewAgeGroupList)
+                .clearDayList().addAllDayList(_crewDayList)
+                .clearSportList().addAllSportList(_crewEventList)
+                .setAreaId(_userDistrictId.value ?: 0) //area id, name 초기화 후에 적용하려면 저장 필요함.
+                .setAreaName(_userDistrictName.value)
+                .build()
+        }
+        filterApplied.value = true
+
+
+    }
+    fun getCrewFilter() = viewModelScope.launch { //filter view 에서 부름.
+        loading.value = true
+        val crewFilter = crewFilterDataStore.data.first()
+
+        crewFilter.ageListList.forEach {
+            if (!_crewAgeGroupList.contains(it)) _crewAgeGroupList.add(it)
+        }
+        crewFilter.dayListList.forEach {
+            if (!_crewDayList.contains(it)) _crewDayList.add(it)
+        }
+        crewFilter.sportListList.forEach {
+            if (!_crewEventList.contains(it)) _crewEventList.add(it)
+        }
+        _crewSizeState.value = if(crewFilter.size == -1) null else crewFilter.size
+        loading.value = false
     }
 
     /*
-    * get crew, get crew filter
+    * get crew
     * */
 
-    private fun getCrew() = viewModelScope.launch {
+    fun getCrew() = viewModelScope.launch {
+        loading.value = true
+        val crewFilter = crewFilterDataStore.data.first()
 
+        //지역구 필터만 홈에서 세팅. 나머지는 필터뷰에서.
+        _userDistrictName.value = if(crewFilter.areaName.isEmpty())"서울시" else crewFilter.areaName
+
+        //필터 읽어서 그대로 get crew.
         val response = crewRepository.getCrew(
-            ageList = if(_crewAgeGroupList.isEmpty()) null else _crewAgeGroupList.map { it +1 },
-            areaId = if(_userDistrictId.value == null) 1 else _userDistrictId.value!! +1,
-            days = if(_crewDayList.isEmpty())null else _crewDayList.map { it+1 },
-            memberCountValue = _crewSizeState.value,
+            ageList = if(crewFilter.ageListList.isEmpty())null else crewFilter.ageListList.map { it +1 },
+            areaId = crewFilter.areaId +1,
+            days = if(crewFilter.dayListList.isEmpty())null else crewFilter.dayListList.map { it+1 },
+            memberCountValue = if(crewFilter.size == -1) null else crewFilter.size+1,
             page = _page.value,
-            sportsList = if(_crewEventList.isEmpty())null else _crewEventList.map { it + 1 }
+            sportsList = if(crewFilter.sportListList.isEmpty())null else crewFilter.sportListList.map { it + 1 }
         )
         if(response.isSuccessful) {
             response.body()?.let { res ->
@@ -187,55 +220,21 @@ class HomeViewModel @Inject constructor(
     private val _getCrewFilterState = mutableStateOf(BaseState())
     var getCrewFilterState : State<BaseState> = _getCrewFilterState
 
-    fun getCrewFilter() = viewModelScope.launch {
-        if(!_isAppliedFilter) {
-            loading.value = true
 
-            val response = crewRepository.getCrewFilter()
-            if (response.isSuccessful) {
-                response.body()?.let { res ->
-                    if (res.isSuccess) {
-                        res.result.crewPickAgeList?.forEach {
-                            if (!_crewAgeGroupList.contains(it - 1)) _crewAgeGroupList.add(
-                                it - 1
-                            )
-                        }
-                        res.result.crewPickDays?.forEach {
-                            if (!_crewDayList.contains(it - 1)) _crewDayList.add(
-                                it - 1
-                            )
-                        }
-                        res.result.crewPickSportsList?.forEach {
-                            if (!_crewEventList.contains(it - 1)) _crewEventList.add(
-                                it - 1
-                            )
-                        }
-                        _userDistrictName.value = res.result.crewPickAreaName ?: "서울시"
-                        _userDistrictId.value = if(res.result.crewPickAreaId == null) 0 else res.result.crewPickAreaId -1
-                        _crewSizeState.value =
-                            if (res.result.crewPickMemberCountValue == null) null else res.result.crewPickMemberCountValue - 1
-                        resetPage()
-                        getCrew()
-
-                    } else {
-                        loading.value = false
-                        _getCrewFilterState.value = BaseState(error = res.message)
-                    }
-                }
-            } else {
-                loading.value = false
-                _getCrewFilterState.value = BaseState(error = "필터 조회에 실패했습니다.")
-            }
-        }
-    }
 
     /*
     * district
     * */
 
-    fun setUserDistrict(districtId : Int, districtName : String) {
+    fun setUserDistrict(districtId : Int, districtName : String) = viewModelScope.launch {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
+        crewFilterDataStore.updateData {
+            it.toBuilder()
+                .setAreaName(_userDistrictName.value)
+                .setAreaId(_userDistrictId.value!!)
+                .build()
+        }
         resetPage()
         getCrew()
     }

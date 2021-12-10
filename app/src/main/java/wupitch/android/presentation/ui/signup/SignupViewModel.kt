@@ -9,6 +9,8 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.wupitch.android.CrewFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
@@ -24,7 +27,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.dataStore
+import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.domain.model.SignupReq
@@ -39,7 +42,9 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val signupRepository: SignupRepository,
-    @ApplicationContext val context: Context,
+    private val userInfoDataStore : DataStore<Preferences>,
+    private val crewFilterDataStore : DataStore<CrewFilter>,
+    @ApplicationContext val context: Context
 ) : ViewModel() {
 
     private var _allToggleState = mutableStateOf<Boolean>(false)
@@ -104,7 +109,6 @@ class SignupViewModel @Inject constructor(
     * validation
     * */
     fun checkNicknameValid(nickname: String) = viewModelScope.launch {
-        Log.d("{SignupViewModel.checkNicknameValid}", nickname)
         if (nickname.isEmpty()) {
             _isNicknameValid.value = null
             return@launch
@@ -126,7 +130,6 @@ class SignupViewModel @Inject constructor(
 
 
     fun checkEmailValid(email: String) = viewModelScope.launch {
-        Log.d("{SignupViewModel.checkEmailValid}", email)
         if (email.isEmpty()) {
             _isEmailValid.value = null
             return@launch
@@ -178,7 +181,6 @@ class SignupViewModel @Inject constructor(
 
             val token = task.result
 
-            // todo call signup
             postSignup(token.toString())
         })
     }
@@ -205,11 +207,16 @@ class SignupViewModel @Inject constructor(
                 if (signupRes.isSuccess) {
 
                     //todo jwt 기준으로 신분증 사진이 들어간다는게 말이 되나? 신분증 인증 안 해도 일단 회원이 된다는게?
-                    context.dataStore.edit { settings ->
-                        settings[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
-                        settings[Constants.USER_ID] = signupRes.result.accountId
-                        settings[Constants.USER_NICKNAME] = signupRes.result.nickname
-                        settings[Constants.FIRST_COMER] = true
+                    userInfoDataStore.edit { pref->
+                        pref[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
+                        pref[Constants.USER_ID] = signupRes.result.accountId
+                        pref[Constants.USER_NICKNAME] = signupRes.result.nickname
+                        pref[Constants.FIRST_COMER] = true
+                    }
+                    crewFilterDataStore.updateData {
+                        it.toBuilder()
+                            .setSize(-1)
+                            .build()
                     }
                     postIdCardImage()
                 } else _signupState.value = BaseState(error = signupRes.message)

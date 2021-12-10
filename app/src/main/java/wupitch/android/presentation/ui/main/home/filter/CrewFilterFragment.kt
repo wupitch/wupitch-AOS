@@ -45,6 +45,11 @@ class CrewFilterFragment : Fragment() {
     private var checkedRadioButton: MutableState<Boolean>? = null
     private val viewModel: HomeViewModel by activityViewModels()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.getCrewFilter()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -108,9 +113,6 @@ class CrewFilterFragment : Fragment() {
                         FilterItem(getString(R.string.forties), remember { mutableStateOf(false) }),
                         FilterItem(
                             getString(R.string.over_fifties),
-                            remember { mutableStateOf(false) }),
-                        FilterItem(
-                            getString(R.string.regardless_of_age),
                             remember { mutableStateOf(false) })
                     )
                     val crewSizeList = listOf<FilterItem>(
@@ -172,6 +174,11 @@ class CrewFilterFragment : Fragment() {
                         crewSizeList[crewSizeState.value!!].state.value = true
                     }else {
                         crewSizeList.forEach { if(it.state.value) it.state.value = false }
+                    }
+
+                    if(viewModel.filterApplied.value){
+                        findNavController().navigateUp()
+                        viewModel.filterApplied.value = false
                     }
 
                     ConstraintLayout(
@@ -276,10 +283,11 @@ class CrewFilterFragment : Fragment() {
                                 viewModel.setCrewDayList(dayState)
                                 viewModel.setCrewEventList(eventState)
                                 viewModel.applyFilter()
-                                findNavController().navigateUp()
                             },
                             onResetClick = { viewModel.resetFilter() }
                         )
+
+
                     }
                 }
             }

@@ -26,7 +26,6 @@ interface CrewRepository {
 
     suspend fun changePinStatus(id : Int) : Response<BaseResultRes>
     suspend fun joinCrew(id : Int) : Response<BaseResultRes>
-    suspend fun getCrewFilter() : Response<GetCrewFilterRes>
     suspend fun getCrewSearch(crewTitle: String, page : Int): Response<GetCrewRes>
     suspend fun getCrewVisitorDates(crewId : Int) : Response<GetCrewVisitorDates>
     suspend fun postVisit(visitReq : CrewVisitorReq) : Response<BaseRes>
