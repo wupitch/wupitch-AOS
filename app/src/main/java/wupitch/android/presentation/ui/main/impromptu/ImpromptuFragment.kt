@@ -10,6 +10,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,6 +30,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import wupitch.android.R
 import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
@@ -63,6 +65,8 @@ class ImpromptuFragment : Fragment() {
                             .show()
                     }
                     val loading = remember {viewModel.loading }
+                    val scrollState = rememberLazyListState()
+                    val scope = rememberCoroutineScope()
 
 
                     ConstraintLayout(
@@ -86,6 +90,14 @@ class ImpromptuFragment : Fragment() {
 
                         if (imprtState.isNotEmpty()) {
 
+                            if(viewModel.firstVisibleItemIndex != 0){
+                                SideEffect {
+                                    scope.launch {
+                                        scrollState.animateScrollToItem(viewModel.firstVisibleItemIndex, viewModel.firstVisibleItemOffset)
+                                    }
+                                }
+                            }
+
                             Box(modifier = Modifier.constrainAs(homeList) {
                                 top.linkTo(toolbar.bottom)
                                 start.linkTo(parent.start)
@@ -94,7 +106,9 @@ class ImpromptuFragment : Fragment() {
                                 height = Dimension.fillToConstraints
                             }.background(Color.White)) {
 
-                                LazyColumn {
+                                LazyColumn(
+                                    state = scrollState
+                                ) {
                                     itemsIndexed(
                                         items = imprtState
                                     ) { index, item ->
@@ -103,6 +117,7 @@ class ImpromptuFragment : Fragment() {
                                             viewModel.getNewPage()
                                         }
                                         ImpromptuCard(cardInfo = item) {
+                                            viewModel.saveScrollPosition(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
                                             val bundle = Bundle().apply { putInt("impromptuId", item.id) }
                                             activity?.findNavController(R.id.main_nav_container_view)
                                                 ?.navigate(

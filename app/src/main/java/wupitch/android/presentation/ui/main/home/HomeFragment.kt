@@ -11,6 +11,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -74,6 +75,9 @@ class HomeFragment : Fragment() {
                             .show()
                     }
                     val loading = remember {viewModel.loading }
+                    val scrollState = rememberLazyListState()
+                    val scope = rememberCoroutineScope()
+
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -97,23 +101,37 @@ class HomeFragment : Fragment() {
 
                         if (crewState.isNotEmpty()) {
 
-                            Box(modifier = Modifier.constrainAs(homeList) {
-                                top.linkTo(toolbar.bottom)
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                bottom.linkTo(parent.bottom)
-                                height = Dimension.fillToConstraints
-                            }.background(Color.White)) {
+                            if(viewModel.firstVisibleItemIndex != 0){
+                                SideEffect {
+                                    scope.launch {
+                                        scrollState.animateScrollToItem(viewModel.firstVisibleItemIndex, viewModel.firstVisibleItemOffset)
+                                    }
+                                }
+                            }
 
-                                LazyColumn {
+
+                            Box(modifier = Modifier
+                                .constrainAs(homeList) {
+                                    top.linkTo(toolbar.bottom)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                    bottom.linkTo(parent.bottom)
+                                    height = Dimension.fillToConstraints
+                                }
+                                .background(Color.White)) {
+
+                                LazyColumn(
+                                    state = scrollState
+                                ) {
                                     itemsIndexed(
-                                        items = crewState
+                                        items = crewState,
                                     ) { index, crew ->
                                         viewModel.onChangeScrollPosition(index)
                                         if((index +1) >= (page * PAGE_SIZE) && !loading.value){
                                             viewModel.getNewPage()
                                         }
                                         CrewCard(crewCard = crew) {
+                                            viewModel.saveScrollPosition(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
                                             val bundle = Bundle().apply { putInt("crewId", crew.id) }
                                             activity?.findNavController(R.id.main_nav_container_view)
                                                 ?.navigate(
@@ -140,7 +158,7 @@ class HomeFragment : Fragment() {
 
                                     Image(
                                         modifier = Modifier
-                                            .constrainAs(image){
+                                            .constrainAs(image) {
                                                 start.linkTo(parent.start)
                                                 end.linkTo(parent.end)
                                                 bottom.linkTo(text.top, margin = 24.dp)

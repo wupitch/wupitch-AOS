@@ -35,6 +35,17 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     /*
+    * scroll
+    * */
+    var firstVisibleItemIndex  = 0
+    var firstVisibleItemOffset = 0
+
+    fun saveScrollPosition(itemIdx : Int, offset : Int){
+        firstVisibleItemIndex = itemIdx
+        firstVisibleItemOffset = offset
+    }
+
+    /*
     * pagination
     * */
 
@@ -64,7 +75,6 @@ class HomeViewModel @Inject constructor(
     fun getNewPage() = viewModelScope.launch {
         if((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
             incrementPage()
-            Log.d("{HomeViewModel.newPage}", "${page.value}")
 
             if(page.value >1){
                 getCrew()
@@ -134,6 +144,7 @@ class HomeViewModel @Inject constructor(
                 .setAreaName(_userDistrictName.value)
                 .build()
         }
+        saveScrollPosition(0,0)
         filterApplied.value = true
     }
 
@@ -226,6 +237,7 @@ class HomeViewModel @Inject constructor(
                 .build()
         }
         resetPage()
+        saveScrollPosition(0,0)
         getCrew()
     }
 

@@ -29,6 +29,17 @@ class ImpromptuViewModel @Inject constructor(
     private val imprtFilterDataStore: DataStore<ImpromptuFilter>
 ) : ViewModel() {
 
+    /*
+    * scroll
+    * */
+    var firstVisibleItemIndex  = 0
+    var firstVisibleItemOffset = 0
+
+    fun saveScrollPosition(itemIdx : Int, offset : Int){
+        firstVisibleItemIndex = itemIdx
+        firstVisibleItemOffset = offset
+    }
+
 
     /*
     * pagination
@@ -124,6 +135,7 @@ class ImpromptuViewModel @Inject constructor(
                 .setAreaName(_userDistrictName.value)
                 .build()
         }
+        saveScrollPosition(0,0)
         filterApplied.value = true
     }
 
@@ -218,6 +230,7 @@ class ImpromptuViewModel @Inject constructor(
                 .build()
         }
         resetPage()
+        saveScrollPosition(0,0)
         getImprt()
     }
 
