@@ -56,23 +56,6 @@ fun IconToolBar(
             contentDescription = "go back previous page"
         )
 
-
-//        if (textString != null) {
-//            Text(
-//                modifier = modifier.constrainAs(text) {
-//                    top.linkTo(parent.top)
-//                    bottom.linkTo(parent.bottom)
-//                    start.linkTo(leftIcon.end, margin = 32.dp)
-//                    end.linkTo(rightIcon.start)
-//                },
-//                text = stringResource(id = textString),
-//                fontSize = 16.sp,
-//                fontFamily = Roboto,
-//                fontWeight = FontWeight.Bold,
-//                color = Color.Black,
-//            )
-//        }
-
         hasRightIcon?.let {
             if(it) {
                 Icon(modifier = Modifier.constrainAs(rightIcon) {

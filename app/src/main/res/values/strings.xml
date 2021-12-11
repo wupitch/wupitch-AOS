@@ -299,6 +299,7 @@
     <string name="announcement_post">공지</string>
     <string name="impromptu_members">번개멤버</string>
     <string name="no_crew_image">가장 먼저 사진을 올려볼까요?</string>
+    <string name="report_member">유저 신고하기</string>
 
 <!--    feed-->
     <string name="no_feed_image">크루에 참여하고\n사진을 올려보세요!</string>

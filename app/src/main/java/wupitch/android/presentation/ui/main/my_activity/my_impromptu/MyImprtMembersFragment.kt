@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import wupitch.android.R
@@ -75,7 +76,8 @@ class MyImprtMembersFragment : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data){ _, item ->
                                     CrewMember(member = item){ //todo 버튼 추가시 변경.
-                                        //todo 멤버 상세 페이지로.
+                                        val bundle = Bundle().apply { putInt("memberId", it) }
+                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
 
                                     }
                                 }

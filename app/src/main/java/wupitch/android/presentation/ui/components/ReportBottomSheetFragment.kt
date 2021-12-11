@@ -19,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
+import wupitch.android.presentation.ui.main.my_activity.MemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 
@@ -50,19 +51,28 @@ class ReportBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if(viewModel is MyCrewViewModel) {
-                                    viewModel.setShowReportDialog()
-                                }else if(viewModel is MyImpromptuViewModel) {
-                                    viewModel.setShowReportDialog()
+                                when(viewModel){
+                                    is MyCrewViewModel -> {
+                                        viewModel.setShowReportDialog()
+                                    }
+                                    is MyImpromptuViewModel-> {
+                                        viewModel.setShowReportDialog()
+                                    }
+                                    is MemberDetailViewModel -> {
+                                        viewModel.setShowReportDialog()
+                                    }
                                 }
+
                                 dismiss()
                             }){
                             Text(
                                 modifier = Modifier.padding(vertical = 16.dp),
                                 text = if(viewModel is MyCrewViewModel) {
                                     stringResource(id = R.string.report_crew)
-                                }else {
+                                }else if(viewModel is MyImpromptuViewModel) {
                                     stringResource(id = R.string.report_impromptu)
+                                }else {
+                                   stringResource(id = R.string.report_member)
                                 },
                                 color = colorResource(id = R.color.main_black),
                                 fontWeight = FontWeight.Normal,

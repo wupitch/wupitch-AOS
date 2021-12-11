@@ -101,9 +101,6 @@
             app:destination="@id/onboardingFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true"/>
-<!--        <action-->
-<!--            android:id="@+id/action_splashFragment_to_loginFragment"-->
-<!--            app:destination="@id/loginFragment" />-->
     </fragment>
 
     <fragment
@@ -182,6 +179,13 @@
             android:name="impromptu_id"
             app:argType="integer"
             android:defaultValue="-1" />
+        <action
+            android:id="@+id/action_myImpromptuDetailFragment_to_memberDetailFragment"
+            app:destination="@id/memberDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/myPageInfoFragment"
@@ -572,4 +576,13 @@
         android:id="@+id/imageDetailFragment"
         android:name="wupitch.android.presentation.ui.main.my_activity.my_crew.ImageDetailFragment"
         android:label="ImageDetailFragment" />
+    <fragment
+        android:id="@+id/memberDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.MemberDetailFragment"
+        android:label="MemberDetailFragment" >
+        <argument
+            android:name="memberId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 </navigation>
