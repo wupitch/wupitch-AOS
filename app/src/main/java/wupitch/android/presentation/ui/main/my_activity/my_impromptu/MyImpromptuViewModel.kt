@@ -8,10 +8,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.domain.model.ImprtDetailResult
 import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailState
+import wupitch.android.presentation.ui.main.my_activity.my_crew.Member
+import wupitch.android.presentation.ui.main.my_activity.my_crew.MemberState
 import wupitch.android.util.dateDashToCol
 import wupitch.android.util.doubleToTime
 import java.text.DecimalFormat
@@ -81,4 +84,31 @@ class MyImpromptuViewModel @Inject constructor(
         Log.d("{MyImpromptuViewModel.postImprtReport}", content.toString())
     }
 
+    /*
+   * members
+   * */
+
+    private var _memberState = mutableStateOf(MemberState())
+    val memberState : State<MemberState> = _memberState
+
+    fun getMembers() = viewModelScope.launch {
+        _memberState.value = MemberState(isLoading = true)
+        delay(500L)
+        _memberState.value = MemberState(data = listOf(
+            Member(0,"https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg", "베키", true),
+            Member(1,null, "플로라", false),
+            Member(2,null, "스완", false),
+            Member(3,null, "우피치", false),
+            Member(4,null, "우피치", false),
+            Member(5,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+            Member(6,null, "우피치", false),
+
+            ))
+    }
 }

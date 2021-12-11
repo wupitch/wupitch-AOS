@@ -259,7 +259,7 @@ class MyPageViewModel @Inject constructor(
         _uploadImageState.value = BaseState(isLoading = true)
 
         val response = profileRepository.deleteProfileImage()
-        if(response.isSuccessful){
+        if(response.isSuccessful) {
             response.body()?.let { res ->
                 if(res.isSuccess) _uploadImageState.value = BaseState(isSuccess = true)
                 else _uploadImageState.value = BaseState(error = res.message)

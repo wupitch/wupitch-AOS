@@ -213,6 +213,9 @@ class MyActivityFragment : Fragment() {
                             ?.navigate(R.id.action_mainFragment_to_myImpromptuDetailFragment, bundle)
                     }
                 }
+                item {
+                    Spacer(modifier = Modifier.height(60.dp))
+                }
             }
         }
     }
