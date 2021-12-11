@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -156,12 +157,17 @@ class MyActivityFragment : Fragment() {
                     items = myCrewState.value.data
                 ){ _, item ->
                     MyCrewCard(crew = item){ tabId ->
-                        val bundle = Bundle().apply {
-                            putInt("selectedTab", tabId)
-                            putInt("crewId", item.id)
+                        if(tabId == 3){
+                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+                        }else {
+                            val bundle = Bundle().apply {
+                                putInt("selectedTab", tabId)
+                                putInt("crewId", item.id)
+                            }
+                            activity?.findNavController(R.id.main_nav_container_view)
+                                ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                         }
-                        activity?.findNavController(R.id.main_nav_container_view)
-                            ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
+
                     }
                 }
             }
@@ -226,8 +232,13 @@ class MyActivityFragment : Fragment() {
         textString : String
     ) {
         Box(
-            modifier = modifier.padding(horizontal = 20.dp)
-                .border(width = 1.dp, color = colorResource(id = R.color.main_orange), shape = RoundedCornerShape(16.dp)),
+            modifier = modifier
+                .padding(horizontal = 20.dp)
+                .border(
+                    width = 1.dp,
+                    color = colorResource(id = R.color.main_orange),
+                    shape = RoundedCornerShape(16.dp)
+                ),
             contentAlignment = Alignment.Center)
         {
 

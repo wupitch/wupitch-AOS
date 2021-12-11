@@ -202,7 +202,7 @@ fun MyCrewCard(
                         height = Dimension.fillToConstraints
                     }
                     .clickable {
-                        onClick(2)
+                        onClick(3)
                     },
                     contentAlignment = Alignment.Center
                 ) {
@@ -238,7 +238,7 @@ fun MyCrewCard(
                             height = Dimension.fillToConstraints
                         }
                         .clickable {
-                            onClick(3)
+                            onClick(2)
                         },
                 contentAlignment = Alignment.Center) {
                     Text(
