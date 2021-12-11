@@ -45,7 +45,7 @@ class MyImprtMembersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getMembers()
+//        viewModel.getMembers()
     }
 
     override fun onCreateView(
@@ -56,7 +56,7 @@ class MyImprtMembersFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 WupitchTheme {
-                    val memberState = remember {viewModel.memberState}
+//                    val memberState = remember {viewModel.memberState}
 
                     ConstraintLayout(
                         Modifier
@@ -65,62 +65,60 @@ class MyImprtMembersFragment : Fragment() {
                         val (chrt, text, members, progressbar) = createRefs()
                         val guildLine = createGuidelineFromTop(0.65f)
 
-                        if(memberState.value.data.isNotEmpty()){
-                            LazyColumn(modifier = Modifier.constrainAs(members){
-                                start.linkTo(parent.start)
-                                end.linkTo(parent.end)
-                                top.linkTo(parent.top)
-                            }) {
-                                item {
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                }
-                                itemsIndexed(items = memberState.value.data){ _, item ->
-                                    CrewMember(member = item){ //todo 버튼 추가시 변경.
-                                        val bundle = Bundle().apply { putInt("memberId", it) }
-                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
-
-                                    }
-                                }
-                            }
-                        }
-
-                        if(memberState.value.isLoading){
-                            CircularProgressIndicator(
-                                modifier = Modifier.constrainAs(progressbar) {
-                                    start.linkTo(parent.start)
-                                    end.linkTo(parent.end)
-                                    top.linkTo(parent.top)
-                                    bottom.linkTo(parent.bottom)
-                                },
-                                color = colorResource(id = R.color.main_orange)
-                            )
-                        }
-
-//                        Image(
-//                            modifier = Modifier
-//                                .constrainAs(chrt) {
-//                                    bottom.linkTo(text.top)
-//                                    start.linkTo(parent.start)
-//                                    end.linkTo(parent.end)
-//                                }
-//                                .size(130.dp, 210.dp),
-//                            painter = painterResource(id = R.drawable.img_chrt_02), contentDescription = null)
-//
-//                        Text(
-//                            modifier = Modifier.constrainAs(text){
+//                        if(memberState.value.data.isNotEmpty()){
+//                            LazyColumn(modifier = Modifier.constrainAs(members){
 //                                start.linkTo(parent.start)
 //                                end.linkTo(parent.end)
-//                                bottom.linkTo(guildLine)
-//                            }.padding(top = 24.dp),
-//                            text = stringResource(R.string.preparing),
-//                            color = colorResource(id = R.color.gray02),
-//                            fontFamily = Roboto,
-//                            fontSize = 16.sp,
-//                            fontWeight = FontWeight.Normal
-//                        )
+//                                top.linkTo(parent.top)
+//                            }) {
+//                                item {
+//                                    Spacer(modifier = Modifier.height(8.dp))
+//                                }
+//                                itemsIndexed(items = memberState.value.data){ _, item ->
+//                                    CrewMember(member = item){ //todo 버튼 추가시 변경.
+//                                        val bundle = Bundle().apply { putInt("memberId", it) }
+//                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
+//
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        if(memberState.value.isLoading){
+//                            CircularProgressIndicator(
+//                                modifier = Modifier.constrainAs(progressbar) {
+//                                    start.linkTo(parent.start)
+//                                    end.linkTo(parent.end)
+//                                    top.linkTo(parent.top)
+//                                    bottom.linkTo(parent.bottom)
+//                                },
+//                                color = colorResource(id = R.color.main_orange)
+//                            )
+//                        }
 
+                        Image(
+                            modifier = Modifier
+                                .constrainAs(chrt) {
+                                    bottom.linkTo(text.top)
+                                    start.linkTo(parent.start)
+                                    end.linkTo(parent.end)
+                                }
+                                .size(130.dp, 210.dp),
+                            painter = painterResource(id = R.drawable.img_chrt_02), contentDescription = null)
+
+                        Text(
+                            modifier = Modifier.constrainAs(text){
+                                start.linkTo(parent.start)
+                                end.linkTo(parent.end)
+                                bottom.linkTo(guildLine)
+                            }.padding(top = 24.dp),
+                            text = stringResource(R.string.preparing),
+                            color = colorResource(id = R.color.gray02),
+                            fontFamily = Roboto,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Normal
+                        )
                     }
-
                 }
             }
         }
