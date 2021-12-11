@@ -16,10 +16,10 @@
         android:id="@+id/myActivityFragment"
         android:name="wupitch.android.presentation.ui.main.my_activity.MyActivityFragment"
         android:label="MyActivityFragment" />
-    <fragment
-        android:id="@+id/feedFragment"
-        android:name="wupitch.android.presentation.ui.main.feed.FeedFragment"
-        android:label="FeedFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/feedFragment"-->
+<!--        android:name="wupitch.android.presentation.ui.main.feed.FeedFragment"-->
+<!--        android:label="FeedFragment" />-->
     <fragment
         android:id="@+id/myPageFragment"
         android:name="wupitch.android.presentation.ui.main.my_page.MyPageFragment"

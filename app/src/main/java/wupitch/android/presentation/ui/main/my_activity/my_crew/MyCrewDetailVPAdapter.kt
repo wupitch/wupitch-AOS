@@ -13,7 +13,7 @@ class MyCrewDetailVPAdapter(fm : Fragment) : FragmentStateAdapter(fm) {
         return when(position){
             0 -> MyCrewIntroFragment()
             1 -> MyCrewBoardFragment()
-            2 -> MyCrewGalleryFragment()
+//            2 -> MyCrewGalleryFragment()
             else -> MyCrewMembersFragment()
         }
     }
