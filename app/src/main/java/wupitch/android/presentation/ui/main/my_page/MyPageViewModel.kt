@@ -242,7 +242,10 @@ class MyPageViewModel @Inject constructor(
 
     fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
         _isUsingDefaultImage.value = isUsingDefaultImage
-        if(isUsingDefaultImage == true)  _userImageState.value = Constants.EMPTY_IMAGE_URI
+        if(isUsingDefaultImage == true)  {
+            _userImageState.value = Constants.EMPTY_IMAGE_URI
+            deleteUserImage()
+        }
 
     }
     fun setImageChosenState(isImageChosen: Boolean) {
@@ -251,6 +254,18 @@ class MyPageViewModel @Inject constructor(
 
     private var _uploadImageState = mutableStateOf(BaseState())
     val uploadImageState: State<BaseState> = _uploadImageState
+
+    private fun deleteUserImage() = viewModelScope.launch {
+        _uploadImageState.value = BaseState(isLoading = true)
+
+        val response = profileRepository.deleteProfileImage()
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess) _uploadImageState.value = BaseState(isSuccess = true)
+                else _uploadImageState.value = BaseState(error = res.message)
+            }
+        }else _uploadImageState.value = BaseState(error = "이미지 변경에 실패했습니다.")
+    }
 
     fun uploadUserImage(uri: Uri) = viewModelScope.launch {
         _uploadImageState.value = BaseState(isLoading = true)

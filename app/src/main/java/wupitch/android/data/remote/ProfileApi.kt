@@ -18,6 +18,9 @@ interface ProfileApi {
         @Part("images") images: RequestBody
     ) : Response<BaseRes>
 
+    @PATCH("app/accounts/image/empty")
+    suspend fun deleteProfileImage() : Response<BaseRes>
+
     @PATCH("app/accounts/auth/password")
     suspend fun patchPw(
         @Body newPw : PwReq

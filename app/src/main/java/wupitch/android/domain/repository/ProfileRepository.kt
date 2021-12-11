@@ -12,6 +12,7 @@ interface ProfileRepository {
     suspend fun changeNotiStatus() : Response<BaseRes>
     suspend fun unregisterUser() : Response<BaseRes>
     suspend fun postProfileImage(images: RequestBody, file : MultipartBody.Part) : Response<BaseRes>
+    suspend fun deleteProfileImage() : Response<BaseRes>
     suspend fun updateUserInfo(userInfoReq : UpdateUserInfoReq) : Response<BaseRes>
     suspend fun getUserDistrict() : Response<UserDistrictRes>
     suspend fun getUserSports() : Response<UserSportsRes>

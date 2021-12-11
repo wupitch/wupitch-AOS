@@ -33,6 +33,9 @@ class ProfileRepositoryImpl @Inject constructor(
         file: MultipartBody.Part
     ): Response<BaseRes> =retrofit.create(ProfileApi::class.java).postProfileImage(file, images)
 
+    override suspend fun deleteProfileImage(): Response<BaseRes>
+    = retrofit.create(ProfileApi::class.java).deleteProfileImage()
+
     override suspend fun updateUserInfo(userInfoReq: UpdateUserInfoReq): Response<BaseRes>
     = retrofit.create(ProfileApi::class.java).updateUserInfo(userInfoReq)
 
