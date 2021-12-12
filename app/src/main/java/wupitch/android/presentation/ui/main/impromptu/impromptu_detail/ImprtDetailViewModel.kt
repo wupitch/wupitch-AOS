@@ -3,6 +3,8 @@ package wupitch.android.presentation.ui.main.impromptu.impromptu_detail
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ImprtDetailViewModel @Inject constructor(
     private val imprtRepository: ImprtRepository,
-    @ApplicationContext val context : Context
+    private val userInfoDataStore : DataStore<Preferences>
 ) : ViewModel() {
 
     private var creatorId : Int = -1
@@ -102,7 +104,7 @@ class ImprtDetailViewModel @Inject constructor(
     fun joinImprt() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
         if(checkIsCreator()) {
-            _joinState.value = JoinState(code = -100, error = context.getString(R.string.cannot_apply_for_self_created_imprt))
+            _joinState.value = JoinState(code = -100, error = "본인이 생성한 번개는 신청이 불가능해요")
             return@launch
         }
 
@@ -127,7 +129,7 @@ class ImprtDetailViewModel @Inject constructor(
     }
 
     private suspend fun checkIsCreator() : Boolean {
-        val flow = context.userInfoStore.data.first()
+        val flow = userInfoDataStore.data.first()
         return flow[Constants.USER_ID] == creatorId
     }
 

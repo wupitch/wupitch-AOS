@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,14 +23,29 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Provides
+    @Singleton
+    fun provideJwtTokenInterceptor(
         @ApplicationContext context: Context
+    ): Interceptor {
+        return JwtTokenInterceptor(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        loggingInterceptor: HttpLoggingInterceptor,
+        jwtTokenInterceptor: Interceptor
     ): Retrofit {
         val client: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(5000, TimeUnit.MILLISECONDS)
             .connectTimeout(5000, TimeUnit.MILLISECONDS)
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .addNetworkInterceptor(JwtTokenInterceptor(context))
+            .addInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(jwtTokenInterceptor)
             .build()
 
         return Retrofit.Builder()

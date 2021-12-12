@@ -3,6 +3,8 @@ package wupitch.android.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import wupitch.android.data.repository.*
@@ -10,60 +12,55 @@ import wupitch.android.domain.repository.*
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object RepositoryModule {
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideGetDistrictRepository(retrofit: Retrofit) : GetDistrictRepository {
         return GetDistrictRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideGetSportRepository(retrofit: Retrofit) : GetSportRepository {
         return GetSportRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideCheckValidRepository(retrofit: Retrofit) : CheckValidRepository {
         return CheckValidRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideSignupRepository(retrofit: Retrofit) : SignupRepository {
         return SignupRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideLoginRepository(retrofit: Retrofit) : LoginRepository {
         return LoginRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideCrewRepository(retrofit: Retrofit) : CrewRepository {
         return CrewRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideImprtRepository(retrofit: Retrofit) : ImprtRepository {
         return ImprtRepositoryImpl(retrofit)
     }
 
     @Provides
-    @Singleton
+    @ViewModelScoped
     fun provideProfileRepository(retrofit: Retrofit) : ProfileRepository {
         return ProfileRepositoryImpl(retrofit)
     }
 
-    @Provides
-    @Singleton
-    fun provideFcmRepository(retrofit: Retrofit) : FcmRepository {
-        return FcmRepositoryImpl(retrofit)
-    }
 }

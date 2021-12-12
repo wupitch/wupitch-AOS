@@ -39,7 +39,7 @@ class CreateCrewViewModel @Inject constructor(
     private val getSportRepository: GetSportRepository,
     private val getDistrictRepository: GetDistrictRepository,
     private val crewRepository: CrewRepository,
-    @ApplicationContext val context: Context
+    private val getRealPath: GetRealPath,
 ) : ViewModel() {
 
     private var _sportsList = mutableStateOf(SportState())
@@ -147,20 +147,15 @@ class CreateCrewViewModel @Inject constructor(
 
     fun setCrewSport(sportId: Int) {
         _crewSportId.value = sportId
-        Log.d("{CreateCrewViewModel.setCrewSport}", _crewSportId.value.toString())
     }
 
     fun setCrewDistrict(districtId: Int, districtName: String) {
-        //todo 서버에 보내기
         _crewDistrictId.value = districtId
         _crewDistrictName.value = districtName
-        Log.d("{CreateCrewViewModel.setUserDistrict}", "id : $districtId name : $districtName")
     }
 
     fun setCrewLocation(location: String) {
-        //todo 장소 미정이면 서버한테 null or 장소미정  text 보내야 되나?
         _crewLocation.value = location
-        Log.d("{CreateCrewViewModel.setCrewLocation}", _crewLocation.value)
     }
 
     fun setCrewName(name: String) {
@@ -173,12 +168,10 @@ class CreateCrewViewModel @Inject constructor(
 
     fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
         _crewAgeGroupList = list
-        Log.d("{CreateCrewViewModel.setCrewAgeGroupList}", _crewAgeGroupList.toList().toString())
     }
 
     fun setCrewExtraInfoList(list: SnapshotStateList<Int>) {
         _crewExtraInfoList = list
-        Log.d("{CreateCrewViewModel.setCrewExtraInfoList}", _crewExtraInfoList.toList().toString())
     }
 
     fun addCrewSchedule() {
@@ -206,7 +199,6 @@ class CreateCrewViewModel @Inject constructor(
     }
 
     fun setTimeFilter(index: Int, type: TimeType, hour: Int, min: Int) {
-        Log.d("{CreateCrewViewModel.setTimeFilter}", "hour : $hour min : $min")
         var hourString = hour.toString()
         var minString = min.toString()
         if (hour < 10) hourString = "0$hour"
@@ -321,7 +313,7 @@ class CreateCrewViewModel @Inject constructor(
             _createCrewState.value = CreateCrewState(data = crewId)
         } else {
 
-            val path = getRealPathFromURIForGallery(context, _crewImage.value)
+            val path = getRealPath.getRealPathFromURIForGallery(_crewImage.value)
 
             if (path != null) {
                 resizeImage(file = File(path))

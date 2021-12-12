@@ -9,43 +9,46 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
-fun getRealPathFromURIForGallery(context : Context, uri: Uri): String? {
+class GetRealPath(private val context: Context) {
 
-    var fullPath: String? = null
-    val column = "_data"
-    var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
-    if (cursor != null) {
-        cursor.moveToFirst()
-        var documentId = cursor.getString(0)
-        if (documentId == null) {
-            for (i in 0 until cursor.columnCount) {
-                if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-                    fullPath = cursor.getString(i)
-                    break
+    fun getRealPathFromURIForGallery(uri: Uri): String? {
+
+        var fullPath: String? = null
+        val column = "_data"
+        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
+        if (cursor != null) {
+            cursor.moveToFirst()
+            var documentId = cursor.getString(0)
+            if (documentId == null) {
+                for (i in 0 until cursor.columnCount) {
+                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
+                        fullPath = cursor.getString(i)
+                        break
+                    }
                 }
-            }
-        } else {
-            documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
-            cursor.close()
-            val projection = arrayOf(column)
-            try {
-                cursor = context.contentResolver.query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    MediaStore.Images.Media._ID + " = ? ",
-                    arrayOf(documentId),
-                    null
-                )
-                if (cursor != null) {
-                    cursor.moveToFirst()
-                    fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
+            } else {
+                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
+                cursor.close()
+                val projection = arrayOf(column)
+                try {
+                    cursor = context.contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        projection,
+                        MediaStore.Images.Media._ID + " = ? ",
+                        arrayOf(documentId),
+                        null
+                    )
+                    if (cursor != null) {
+                        cursor.moveToFirst()
+                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
+                    }
+                } finally {
+                    if (cursor != null) cursor.close()
                 }
-            } finally {
-                if (cursor != null) cursor.close()
             }
         }
+        return fullPath
     }
-    return fullPath
 }
 
 fun getImageBody(file: File): MultipartBody.Part {

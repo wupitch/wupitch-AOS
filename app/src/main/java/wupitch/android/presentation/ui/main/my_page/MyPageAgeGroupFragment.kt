@@ -41,10 +41,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.domain.model.AgeRadioButton
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
-import wupitch.android.presentation.ui.MainViewModel
 import wupitch.android.presentation.ui.components.RoundBtn
 import wupitch.android.presentation.ui.components.IconToolBar
-import wupitch.android.presentation.ui.components.StopWarningDialog
 
 @AndroidEntryPoint
 class MyPageAgeGroupFragment : Fragment() {
