@@ -5,6 +5,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 import wupitch.android.data.remote.dto.*
+import wupitch.android.data.remote.response.*
 
 interface ProfileApi {
 

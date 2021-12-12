@@ -1,7 +1,7 @@
-package wupitch.android.data.remote.dto
+package wupitch.android.data.remote.response
 
 
-import com.google.gson.annotations.SerializedName
+import wupitch.android.data.remote.dto.GetCrewContent
 
 data class GetMyCrewRes(
     val code: Int,

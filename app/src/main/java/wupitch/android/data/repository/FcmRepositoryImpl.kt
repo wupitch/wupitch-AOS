@@ -3,10 +3,10 @@ package wupitch.android.data.repository
 import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.FcmApi
-import wupitch.android.data.remote.dto.BaseRes
+import wupitch.android.data.remote.response.BaseRes
 import wupitch.android.data.remote.dto.FcmReq
 import wupitch.android.data.remote.dto.FcmReqTest
-import wupitch.android.data.remote.dto.NotiRes
+import wupitch.android.data.remote.response.NotiRes
 import wupitch.android.domain.repository.FcmRepository
 import javax.inject.Inject
 

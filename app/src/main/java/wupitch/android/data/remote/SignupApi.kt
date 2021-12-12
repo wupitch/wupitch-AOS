@@ -4,8 +4,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
-import wupitch.android.data.remote.dto.BaseRes
-import wupitch.android.data.remote.dto.SignupRes
+import wupitch.android.data.remote.response.BaseRes
+import wupitch.android.data.remote.response.SignupRes
 import wupitch.android.domain.model.SignupReq
 
 interface SignupApi {

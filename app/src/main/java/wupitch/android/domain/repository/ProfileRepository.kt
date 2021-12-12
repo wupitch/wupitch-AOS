@@ -4,6 +4,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import wupitch.android.data.remote.dto.*
+import wupitch.android.data.remote.response.*
 
 interface ProfileRepository {
     suspend fun getUserInfo() : Response<UserInfoRes>

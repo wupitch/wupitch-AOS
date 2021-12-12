@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import wupitch.android.data.remote.CheckValidationApi
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
-import wupitch.android.data.remote.dto.ValidationRes
+import wupitch.android.data.remote.response.ValidationRes
 import wupitch.android.domain.repository.CheckValidRepository
 import javax.inject.Inject
 

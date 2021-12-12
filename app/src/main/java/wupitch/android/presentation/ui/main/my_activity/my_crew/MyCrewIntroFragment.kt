@@ -35,7 +35,7 @@ import wupitch.android.domain.model.CrewDetailResult
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.util.Sport
+import wupitch.android.util.SportType
 
 @AndroidEntryPoint
 class MyCrewIntroFragment : Fragment() {
@@ -89,12 +89,12 @@ class MyCrewIntroFragment : Fragment() {
                                             rememberImagePainter(
                                                 crewInfo.crewImage,
                                                 builder = {
-                                                    placeholder(Sport.getNumOf(crewInfo.sportsId).detailImage)
+                                                    placeholder(SportType.getNumOf(crewInfo.sportsId).detailImage)
                                                     build()
                                                 }
                                             )
                                         } else {
-                                            rememberImagePainter(Sport.getNumOf(crewInfo.sportsId).detailImage)
+                                            rememberImagePainter(SportType.getNumOf(crewInfo.sportsId).detailImage)
                                         },
                                         contentDescription = "crew sport icon",
                                         modifier = Modifier
@@ -327,9 +327,9 @@ fun CrewInfo(
         SportKeyword(
             modifier = Modifier
                 .clip(RoundedCornerShape(14.dp))
-                .background(colorResource(id = Sport.getNumOf(crewState.sportsId).color))
+                .background(colorResource(id = SportType.getNumOf(crewState.sportsId).color))
                 .padding(horizontal = 13.dp, vertical = 4.dp),
-            sportName = Sport.getNumOf(crewState.sportsId).sportName
+            sportName = SportType.getNumOf(crewState.sportsId).sportName
         )
 
         Text(

@@ -55,3 +55,9 @@ fun formatToWon(text: AnnotatedString): TransformedText {
 
     return TransformedText(AnnotatedString(formatter.format(num)), numberOffsetTranslator)
 }
+
+fun checkKeywordLen(searchKeyword: String): String {
+    return if(searchKeyword.length > 7) {
+        searchKeyword.substring(0, 7) + "..."
+    }else searchKeyword
+}

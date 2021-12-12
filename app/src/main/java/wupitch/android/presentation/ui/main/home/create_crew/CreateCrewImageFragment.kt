@@ -1,9 +1,7 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +30,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import coil.compose.rememberImagePainter
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -45,11 +42,9 @@ import wupitch.android.common.Constants.SUPPLY_MAX_LENGTH
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
-import wupitch.android.util.Sport
-import android.provider.MediaStore
+import wupitch.android.util.SportType
 import androidx.compose.animation.core.FloatTweenSpec
 import androidx.compose.animation.core.LinearEasing
-import androidx.fragment.app.viewModels
 import androidx.navigation.navGraphViewModels
 import kotlinx.coroutines.launch
 
@@ -362,7 +357,7 @@ class CreateCrewImageFragment : Fragment() {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
                     painter = if(imageUri.value != EMPTY_IMAGE_URI) rememberImagePainter(data = imageUri.value)
-                    else painterResource(id = Sport.getNumOf(viewModel.crewSportId.value).detailImage),
+                    else painterResource(id = SportType.getNumOf(viewModel.crewSportId.value).detailImage),
                     contentDescription = "crew image"
                 )
             }

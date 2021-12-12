@@ -1,11 +1,6 @@
 package wupitch.android.presentation.ui.main.my_activity.my_crew
 
-import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -14,23 +9,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
-import wupitch.android.data.remote.dto.Schedule
-import wupitch.android.domain.model.CrewDetailResult
+import wupitch.android.data.remote.dto.toCrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
 import wupitch.android.util.GetRealPath
-import wupitch.android.util.doubleToTime
-import wupitch.android.util.getImageBody
-import java.io.File
-import java.lang.StringBuilder
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -56,68 +41,16 @@ class MyCrewViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let { res ->
                 if (res.isSuccess) _crewDetailState.value = CrewDetailState(
-                    data = CrewDetailResult(
-                        ageTable = convertedAge(res.result.ageTable),
-                        areaName = res.result.areaName ?: "장소 미정",
-                        clubId = res.result.clubId,
-                        clubTitle = res.result.clubTitle,
-                        crewImage = res.result.crewImage,
-                        crewName = res.result.crewName ?: "",
-                        dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                        extraList = res.result.extraList,
-                        introduction = res.result.introduction,
-                        memberCount = "${res.result.memberCount}명",
-                        schedules = convertedSchedule(res.result.schedules),
-                        sportsId = res.result.sportsId-1,
-                        materials = res.result.materials,
-                        inquiries = res.result.inquiries,
-                        isPinUp = res.result.isPinUp,
-                        isSelect = res.result.isSelect
-                    )
+                    data = res.result.toCrewDetailResult()
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)
             }
         } else _crewDetailState.value = CrewDetailState(error = "크루 조회에 실패했습니다.")
     }
 
-    private fun convertedSchedule(schedules: List<Schedule>): List<String> {
-        val schedule = arrayListOf<String>()
-        schedules.forEach {
-            schedule.add("${it.day} ${doubleToTime(it.startTime)} - ${doubleToTime(it.endTime)}")
-        }
-        return schedule.toList()
-    }
-
-
-    private fun convertedCrewFee(dues: Int?, guestDues: Int? ): List<String> {
-        val list = arrayListOf<String>()
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-
-        if (dues != null){
-            val formattedMoney = formatter.format(dues)
-            list.add("정회원비 $formattedMoney 원")
-        }
-        if(guestDues != null){
-            val formattedMoney = formatter.format(guestDues)
-            list.add("손님비 $formattedMoney 원")
-        }
-
-        return list.toList()
-    }
-
-    private fun convertedAge(ageTable: List<String>): String {
-
-        val stringBuilder = StringBuilder()
-        ageTable.forEachIndexed { index, s ->
-            if (index != ageTable.size - 1) {
-                stringBuilder.append("$s, ")
-            }else {
-                stringBuilder.append(s)
-            }
-        }
-        return stringBuilder.toString()
-    }
+    /*
+    * pin
+    * */
 
     private var _pinState = mutableStateOf(BaseState())
     val pinState : State<BaseState> = _pinState

@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,7 +24,6 @@ import coil.compose.rememberImagePainter
 import wupitch.android.R
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.util.Sport
 
 @Composable
 fun ImpromptuCard(

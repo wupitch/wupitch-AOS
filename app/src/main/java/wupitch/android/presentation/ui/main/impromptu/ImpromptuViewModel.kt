@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
+import wupitch.android.data.remote.dto.toImprtCardInfo
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.ImprtRepository
@@ -185,19 +186,7 @@ class ImpromptuViewModel @Inject constructor(
             response.body()?.let { res ->
                 if (res.isSuccess) {
                     if (res.result.first) _imprtState.clear()
-                    appendList(res.result.content.map {
-                        ImpromptuCardInfo(
-                            id = it.impromptuId,
-                            remainingDays = it.dday,
-                            title = it.title,
-                            isPinned = it.isPinUp,
-                            time = "${dateDashToCol(it.date)} ${it.day} ${doubleToTime(it.startTime)}",
-                            detailAddress = it.location ?: "장소 미정",
-                            imprtImage = it.impromptuImage,
-                            gatheredPeople = it.nowMemberCount,
-                            totalCount = it.recruitmentCount
-                        )
-                    })
+                    appendList(res.result.content.map { it.toImprtCardInfo() })
                 } else {
                     error.value = res.message
                 }

@@ -5,7 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
-import wupitch.android.data.remote.dto.ValidationRes
+import wupitch.android.data.remote.response.ValidationRes
 
 interface CheckValidationApi {
     @POST("app/accounts/nickname/validation")

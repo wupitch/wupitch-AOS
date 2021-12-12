@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.data.remote.dto.CrewVisitorReq
-import wupitch.android.data.remote.dto.Schedule
-import wupitch.android.domain.model.CrewDetailResult
+import wupitch.android.data.remote.dto.toCrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.util.*
 import java.text.DecimalFormat
@@ -41,24 +40,7 @@ class CrewDetailViewModel @Inject constructor(
             response.body()?.let { res ->
                 if (res.isSuccess) {
                     _crewDetailState.value = CrewDetailState(
-                        data = CrewDetailResult(
-                            ageTable = convertedAge(res.result.ageTable),
-                            areaName = res.result.areaName ?: "장소 미정",
-                            clubId = res.result.clubId,
-                            clubTitle = res.result.clubTitle,
-                            crewImage = res.result.crewImage,
-                            crewName = res.result.crewName ?: "",
-                            dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                            extraList = res.result.extraList,
-                            introduction = res.result.introduction,
-                            memberCount = "${res.result.memberCount}명",
-                            schedules = convertedSchedule(res.result.schedules),
-                            sportsId = res.result.sportsId - 1,
-                            materials = res.result.materials,
-                            inquiries = res.result.inquiries,
-                            isPinUp = res.result.isPinUp,
-                            isSelect = res.result.isSelect
-                        )
+                        data = res.result.toCrewDetailResult()
                     )
                     creatorId = res.result.creatorAccountId
                 }
@@ -68,43 +50,10 @@ class CrewDetailViewModel @Inject constructor(
     }
     
 
-    private fun convertedSchedule(schedules: List<Schedule>): List<String> {
-        val schedule = arrayListOf<String>()
-        schedules.forEach {
-            schedule.add("${it.day} ${doubleToTime(it.startTime)} - ${doubleToTime(it.endTime)}")
-        }
-        return schedule.toList()
-    }
+    /*
+    * pin
+    * */
 
-    private fun convertedCrewFee(dues: Int?, guestDues: Int?): List<String> {
-        val list = arrayListOf<String>()
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-
-        if (dues != null) {
-            val formattedMoney = formatter.format(dues)
-            list.add("정회원비 $formattedMoney 원")
-        }
-        if (guestDues != null) {
-            val formattedMoney = formatter.format(guestDues)
-            list.add("손님비 $formattedMoney 원")
-        }
-
-        return list.toList()
-    }
-
-    private fun convertedAge(ageTable: List<String>): String {
-
-        val stringBuilder = StringBuilder()
-        ageTable.forEachIndexed { index, s ->
-            if (index != ageTable.size - 1) {
-                stringBuilder.append("$s, ")
-            } else {
-                stringBuilder.append(s)
-            }
-        }
-        return stringBuilder.toString()
-    }
 
     private var _pinChangeState = mutableStateOf(BaseState())
     val pinChangeState: State<BaseState> = _pinChangeState

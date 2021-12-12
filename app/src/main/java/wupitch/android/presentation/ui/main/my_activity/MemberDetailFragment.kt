@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +40,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.FullToolBar
 import wupitch.android.presentation.ui.components.ReportBottomSheetFragment
-import wupitch.android.util.Sport
+import wupitch.android.util.SportType
 
 @AndroidEntryPoint
 class MemberDetailFragment : Fragment() {
@@ -204,7 +203,7 @@ class MemberDetailFragment : Fragment() {
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(colorResource(id = Sport.getNumOf(it.sportsId).color))
+                            .background(colorResource(id = SportType.getNumOf(it.sportsId).color))
                             .padding(horizontal = 11.dp, vertical = 5.dp)
                     ) {
                         Text(

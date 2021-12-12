@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.CrewApi
 import wupitch.android.data.remote.dto.*
+import wupitch.android.data.remote.response.*
 import wupitch.android.domain.model.CreateCrewReq
 import wupitch.android.domain.repository.CrewRepository
 import javax.inject.Inject

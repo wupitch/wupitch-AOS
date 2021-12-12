@@ -1,4 +1,6 @@
-package wupitch.android.data.remote.dto
+package wupitch.android.data.remote.response
+
+import wupitch.android.data.remote.dto.UserSportsResult
 
 
 data class UserSportsRes(
