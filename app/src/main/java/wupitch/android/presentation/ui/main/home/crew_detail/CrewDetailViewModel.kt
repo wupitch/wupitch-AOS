@@ -1,24 +1,20 @@
 package wupitch.android.presentation.ui.main.home.crew_detail
 
-import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import wupitch.android.R
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
-import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.data.remote.dto.CrewVisitorReq
-import wupitch.android.data.remote.dto.Schedule
-import wupitch.android.domain.model.CrewDetailResult
+import wupitch.android.data.remote.dto.toCrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.util.*
-import java.lang.StringBuilder
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
@@ -26,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CrewDetailViewModel @Inject constructor(
     private val crewRepository: CrewRepository,
-    @ApplicationContext val context: Context
+    private val userInfoDataStore : DataStore<Preferences>
 ) : ViewModel() {
 
     private var crewId: Int = -1
@@ -44,24 +40,7 @@ class CrewDetailViewModel @Inject constructor(
             response.body()?.let { res ->
                 if (res.isSuccess) {
                     _crewDetailState.value = CrewDetailState(
-                        data = CrewDetailResult(
-                            ageTable = convertedAge(res.result.ageTable),
-                            areaName = res.result.areaName ?: "장소 미정",
-                            clubId = res.result.clubId,
-                            clubTitle = res.result.clubTitle,
-                            crewImage = res.result.crewImage,
-                            crewName = res.result.crewName ?: "",
-                            dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                            extraList = res.result.extraList,
-                            introduction = res.result.introduction,
-                            memberCount = "${res.result.memberCount}명",
-                            schedules = convertedSchedule(res.result.schedules),
-                            sportsId = res.result.sportsId - 1,
-                            materials = res.result.materials,
-                            inquiries = res.result.inquiries,
-                            isPinUp = res.result.isPinUp,
-                            isSelect = res.result.isSelect
-                        )
+                        data = res.result.toCrewDetailResult()
                     )
                     creatorId = res.result.creatorAccountId
                 }
@@ -71,43 +50,10 @@ class CrewDetailViewModel @Inject constructor(
     }
     
 
-    private fun convertedSchedule(schedules: List<Schedule>): List<String> {
-        val schedule = arrayListOf<String>()
-        schedules.forEach {
-            schedule.add("${it.day} ${doubleToTime(it.startTime)} - ${doubleToTime(it.endTime)}")
-        }
-        return schedule.toList()
-    }
+    /*
+    * pin
+    * */
 
-    private fun convertedCrewFee(dues: Int?, guestDues: Int?): List<String> {
-        val list = arrayListOf<String>()
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-
-        if (dues != null) {
-            val formattedMoney = formatter.format(dues)
-            list.add("정회원비 $formattedMoney 원")
-        }
-        if (guestDues != null) {
-            val formattedMoney = formatter.format(guestDues)
-            list.add("손님비 $formattedMoney 원")
-        }
-
-        return list.toList()
-    }
-
-    private fun convertedAge(ageTable: List<String>): String {
-
-        val stringBuilder = StringBuilder()
-        ageTable.forEachIndexed { index, s ->
-            if (index != ageTable.size - 1) {
-                stringBuilder.append("$s, ")
-            } else {
-                stringBuilder.append(s)
-            }
-        }
-        return stringBuilder.toString()
-    }
 
     private var _pinChangeState = mutableStateOf(BaseState())
     val pinChangeState: State<BaseState> = _pinChangeState
@@ -139,7 +85,7 @@ class CrewDetailViewModel @Inject constructor(
     fun participateCrew() = viewModelScope.launch {
         _joinState.value = JoinState(isLoading = true)
         if(checkIsCreator()) {
-            _joinState.value = JoinState(code = -100, error = context.getString(R.string.cannot_apply_for_self_created_crew))
+            _joinState.value = JoinState(code = -100, error = "본인이 생성한 크루는 신청이 불가능해요")
             return@launch
         }
         _crewDetailState.value.data?.clubId?.let {
@@ -159,7 +105,7 @@ class CrewDetailViewModel @Inject constructor(
     }
 
     private suspend fun checkIsCreator() : Boolean {
-        val flow = context.userInfoStore.data.first()
+        val flow = userInfoDataStore.data.first()
         return flow[Constants.USER_ID] == creatorId
     }
 
@@ -213,7 +159,7 @@ class CrewDetailViewModel @Inject constructor(
     fun postVisit(date : String) = viewModelScope.launch {
         _postVisitState.value = BaseState(isLoading = true)
         if(checkIsCreator()) {
-            _postVisitState.value = BaseState(error = context.getString(R.string.cannot_apply_for_self_created_crew))
+            _postVisitState.value = BaseState(error = "본인이 생성한 크루는 신청이 불가능해요")
             return@launch
         }
         val req = CrewVisitorReq(

@@ -1,19 +1,14 @@
 package wupitch.android.presentation.ui.main.my_page
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
-import wupitch.android.data.remote.dto.BaseRes
 import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.data.remote.dto.UpdateUserInfoReq
-import wupitch.android.data.remote.dto.toResult
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject

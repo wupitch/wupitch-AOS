@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import wupitch.android.data.remote.dto.SportRes
 import wupitch.android.domain.model.SportResult
-import wupitch.android.presentation.ui.main.my_activity.my_crew.MemberState
 
 data class MemberDetailState(
     val isLoading: Boolean = false,

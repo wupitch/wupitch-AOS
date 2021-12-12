@@ -9,9 +9,10 @@ import okhttp3.Request
 import okhttp3.Response
 import wupitch.android.common.Constants.userInfoStore
 import java.io.IOException
+import javax.inject.Inject
 
-class JwtTokenInterceptor(
-    @ApplicationContext val context: Context
+class JwtTokenInterceptor @Inject constructor(
+    val context: Context
 ) : Interceptor {
 
     @Throws(IOException::class)

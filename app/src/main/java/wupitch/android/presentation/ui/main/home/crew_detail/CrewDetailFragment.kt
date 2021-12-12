@@ -39,7 +39,7 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
-import wupitch.android.util.Sport
+import wupitch.android.util.SportType
 
 @AndroidEntryPoint
 class CrewDetailFragment : Fragment() {
@@ -479,9 +479,9 @@ class CrewDetailFragment : Fragment() {
             SportKeyword(
                 modifier = Modifier
                     .clip(RoundedCornerShape(14.dp))
-                    .background(colorResource(id = Sport.getNumOf(crewState.sportsId).color))
+                    .background(colorResource(id = SportType.getNumOf(crewState.sportsId).color))
                     .padding(horizontal = 13.dp, vertical = 4.dp),
-                sportName = Sport.getNumOf(crewState.sportsId).sportName
+                sportName = SportType.getNumOf(crewState.sportsId).sportName
             )
 
             Text(
@@ -603,12 +603,12 @@ class CrewDetailFragment : Fragment() {
                 rememberImagePainter(
                     crewState.crewImage,
                     builder = {
-                        placeholder(Sport.getNumOf(crewState.sportsId).detailImage)
+                        placeholder(SportType.getNumOf(crewState.sportsId).detailImage)
                         build()
                     }
                 )
             } else {
-                rememberImagePainter(Sport.getNumOf(crewState.sportsId).detailImage)
+                rememberImagePainter(SportType.getNumOf(crewState.sportsId).detailImage)
             },
                 contentDescription = "crew sport icon",
                 modifier = Modifier

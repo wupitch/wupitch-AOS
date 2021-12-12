@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import wupitch.android.data.remote.dto.toCrewCardInfo
+import wupitch.android.data.remote.dto.toImprtCardInfo
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.model.ImpromptuCardInfo
 import wupitch.android.domain.repository.CrewRepository
@@ -36,17 +38,7 @@ class MyActivityViewModel @Inject constructor(
         val response = crewRepository.getMyCrews()
         if (response.isSuccessful) {
             response.body()?.let { res ->
-                if (res.isSuccess) _myCrewState.value = MyCrewState(data = res.result.map {
-                    CrewCardInfo(
-                        id = it.clubId,
-                        sportId = it.sportsId - 1,
-                        crewImage = it.crewImage,
-                        isPinned = false,
-                        title = it.clubTitle,
-                        time = "${it.schedules[0].day} ${doubleToTime(it.schedules[0].startTime)}-${doubleToTime(it.schedules[0].endTime)}",
-                        isMoreThanOnceAWeek = it.schedules.size > 1,
-                        detailAddress = it.areaName ?: "장소 미정"
-                    ) }
+                if (res.isSuccess) _myCrewState.value = MyCrewState(data = res.result.map {it.toCrewCardInfo()}
                 ) else _myCrewState.value = MyCrewState(error = res.message)
             }
         }else _myCrewState.value = MyCrewState(error = "내 크루 조회에 실패했습니다.")
@@ -59,19 +51,7 @@ class MyActivityViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let { res ->
                 if (res.isSuccess) {
-                    _myImprtState.value = ImprtState(data = res.result.map {
-                        ImpromptuCardInfo(
-                            id = it.impromptuId,
-                            remainingDays = it.dday,
-                            title = it.title,
-                            isPinned = it.isPinUp,
-                            time = "${dateDashToCol(it.date)} ${it.day} ${doubleToTime(it.startTime)}",
-                            detailAddress = it.location ?: "장소 미정",
-                            imprtImage = it.impromptuImage,
-                            gatheredPeople = it.nowMemberCount,
-                            totalCount = it.recruitmentCount
-                        )
-                    })
+                    _myImprtState.value = ImprtState(data = res.result.map {it.toImprtCardInfo() })
                 } else {
                     _myImprtState.value = ImprtState(error = res.message)
                 }

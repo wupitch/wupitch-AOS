@@ -27,16 +27,18 @@ import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.repository.ProfileRepository
+import wupitch.android.util.GetRealPath
+import wupitch.android.util.getImageBody
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
-    @ApplicationContext val context: Context,
     private val userInfoDataStore : DataStore<Preferences>,
     private val crewFilterDataStore : DataStore<CrewFilter>,
-    private val imprtFilterDataStore : DataStore<ImpromptuFilter>
+    private val imprtFilterDataStore : DataStore<ImpromptuFilter>,
+    private val getRealPath: GetRealPath
 ) : ViewModel() {
 
     /*
@@ -271,7 +273,7 @@ class MyPageViewModel @Inject constructor(
         _uploadImageState.value = BaseState(isLoading = true)
 
         _userImageState.value = uri
-        val path = getRealPathFromURIForGallery(uri)
+        val path = getRealPath.getRealPathFromURIForGallery(uri)
 
         if (path != null) {
             resizeImage(file = File(path))
@@ -306,53 +308,6 @@ class MyPageViewModel @Inject constructor(
             resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
             resized.recycle()
         }
-    }
-
-    private fun getImageBody(file: File): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(
-            name = "images",
-            filename = file.name,
-            body = file.asRequestBody("image/*".toMediaType())
-        )
-    }
-
-    private fun getRealPathFromURIForGallery(uri: Uri): String? {
-
-        var fullPath: String? = null
-        val column = "_data"
-        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
-        if (cursor != null) {
-            cursor.moveToFirst()
-            var documentId = cursor.getString(0)
-            if (documentId == null) {
-                for (i in 0 until cursor.columnCount) {
-                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-                        fullPath = cursor.getString(i)
-                        break
-                    }
-                }
-            } else {
-                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
-                cursor.close()
-                val projection = arrayOf(column)
-                try {
-                    cursor = context.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection,
-                        MediaStore.Images.Media._ID + " = ? ",
-                        arrayOf(documentId),
-                        null
-                    )
-                    if (cursor != null) {
-                        cursor.moveToFirst()
-                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
-                    }
-                } finally {
-                    if (cursor != null) cursor.close()
-                }
-            }
-        }
-        return fullPath
     }
 
 }

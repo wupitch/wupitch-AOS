@@ -1,19 +1,16 @@
 package wupitch.android.presentation.ui.main.impromptu.impromptu_detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,7 +39,6 @@ import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.home.crew_detail.components.JoinSuccessDialog
 import wupitch.android.presentation.ui.main.home.crew_detail.components.NotEnoughInfoDialog
 import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
-import wupitch.android.util.Sport
 
 @AndroidEntryPoint
 class ImpromptuDetailFragment : Fragment() {

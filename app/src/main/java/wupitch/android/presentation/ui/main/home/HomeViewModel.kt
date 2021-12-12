@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants.PAGE_SIZE
 import wupitch.android.common.Resource
+import wupitch.android.data.remote.dto.toCrewCardInfo
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
@@ -196,17 +197,7 @@ class HomeViewModel @Inject constructor(
             response.body()?.let { res ->
                 if(res.isSuccess) {
                     if(res.result.first) _crewState.clear()
-                    appendList(res.result.content.map {
-                        CrewCardInfo(
-                            id = it.clubId,
-                            sportId = it.sportsId -1,
-                            isPinned = it.isPinUp,
-                            time = "${it.schedules[0].day} ${doubleToTime(it.schedules[0].startTime)}-${doubleToTime(it.schedules[0].endTime)}",
-                            isMoreThanOnceAWeek = it.schedules.size >1,
-                            detailAddress = it.areaName ?: "장소 미정",
-                            crewImage = it.crewImage,
-                            title = it.clubTitle
-                        )})
+                    appendList(res.result.content.map { it.toCrewCardInfo() })
                 } else {
                     error.value = res.message
                 }

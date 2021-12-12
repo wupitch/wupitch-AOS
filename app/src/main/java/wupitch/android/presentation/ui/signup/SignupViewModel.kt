@@ -34,6 +34,7 @@ import wupitch.android.data.remote.dto.NicknameValidReq
 import wupitch.android.domain.model.SignupReq
 import wupitch.android.domain.repository.CheckValidRepository
 import wupitch.android.domain.repository.SignupRepository
+import wupitch.android.util.getImageBody
 import java.io.*
 import java.util.*
 import javax.inject.Inject
@@ -304,14 +305,6 @@ class SignupViewModel @Inject constructor(
 
         return file
 
-    }
-
-    private fun getImageBody(file: File): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(
-            name = "images",
-            filename = file.name,
-            body = file.asRequestBody("image/*".toMediaType())
-        )
     }
 
 

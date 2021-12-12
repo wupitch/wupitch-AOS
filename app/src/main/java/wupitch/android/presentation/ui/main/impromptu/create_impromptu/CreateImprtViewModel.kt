@@ -37,7 +37,7 @@ import javax.inject.Inject
 class CreateImprtViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
     private val imprtRepository: ImprtRepository,
-    @ApplicationContext val context: Context
+    private val getRealPath: GetRealPath
 ) : ViewModel() {
 
     private var _districtList = mutableStateOf(DistrictState())
@@ -252,7 +252,7 @@ class CreateImprtViewModel @Inject constructor(
         if (_imprtImage.value == EMPTY_IMAGE_URI) {
             _createImprtState.value = CreateImpromptuState(data = id)
         } else {
-            val path = getRealPathFromURIForGallery(context,_imprtImage.value)
+            val path = getRealPath.getRealPathFromURIForGallery(_imprtImage.value)
 
             if (path != null) {
                 resizeImage(file = File(path))

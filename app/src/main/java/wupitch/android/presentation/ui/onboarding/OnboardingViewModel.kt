@@ -3,6 +3,8 @@ package wupitch.android.presentation.ui.onboarding
 import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,11 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
-    @ApplicationContext val context: Context,
+    private val userInfoDataStore : DataStore<Preferences>,
     private val loginRepository: LoginRepository,
 ) : ViewModel() {
-
-
 
     var userEmail = mutableStateOf("")
     var userPw = mutableStateOf("")
@@ -41,7 +41,7 @@ class OnboardingViewModel @Inject constructor(
             response.body()?.let { loginRes ->
                 if(loginRes.isSuccess) {
                     _loginState.value = LoginState(isSuccess = true)
-                    context.userInfoStore.edit { settings ->
+                    userInfoDataStore.edit { settings ->
                         settings[Constants.JWT_PREFERENCE_KEY] = loginRes.result.jwt
                         settings[Constants.USER_ID] = loginRes.result.accountId
                         settings[Constants.USER_EMAIL] = loginRes.result.email

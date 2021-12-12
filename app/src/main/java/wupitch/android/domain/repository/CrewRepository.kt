@@ -3,9 +3,8 @@ package wupitch.android.domain.repository
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.POST
 import wupitch.android.data.remote.dto.*
+import wupitch.android.data.remote.response.*
 import wupitch.android.domain.model.CreateCrewReq
 
 interface CrewRepository {

@@ -28,7 +28,7 @@ import wupitch.android.R
 import wupitch.android.domain.model.CrewCardInfo
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.SportKeyword
-import wupitch.android.util.Sport
+import wupitch.android.util.SportType
 
 @Composable
 fun MyCrewCard(
@@ -80,7 +80,7 @@ fun MyCrewCard(
                                 build()
                             }
                         )
-                    } else painterResource(id = Sport.getNumOf(crew.sportId).thumbnailImage),
+                    } else painterResource(id = SportType.getNumOf(crew.sportId).thumbnailImage),
                     contentDescription = "",
                     contentScale = ContentScale.Crop
                 )
@@ -101,9 +101,9 @@ fun MyCrewCard(
                                     bottom.linkTo(parent.bottom)
                                 }
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(colorResource(id = Sport.getNumOf(crew.sportId).color))
+                                .background(colorResource(id = SportType.getNumOf(crew.sportId).color))
                                 .padding(horizontal = 8.dp, vertical = 1.dp),
-                            sportName = Sport.getNumOf(crew.sportId).sportName
+                            sportName = SportType.getNumOf(crew.sportId).sportName
                         )
                     }
                     Spacer(modifier = Modifier.height(7.dp))

@@ -1,11 +1,6 @@
 package wupitch.android.presentation.ui.main.my_activity.my_crew
 
-import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -14,27 +9,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
-import wupitch.android.data.remote.dto.Schedule
-import wupitch.android.domain.model.CrewDetailResult
+import wupitch.android.data.remote.dto.toCrewDetailResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
-import wupitch.android.util.doubleToTime
-import java.io.File
-import java.lang.StringBuilder
-import java.text.DecimalFormat
+import wupitch.android.util.GetRealPath
 import javax.inject.Inject
 
 @HiltViewModel
 class MyCrewViewModel @Inject constructor(
     private val crewRepository: CrewRepository,
-    @ApplicationContext val context : Context
+    private val getRealPath: GetRealPath
 ) : ViewModel(){
 
     var crewId = -1
@@ -54,68 +41,16 @@ class MyCrewViewModel @Inject constructor(
         if (response.isSuccessful) {
             response.body()?.let { res ->
                 if (res.isSuccess) _crewDetailState.value = CrewDetailState(
-                    data = CrewDetailResult(
-                        ageTable = convertedAge(res.result.ageTable),
-                        areaName = res.result.areaName ?: "장소 미정",
-                        clubId = res.result.clubId,
-                        clubTitle = res.result.clubTitle,
-                        crewImage = res.result.crewImage,
-                        crewName = res.result.crewName ?: "",
-                        dues = convertedCrewFee(res.result.dues, res.result.guestDues),
-                        extraList = res.result.extraList,
-                        introduction = res.result.introduction,
-                        memberCount = "${res.result.memberCount}명",
-                        schedules = convertedSchedule(res.result.schedules),
-                        sportsId = res.result.sportsId-1,
-                        materials = res.result.materials,
-                        inquiries = res.result.inquiries,
-                        isPinUp = res.result.isPinUp,
-                        isSelect = res.result.isSelect
-                    )
+                    data = res.result.toCrewDetailResult()
                 )
                 else _crewDetailState.value = CrewDetailState(error = res.message)
             }
         } else _crewDetailState.value = CrewDetailState(error = "크루 조회에 실패했습니다.")
     }
 
-    private fun convertedSchedule(schedules: List<Schedule>): List<String> {
-        val schedule = arrayListOf<String>()
-        schedules.forEach {
-            schedule.add("${it.day} ${doubleToTime(it.startTime)} - ${doubleToTime(it.endTime)}")
-        }
-        return schedule.toList()
-    }
-
-
-    private fun convertedCrewFee(dues: Int?, guestDues: Int? ): List<String> {
-        val list = arrayListOf<String>()
-        val formatter: DecimalFormat =
-            DecimalFormat("#,###")
-
-        if (dues != null){
-            val formattedMoney = formatter.format(dues)
-            list.add("정회원비 $formattedMoney 원")
-        }
-        if(guestDues != null){
-            val formattedMoney = formatter.format(guestDues)
-            list.add("손님비 $formattedMoney 원")
-        }
-
-        return list.toList()
-    }
-
-    private fun convertedAge(ageTable: List<String>): String {
-
-        val stringBuilder = StringBuilder()
-        ageTable.forEachIndexed { index, s ->
-            if (index != ageTable.size - 1) {
-                stringBuilder.append("$s, ")
-            }else {
-                stringBuilder.append(s)
-            }
-        }
-        return stringBuilder.toString()
-    }
+    /*
+    * pin
+    * */
 
     private var _pinState = mutableStateOf(BaseState())
     val pinState : State<BaseState> = _pinState
@@ -234,12 +169,12 @@ class MyCrewViewModel @Inject constructor(
     var shareOnlyToCrew = true
 
     fun setUserImage(uri: Uri) = viewModelScope.launch {
-        val path = getRealPathFromURIForGallery(uri)
-
-        if (path != null) {
-            resizeImage(file = File(path))
-
-            val file = getImageBody(File(path))
+//        val path = getRealPath.getRealPathFromURIForGallery(uri)
+//
+//        if (path != null) {
+//            resizeImage(file = File(path))
+//
+//            val file = getImageBody(File(path))
 
 //            val response = profileRepository.postProfileImage(file.body, file)
 //            if (response.isSuccessful) {
@@ -248,75 +183,28 @@ class MyCrewViewModel @Inject constructor(
 //                    else _userImageState.value = BaseState(error = res.message)
 //                }
 //            } else _userImageState.value = BaseState(error = "프로필 이미지 업로드를 실패했습니다.")
-        }
+//        }
 
     }
 
-    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-        val bmOptions = BitmapFactory.Options()
-        bmOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-        val photoW = bmOptions.outWidth
-        val photoH = bmOptions.outHeight
-
-        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-
-        bmOptions.inJustDecodeBounds = false
-        bmOptions.inSampleSize = scaleFactor
-
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-        file.outputStream().use {
-            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
-        }
-    }
-
-    private fun getImageBody(file: File): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(
-            name = "images",
-            filename = file.name,
-            body = file.asRequestBody("image/*".toMediaType())
-        )
-    }
-
-    private fun getRealPathFromURIForGallery(uri: Uri): String? {
-
-        var fullPath: String? = null
-        val column = "_data"
-        var cursor: Cursor? = context.contentResolver.query(uri, null, null, null, null)
-        if (cursor != null) {
-            cursor.moveToFirst()
-            var documentId = cursor.getString(0)
-            if (documentId == null) {
-                for (i in 0 until cursor.columnCount) {
-                    if (column.equals(cursor.getColumnName(i), ignoreCase = true)) {
-                        fullPath = cursor.getString(i)
-                        break
-                    }
-                }
-            } else {
-                documentId = documentId.substring(documentId.lastIndexOf(":") + 1)
-                cursor.close()
-                val projection = arrayOf(column)
-                try {
-                    cursor = context.contentResolver.query(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        projection,
-                        MediaStore.Images.Media._ID + " = ? ",
-                        arrayOf(documentId),
-                        null
-                    )
-                    if (cursor != null) {
-                        cursor.moveToFirst()
-                        fullPath = cursor.getString(cursor.getColumnIndexOrThrow(column))
-                    }
-                } finally {
-                    if (cursor != null) cursor.close()
-                }
-            }
-        }
-        return fullPath
-    }
+//    private fun resizeImage(file: File, scaleTo: Int = 1024) {
+//        val bmOptions = BitmapFactory.Options()
+//        bmOptions.inJustDecodeBounds = true
+//        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+//        val photoW = bmOptions.outWidth
+//        val photoH = bmOptions.outHeight
+//
+//        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
+//
+//        bmOptions.inJustDecodeBounds = false
+//        bmOptions.inSampleSize = scaleFactor
+//
+//        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
+//        file.outputStream().use {
+//            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+//            resized.recycle()
+//        }
+//    }
 
     /*
     * members

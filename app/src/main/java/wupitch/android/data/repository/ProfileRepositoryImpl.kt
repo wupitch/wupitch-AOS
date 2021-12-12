@@ -6,6 +6,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import wupitch.android.data.remote.ProfileApi
 import wupitch.android.data.remote.dto.*
+import wupitch.android.data.remote.response.*
 import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject
 

@@ -3,7 +3,7 @@ package wupitch.android.domain.repository
 import retrofit2.Response
 import wupitch.android.data.remote.dto.EmailValidReq
 import wupitch.android.data.remote.dto.NicknameValidReq
-import wupitch.android.data.remote.dto.ValidationRes
+import wupitch.android.data.remote.response.ValidationRes
 
 interface CheckValidRepository {
     suspend fun checkNicknameValidation(validReq : NicknameValidReq) : Response<ValidationRes>

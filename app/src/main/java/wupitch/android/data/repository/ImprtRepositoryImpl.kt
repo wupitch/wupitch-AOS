@@ -4,12 +4,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
-import wupitch.android.data.remote.CrewApi
 import wupitch.android.data.remote.ImprtApi
 import wupitch.android.data.remote.dto.*
-import wupitch.android.domain.model.CreateCrewReq
+import wupitch.android.data.remote.response.*
 import wupitch.android.domain.model.CreateImprtReq
-import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.ImprtRepository
 import javax.inject.Inject
 
