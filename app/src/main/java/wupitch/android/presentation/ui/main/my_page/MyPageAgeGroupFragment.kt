@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.viewModels
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.domain.model.AgeRadioButton
 import wupitch.android.presentation.theme.Roboto
@@ -134,15 +135,17 @@ class MyPageAgeGroupFragment : Fragment() {
                                     top.linkTo(title.bottom, margin = 32.dp)
                                     start.linkTo(title.start)
                                     end.linkTo(parent.end, margin = 20.dp)
-                                    width = Dimension.fillToConstraints
+//                                    width = Dimension.fillToConstraints
                                 },
                             mainAxisSpacing = 16.dp,
-                            crossAxisSpacing = 16.dp
+                            crossAxisSpacing = 16.dp,
+                            mainAxisSize = SizeMode.Wrap
                         ) {
                             ageList.forEach {
                                 AgeRadioButton(
                                     modifier = Modifier
-                                        .width(152.dp)
+                                        .fillMaxWidth(0.42f)
+//                                        .width(152.dp)
                                         .height(48.dp),
                                     checkedState = it.checkedState,
                                     textString = it.ageString,

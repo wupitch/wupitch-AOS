@@ -80,7 +80,7 @@ class MyPageSportFragment : Fragment() {
                             .background(Color.White)
                             .fillMaxSize()
                     ) {
-                        val (toolbar, content, nextBtn, progressBar) = createRefs()
+                        val (toolbar, content, sports, nextBtn, progressBar) = createRefs()
 
                         IconToolBar(modifier = Modifier.constrainAs(toolbar) {
                             top.linkTo(parent.top)
@@ -142,15 +142,22 @@ class MyPageSportFragment : Fragment() {
                                     )
                                 }
                                 Spacer(modifier = Modifier.height(20.dp))
-                                RepetitionLayout(
-                                    text = null,
-                                    filterItemList = sportRememberList.toList(),
-                                    modifier = Modifier
-                                        .width(152.dp)
-                                        .height(48.dp),
-                                    checkedListState = userSportListState
-                                )
+
                             }
+                            RepetitionLayout(
+                                colModifier = Modifier.constrainAs(sports){
+                                     start.linkTo(parent.start, margin = 20.dp)
+                                    end.linkTo(parent.end, margin = 20.dp)
+                                    top.linkTo(content.bottom)
+                                },
+                                text = null,
+                                filterItemList = sportRememberList.toList(),
+                                modifier = Modifier
+                                    .fillMaxWidth(0.42f)
+//                                        .width(152.dp)
+                                    .height(48.dp),
+                                checkedListState = userSportListState
+                            )
                         }
 
                         RoundBtn(

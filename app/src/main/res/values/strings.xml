@@ -66,7 +66,7 @@
     <string name="etc">기타</string>
     <string name="set_profile">프로필을\n설정해주세요.</string>
     <string name="input_nickname">닉네임 (최대 6자)</string>
-    <string name="input_introduction">자기소개를 입력해주세요.</string>
+    <string name="input_introduction">간단한 자기소개글을 입력해주세요.</string>
     <string name="introduction_length">%d/100</string>
     <string name="available_nickname">사용 가능한 닉네임입니다.</string>
     <string name="not_available_nickname">사용 불가능한 닉네임입니다.</string>

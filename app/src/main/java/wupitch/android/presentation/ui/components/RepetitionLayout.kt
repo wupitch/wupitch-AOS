@@ -16,18 +16,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import wupitch.android.domain.model.FilterItem
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
 fun RepetitionLayout(
+    colModifier: Modifier = Modifier,
     text: Int? = null,
     filterItemList: List<FilterItem>,
     checkedListState : SnapshotStateList<Int>,
     modifier: Modifier,
 ) {
 
-    Column(Modifier.fillMaxWidth()) {
+    Column(colModifier) { //.fillMaxWidth()
         if(text != null) {
             Text(
                 modifier = Modifier.align(Alignment.Start),
@@ -42,7 +44,8 @@ fun RepetitionLayout(
             modifier = Modifier
                 .padding(top = 12.dp),
             mainAxisSpacing = 16.dp,
-            crossAxisSpacing = 16.dp
+            crossAxisSpacing = 16.dp,
+            mainAxisSize = SizeMode.Wrap,
         ) {
             filterItemList.forEachIndexed { index, item ->
                 ToggleBtn(
