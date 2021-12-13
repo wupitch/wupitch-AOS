@@ -14,8 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.wupitch.android.CrewFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants.PAGE_SIZE
@@ -30,18 +29,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getDistrictRepository : GetDistrictRepository,
+    private val getDistrictRepository: GetDistrictRepository,
     private val crewRepository: CrewRepository,
-    private val crewFilterDataStore : DataStore<CrewFilter>
+    private val crewFilterDataStore: DataStore<CrewFilter>
 ) : ViewModel() {
+
+    /*
+    * refresh
+    * */
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    fun refresh() = viewModelScope.launch {
+        _isRefreshing.emit(true)
+        resetPage()
+        firstVisibleItemIndex = 0
+        firstVisibleItemOffset = 0
+        getCrew()
+        _isRefreshing.emit(false)
+
+    }
+
 
     /*
     * scroll
     * */
-    var firstVisibleItemIndex  = 0
+    var firstVisibleItemIndex = 0
     var firstVisibleItemOffset = 0
 
-    fun saveScrollPosition(itemIdx : Int, offset : Int){
+    fun saveScrollPosition(itemIdx: Int, offset: Int) {
         firstVisibleItemIndex = itemIdx
         firstVisibleItemOffset = offset
     }
@@ -54,35 +70,35 @@ class HomeViewModel @Inject constructor(
     val error = mutableStateOf("")
 
     private var _page = mutableStateOf(1)
-    val page : State<Int> = _page
+    val page: State<Int> = _page
 
-    fun resetPage () {
+    fun resetPage() {
         _page.value = 1
     }
+
     private fun incrementPage() {
-        _page.value = _page.value +1
+        _page.value = _page.value + 1
     }
 
     private var scrollPosition = 0
 
-    fun onChangeScrollPosition(position : Int) {
+    fun onChangeScrollPosition(position: Int) {
         scrollPosition = position
     }
 
-    private fun appendList(list : List<CrewCardInfo>) {
+    private fun appendList(list: List<CrewCardInfo>) {
         _crewState.addAll(list)
     }
 
     fun getNewPage() = viewModelScope.launch {
-        if((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+        if ((scrollPosition + 1) >= (page.value * PAGE_SIZE)) {
             incrementPage()
 
-            if(page.value >1){
+            if (page.value > 1) {
                 getCrew()
             }
         }
     }
-
 
 
     /*
@@ -96,6 +112,7 @@ class HomeViewModel @Inject constructor(
     fun setCrewEventList(list: SnapshotStateList<Int>) {
         _crewEventList = list
     }
+
     //day
     private var _crewDayList = mutableStateListOf<Int>()
     val crewDayList: SnapshotStateList<Int> = _crewDayList
@@ -103,6 +120,7 @@ class HomeViewModel @Inject constructor(
     fun setCrewDayList(list: SnapshotStateList<Int>) {
         _crewDayList = list
     }
+
     //age
     private var _crewAgeGroupList = mutableStateListOf<Int>()
     val crewAgeGroupList: SnapshotStateList<Int> = _crewAgeGroupList
@@ -110,16 +128,17 @@ class HomeViewModel @Inject constructor(
     fun setCrewAgeGroupList(list: SnapshotStateList<Int>) {
         _crewAgeGroupList = list
     }
+
     //size
     private var _crewSizeState = mutableStateOf<Int?>(null)
-    val crewSizeState : State<Int?> = _crewSizeState
+    val crewSizeState: State<Int?> = _crewSizeState
 
     fun setCrewSize(size: Int?) {
         _crewSizeState.value = size
     }
 
     private var _resetState = mutableStateOf(false)
-    val resetState : State<Boolean> = _resetState
+    val resetState: State<Boolean> = _resetState
 
     fun resetFilter() {
         _resetState.value = true
@@ -145,12 +164,12 @@ class HomeViewModel @Inject constructor(
                 .setAreaName(_userDistrictName.value)
                 .build()
         }
-        saveScrollPosition(0,0)
+        saveScrollPosition(0, 0)
         filterApplied.value = true
     }
 
     private val _getCrewFilterState = mutableStateOf(BaseState())
-    var getCrewFilterState : State<BaseState> = _getCrewFilterState
+    var getCrewFilterState: State<BaseState> = _getCrewFilterState
 
 
     fun getCrewFilter() = viewModelScope.launch { //filter view 에서 부름.
@@ -166,7 +185,7 @@ class HomeViewModel @Inject constructor(
         crewFilter.sportListList.forEach {
             if (!_crewEventList.contains(it)) _crewEventList.add(it)
         }
-        _crewSizeState.value = if(crewFilter.size == -1) null else crewFilter.size
+        _crewSizeState.value = if (crewFilter.size == -1) null else crewFilter.size
         loading.value = false
     }
 
@@ -175,34 +194,34 @@ class HomeViewModel @Inject constructor(
     * */
 
     private var _crewState = mutableStateListOf<CrewCardInfo>()
-    val crewState : SnapshotStateList<CrewCardInfo> = _crewState
+    val crewState: SnapshotStateList<CrewCardInfo> = _crewState
 
     fun getCrew() = viewModelScope.launch {
         loading.value = true
         val crewFilter = crewFilterDataStore.data.first()
 
         //지역구 필터만 홈에서 세팅. 나머지는 필터뷰에서.
-        _userDistrictName.value = if(crewFilter.areaName.isEmpty())"서울시" else crewFilter.areaName
+        _userDistrictName.value = if (crewFilter.areaName.isEmpty()) "서울시" else crewFilter.areaName
 
         //필터 읽어서 그대로 get crew.
         val response = crewRepository.getCrew(
-            ageList = if(crewFilter.ageListList.isEmpty())null else crewFilter.ageListList.map { it +1 },
-            areaId = crewFilter.areaId +1,
-            days = if(crewFilter.dayListList.isEmpty())null else crewFilter.dayListList.map { it+1 },
-            memberCountValue = if(crewFilter.size == -1) null else crewFilter.size+1,
+            ageList = if (crewFilter.ageListList.isEmpty()) null else crewFilter.ageListList.map { it + 1 },
+            areaId = crewFilter.areaId + 1,
+            days = if (crewFilter.dayListList.isEmpty()) null else crewFilter.dayListList.map { it + 1 },
+            memberCountValue = if (crewFilter.size == -1) null else crewFilter.size + 1,
             page = _page.value,
-            sportsList = if(crewFilter.sportListList.isEmpty())null else crewFilter.sportListList.map { it + 1 }
+            sportsList = if (crewFilter.sportListList.isEmpty()) null else crewFilter.sportListList.map { it + 1 }
         )
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { res ->
-                if(res.isSuccess) {
-                    if(res.result.first) _crewState.clear()
+                if (res.isSuccess) {
+                    if (res.result.first) _crewState.clear()
                     appendList(res.result.content.map { it.toCrewCardInfo() })
                 } else {
                     error.value = res.message
                 }
             }
-        }else error.value = "크루 조회에 실패했습니다."
+        } else error.value = "크루 조회에 실패했습니다."
         loading.value = false
     }
 
@@ -211,14 +230,14 @@ class HomeViewModel @Inject constructor(
     * */
 
     private var _districtList = mutableStateOf(DistrictState())
-    val districtList : State<DistrictState> = _districtList
+    val districtList: State<DistrictState> = _districtList
 
     private var _userDistrictId = mutableStateOf<Int?>(null)
 
     private var _userDistrictName = mutableStateOf<String>("서울시")
-    val userDistrictName : State<String> = _userDistrictName
+    val userDistrictName: State<String> = _userDistrictName
 
-    fun setUserDistrict(districtId : Int, districtName : String) = viewModelScope.launch {
+    fun setUserDistrict(districtId: Int, districtName: String) = viewModelScope.launch {
         _userDistrictId.value = districtId
         _userDistrictName.value = districtName
         crewFilterDataStore.updateData {
@@ -228,20 +247,21 @@ class HomeViewModel @Inject constructor(
                 .build()
         }
         resetPage()
-        saveScrollPosition(0,0)
+        saveScrollPosition(0, 0)
         getCrew()
     }
 
-    fun getDistricts () = viewModelScope.launch {
+    fun getDistricts() = viewModelScope.launch {
         _districtList.value = DistrictState(isLoading = true)
 
         val response = getDistrictRepository.getDistricts()
-        if(response.isSuccessful) {
+        if (response.isSuccessful) {
             response.body()?.let { districtRes ->
-                if(districtRes.isSuccess) _districtList.value = DistrictState(data = districtRes.result.map { it.name }.toTypedArray())
-                else _districtList.value = DistrictState( error = districtRes.message)
+                if (districtRes.isSuccess) _districtList.value =
+                    DistrictState(data = districtRes.result.map { it.name }.toTypedArray())
+                else _districtList.value = DistrictState(error = districtRes.message)
             }
-        } else _districtList.value =  DistrictState( error = "지역 가져오기를 실패했습니다.")
+        } else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
     }
 
 }

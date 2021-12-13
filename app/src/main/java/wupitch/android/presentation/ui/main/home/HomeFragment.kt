@@ -29,6 +29,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,6 +80,7 @@ class HomeFragment : Fragment() {
                     val scrollState = rememberLazyListState()
                     val scope = rememberCoroutineScope()
 
+                    val isRefreshing by viewModel.isRefreshing.collectAsState()
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -119,28 +122,39 @@ class HomeFragment : Fragment() {
                                     height = Dimension.fillToConstraints
                                 }
                                 .background(Color.White)) {
+                                
+                                SwipeRefresh(
+                                    state =  rememberSwipeRefreshState(isRefreshing) ,
+                                    onRefresh = { viewModel.refresh()}) {
 
-                                LazyColumn(
-                                    state = scrollState
-                                ) {
-                                    itemsIndexed(
-                                        items = crewState,
-                                    ) { index, crew ->
-                                        viewModel.onChangeScrollPosition(index)
-                                        if((index +1) >= (page * PAGE_SIZE) && !loading.value){
-                                            viewModel.getNewPage()
+                                    LazyColumn(
+                                        state = scrollState
+                                    ) {
+                                        itemsIndexed(
+                                            items = crewState,
+                                        ) { index, crew ->
+                                            viewModel.onChangeScrollPosition(index)
+                                            if((index +1) >= (page * PAGE_SIZE) && !loading.value){
+                                                viewModel.getNewPage()
+                                            }
+                                            CrewCard(crewCard = crew) {
+                                                viewModel.saveScrollPosition(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
+                                                val bundle = Bundle().apply { putInt("crewId", crew.id) }
+                                                activity?.findNavController(R.id.main_nav_container_view)
+                                                    ?.navigate(
+                                                        R.id.action_mainFragment_to_crewDetailFragment,
+                                                        bundle
+                                                    )
+                                            }
                                         }
-                                        CrewCard(crewCard = crew) {
-                                            viewModel.saveScrollPosition(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
-                                            val bundle = Bundle().apply { putInt("crewId", crew.id) }
-                                            activity?.findNavController(R.id.main_nav_container_view)
-                                                ?.navigate(
-                                                    R.id.action_mainFragment_to_crewDetailFragment,
-                                                    bundle
-                                                )
+                                        item {
+                                            Spacer(modifier = Modifier.height(60.dp))
                                         }
+
                                     }
                                 }
+
+
                             }
                         }else {
                             if(!loading.value) {

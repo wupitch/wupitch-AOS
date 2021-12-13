@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
@@ -30,6 +33,20 @@ class ImpromptuViewModel @Inject constructor(
     private val imprtFilterDataStore: DataStore<ImpromptuFilter>
 ) : ViewModel() {
 
+    /*
+     * refresh
+     * */
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+
+    fun refresh() = viewModelScope.launch {
+        _isRefreshing.emit(true)
+        resetPage()
+        firstVisibleItemIndex = 0
+        firstVisibleItemOffset = 0
+        getImprt()
+        _isRefreshing.emit(false)
+    }
     /*
     * scroll
     * */

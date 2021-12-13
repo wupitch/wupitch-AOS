@@ -80,10 +80,7 @@ class ImpromptuDetailFragment : Fragment() {
                     }
 
                     val joinState = remember {viewModel.joinState}
-                    if(joinState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), viewModel.pinState.value.error, Toast.LENGTH_SHORT)
-                            .show()
-                    }
+
                     if(joinState.value.isSuccess){
                         if(joinState.value.result == true) joinSuccessDialogOpenState.value = true
                         else if(joinState.value.result == false) Toast.makeText(

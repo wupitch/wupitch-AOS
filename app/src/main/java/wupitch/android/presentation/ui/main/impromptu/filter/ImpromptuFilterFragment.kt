@@ -206,6 +206,7 @@ class ImpromptuFilterFragment : Fragment() {
 
                             Spacer(modifier = Modifier.height(32.dp))
                             RepetitionLayout(
+                                colModifier = Modifier.fillMaxWidth(),
                                 text = R.string.day,
                                 filterItemList = dayList,
                                 modifier = Modifier

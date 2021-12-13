@@ -29,6 +29,8 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import wupitch.android.R
@@ -68,6 +70,8 @@ class ImpromptuFragment : Fragment() {
                     val scrollState = rememberLazyListState()
                     val scope = rememberCoroutineScope()
 
+                    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -106,24 +110,39 @@ class ImpromptuFragment : Fragment() {
                                 height = Dimension.fillToConstraints
                             }.background(Color.White)) {
 
-                                LazyColumn(
-                                    state = scrollState
-                                ) {
-                                    itemsIndexed(
-                                        items = imprtState
-                                    ) { index, item ->
-                                        viewModel.onChangeScrollPosition(index)
-                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-                                            viewModel.getNewPage()
-                                        }
-                                        ImpromptuCard(cardInfo = item) {
-                                            viewModel.saveScrollPosition(scrollState.firstVisibleItemIndex, scrollState.firstVisibleItemScrollOffset)
-                                            val bundle = Bundle().apply { putInt("impromptuId", item.id) }
-                                            activity?.findNavController(R.id.main_nav_container_view)
-                                                ?.navigate(
-                                                    R.id.action_mainFragment_to_impromptuDetailFragment,
-                                                    bundle
+                                SwipeRefresh(
+                                    state =  rememberSwipeRefreshState(isRefreshing) ,
+                                    onRefresh = { viewModel.refresh()}) {
+                                    LazyColumn(
+                                        state = scrollState
+                                    ) {
+                                        itemsIndexed(
+                                            items = imprtState
+                                        ) { index, item ->
+                                            viewModel.onChangeScrollPosition(index)
+                                            if ((index + 1) >= (page * Constants.PAGE_SIZE) && !loading.value) {
+                                                viewModel.getNewPage()
+                                            }
+                                            ImpromptuCard(cardInfo = item) {
+                                                viewModel.saveScrollPosition(
+                                                    scrollState.firstVisibleItemIndex,
+                                                    scrollState.firstVisibleItemScrollOffset
                                                 )
+                                                val bundle = Bundle().apply {
+                                                    putInt(
+                                                        "impromptuId",
+                                                        item.id
+                                                    )
+                                                }
+                                                activity?.findNavController(R.id.main_nav_container_view)
+                                                    ?.navigate(
+                                                        R.id.action_mainFragment_to_impromptuDetailFragment,
+                                                        bundle
+                                                    )
+                                            }
+                                        }
+                                        item {
+                                            Spacer(modifier = Modifier.height(60.dp))
                                         }
                                     }
                                 }
