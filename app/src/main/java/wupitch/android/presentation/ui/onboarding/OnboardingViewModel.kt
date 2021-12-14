@@ -7,19 +7,29 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.*
+import com.wupitch.android.CrewFilter
+import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import wupitch.android.common.Constants
+import wupitch.android.common.Constants.FIRST_COMER
+import wupitch.android.common.Constants.IS_CONFIRMED
+import wupitch.android.common.Constants.JWT_PREFERENCE_KEY
+import wupitch.android.common.Constants.USER_ID
 import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.domain.model.LoginReq
 import wupitch.android.domain.repository.LoginRepository
+import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val userInfoDataStore : DataStore<Preferences>,
+    private val crewFilterDataStore: DataStore<CrewFilter>,
+    private val imprtFilterDataStore: DataStore<ImpromptuFilter>,
     private val loginRepository: LoginRepository,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
     var userEmail = mutableStateOf("")
@@ -40,18 +50,54 @@ class OnboardingViewModel @Inject constructor(
         if(response.isSuccessful) {
             response.body()?.let { loginRes ->
                 if(loginRes.isSuccess) {
-                    _loginState.value = LoginState(isSuccess = true)
                     userInfoDataStore.edit { settings ->
-                        settings[Constants.JWT_PREFERENCE_KEY] = loginRes.result.jwt
-                        settings[Constants.USER_ID] = loginRes.result.accountId
-                        settings[Constants.USER_EMAIL] = loginRes.result.email
+                        settings[JWT_PREFERENCE_KEY] = loginRes.result.jwt
                     }
+                    checkIsUserConfirmed()
                 }
                 else _loginState.value = LoginState(error = loginRes.message)
             }
         }else{
             _loginState.value = LoginState(error = "로그인에 실패했습니다.")
         }
+    }
+
+    private fun checkIsUserConfirmed() = viewModelScope.launch{
+        val response = profileRepository.getUserInfo()
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess) {
+                   if(res.result.isChecked){
+                       userInfoDataStore.edit { settings ->
+                           settings[JWT_PREFERENCE_KEY] = res.result.jwt
+                           settings[USER_ID] = res.result.accountId
+                           settings[FIRST_COMER] = true
+                           settings[IS_CONFIRMED] = res.result.isChecked
+                       }
+                       crewFilterDataStore.updateData {
+                           it.toBuilder()
+                               .setSize(-1)
+                               .build()
+                       }
+                       imprtFilterDataStore.updateData {
+                           it.toBuilder()
+                               .setSchedule(-1)
+                               .setRecruitSize(-1)
+                               .build()
+                       }
+                       _loginState.value = LoginState(isSuccess = true)
+                   }else {
+                       userInfoDataStore.edit { settings ->
+                           settings[IS_CONFIRMED] = res.result.isChecked
+                       }
+                       _loginState.value = LoginState(error = "신분증 인증 검토중입니다.")
+                   }
+
+                }else {
+                    _loginState.value = LoginState(error = res.message)
+                }
+            }
+        }else  _loginState.value = LoginState(error = "로그인에 실패했습니다.")
     }
 
 }

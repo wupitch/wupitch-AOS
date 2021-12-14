@@ -26,4 +26,9 @@ class SplashViewModel @Inject constructor(
         val prefFlow = userInfoDataStore.data.first()
         return prefFlow[Constants.JWT_PREFERENCE_KEY]
     }
+
+    suspend fun readIsUserConfirmed() : Boolean? {
+        val prefFlow = userInfoDataStore.data.first()
+        return prefFlow[Constants.IS_CONFIRMED]
+    }
 }

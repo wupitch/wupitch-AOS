@@ -13,8 +13,8 @@ import com.wupitch.android.CrewFilter
 import com.wupitch.android.ImpromptuFilter
 
 object Constants {
-    const val API_URL = "https://dev.yogiyo-backend.shop/" //test
-    //"https://prod.wupitch.site/" //real
+    const val API_URL = //"https://dev.yogiyo-backend.shop/" //test
+    "https://prod.wupitch.site/" //real
     val Context.userInfoStore : DataStore<Preferences> by preferencesDataStore(
         name = "user_info"
     )
@@ -28,9 +28,9 @@ object Constants {
     )
     val JWT_PREFERENCE_KEY = stringPreferencesKey("jwt_token")
     val USER_NICKNAME = stringPreferencesKey("user_nickname")
-    val USER_EMAIL = stringPreferencesKey("user_email")
     val USER_ID = intPreferencesKey("user_id")
     val FIRST_COMER = booleanPreferencesKey("is_first_comer")
+    val IS_CONFIRMED = booleanPreferencesKey("is_confirmed")
 
     const val SEARCH_PAGE_NUM = 2
     const val MY_CREW_DETAIL_PAGE_NUM = 3

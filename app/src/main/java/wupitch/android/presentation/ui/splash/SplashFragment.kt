@@ -62,17 +62,15 @@ class SplashFragment : Fragment() {
         lifecycleScope.launch {
 
             val jwt = viewModel.readJwt()
+            val isConfirmed = viewModel.readIsUserConfirmed()
             delay(1000L)
 
 //            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main) {
 
-                if (jwt != null && jwt.isNotEmpty()) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+                if (jwt != null && jwt.isNotEmpty() && isConfirmed == true) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
                 else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
-
-
-                //development 용도.
 
             }
         }

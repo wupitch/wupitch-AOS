@@ -5,6 +5,7 @@ import wupitch.android.domain.model.UserInfoResult
 
 data class UserInfoResultDto(
     val accountId: Int,
+    val isChecked : Boolean,
     val email: String,
     val introduce: String,
     val isPushAgree: Boolean?,

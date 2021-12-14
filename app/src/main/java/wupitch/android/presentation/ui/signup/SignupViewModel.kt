@@ -44,9 +44,6 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val signupRepository: SignupRepository,
-    private val userInfoDataStore : DataStore<Preferences>,
-    private val crewFilterDataStore : DataStore<CrewFilter>,
-    private val imprtFilterDataStore : DataStore<ImpromptuFilter>,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
@@ -169,7 +166,6 @@ class SignupViewModel @Inject constructor(
     }
 
 
-
     /*
     * fcm
     * */
@@ -192,8 +188,7 @@ class SignupViewModel @Inject constructor(
    * signup
    * */
 
-    private fun postSignup(token : String) = viewModelScope.launch {
-
+    private fun postSignup(token: String) = viewModelScope.launch {
 
         val signupReq = SignupReq(
             email = _userEmail.value!!,
@@ -207,28 +202,8 @@ class SignupViewModel @Inject constructor(
 
         if (response.isSuccessful) {
             response.body()?.let { signupRes ->
-                if (signupRes.isSuccess) {
-
-                    //todo jwt 기준으로 신분증 사진이 들어간다는게 말이 되나? 신분증 인증 안 해도 일단 회원이 된다는게?
-                    userInfoDataStore.edit { pref->
-                        pref[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
-                        pref[Constants.USER_ID] = signupRes.result.accountId
-                        pref[Constants.USER_NICKNAME] = signupRes.result.nickname
-                        pref[Constants.FIRST_COMER] = true
-                    }
-                    crewFilterDataStore.updateData {
-                        it.toBuilder()
-                            .setSize(-1)
-                            .build()
-                    }
-                    imprtFilterDataStore.updateData {
-                        it.toBuilder()
-                            .setSchedule(-1)
-                            .setRecruitSize(-1)
-                            .build()
-                    }
-                    postIdCardImage()
-                } else _signupState.value = BaseState(error = signupRes.message)
+                if (signupRes.isSuccess) postIdCardImage()
+                else _signupState.value = BaseState(error = signupRes.message)
             }
         } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
     }
@@ -264,7 +239,7 @@ class SignupViewModel @Inject constructor(
                     }
                 } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
             } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
-        }else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
+        } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")
     }
 
     private fun convertUriToBitmap(): Bitmap? {
