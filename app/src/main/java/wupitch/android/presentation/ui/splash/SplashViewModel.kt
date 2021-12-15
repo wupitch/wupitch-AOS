@@ -6,15 +6,17 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import wupitch.android.common.Constants
+import wupitch.android.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val userInfoDataStore : DataStore<Preferences>
+    private val userInfoDataStore: DataStore<Preferences>,
+    private val profileRepository: ProfileRepository
 ) : ViewModel() {
 
 
-    suspend fun readJwt() : String? {
+    suspend fun readJwt(): String? {
 
         //development 용도
 //        context.dataStore.edit { settings ->
@@ -27,8 +29,22 @@ class SplashViewModel @Inject constructor(
         return prefFlow[Constants.JWT_PREFERENCE_KEY]
     }
 
-    suspend fun readIsUserConfirmed() : Boolean? {
-        val prefFlow = userInfoDataStore.data.first()
-        return prefFlow[Constants.IS_CONFIRMED]
+
+    suspend fun checkIsUserConfirmed(): Boolean {
+
+        val jwt = readJwt()
+        if (jwt != null && jwt.isNotEmpty()) {
+            val response = profileRepository.getUserInfo()
+            if (response.isSuccessful) {
+                response.body()?.let { res ->
+                    return if (res.isSuccess) {
+                        res.result.isChecked
+                    } else false
+                }
+            } else return false
+        } else return false
+
+        return false
     }
+    
 }

@@ -1,23 +1,19 @@
 package wupitch.android.presentation.ui.onboarding
 
-import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.wupitch.android.CrewFilter
 import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import wupitch.android.common.Constants
 import wupitch.android.common.Constants.FIRST_COMER
-import wupitch.android.common.Constants.IS_CONFIRMED
 import wupitch.android.common.Constants.JWT_PREFERENCE_KEY
 import wupitch.android.common.Constants.USER_ID
-import wupitch.android.common.Constants.userInfoStore
 import wupitch.android.domain.model.LoginReq
 import wupitch.android.domain.repository.LoginRepository
 import wupitch.android.domain.repository.ProfileRepository
@@ -71,7 +67,6 @@ class OnboardingViewModel @Inject constructor(
                        userInfoDataStore.edit { settings ->
                            settings[USER_ID] = res.result.accountId
                            settings[FIRST_COMER] = true
-                           settings[IS_CONFIRMED] = res.result.isChecked
                        }
                        crewFilterDataStore.updateData {
                            it.toBuilder()
@@ -86,12 +81,8 @@ class OnboardingViewModel @Inject constructor(
                        }
                        _loginState.value = LoginState(isSuccess = true)
                    }else {
-                       userInfoDataStore.edit { settings ->
-                           settings[IS_CONFIRMED] = res.result.isChecked
-                       }
                        _loginState.value = LoginState(error = "신분증 인증 검토중입니다.")
                    }
-
                 }else {
                     _loginState.value = LoginState(error = res.message)
                 }
