@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_main_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Wupitch"
+        android:requestLegacyExternalStorage="true"
         >
 
         <activity android:name=".presentation.ui.MainActivity"

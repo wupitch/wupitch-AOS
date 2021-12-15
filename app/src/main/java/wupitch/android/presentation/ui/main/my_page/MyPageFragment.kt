@@ -275,7 +275,7 @@ class MyPageFragment : Fragment() {
                         rememberImagePainter(
                             imageUri.value,
                             builder = {
-                                placeholder(R.color.white)
+                                placeholder(R.drawable.profile_basic)
                                 transformations(CircleCropTransformation())
                                 build()
                             }

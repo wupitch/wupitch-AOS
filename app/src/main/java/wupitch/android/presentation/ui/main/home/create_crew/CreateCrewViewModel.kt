@@ -1,12 +1,6 @@
 package wupitch.android.presentation.ui.main.home.create_crew
 
-import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,11 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.Constants
 import wupitch.android.data.remote.dto.toFilterItem
 import wupitch.android.domain.model.CreateCrewReq
@@ -28,7 +18,6 @@ import wupitch.android.domain.model.Schedule
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.GetSportRepository
-import wupitch.android.presentation.ui.main.impromptu.create_impromptu.CreateImpromptuState
 import wupitch.android.util.*
 import java.io.File
 import javax.inject.Inject
@@ -39,23 +28,12 @@ class CreateCrewViewModel @Inject constructor(
     private val getSportRepository: GetSportRepository,
     private val getDistrictRepository: GetDistrictRepository,
     private val crewRepository: CrewRepository,
-    private val getRealPath: GetRealPath,
+    private val getImageFile: GetImageFile,
 ) : ViewModel() {
 
-    private var _sportsList = mutableStateOf(SportState())
-    val sportsList: State<SportState> = _sportsList
-
-    private var _crewSportId = mutableStateOf(-1)
-    val crewSportId: State<Int> = _crewSportId
-
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList: State<DistrictState> = _districtList
-
-    private var _crewDistrictId = MutableLiveData<Int>()
-    val crewDistrictId: LiveData<Int> = _crewDistrictId
-
-    private var _crewDistrictName = MutableLiveData<String>()
-    val crewDistrictName: LiveData<String> = _crewDistrictName
+    /*
+       * info (name, size, age group, extra info, intro, supply, inquiry)
+       * */
 
     private var _crewLocation = mutableStateOf("")
     val crewLocation: State<String> = _crewLocation
@@ -84,74 +62,8 @@ class CreateCrewViewModel @Inject constructor(
     private var _crewInquiry = mutableStateOf("")
     val crewInquiry: State<String> = _crewInquiry
 
-
-    private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
-    val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
-
-    private var _imageChosenState = mutableStateOf(false)
-    val imageChosenState: State<Boolean> = _imageChosenState
-
-    private var _crewImage = mutableStateOf<Uri>(Constants.EMPTY_IMAGE_URI)
-    val crewImage: State<Uri> = _crewImage
-
-    private var _scheduleList = mutableStateListOf<ScheduleState>(
-        ScheduleState(
-            day = mutableStateOf(-1),
-            startTime = mutableStateOf("00:00"),
-            endTime = mutableStateOf("00:00"),
-            isStartTimeSet = mutableStateOf<Boolean?>(false),
-            isEndTimeSet = mutableStateOf<Boolean?>(false)
-        )
-    )
-    val scheduleList: SnapshotStateList<ScheduleState> = _scheduleList
-
-    private var _createCrewState = mutableStateOf(CreateCrewState())
-    val createCrewState: State<CreateCrewState> = _createCrewState
-
-
-    fun getSports() = viewModelScope.launch {
-        _sportsList.value = SportState(isLoading = true)
-
-        val response = getSportRepository.getSport()
-        if (response.isSuccessful) {
-            response.body()?.let { sportRes ->
-                if (sportRes.isSuccess) {
-                    _sportsList.value =
-                        SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }
-                            .map { it.toFilterItem() })
-                    _sportsList.value.data.forEachIndexed { index, filterItem ->
-                        if (_crewSportId.value == index) {
-                            filterItem.state.value = true
-                        }
-                    }
-                } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
-            }
-        } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
-
-    }
-
-
-    fun getDistricts() = viewModelScope.launch {
-        _districtList.value = DistrictState(isLoading = true)
-
-        val response = getDistrictRepository.getDistricts()
-        if (response.isSuccessful) {
-            response.body()?.let { districtRes ->
-                if (districtRes.isSuccess) _districtList.value =
-                    DistrictState(data = districtRes.result.map { it.name }.toTypedArray())
-                else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
-            }
-        } else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
-
-    }
-
-    fun setCrewSport(sportId: Int) {
-        _crewSportId.value = sportId
-    }
-
-    fun setCrewDistrict(districtId: Int, districtName: String) {
-        _crewDistrictId.value = districtId
-        _crewDistrictName.value = districtName
+    fun setCrewTitle(title: String) {
+        _crewTitle.value = title
     }
 
     fun setCrewLocation(location: String) {
@@ -174,6 +86,22 @@ class CreateCrewViewModel @Inject constructor(
         _crewExtraInfoList = list
     }
 
+    fun setCrewIntro(intro: String) {
+        _crewIntro.value = intro
+    }
+
+    fun setCrewSupplies(supplies: String) {
+        _crewSupplies.value = supplies
+    }
+
+    fun setCrewInquiry(inquiry: String) {
+        _crewInquiry.value = inquiry
+    }
+
+    /*
+    * schedule
+    * */
+
     fun addCrewSchedule() {
         _scheduleList.add(
             ScheduleState(
@@ -186,17 +114,16 @@ class CreateCrewViewModel @Inject constructor(
         )
     }
 
-    fun setCrewImage(image: Uri) {
-        _crewImage.value = image
-    }
-
-    fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
-        _isUsingDefaultImage.value = isUsingDefaultImage
-    }
-
-    fun setImageChosenState(isImageChosen: Boolean) {
-        _imageChosenState.value = isImageChosen
-    }
+    private var _scheduleList = mutableStateListOf<ScheduleState>(
+        ScheduleState(
+            day = mutableStateOf(-1),
+            startTime = mutableStateOf("00:00"),
+            endTime = mutableStateOf("00:00"),
+            isStartTimeSet = mutableStateOf<Boolean?>(false),
+            isEndTimeSet = mutableStateOf<Boolean?>(false)
+        )
+    )
+    val scheduleList: SnapshotStateList<ScheduleState> = _scheduleList
 
     fun setTimeFilter(index: Int, type: TimeType, hour: Int, min: Int) {
         var hourString = hour.toString()
@@ -235,21 +162,80 @@ class CreateCrewViewModel @Inject constructor(
         }
     }
 
-    fun setCrewTitle(title: String) {
-        _crewTitle.value = title
+
+
+
+    /*
+    * sports
+    * */
+
+    private var _sportsList = mutableStateOf(SportState())
+    val sportsList: State<SportState> = _sportsList
+
+    private var _crewSportId = mutableStateOf(-1)
+    val crewSportId: State<Int> = _crewSportId
+
+    fun setCrewSport(sportId: Int) {
+        _crewSportId.value = sportId
     }
 
-    fun setCrewIntro(intro: String) {
-        _crewIntro.value = intro
+    fun getSports() = viewModelScope.launch {
+        _sportsList.value = SportState(isLoading = true)
+
+        val response = getSportRepository.getSport()
+        if (response.isSuccessful) {
+            response.body()?.let { sportRes ->
+                if (sportRes.isSuccess) {
+                    _sportsList.value =
+                        SportState(data = sportRes.result.filter { it.sportsId < sportRes.result.size }
+                            .map { it.toFilterItem() })
+                    _sportsList.value.data.forEachIndexed { index, filterItem ->
+                        if (_crewSportId.value == index) {
+                            filterItem.state.value = true
+                        }
+                    }
+                } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
+            }
+        } else _sportsList.value = SportState(error = "스포츠 가져오기를 실패했습니다.")
+
     }
 
-    fun setCrewSupplies(supplies: String) {
-        _crewSupplies.value = supplies
+    /*
+    * district
+    * */
+
+    private var _districtList = mutableStateOf(DistrictState())
+    val districtList: State<DistrictState> = _districtList
+
+    private var _crewDistrictId = MutableLiveData<Int>()
+    val crewDistrictId: LiveData<Int> = _crewDistrictId
+
+    private var _crewDistrictName = MutableLiveData<String>()
+    val crewDistrictName: LiveData<String> = _crewDistrictName
+
+    fun setCrewDistrict(districtId: Int, districtName: String) {
+        _crewDistrictId.value = districtId
+        _crewDistrictName.value = districtName
     }
 
-    fun setCrewInquiry(inquiry: String) {
-        _crewInquiry.value = inquiry
+    fun getDistricts() = viewModelScope.launch {
+        _districtList.value = DistrictState(isLoading = true)
+
+        val response = getDistrictRepository.getDistricts()
+        if (response.isSuccessful) {
+            response.body()?.let { districtRes ->
+                if (districtRes.isSuccess) _districtList.value =
+                    DistrictState(data = districtRes.result.map { it.name }.toTypedArray())
+                else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
+            }
+        } else _districtList.value = DistrictState(error = "지역 가져오기를 실패했습니다.")
+
     }
+
+
+    /*
+    * fee
+    * */
 
     private var _crewFee = mutableStateOf<String>("")
     val crewFee: State<String> = _crewFee
@@ -272,6 +258,12 @@ class CreateCrewViewModel @Inject constructor(
         _crewVisitorFee.value = money
         _noCrewVisitorFee.value = toggleState
     }
+
+    /*
+    * create crew
+    * */
+    private var _createCrewState = mutableStateOf(CreateCrewState())
+    val createCrewState: State<CreateCrewState> = _createCrewState
 
     fun createCrew() = viewModelScope.launch {
         _createCrewState.value = CreateCrewState(isLoading = true)
@@ -307,20 +299,42 @@ class CreateCrewViewModel @Inject constructor(
         } else _createCrewState.value = CreateCrewState(error = "크루 생성을 실패했습니다.")
     }
 
+    /*
+    * image
+    * */
+
+    private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
+    val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
+
+    private var _imageChosenState = mutableStateOf(false)
+    val imageChosenState: State<Boolean> = _imageChosenState
+
+    private var _crewImage = mutableStateOf<Uri>(Constants.EMPTY_IMAGE_URI)
+    val crewImage: State<Uri> = _crewImage
+
+    fun setCrewImage(image: Uri) {
+        _crewImage.value = image
+    }
+
+    fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
+        _isUsingDefaultImage.value = isUsingDefaultImage
+    }
+
+    fun setImageChosenState(isImageChosen: Boolean) {
+        _imageChosenState.value = isImageChosen
+    }
+
     private fun postCrewImage(crewId: Int) = viewModelScope.launch {
 
         if (_crewImage.value == Constants.EMPTY_IMAGE_URI) {
             _createCrewState.value = CreateCrewState(data = crewId)
         } else {
+            val file = getImageFile.getImageFile(_crewImage.value)
 
-            val path = getRealPath.getRealPathFromURIForGallery(_crewImage.value)
+            if (file != null) {
+                val multipartBodyPart = getImageBody(file)
 
-            if (path != null) {
-                resizeImage(file = File(path))
-
-                val file = getImageBody(File(path))
-
-                val response = crewRepository.postCrewImage(file.body, file, crewId)
+                val response = crewRepository.postCrewImage(multipartBodyPart.body, multipartBodyPart, crewId)
                 if (response.isSuccessful) {
                     response.body()?.let { res ->
                         if (res.isSuccess) _createCrewState.value = CreateCrewState(data = crewId)
@@ -328,26 +342,6 @@ class CreateCrewViewModel @Inject constructor(
                     }
                 } else _createCrewState.value = CreateCrewState(error = "크루 이미지 업로드를 실패했습니다.")
             }
-        }
-    }
-
-
-    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-        val bmOptions = BitmapFactory.Options()
-        bmOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-        val photoW = bmOptions.outWidth
-        val photoH = bmOptions.outHeight
-
-        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-
-        bmOptions.inJustDecodeBounds = false
-        bmOptions.inSampleSize = scaleFactor
-
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-        file.outputStream().use {
-            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
         }
     }
 

@@ -1,11 +1,6 @@
 package wupitch.android.presentation.ui.main.my_page
 
-import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.datastore.core.DataStore
@@ -16,20 +11,15 @@ import androidx.lifecycle.viewModelScope
 import com.wupitch.android.CrewFilter
 import com.wupitch.android.ImpromptuFilter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import wupitch.android.common.BaseState
 import wupitch.android.common.Constants
 import wupitch.android.data.remote.dto.*
 import wupitch.android.domain.repository.ProfileRepository
-import wupitch.android.util.GetRealPath
+import wupitch.android.util.GetImageFile
 import wupitch.android.util.getImageBody
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +28,7 @@ class MyPageViewModel @Inject constructor(
     private val userInfoDataStore : DataStore<Preferences>,
     private val crewFilterDataStore : DataStore<CrewFilter>,
     private val imprtFilterDataStore : DataStore<ImpromptuFilter>,
-    private val getRealPath: GetRealPath
+    private val getImageFile: GetImageFile
 ) : ViewModel() {
 
     /*
@@ -274,14 +264,13 @@ class MyPageViewModel @Inject constructor(
         _uploadImageState.value = BaseState(isLoading = true)
 
         _userImageState.value = uri
-        val path = getRealPath.getRealPathFromURIForGallery(uri)
 
-        if (path != null) {
-            resizeImage(file = File(path))
+        val file = getImageFile.getImageFile(uri)
 
-            val file = getImageBody(File(path))
+        if (file != null) {
+            val multipartBodyPart = getImageBody(file)
 
-            val response = profileRepository.postProfileImage(file.body, file)
+            val response = profileRepository.postProfileImage(multipartBodyPart.body, multipartBodyPart)
             if (response.isSuccessful) {
                 response.body()?.let { res ->
                     if (res.isSuccess) _uploadImageState.value = BaseState(isSuccess = true)
@@ -291,24 +280,4 @@ class MyPageViewModel @Inject constructor(
         }
 
     }
-
-    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-        val bmOptions = BitmapFactory.Options()
-        bmOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-        val photoW = bmOptions.outWidth
-        val photoH = bmOptions.outHeight
-
-        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-
-        bmOptions.inJustDecodeBounds = false
-        bmOptions.inSampleSize = scaleFactor
-
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-        file.outputStream().use {
-            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
-        }
-    }
-
 }

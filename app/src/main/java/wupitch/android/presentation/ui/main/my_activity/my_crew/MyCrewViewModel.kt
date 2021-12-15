@@ -12,19 +12,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
-import wupitch.android.data.remote.dto.CrewPostReq
 import wupitch.android.data.remote.dto.toCrewDetailResult
 import wupitch.android.data.remote.dto.toResult
-import wupitch.android.domain.model.CrewPostResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
-import wupitch.android.util.GetRealPath
+import wupitch.android.util.GetImageFile
 import javax.inject.Inject
 
 @HiltViewModel
 class MyCrewViewModel @Inject constructor(
     private val crewRepository: CrewRepository,
-    private val getRealPath: GetRealPath
+    private val getRealPath: GetImageFile
 ) : ViewModel(){
 
     var crewId = -1
