@@ -16,6 +16,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +48,7 @@ class SplashFragment : Fragment() {
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_logo),
-                            contentDescription = "spash screen logo"
+                            contentDescription = "splash screen logo"
                         )
                     }
                 }
@@ -58,20 +59,18 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         lifecycleScope.launch {
 
+            //development
             val jwt = viewModel.readJwt()
-            val isConfirmed = viewModel.readIsUserConfirmed()
-            delay(1000L)
-
             Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
-            withContext(Dispatchers.Main) {
-//&& isConfirmed == true
-                if (jwt != null && jwt.isNotEmpty()&& isConfirmed == true ) findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
-                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
 
+            withContext(Dispatchers.Main) {
+                if (viewModel.checkIsUserConfirmed()) {
+                    findNavController().navigate(R.id.action_splashFragment_to_mainFragment)
+                }
+                else findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
             }
         }
     }
