@@ -154,34 +154,34 @@ class MyPageFragment : Fragment() {
                             }
                         )
 
-                        MyPageText(
-                            modifier = Modifier
-                                .constrainAs(myActivity) {
-                                    start.linkTo(parent.start)
-                                    top.linkTo(profile.bottom, margin = 22.dp)
-                                },
-                            textString = stringResource(id = R.string.interested_activity)
-                        ){
-                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                        }
+//                        MyPageText(
+//                            modifier = Modifier
+//                                .constrainAs(myActivity) {
+//                                    start.linkTo(parent.start)
+//                                    top.linkTo(profile.bottom, margin = 22.dp)
+//                                },
+//                            textString = stringResource(id = R.string.interested_activity)
+//                        ){
+//                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                        }
 
-                        MyPageText(
-                            modifier = Modifier
-                                .constrainAs(myRecord) {
-                                    start.linkTo(parent.start)
-                                    top.linkTo(myActivity.bottom)
-                                },
-                            textString = stringResource(id = R.string.my_record)
-                        ){
-                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        FillInfoSnackbar(
-                            modifier = Modifier.constrainAs(alert){
-                                end.linkTo(parent.end)
-                                top.linkTo(profile.top, margin = 93.dp)
-                            },
-                            snackbarHostState = snackbarHostState
-                        )
+//                        MyPageText(
+//                            modifier = Modifier
+//                                .constrainAs(myRecord) {
+//                                    start.linkTo(parent.start)
+//                                    top.linkTo(myActivity.bottom)
+//                                },
+//                            textString = stringResource(id = R.string.my_record)
+//                        ){
+//                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                        }
+//                        FillInfoSnackbar(
+//                            modifier = Modifier.constrainAs(alert){
+//                                end.linkTo(parent.end)
+//                                top.linkTo(profile.top, margin = 93.dp)
+//                            },
+//                            snackbarHostState = snackbarHostState
+//                        )
 
                         if (userInfoState.value.isLoading || uploadImageState.value.isLoading) {
                             CircularProgressIndicator(
@@ -195,27 +195,28 @@ class MyPageFragment : Fragment() {
                             )
                         }
                     }
+                    Spacer(modifier = Modifier.height(34.dp)) //not needed in the original version.
 
                     GrayDivider()
                     Spacer(modifier = Modifier.height(4.dp))
-                    MyPageText(
-                        modifier = Modifier.padding(start = 20.dp),
-                        textString = stringResource(id = R.string.announcement)
-                    ){
-                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    MyPageText(
-                        modifier = Modifier.padding(start = 20.dp),
-                        textString = stringResource(id = R.string.faq)
-                    ){
-                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    MyPageText(
-                        modifier = Modifier.padding(start = 20.dp),
-                        textString = stringResource(id = R.string.mypage_inquiry)
-                    ){
-                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                    }
+//                    MyPageText(
+//                        modifier = Modifier.padding(start = 20.dp),
+//                        textString = stringResource(id = R.string.announcement)
+//                    ){
+//                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    MyPageText(
+//                        modifier = Modifier.padding(start = 20.dp),
+//                        textString = stringResource(id = R.string.faq)
+//                    ){
+//                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    MyPageText(
+//                        modifier = Modifier.padding(start = 20.dp),
+//                        textString = stringResource(id = R.string.mypage_inquiry)
+//                    ){
+//                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                    }
                     MyPageText(
                         modifier = Modifier.padding(start = 20.dp),
                         textString = stringResource(id = R.string.settings)
@@ -224,12 +225,12 @@ class MyPageFragment : Fragment() {
                         activity?.findNavController(R.id.main_nav_container_view)
                             ?.navigate(R.id.action_mainFragment_to_myPageSettingFragment, bundle)
                     }
-                    MyPageText(
-                        modifier = Modifier.padding(start = 20.dp),
-                        textString = stringResource(id = R.string.dev_info)
-                    ){
-                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                    }
+//                    MyPageText(
+//                        modifier = Modifier.padding(start = 20.dp),
+//                        textString = stringResource(id = R.string.dev_info)
+//                    ){
+//                        Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
+//                    }
                 }
             }
         }
