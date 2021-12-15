@@ -29,5 +29,8 @@ interface CrewRepository {
     suspend fun getCrewVisitorDates(crewId : Int) : Response<GetCrewVisitorDates>
     suspend fun postVisit(visitReq : CrewVisitorReq) : Response<BaseRes>
     suspend fun getMyCrews() : Response<GetMyCrewRes>
+    suspend fun createCrewPost(crewId : Int, crewPostReq : CrewPostReq) : Response<BaseRes>
+    suspend fun getCrewPosts(crewId: Int) : Response<GetCrewPostRes>
+    suspend fun patchPostLike(postId : Int) : Response<BaseResultRes>
 
 }

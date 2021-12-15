@@ -1,5 +1,6 @@
 package wupitch.android.presentation.ui.main.my_activity.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -32,16 +31,15 @@ import coil.transform.CircleCropTransformation
 import wupitch.android.R
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.GrayDivider
-import wupitch.android.presentation.ui.main.my_activity.my_crew.CrewPost
+import wupitch.android.domain.model.CrewPostResult
 
 @Composable
 fun MyCrewPostCard(
-    post: CrewPost,
+    post: CrewPostResult,
     onMoreClick: () -> Unit,
     onLikeClick: (id: Int) -> Unit
 ) {
 
-    val toggleState = remember { mutableStateOf(post.isLiked) }
     Column(
         Modifier
             .fillMaxWidth()
@@ -235,19 +233,21 @@ fun MyCrewPostCard(
                     bottom.linkTo(parent.bottom)
                 }
                 .toggleable(
-                    value = toggleState.value,
+                    value =  post.isLiked,
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
                     enabled = true,
                     role = Role.Checkbox,
                     onValueChange = {
-                        toggleState.value = it
                         onLikeClick(post.id)
+                        post.isLiked = it
+                        if(it) ++post.likedNum
+                        else --post.likedNum
                     }
                 ), verticalAlignment = Alignment.CenterVertically) {
                 Image(
                     modifier = Modifier.size(24.dp),
-                    painter = if (toggleState.value) painterResource(id = R.drawable.react_heart) else painterResource(
+                    painter = if ( post.isLiked) painterResource(id = R.drawable.react_heart) else painterResource(
                         id = R.drawable.react_heart_inact
                     ),
                     contentDescription = null
@@ -258,7 +258,7 @@ fun MyCrewPostCard(
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
-                    color = if (toggleState.value) colorResource(id = R.color.pink) else colorResource(
+                    color = if ( post.isLiked) colorResource(id = R.color.pink) else colorResource(
                         id = R.color.gray03
                     )
                 )

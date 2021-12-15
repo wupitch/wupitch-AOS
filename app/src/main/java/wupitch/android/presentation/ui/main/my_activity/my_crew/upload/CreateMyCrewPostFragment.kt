@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Space
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -63,6 +64,9 @@ class CreateMyCrewPostFragment : Fragment() {
                     val uploadState = remember {viewModel.uploadPostState}
                     if(uploadState.value.isSuccess){
                         findNavController().navigateUp()
+                    }
+                    if(uploadState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), uploadState.value.error, Toast.LENGTH_SHORT).show()
                     }
 
                     val contentTextState = remember { mutableStateOf("")}
@@ -126,9 +130,6 @@ class CreateMyCrewPostFragment : Fragment() {
                                     onFocusChanged = {}
                                 )
                             }
-
-
-
                         }
 
                         if (uploadState.value.isLoading) {
@@ -159,7 +160,7 @@ class CreateMyCrewPostFragment : Fragment() {
                             fontSize = 16.sp
                         ) {
                             if(checkValid(contentTextState, announceToggleState, announceTitleState))
-                                viewModel.uploadPost()
+                                viewModel.uploadPost(contentTextState.value, if(announceToggleState.value) announceTitleState.value else null)
                         }
                     }
 

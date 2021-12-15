@@ -44,6 +44,7 @@ import javax.inject.Inject
 class SignupViewModel @Inject constructor(
     private val checkValidRepository: CheckValidRepository,
     private val signupRepository: SignupRepository,
+    private val userInfoDataStore : DataStore<Preferences>,
     @ApplicationContext val context: Context
 ) : ViewModel() {
 
@@ -202,7 +203,12 @@ class SignupViewModel @Inject constructor(
 
         if (response.isSuccessful) {
             response.body()?.let { signupRes ->
-                if (signupRes.isSuccess) postIdCardImage()
+                if (signupRes.isSuccess) {
+                    userInfoDataStore.edit { settings ->
+                        settings[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
+                    }
+                    postIdCardImage()
+                }
                 else _signupState.value = BaseState(error = signupRes.message)
             }
         } else _signupState.value = BaseState(error = "회원가입에 실패했습니다.")

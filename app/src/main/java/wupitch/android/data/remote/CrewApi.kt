@@ -65,4 +65,20 @@ interface CrewApi {
 
     @GET("app/clubs/accounts/auth")
     suspend fun getMyCrews() : Response<GetMyCrewRes>
+
+    @POST("app/posts/crew/{crewId}")
+    suspend fun createCrewPost(
+        @Path("crewId") crewId : Int,
+        @Body crewPostReq : CrewPostReq
+    ): Response<BaseRes>
+
+    @GET("app/posts/crew/{crewId}")
+    suspend fun getCrewPosts(
+        @Path("crewId") crewId : Int
+    ) : Response<GetCrewPostRes>
+
+    @PATCH("app/posts/{postId}/like-toggle")
+    suspend fun patchPostLike(
+        @Path("postId") postId : Int
+    ) : Response<BaseResultRes>
 }

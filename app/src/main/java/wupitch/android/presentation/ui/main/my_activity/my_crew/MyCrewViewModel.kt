@@ -12,7 +12,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.CrewPostReq
 import wupitch.android.data.remote.dto.toCrewDetailResult
+import wupitch.android.data.remote.dto.toResult
+import wupitch.android.domain.model.CrewPostResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
 import wupitch.android.util.GetRealPath
@@ -48,24 +51,24 @@ class MyCrewViewModel @Inject constructor(
         } else _crewDetailState.value = CrewDetailState(error = "크루 조회에 실패했습니다.")
     }
 
-    /*
-    * pin
-    * */
-
-    private var _pinState = mutableStateOf(BaseState())
-    val pinState : State<BaseState> = _pinState
-
-    fun changePinStatus() = viewModelScope.launch {
-        _crewDetailState.value.data?.clubId?.let {
-            val response = crewRepository.changePinStatus(it)
-            if(response.isSuccessful){
-                response.body()?.let { res ->
-                    if(res.isSuccess) _pinState.value = BaseState(isSuccess = true)
-                    else  _pinState.value = BaseState(error = res.message)
-                }
-            }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
-        }
-    }
+//    /*
+//    * pin
+//    * */
+//
+//    private var _pinState = mutableStateOf(BaseState())
+//    val pinState : State<BaseState> = _pinState
+//
+//    fun changePinStatus() = viewModelScope.launch {
+//        _crewDetailState.value.data?.clubId?.let {
+//            val response = crewRepository.changePinStatus(it)
+//            if(response.isSuccessful){
+//                response.body()?.let { res ->
+//                    if(res.isSuccess) _pinState.value = BaseState(isSuccess = true)
+//                    else  _pinState.value = BaseState(error = res.message)
+//                }
+//            }else _pinState.value = BaseState(error = "핀업에 실패했습니다.")
+//        }
+//    }
 
 
     /*
@@ -95,72 +98,32 @@ class MyCrewViewModel @Inject constructor(
     fun getCrewPosts() = viewModelScope.launch {
         _crewPostState.value = CrewPostState(isLoading = true)
 
-        delay(500L)
-        _crewPostState.value = CrewPostState(
-            data = listOf(
-                CrewPost(
-                    id = 1,
-                    isAnnounce = true,
-                    announceTitle = "회비 납부일은 매일 6월입니다.회비 납부일은 매일 6월",
-                    userImage = null,
-                    userName = "베키짱",
-                    isLeader = true,
-                    content = "xx은행으로 입금해주시면 감사감사링하겠습니당~~!!! 여러분들 항상 즐거운 하루보내시구 담주에 봐용~",
-                    isLiked = true,
-                    likedNum = 30,
-                    date = "21.12.03"
-                ),
-                CrewPost(
-                    id = 2,
-                    isAnnounce = false,
-                    announceTitle = null,
-                    userImage = null,
-                    userName = "베키짱2",
-                    isLeader = true,
-                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
-                    isLiked = false,
-                    likedNum = 32,
-                    date = "21.11.12"
-                ),
-                CrewPost(
-                    id = 2,
-                    isAnnounce = false,
-                    announceTitle = null,
-                    userImage = null,
-                    userName = "베키짱2",
-                    isLeader = true,
-                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
-                    isLiked = false,
-                    likedNum = 32,
-                    date = "21.11.12"
-                ),
-                CrewPost(
-                    id = 2,
-                    isAnnounce = false,
-                    announceTitle = null,
-                    userImage = null,
-                    userName = "베키짱2",
-                    isLeader = true,
-                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
-                    isLiked = false,
-                    likedNum = 32,
-                    date = "21.11.12"
-                ),
-                CrewPost(
-                    id = 2,
-                    isAnnounce = false,
-                    announceTitle = null,
-                    userImage = null,
-                    userName = "베키짱2",
-                    isLeader = true,
-                    content = "오늘 개꿀잼이었습니다 ㅋㅋㅋㅋ",
-                    isLiked = false,
-                    likedNum = 32,
-                    date = "21.11.12"
-                )
-            )
-        )
+        val response = crewRepository.getCrewPosts(crewId)
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess){
+                    _crewPostState.value = CrewPostState(
+                        data = res.result.map { it.toResult() }
+                    )
+                }else _crewPostState.value = CrewPostState(error = res.message)
+            }
+        }else _crewPostState.value = CrewPostState(error ="게시글 조회에 실패했습니다.")
+    }
 
+    private var _postLikeState = mutableStateOf(BaseState())
+    val postLikeState : State<BaseState> = _postLikeState
+
+    fun patchPostLike(postId : Int) = viewModelScope.launch {
+
+        _postLikeState.value = BaseState(isLoading = true)
+
+        val response = crewRepository.patchPostLike(postId)
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess) _postLikeState.value = BaseState(isSuccess = true)
+                else _postLikeState.value = BaseState(error = res.message)
+            }
+        } else _postLikeState.value = BaseState(error = "좋아요 등록/취소에 실패했습니다.")
     }
 
     /*

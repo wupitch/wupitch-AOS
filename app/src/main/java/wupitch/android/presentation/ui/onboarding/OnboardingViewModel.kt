@@ -69,7 +69,6 @@ class OnboardingViewModel @Inject constructor(
                 if(res.isSuccess) {
                    if(res.result.isChecked){
                        userInfoDataStore.edit { settings ->
-                           settings[JWT_PREFERENCE_KEY] = res.result.jwt
                            settings[USER_ID] = res.result.accountId
                            settings[FIRST_COMER] = true
                            settings[IS_CONFIRMED] = res.result.isChecked

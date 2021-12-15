@@ -157,6 +157,7 @@ class MyPageViewModel @Inject constructor(
                         settings[Constants.JWT_PREFERENCE_KEY] = ""
                         settings[Constants.USER_ID] = -1
                         settings[Constants.USER_NICKNAME] = ""
+                        settings[Constants.IS_CONFIRMED] = false
                     }
                     crewFilterDataStore.updateData {
                         it.toBuilder()

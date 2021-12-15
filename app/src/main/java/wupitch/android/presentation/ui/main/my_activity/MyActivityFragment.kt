@@ -49,7 +49,7 @@ import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtState
 @AndroidEntryPoint
 class MyActivityFragment : Fragment() {
 
-    private val viewModel : MyActivityViewModel by viewModels()
+    private val viewModel: MyActivityViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,8 +67,8 @@ class MyActivityFragment : Fragment() {
             setContent {
                 WupitchTheme {
 
-                    val myImprtState = remember {viewModel.myImprtState}
-                    val myCrewState = remember {viewModel.myCrewState}
+                    val myImprtState = remember { viewModel.myImprtState }
+                    val myCrewState = remember { viewModel.myCrewState }
 
                     ConstraintLayout(
                         modifier = Modifier
@@ -85,7 +85,7 @@ class MyActivityFragment : Fragment() {
                                 end.linkTo(parent.end)
                             },
                             textString = stringResource(id = R.string.my_activity)
-                        ){
+                        ) {
                             activity?.findNavController(R.id.main_nav_container_view)
                                 ?.navigate(R.id.action_mainFragment_to_notificationFragment)
                         }
@@ -112,9 +112,9 @@ class MyActivityFragment : Fragment() {
     @Composable
     fun MyActivityScrollCol(
         modifier: Modifier,
-        myCrewState : State<MyCrewState>,
-        myImprtState : State<ImprtState>
-        ) {
+        myCrewState: State<MyCrewState>,
+        myImprtState: State<ImprtState>
+    ) {
         LazyColumn(modifier = modifier) {
             item {
 
@@ -128,22 +128,24 @@ class MyActivityFragment : Fragment() {
                 )
                 Spacer(modifier = Modifier.height(5.dp))
             }
-            if(myCrewState.value.isLoading){
+            if (myCrewState.value.isLoading) {
                 item {
-                    Box(modifier = Modifier
-                        .height(160.dp)
-                        .fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Box(
+                        modifier = Modifier
+                            .height(160.dp)
+                            .fillMaxWidth(), contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.main_orange)
                         )
                     }
                 }
             }
-            if(myCrewState.value.data.isEmpty() && !myCrewState.value.isLoading){
+            if (myCrewState.value.data.isEmpty() && !myCrewState.value.isLoading) {
                 item {
                     Spacer(modifier = Modifier.height(7.dp))
                     EmptyActivityLayout(
-                        modifier= Modifier
+                        modifier = Modifier
                             .height(169.dp)
                             .fillMaxWidth()
                             .clickable {
@@ -152,22 +154,17 @@ class MyActivityFragment : Fragment() {
                         textString = stringResource(id = R.string.look_around_crew)
                     )
                 }
-            }else if(myCrewState.value.data.isNotEmpty()) {
+            } else if (myCrewState.value.data.isNotEmpty()) {
                 itemsIndexed(
                     items = myCrewState.value.data
-                ){ _, item ->
-                    MyCrewCard(crew = item){ tabId ->
-                        if(tabId == 3){
-                            Toast.makeText(requireContext(), "서비스 준비중입니다.", Toast.LENGTH_SHORT).show()
-                        }else {
-                            val bundle = Bundle().apply {
-                                putInt("selectedTab", tabId)
-                                putInt("crewId", item.id)
-                            }
-                            activity?.findNavController(R.id.main_nav_container_view)
-                                ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
+                ) { _, item ->
+                    MyCrewCard(crew = item) { tabId ->
+                        val bundle = Bundle().apply {
+                            putInt("selectedTab", tabId)
+                            putInt("crewId", item.id)
                         }
-
+                        activity?.findNavController(R.id.main_nav_container_view)
+                            ?.navigate(R.id.action_mainFragment_to_myCrewDetailFragment, bundle)
                     }
                 }
             }
@@ -183,11 +180,13 @@ class MyActivityFragment : Fragment() {
                 )
                 Spacer(modifier = Modifier.height(5.dp))
             }
-            if(myImprtState.value.isLoading){
+            if (myImprtState.value.isLoading) {
                 item {
-                    Box(modifier = Modifier
-                        .height(160.dp)
-                        .fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Box(
+                        modifier = Modifier
+                            .height(160.dp)
+                            .fillMaxWidth(), contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.main_orange)
                         )
@@ -195,11 +194,11 @@ class MyActivityFragment : Fragment() {
                 }
             }
 
-            if(myImprtState.value.data.isEmpty() && !myImprtState.value.isLoading){
+            if (myImprtState.value.data.isEmpty() && !myImprtState.value.isLoading) {
                 item {
                     Spacer(modifier = Modifier.height(7.dp))
                     EmptyActivityLayout(
-                        modifier= Modifier
+                        modifier = Modifier
                             .height(144.dp)
                             .fillMaxWidth()
                             .clickable {
@@ -209,14 +208,17 @@ class MyActivityFragment : Fragment() {
                     )
                     Spacer(modifier = Modifier.height(60.dp))
                 }
-            }else if(myImprtState.value.data.isNotEmpty()) {
+            } else if (myImprtState.value.data.isNotEmpty()) {
                 itemsIndexed(
                     items = myImprtState.value.data
-                ){ _, item ->
+                ) { _, item ->
                     ImpromptuCard(cardInfo = item) {
                         val bundle = Bundle().apply { putInt("impromptuId", item.id) }
                         activity?.findNavController(R.id.main_nav_container_view)
-                            ?.navigate(R.id.action_mainFragment_to_myImpromptuDetailFragment, bundle)
+                            ?.navigate(
+                                R.id.action_mainFragment_to_myImpromptuDetailFragment,
+                                bundle
+                            )
                     }
                 }
                 item {
@@ -228,8 +230,8 @@ class MyActivityFragment : Fragment() {
 
     @Composable
     fun EmptyActivityLayout(
-        modifier: Modifier, 
-        textString : String
+        modifier: Modifier,
+        textString: String
     ) {
         Box(
             modifier = modifier
@@ -239,7 +241,8 @@ class MyActivityFragment : Fragment() {
                     color = colorResource(id = R.color.main_orange),
                     shape = RoundedCornerShape(16.dp)
                 ),
-            contentAlignment = Alignment.Center)
+            contentAlignment = Alignment.Center
+        )
         {
 
             Text(

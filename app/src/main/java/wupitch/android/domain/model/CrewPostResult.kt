@@ -1,6 +1,6 @@
-package wupitch.android.presentation.ui.main.my_activity.my_crew
+package wupitch.android.domain.model
 
-data class CrewPost(
+data class CrewPostResult(
     val id : Int,
     val isAnnounce : Boolean,
     val announceTitle : String?,
@@ -8,7 +8,7 @@ data class CrewPost(
     val userName : String,
     val isLeader : Boolean,
     val content : String,
-    val isLiked : Boolean,
-    val likedNum : Int,
+    var isLiked : Boolean,
+    var likedNum : Int,
     val date : String
 )
