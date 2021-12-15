@@ -42,8 +42,8 @@ object NetworkModule {
         jwtTokenInterceptor: Interceptor
     ): Retrofit {
         val client: OkHttpClient = OkHttpClient.Builder()
-            .readTimeout(5000, TimeUnit.MILLISECONDS)
-            .connectTimeout(5000, TimeUnit.MILLISECONDS)
+            .readTimeout(6000, TimeUnit.MILLISECONDS)
+            .connectTimeout(6000, TimeUnit.MILLISECONDS)
             .addInterceptor(loggingInterceptor)
             .addNetworkInterceptor(jwtTokenInterceptor)
             .build()
