@@ -152,14 +152,13 @@ class CrewDetailViewModel @Inject constructor(
         return "${formatter.format(guestDues)}원"
     }
 
-    //todo : response to be fixed in server
-    private var _postVisitState = mutableStateOf(BaseState())
-    val postVisitState : State<BaseState> = _postVisitState
+    private var _postVisitState = mutableStateOf(JoinState())
+    val postVisitState : State<JoinState> = _postVisitState
 
     fun postVisit(date : String) = viewModelScope.launch {
-        _postVisitState.value = BaseState(isLoading = true)
+        _postVisitState.value = JoinState(isLoading = true)
         if(checkIsCreator()) {
-            _postVisitState.value = BaseState(error = "본인이 생성한 크루는 신청이 불가능해요")
+            _postVisitState.value = JoinState(code = -1, error = "본인이 생성한 크루는 신청이 불가능해요")
             return@launch
         }
         val req = CrewVisitorReq(
@@ -170,15 +169,15 @@ class CrewDetailViewModel @Inject constructor(
 
         if(response.isSuccessful){
             response.body()?.let { res ->
-                if(res.isSuccess) _postVisitState.value = BaseState(isSuccess = true)
-                else _postVisitState.value = BaseState(error = res.message)
+                if(res.isSuccess) _postVisitState.value = JoinState(isSuccess = true)
+                else _postVisitState.value = JoinState(code = res.code, error = res.message)
             }
-        }else _postVisitState.value = BaseState(error = "손님신청에 실패했습니다.")
+        }else _postVisitState.value = JoinState(error = "손님신청에 실패했습니다.")
 
     }
 
     fun initPostVisitState() {
-        _postVisitState.value = BaseState()
+        _postVisitState.value = JoinState()
     }
 
     private fun convertedVisitDate(date : String) : String{

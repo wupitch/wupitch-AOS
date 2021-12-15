@@ -13,8 +13,8 @@ import com.wupitch.android.CrewFilter
 import com.wupitch.android.ImpromptuFilter
 
 object Constants {
-    const val API_URL = //"https://dev.yogiyo-backend.shop/" //test
-    "https://prod.wupitch.site/" //real
+    const val API_URL = "https://dev.yogiyo-backend.shop/" //test
+    //"https://prod.wupitch.site/" //real
     val Context.userInfoStore : DataStore<Preferences> by preferencesDataStore(
         name = "user_info"
     )

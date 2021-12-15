@@ -78,12 +78,11 @@ class CrewDetailFragment : Fragment() {
                     if (postVisitState.value.isSuccess){
                         joinVisitorDialogOpenState.value = true
                     }else {
-                        //todo
-//                        when (postVisitState.value.code) {
-//                            2014 -> {
-//                                notEnoughInfoDialogOpenState.value = true
-//                            }
-//                        }
+                        when (postVisitState.value.code) {
+                            2014 -> {
+                                notEnoughInfoDialogOpenState.value = true
+                            }
+                        }
                     }
                     if (postVisitState.value.error.isNotEmpty()) {
                         Toast.makeText(
