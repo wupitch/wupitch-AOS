@@ -21,12 +21,12 @@
         android:title="@string/my_activity"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/feedFragment"
-        android:enabled="true"
-        android:icon="@drawable/ic_feed"
-        android:title="@string/feed"
-        app:showAsAction="always" />
+<!--    <item-->
+<!--        android:id="@+id/feedFragment"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/ic_feed"-->
+<!--        android:title="@string/feed"-->
+<!--        app:showAsAction="always" />-->
     <item
         android:id="@+id/myPageFragment"
         android:enabled="true"

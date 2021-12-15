@@ -184,7 +184,7 @@ fun MyCrewCard(
                     Modifier
                         .constrainAs(firstDivider) {
                             start.linkTo(board.end)
-                            end.linkTo(gallery.start)
+                            end.linkTo(members.start) //gallery
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
                         }
@@ -192,45 +192,45 @@ fun MyCrewCard(
                         .width(1.dp)
                         .background(colorResource(id = R.color.gray01)))
 
-                Box(modifier = Modifier
-                    .constrainAs(gallery) {
-                        start.linkTo(firstDivider.end)
-                        end.linkTo(secondDivider.start)
-                        top.linkTo(parent.top)
-                        bottom.linkTo(parent.bottom)
-                        width = Dimension.fillToConstraints
-                        height = Dimension.fillToConstraints
-                    }
-                    .clickable {
-                        onClick(2)
-                    },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.gallery),
-                        fontFamily = Roboto,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = colorResource(id = R.color.main_black)
-                    )
+//                Box(modifier = Modifier
+//                    .constrainAs(gallery) {
+//                        start.linkTo(firstDivider.end)
+//                        end.linkTo(secondDivider.start)
+//                        top.linkTo(parent.top)
+//                        bottom.linkTo(parent.bottom)
+//                        width = Dimension.fillToConstraints
+//                        height = Dimension.fillToConstraints
+//                    }
+//                    .clickable {
+//                        onClick(2)
+//                    },
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = stringResource(id = R.string.gallery),
+//                        fontFamily = Roboto,
+//                        fontSize = 14.sp,
+//                        fontWeight = FontWeight.Normal,
+//                        color = colorResource(id = R.color.main_black)
+//                    )
+//
+//                }
 
-                }
-
-                Divider(
-                    Modifier
-                        .constrainAs(secondDivider) {
-                            start.linkTo(gallery.end)
-                            end.linkTo(members.start)
-                            top.linkTo(parent.top)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .height(14.dp)
-                        .width(1.dp)
-                        .background(colorResource(id = R.color.gray01)))
+//                Divider(
+//                    Modifier
+//                        .constrainAs(secondDivider) {
+//                            start.linkTo(gallery.end)
+//                            end.linkTo(members.start)
+//                            top.linkTo(parent.top)
+//                            bottom.linkTo(parent.bottom)
+//                        }
+//                        .height(14.dp)
+//                        .width(1.dp)
+//                        .background(colorResource(id = R.color.gray01)))
 
                 Box(modifier = Modifier
                         .constrainAs(members) {
-                            start.linkTo(secondDivider.end)
+                            start.linkTo(firstDivider.end) //secondDivider
                             end.linkTo(parent.end)
                             top.linkTo(parent.top)
                             bottom.linkTo(parent.bottom)
@@ -238,7 +238,7 @@ fun MyCrewCard(
                             height = Dimension.fillToConstraints
                         }
                         .clickable {
-                            onClick(3)
+                            onClick(2) //3
                         },
                 contentAlignment = Alignment.Center) {
                     Text(

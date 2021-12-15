@@ -98,7 +98,7 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
             tab.text = when (position) {
                 0 -> getString(R.string.intro)
                 1 -> getString(R.string.board)
-                2 -> getString(R.string.gallery)
+//                2 -> getString(R.string.gallery)
                 else -> getString(R.string.members)
             }
         }.attach()
