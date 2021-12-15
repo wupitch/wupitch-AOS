@@ -196,7 +196,7 @@ class MyPageContactFragment : Fragment() {
                 decorationBox = { innerTextField ->
                     Row(
                         modifier = Modifier
-                            .width(152.dp)
+                            .width(155.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(colorResource(id = R.color.gray04))
                             .padding(horizontal = 22.dp)
