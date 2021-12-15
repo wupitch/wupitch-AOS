@@ -65,7 +65,7 @@ class SplashFragment : Fragment() {
             val isConfirmed = viewModel.readIsUserConfirmed()
             delay(1000L)
 
-//            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
+            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
 
             withContext(Dispatchers.Main) {
 //&& isConfirmed == true

@@ -1,15 +1,55 @@
 package wupitch.android.util
 
+import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
+import android.provider.OpenableColumns
+import android.util.Log
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
-class GetRealPath(private val context: Context) {
+class GetImageFile(private val context: Context) {
+
+    fun getImageFile(uri: Uri) : File? {
+        return if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) createImageFileAndroidQ(uri)
+        else createImageFileBelowAndroidQ(uri)
+    }
+
+    // android 10 (Q) or over.
+    private fun createImageFileAndroidQ(uri:Uri): File?{
+        return try {
+            val parcelFileDescriptor = context.contentResolver.openFileDescriptor(uri, "r", null)
+            val inputStream = FileInputStream(parcelFileDescriptor?.fileDescriptor)
+
+            val file = File(context.cacheDir, context.contentResolver.getFileName(uri))
+            val outputStream = FileOutputStream(file)
+
+            inputStream.copyTo(outputStream)
+
+            file
+        }catch (e:Exception) {
+            Log.e("LOG>>","createImageFileAndroidQ ERror : $e")
+            null
+        }
+    }
+
+    //below android 10
+    private fun createImageFileBelowAndroidQ(uri : Uri) : File? {
+        val path = getRealPathFromURIForGallery(uri)
+        return if(path != null) {
+            resizeImage(file = File(path))
+            File(path)
+        }else null
+    }
 
     fun getRealPathFromURIForGallery(uri: Uri): String? {
 
@@ -57,4 +97,38 @@ fun getImageBody(file: File): MultipartBody.Part {
         filename = file.name,
         body = file.asRequestBody("image/*".toMediaType())
     )
+}
+
+fun resizeImage(file: File, scaleTo: Int = 1024) {
+    val bmOptions = BitmapFactory.Options()
+    bmOptions.inJustDecodeBounds = true
+    BitmapFactory.decodeFile(file.absolutePath, bmOptions)
+    val photoW = bmOptions.outWidth
+    val photoH = bmOptions.outHeight
+
+    val scaleFactor = (photoW / scaleTo).coerceAtMost(photoH / scaleTo)
+
+    bmOptions.inJustDecodeBounds = false
+    bmOptions.inSampleSize = scaleFactor
+
+    val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
+    file.outputStream().use {
+        resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+        resized.recycle()
+    }
+}
+
+
+
+fun ContentResolver.getFileName(fileUri: Uri): String {
+    var name = ""
+    val returnCursor = this.query(fileUri, null, null, null, null)
+    if (returnCursor != null) {
+        val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+        returnCursor.moveToFirst()
+        name = returnCursor.getString(nameIndex)
+        returnCursor.close()
+    }
+
+    return name
 }

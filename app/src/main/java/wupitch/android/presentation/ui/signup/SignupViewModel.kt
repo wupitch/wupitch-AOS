@@ -206,6 +206,8 @@ class SignupViewModel @Inject constructor(
                 if (signupRes.isSuccess) {
                     userInfoDataStore.edit { settings ->
                         settings[Constants.JWT_PREFERENCE_KEY] = signupRes.result.jwt
+                        settings[Constants.USER_ID] = signupRes.result.accountId
+                        settings[Constants.FIRST_COMER] = true
                     }
                     postIdCardImage()
                 }

@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
-import wupitch.android.util.GetRealPath
+import wupitch.android.util.GetImageFile
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -17,7 +17,7 @@ object ImageModule {
     @ViewModelScoped
     fun provideGetRealPath(
         @ApplicationContext context: Context
-    ) : GetRealPath {
-        return GetRealPath(context)
+    ) : GetImageFile {
+        return GetImageFile(context)
     }
 }

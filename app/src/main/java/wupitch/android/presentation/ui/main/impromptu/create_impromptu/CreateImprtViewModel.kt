@@ -1,34 +1,19 @@
 package wupitch.android.presentation.ui.main.impromptu.create_impromptu
 
-import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import wupitch.android.common.Constants
 import wupitch.android.common.Constants.EMPTY_IMAGE_URI
 import wupitch.android.domain.model.CreateImprtReq
 import wupitch.android.domain.repository.GetDistrictRepository
 import wupitch.android.domain.repository.ImprtRepository
-import wupitch.android.presentation.ui.main.home.create_crew.CreateCrewState
 import wupitch.android.presentation.ui.main.home.create_crew.DistrictState
-import wupitch.android.presentation.ui.main.home.create_crew.ScheduleState
 import wupitch.android.util.*
 import java.io.File
 import javax.inject.Inject
@@ -37,17 +22,13 @@ import javax.inject.Inject
 class CreateImprtViewModel @Inject constructor(
     private val getDistrictRepository: GetDistrictRepository,
     private val imprtRepository: ImprtRepository,
-    private val getRealPath: GetRealPath
+    private val getImageFile: GetImageFile
 ) : ViewModel() {
 
-    private var _districtList = mutableStateOf(DistrictState())
-    val districtList: State<DistrictState> = _districtList
+    /*
+    * impromptu info (location, size, title, intro, supply, inquiry)
+    * */
 
-    private var _imprtDistrictId = MutableLiveData<Int>()
-    val imprtDistrictId: LiveData<Int> = _imprtDistrictId
-
-    private var _imprtDistrictName = MutableLiveData<String>()
-    val imprtDistrictName: LiveData<String> = _imprtDistrictName
 
     private var _imprtLocation = mutableStateOf("")
     val crewLocation: State<String> = _imprtLocation
@@ -68,35 +49,47 @@ class CreateImprtViewModel @Inject constructor(
     private var _imprtInquiry = mutableStateOf("")
     val imprtInquiry: State<String> = _imprtInquiry
 
+    fun setImprtLocation(location: String) {
+        _imprtLocation.value = location
+    }
 
-    private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
-    val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
 
-    private var _imageChosenState = mutableStateOf(false)
-    val imageChosenState: State<Boolean> = _imageChosenState
+    fun setImprtSize(size: String) {
+        _imprtSize.value = size
+    }
+    fun setImprtTitle(title: String) {
+        _imprtTitle.value = title
+    }
 
-    private var _imprtImage = mutableStateOf<Uri>(EMPTY_IMAGE_URI)
-    val imprtImage: State<Uri> = _imprtImage
+    fun setImprtIntro(intro: String) {
+        _imprtIntro.value = intro
+    }
 
-    private var _dateState = mutableStateOf("0000.00.00 (요일)")
-    val dateState: State<String> = _dateState
+    fun setImprtSupplies(supplies: String) {
+        _imprtSupplies.value = supplies
+    }
 
-    private var _dateValidState = mutableStateOf<Boolean?>(true)
-    val dateValidState: State<Boolean?> = _dateValidState
+    fun setImprtInquiry(inquiry: String) {
+        _imprtInquiry.value = inquiry
+    }
 
-    private var _timeState = mutableStateOf<TimeState>(
-        TimeState(
-            startTime = mutableStateOf("00:00"),
-            endTime = mutableStateOf("00:00"),
-            isStartTimeSet = mutableStateOf<Boolean?>(false),
-            isEndTimeSet = mutableStateOf<Boolean?>(false)
-        )
-    )
-    val timeState: State<TimeState> = _timeState
+    /*
+    * district
+    * */
 
-    private var _createImprtState = mutableStateOf(CreateImpromptuState())
-    val createImprtState: State<CreateImpromptuState> = _createImprtState
+    private var _districtList = mutableStateOf(DistrictState())
+    val districtList: State<DistrictState> = _districtList
 
+    private var _imprtDistrictId = MutableLiveData<Int>()
+    val imprtDistrictId: LiveData<Int> = _imprtDistrictId
+
+    private var _imprtDistrictName = MutableLiveData<String>()
+    val imprtDistrictName: LiveData<String> = _imprtDistrictName
+
+    fun setImprtDistrict(districtId: Int, districtName: String) {
+        _imprtDistrictId.value = districtId
+        _imprtDistrictName.value = districtName
+    }
 
     fun getDistricts() = viewModelScope.launch {
         _districtList.value = DistrictState(isLoading = true)
@@ -113,19 +106,25 @@ class CreateImprtViewModel @Inject constructor(
     }
 
 
-    fun setImprtDistrict(districtId: Int, districtName: String) {
-        _imprtDistrictId.value = districtId
-        _imprtDistrictName.value = districtName
-    }
 
-    fun setImprtLocation(location: String) {
-        _imprtLocation.value = location
-    }
+    /*
+    * schedule
+    * */
+    private var _dateState = mutableStateOf("0000.00.00 (요일)")
+    val dateState: State<String> = _dateState
 
+    private var _dateValidState = mutableStateOf<Boolean?>(true)
+    val dateValidState: State<Boolean?> = _dateValidState
 
-    fun setImprtSize(size: String) {
-        _imprtSize.value = size
-    }
+    private var _timeState = mutableStateOf<TimeState>(
+        TimeState(
+            startTime = mutableStateOf("00:00"),
+            endTime = mutableStateOf("00:00"),
+            isStartTimeSet = mutableStateOf<Boolean?>(false),
+            isEndTimeSet = mutableStateOf<Boolean?>(false)
+        )
+    )
+    val timeState: State<TimeState> = _timeState
 
     fun setDateState(longDate: Long?) {
         if (longDate != null) {
@@ -145,19 +144,6 @@ class CreateImprtViewModel @Inject constructor(
 
     fun resetDateValid() {
         _dateValidState.value = null
-    }
-
-
-    fun setImprtImage(image: Uri) {
-        _imprtImage.value = image
-    }
-
-    fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
-        _isUsingDefaultImage.value = isUsingDefaultImage
-    }
-
-    fun setImageChosenState(isImageChosen: Boolean) {
-        _imageChosenState.value = isImageChosen
     }
 
     fun setTimeFilter(type: TimeType, hour: Int, min: Int) {
@@ -195,21 +181,14 @@ class CreateImprtViewModel @Inject constructor(
         }
     }
 
-    fun setImprtTitle(title: String) {
-        _imprtTitle.value = title
+    private fun convertDateForServer(date: String): String {
+        val datePart = date.split(" ")[0]
+        return datePart.replace(".", "-")
     }
 
-    fun setImprtIntro(intro: String) {
-        _imprtIntro.value = intro
-    }
-
-    fun setImprtSupplies(supplies: String) {
-        _imprtSupplies.value = supplies
-    }
-
-    fun setImprtInquiry(inquiry: String) {
-        _imprtInquiry.value = inquiry
-    }
+    /*
+    * fee
+    * */
 
     private var _imprtFee = mutableStateOf<String>("")
     val imprtFee: State<String> = _imprtFee
@@ -222,6 +201,14 @@ class CreateImprtViewModel @Inject constructor(
         _imprtFee.value = money
         _noImprtFee.value = toggleState
     }
+
+    /*
+    * create impromptu
+    * */
+
+    private var _createImprtState = mutableStateOf(CreateImpromptuState())
+    val createImprtState: State<CreateImpromptuState> = _createImprtState
+
 
     fun createImpromptu() = viewModelScope.launch {
         _createImprtState.value = CreateImpromptuState(isLoading = true)
@@ -248,18 +235,41 @@ class CreateImprtViewModel @Inject constructor(
         } else _createImprtState.value = CreateImpromptuState(error = "번개 생성을 실패했습니다.")
     }
 
+    /*
+    * image
+    * */
+
+    private var _isUsingDefaultImage = mutableStateOf<Boolean?>(null)
+    val isUsingDefaultImage: State<Boolean?> = _isUsingDefaultImage
+
+    private var _imageChosenState = mutableStateOf(false)
+    val imageChosenState: State<Boolean> = _imageChosenState
+
+    private var _imprtImage = mutableStateOf<Uri>(EMPTY_IMAGE_URI)
+    val imprtImage: State<Uri> = _imprtImage
+
+    fun setImprtImage(image: Uri) {
+        _imprtImage.value = image
+    }
+
+    fun setIsUsingDefaultImage(isUsingDefaultImage: Boolean?) {
+        _isUsingDefaultImage.value = isUsingDefaultImage
+    }
+
+    fun setImageChosenState(isImageChosen: Boolean) {
+        _imageChosenState.value = isImageChosen
+    }
+
     private fun postImprtImage(id: Int) = viewModelScope.launch {
         if (_imprtImage.value == EMPTY_IMAGE_URI) {
             _createImprtState.value = CreateImpromptuState(data = id)
         } else {
-            val path = getRealPath.getRealPathFromURIForGallery(_imprtImage.value)
+            val file = getImageFile.getImageFile(_imprtImage.value)
 
-            if (path != null) {
-                resizeImage(file = File(path))
+            if (file != null) {
+                val multipartBodyPart = getImageBody(file)
 
-                val file = getImageBody(File(path))
-
-                val response = imprtRepository.postImprtImage(file.body, file, id)
+                val response = imprtRepository.postImprtImage(multipartBodyPart.body, multipartBodyPart, id)
                 if (response.isSuccessful) {
                     response.body()?.let { res ->
                         if (res.isSuccess) _createImprtState.value = CreateImpromptuState(data = id)
@@ -267,30 +277,6 @@ class CreateImprtViewModel @Inject constructor(
                     }
                 } else _createImprtState.value = CreateImpromptuState(error = "번개 이미지 업로드를 실패했습니다.")
             }
-        }
-    }
-
-    private fun convertDateForServer(date: String): String {
-        val datePart = date.split(" ")[0]
-        return datePart.replace(".", "-")
-    }
-
-    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-        val bmOptions = BitmapFactory.Options()
-        bmOptions.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-        val photoW = bmOptions.outWidth
-        val photoH = bmOptions.outHeight
-
-        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-
-        bmOptions.inJustDecodeBounds = false
-        bmOptions.inSampleSize = scaleFactor
-
-        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-        file.outputStream().use {
-            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-            resized.recycle()
         }
     }
 }
