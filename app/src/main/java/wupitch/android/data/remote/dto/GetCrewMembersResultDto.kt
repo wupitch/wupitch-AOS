@@ -10,7 +10,7 @@ data class GetCrewMembersResultDto(
     val guestReserveTime: String,
     val isGuest: Boolean,
     val isLeader: Boolean,
-    val isValid: Boolean
+    val isValid: Boolean?
 )
 
 fun GetCrewMembersResultDto.toCrewMember() : CrewMember {

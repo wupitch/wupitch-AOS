@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import wupitch.android.R
 import wupitch.android.domain.model.CrewMember
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.my_activity.components.CrewMemberLayout
+import wupitch.android.presentation.ui.main.my_activity.components.ImprtMemberLayout
 
 class MyImprtMembersFragment : Fragment() {
 
@@ -53,8 +55,7 @@ class MyImprtMembersFragment : Fragment() {
                         Modifier
                             .fillMaxSize()
                             .background(Color.White)) {
-                        val (chrt, text, members, progressbar) = createRefs()
-                        val guildLine = createGuidelineFromTop(0.65f)
+                        val ( members, progressbar) = createRefs()
 
                         if(memberState.value.data.isNotEmpty()){
                             LazyColumn(modifier = Modifier.constrainAs(members){
@@ -66,11 +67,10 @@ class MyImprtMembersFragment : Fragment() {
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                                 itemsIndexed(items = memberState.value.data){ _, item ->
-//                                    CrewMemberLayout(member = item){ //todo 버튼 추가시 변경.
-//                                        val bundle = Bundle().apply { putInt("memberId", it) }
-//                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
-//
-//                                    }
+                                    ImprtMemberLayout(member = item){
+                                        val bundle = Bundle().apply { putInt("memberId", it) }
+                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
+                                    }
                                 }
                             }
                         }

@@ -62,8 +62,7 @@ class MyCrewMembersFragment() : Fragment() {
                                     Spacer(modifier = Modifier.height(8.dp))
                                 }
                                 itemsIndexed(items = memberState.value.data) { _, item ->
-                                    CrewMemberLayout(member = item) { //todo 버튼 추가시 변경
-                                        //todo 멤버 상세 페이지로.
+                                    CrewMemberLayout(member = item) {
                                         Log.d("{MyCrewMembersFragment.onCreateView}", it.toString())
                                     }
                                 }

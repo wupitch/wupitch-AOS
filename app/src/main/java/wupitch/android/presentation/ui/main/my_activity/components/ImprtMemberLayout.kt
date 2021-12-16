@@ -24,11 +24,12 @@ import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import wupitch.android.R
 import wupitch.android.domain.model.CrewMember
+import wupitch.android.domain.model.ImprtMember
 import wupitch.android.presentation.theme.Roboto
 
 @Composable
-fun CrewMemberLayout(
-    member: CrewMember,
+fun ImprtMemberLayout(
+    member: ImprtMember,
     onClick: (Int) -> Unit
 ) {
     ConstraintLayout(
@@ -39,7 +40,7 @@ fun CrewMemberLayout(
 
     ) {
 
-        val (userImage, userName, leaderIcon, arrow, waiting) = createRefs()
+        val (userImage, userName, leaderIcon, arrow) = createRefs()
 
         Image(
             modifier = Modifier
@@ -78,29 +79,6 @@ fun CrewMemberLayout(
             fontSize = 16.sp,
             color = colorResource(id = R.color.main_black)
         )
-
-        if (member.isValid== false) {
-            Box(modifier = Modifier
-                .constrainAs(waiting) {
-                    start.linkTo(userName.end, margin = 4.dp)
-                    top.linkTo(userName.top)
-                    bottom.linkTo(userName.bottom)
-                }
-                .clip(RoundedCornerShape(9.5.dp))
-                .background(colorResource(id = R.color.gray03))
-                .padding(horizontal = 6.dp)
-                .padding(top = 2.dp, bottom = 1.dp),
-                contentAlignment = Alignment.Center) {
-                Text(
-                    text = stringResource(id = R.string.waiting_for_acceptance),
-                    fontFamily = Roboto,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                    color = Color.White
-                )
-            }
-        }
-
 
         if (member.isLeader) {
             Image(
