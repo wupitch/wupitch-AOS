@@ -11,9 +11,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.toMemberDetail
 import wupitch.android.domain.model.MemberDetail
 import wupitch.android.domain.model.SportResult
 import wupitch.android.domain.repository.ImprtRepository
+import wupitch.android.presentation.ui.main.my_activity.my_crew.CrewMemberDetailState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,26 +35,16 @@ class ImprtMemberDetailViewModel @Inject constructor(
 
     fun getMemberInfo() = viewModelScope.launch {
         _memberInfoState.value = ImprtMemberDetailState(isLoading = true)
-        delay(500L)
-        _memberInfoState.value = ImprtMemberDetailState(
-            data = MemberDetail(
-                userImage = null,
-                userName = "베키",
-                userAgeGroup = "20대",
-                userArea = "성북구",
-                userPhoneNum = "01099998888",
-                userSports = listOf(
-                    SportResult("축구", 0),
-                    SportResult("농구", 3),
-                    SportResult("배구", 2),
-                    SportResult("배드민턴", 1),
-                    SportResult("런닝", 5),
-                    SportResult("등산", 4),
-                ),
-                intro = "할룽할룽~! 사람들이랑 같이 운동하는거 넘 좋아한다능 ㅎㅎ",
-                visitorDate = null
-            )
-        )
+        val response = imprtRepository.getImprtMemberDetail(imprtId, memberId)
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) {
+                    _memberInfoState.value = ImprtMemberDetailState(
+                        data = res.result.toMemberDetail()
+                    )
+                }else  _memberInfoState.value = ImprtMemberDetailState(error = res.message)
+            }
+        }else  _memberInfoState.value = ImprtMemberDetailState(error = "멤버 조회에 실패했습니다.")
     }
 
     /*

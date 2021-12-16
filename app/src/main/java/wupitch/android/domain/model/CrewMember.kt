@@ -5,6 +5,5 @@ data class CrewMember(
     val userImage : String?,
     val userName : String,
     val isLeader : Boolean,
-    val isGuest : Boolean,
     val isValid : Boolean?
 )

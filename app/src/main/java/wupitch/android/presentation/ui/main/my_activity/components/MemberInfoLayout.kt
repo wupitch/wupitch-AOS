@@ -96,11 +96,11 @@ fun MemberInfoLayout(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .background(colorResource(id = SportType.getNumOf(it.sportsId).color))
+                        .background(colorResource(id = SportType.getNumOf(it).color))
                         .padding(horizontal = 11.dp, vertical = 5.dp)
                 ) {
                     Text(
-                        text = it.name,
+                        text = stringResource(id = SportType.getNumOf(it).sportName),
                         color = Color.White,
                         fontFamily = Roboto,
                         fontWeight = FontWeight.Normal,
@@ -150,7 +150,7 @@ fun MemberInfoLayout(
                     text = member.visitorDate,
                     fontFamily = Roboto,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
+                    fontSize = 14.sp,
                     color = colorResource(id = R.color.main_orange)
                 )
             }

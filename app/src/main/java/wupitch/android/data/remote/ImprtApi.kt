@@ -65,4 +65,10 @@ interface ImprtApi {
         @Path("impromptuId") impromptuId : Int,
         @Path("accountId") accountId : Int
     ): Response<BaseRes>
+
+    @GET("app/impromptus/{impromptuId}/accounts/{accountId}/profile-info")
+    suspend fun getImprtMemberDetail(
+        @Path("impromptuId") impromptuId : Int,
+        @Path("accountId") accountId : Int
+    ): Response<GetMemberDetailRes>
 }

@@ -70,5 +70,17 @@ class CrewRepositoryImpl @Inject constructor(
     override suspend fun getCrewMembers(crewId: Int): Response<GetCrewMembersRes>
     = retrofit.create(CrewApi::class.java).getCrewMembers(crewId)
 
+    override suspend fun getCrewMemberDetail(
+        crewId: Int,
+        memberId: Int
+    ): Response<GetMemberDetailRes>
+    = retrofit.create(CrewApi::class.java).getCrewMemberDetail(crewId, memberId)
+
+    override suspend fun acceptCrewApplicant(req: CrewApplicantReq): Response<BaseRes>
+    = retrofit.create(CrewApi::class.java).acceptCrewApplicant(req)
+
+    override suspend fun dismissCrewApplicant(req: CrewApplicantReq): Response<BaseRes>
+    = retrofit.create(CrewApi::class.java).dismissCrewApplicant(req)
+
 
 }

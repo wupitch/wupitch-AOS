@@ -10,14 +10,15 @@ data class GetImprtMembersResultDto(
     val accountNickname: String,
     val addedAt: String,
     val isLeader: Boolean,
-    val isValid: Boolean
+    val isValid: Boolean,
+    val profileImage : String?
 )
 
 fun GetImprtMembersResultDto.toImprtMember() : ImprtMember {
     return ImprtMember(
         id = accountId,
         userName = accountNickname,
-        userImage = null,
+        userImage = profileImage,
         isLeader = isLeader,
         isValid = isValid
     )

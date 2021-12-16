@@ -69,7 +69,7 @@ class CreateImprtFeeFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_impromptu_warning))
                     }
 
-                    val createImprtState = remember {viewModel.createImprtState}
+                    val createImprtState = viewModel.createImprtState
                     if(createImprtState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), createImprtState.value.error, Toast.LENGTH_SHORT).show()
                     }

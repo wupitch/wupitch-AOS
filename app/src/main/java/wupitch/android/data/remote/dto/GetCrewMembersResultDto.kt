@@ -10,16 +10,16 @@ data class GetCrewMembersResultDto(
     val guestReserveTime: String,
     val isGuest: Boolean,
     val isLeader: Boolean,
-    val isValid: Boolean?
+    val isValid: Boolean?,
+    val profileImage : String?
 )
 
 fun GetCrewMembersResultDto.toCrewMember() : CrewMember {
     return CrewMember(
         id = accountId,
         userName = accountNickname,
-        userImage = null,
+        userImage = profileImage,
         isLeader = isLeader,
-        isGuest = isGuest,
         isValid = isValid
     )
 }

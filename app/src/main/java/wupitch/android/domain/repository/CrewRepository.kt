@@ -34,4 +34,7 @@ interface CrewRepository {
     suspend fun patchPostLike(postId : Int) : Response<BaseResultRes>
     suspend fun patchPostReport(postId : Int, reportPostReq: ReportPostReq) : Response<BaseResultRes>
     suspend fun getCrewMembers(crewId: Int) : Response<GetCrewMembersRes>
+    suspend fun getCrewMemberDetail(crewId: Int, memberId : Int) : Response<GetMemberDetailRes>
+    suspend fun acceptCrewApplicant(req : CrewApplicantReq) : Response<BaseRes>
+    suspend fun dismissCrewApplicant(req: CrewApplicantReq) : Response<BaseRes>
 }
