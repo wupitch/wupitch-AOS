@@ -68,7 +68,7 @@ class CreateCrewVisitorFeeFragment : Fragment() {
                             textString = stringResource(id = R.string.stop_create_crew_warning))
                     }
 
-                    val createCrewState = remember {viewModel.createCrewState}
+                    val createCrewState = viewModel.createCrewState
                     if(createCrewState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), createCrewState.value.error, Toast.LENGTH_SHORT).show()
                     }

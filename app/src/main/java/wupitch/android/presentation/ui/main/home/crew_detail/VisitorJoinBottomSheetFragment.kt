@@ -35,7 +35,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.ui.components.RoundBtn
 
 
-class VisitorBottomSheetFragment(
+class VisitorJoinBottomSheetFragment(
 //    private val visitorCost: String,
 //    private val visitDateList: List<String>
     private val viewModel : CrewDetailViewModel

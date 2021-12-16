@@ -45,7 +45,7 @@ import wupitch.android.util.SportType
 class CrewDetailFragment : Fragment() {
 
     private val viewModel: CrewDetailViewModel by viewModels()
-    private lateinit var visitorBottomSheet: VisitorBottomSheetFragment
+    private lateinit var visitorBottomSheet: VisitorJoinBottomSheetFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -270,7 +270,7 @@ class CrewDetailFragment : Fragment() {
                     textColor = R.color.main_orange,
                     borderColor = R.color.main_orange
                 ) {
-                    visitorBottomSheet = VisitorBottomSheetFragment(viewModel)
+                    visitorBottomSheet = VisitorJoinBottomSheetFragment(viewModel)
                     visitorBottomSheet.show(childFragmentManager, "visitor bottom sheet")
                 }
                 Spacer(modifier = Modifier.width(12.dp))

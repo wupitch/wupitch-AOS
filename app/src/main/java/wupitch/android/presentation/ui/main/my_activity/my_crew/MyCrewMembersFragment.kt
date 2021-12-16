@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import wupitch.android.R
 import wupitch.android.presentation.theme.WupitchTheme
@@ -63,7 +64,12 @@ class MyCrewMembersFragment() : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data) { _, item ->
                                     CrewMemberLayout(member = item) {
-                                        Log.d("{MyCrewMembersFragment.onCreateView}", it.toString())
+                                        val bundle = Bundle().apply {
+                                            putInt("memberId", it)
+                                            putInt("crewId", viewModel.crewId)
+//                                            putBoolean("isLeader", viewModel)
+                                        }
+                                        findNavController().navigate(R.id.action_myCrewDetailFragment_to_memberDetailFragment, bundle)
                                     }
                                 }
                             }

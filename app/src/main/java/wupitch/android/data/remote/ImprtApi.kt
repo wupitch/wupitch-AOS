@@ -59,4 +59,10 @@ interface ImprtApi {
     suspend fun getImprtMembers(
         @Path("impromptuId") impromptuId : Int
     ) : Response<GetImprtMembersRes>
+
+    @PATCH("app/impromptus/{impromptuId}/disagree-enroll-member/{accountId}")
+    suspend fun dismissMember(
+        @Path("impromptuId") impromptuId : Int,
+        @Path("accountId") accountId : Int
+    ): Response<BaseRes>
 }

@@ -68,8 +68,11 @@ class MyImprtMembersFragment : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data){ _, item ->
                                     ImprtMemberLayout(member = item){
-                                        val bundle = Bundle().apply { putInt("memberId", it) }
-                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_memberDetailFragment, bundle)
+                                        val bundle = Bundle().apply {
+                                            putInt("memberId", it)
+                                            putInt("imprtId", viewModel.imprtId)
+                                        }
+                                        findNavController().navigate(R.id.action_myImpromptuDetailFragment_to_imprtMemberDetailFragment, bundle)
                                     }
                                 }
                             }

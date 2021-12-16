@@ -97,10 +97,6 @@ class MyCrewBoardFragment : Fragment() {
                                     itemsIndexed(
                                         items = postState.value.data
                                     ) { index, item ->
-//                                        viewModel.onChangeScrollPosition(index)
-//                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-//                                            viewModel.getNewPage()
-//                                        }
                                         MyCrewPostCard(
                                             post = item,
                                             onMoreClick = { postId ->

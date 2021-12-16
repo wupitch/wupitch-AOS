@@ -22,4 +22,5 @@ interface ImprtRepository {
     suspend fun getSearchImprt(title: String, page : Int) : Response<GetImprtRes>
     suspend fun getMyImprt() : Response<GetMyImprt>
     suspend fun getImprtMembers(imprtId : Int) : Response<GetImprtMembersRes>
+    suspend fun dismissMember(imprtId : Int, memberId : Int) : Response<BaseRes>
 }
