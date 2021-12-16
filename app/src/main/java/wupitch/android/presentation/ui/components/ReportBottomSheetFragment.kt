@@ -21,6 +21,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.my_activity.my_crew.CrewMemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtMemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 import wupitch.android.util.ReportType
 
@@ -64,18 +65,28 @@ class ReportBottomSheetFragment(
                                     is CrewMemberDetailViewModel -> {
                                         viewModel.setShowReportDialog()
                                     }
+                                    is ImprtMemberDetailViewModel -> {
+                                        viewModel.setShowReportDialog()
+                                    }
                                 }
 
                                 dismiss()
                             }){
                             Text(
                                 modifier = Modifier.padding(vertical = 16.dp),
-                                text = if(viewModel is MyCrewViewModel) {
-                                    stringResource(id = R.string.report_crew)
-                                }else if(viewModel is MyImpromptuViewModel) {
-                                    stringResource(id = R.string.report_impromptu)
-                                }else {
-                                   stringResource(id = R.string.report_member)
+                                text = when (reportType) {
+                                    ReportType.CREW -> {
+                                        stringResource(id = R.string.report_crew)
+                                    }
+                                    ReportType.IMPROMPTU -> {
+                                        stringResource(id = R.string.report_impromptu)
+                                    }
+                                    ReportType.MEMBER -> {
+                                        stringResource(id = R.string.report_member)
+                                    }
+                                    else -> {
+                                        stringResource(id = R.string.report_post)
+                                    }
                                 },
                                 color = colorResource(id = R.color.main_black),
                                 fontWeight = FontWeight.Normal,

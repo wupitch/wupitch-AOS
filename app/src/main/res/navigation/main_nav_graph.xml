@@ -595,10 +595,6 @@
             android:name="crewId"
             app:argType="integer"
             android:defaultValue="-1" />
-<!--        <argument-->
-<!--            android:name="isLeader"-->
-<!--            app:argType="Boolean"-->
-<!--            android:defaultValue="false" />-->
     </fragment>
     <fragment
         android:id="@+id/imprtMemberDetailFragment"
@@ -612,9 +608,5 @@
             android:name="imprtId"
             app:argType="integer"
             android:defaultValue="-1" />
-<!--        <argument-->
-<!--            android:name="isLeader"-->
-<!--            app:argType="Boolean"-->
-<!--            android:defaultValue="false" />-->
     </fragment>
 </navigation>

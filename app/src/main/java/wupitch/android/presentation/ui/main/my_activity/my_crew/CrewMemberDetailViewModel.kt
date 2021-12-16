@@ -10,7 +10,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.CrewApplicantReq
 import wupitch.android.data.remote.dto.toMemberDetail
+import wupitch.android.domain.model.CrewMemberStatus
 import wupitch.android.domain.model.MemberDetail
 import wupitch.android.domain.model.SportResult
 import wupitch.android.domain.repository.CrewRepository
@@ -23,6 +26,10 @@ class CrewMemberDetailViewModel @Inject constructor(
 
     var memberId = -1
     var crewId = -1
+    var isCurrentUserLeader = false
+    var memberStatus = CrewMemberStatus()
+
+
 
     /*
     * get member info
@@ -40,18 +47,16 @@ class CrewMemberDetailViewModel @Inject constructor(
                     _memberInfoState.value = CrewMemberDetailState(
                         data = res.result.toMemberDetail()
                     )
+                    isCurrentUserLeader = res.result.isAuthAccountLeader
+                    memberStatus = CrewMemberStatus(
+                        isValid = res.result.isValid,
+                        isGuest = res.result.isGuest
+                    )
                 }else  _memberInfoState.value = CrewMemberDetailState(error = res.message)
             }
         }else  _memberInfoState.value = CrewMemberDetailState(error = "멤버 조회에 실패했습니다.")
     }
 
-    private fun getImprtMemberInfo() {
-
-    }
-
-    private fun getCrewMemberInfo() {
-
-    }
 
     /*
     * report
@@ -67,7 +72,6 @@ class CrewMemberDetailViewModel @Inject constructor(
     fun postImprtReport(content: String) {
         //todo
         _showReportDialog.value = false
-        Log.d("{MyImpromptuViewModel.postImprtReport}", content.toString())
     }
 
     /**
@@ -75,30 +79,52 @@ class CrewMemberDetailViewModel @Inject constructor(
      */
 
     fun dismissMember() {
-
+        //todo 멤버 삭제
     }
 
     /*
-    * visitor management
+    * accept & decline guest and members
     * */
 
-    fun acceptVisitor () {
+    private var _acceptState = mutableStateOf(BaseState())
+    val acceptState : State<BaseState> = _acceptState
+
+
+    fun accept(isGuest : Boolean) = viewModelScope.launch{
+        _acceptState. value = BaseState(isLoading = true)
+        val response = crewRepository.acceptCrewApplicant(CrewApplicantReq(
+            accountId = memberId,
+            clubId = crewId,
+            isGuest = isGuest
+        ))
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) _acceptState.value = BaseState(isSuccess = true)
+                else  _acceptState.value = BaseState(error = res.message)
+            }
+        }else _acceptState.value = BaseState(error = "수락에 실패했습니다.")
 
     }
 
-    fun declineVisitor() {
 
-    }
+    private var _declineState = mutableStateOf(BaseState())
+    val declineState : State<BaseState> = _declineState
 
-    /*
-    * member-to-be management
-    * */
 
-    fun acceptMemberToBe () {
-
-    }
-
-    fun declineMemberToBe() {
+    fun decline(isGuest : Boolean) = viewModelScope.launch {
+        val response = crewRepository.dismissCrewApplicant(
+            CrewApplicantReq(
+                accountId = memberId,
+                clubId = crewId,
+                isGuest = isGuest
+            )
+        )
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) _declineState.value = BaseState(isSuccess = true)
+                else  _declineState.value = BaseState(error = res.message)
+            }
+        }else _declineState.value = BaseState(error = "거절에 실패했습니다.")
 
     }
 

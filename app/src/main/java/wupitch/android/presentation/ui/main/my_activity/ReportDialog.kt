@@ -7,7 +7,9 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import wupitch.android.databinding.DialogReportBinding
+import wupitch.android.presentation.ui.main.my_activity.my_crew.CrewMemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
+import wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtMemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
 
 class ReportDialog(context: Context, val viewModel : ViewModel) : Dialog(context) {
@@ -26,6 +28,12 @@ class ReportDialog(context: Context, val viewModel : ViewModel) : Dialog(context
                     viewModel.postReport(binding.etReport.text.toString())
                 }
                 is MyImpromptuViewModel -> {
+                    viewModel.postImprtReport(binding.etReport.text.toString())
+                }
+                is CrewMemberDetailViewModel -> {
+                    viewModel.postImprtReport(binding.etReport.text.toString())
+                }
+                is ImprtMemberDetailViewModel -> {
                     viewModel.postImprtReport(binding.etReport.text.toString())
                 }
             }

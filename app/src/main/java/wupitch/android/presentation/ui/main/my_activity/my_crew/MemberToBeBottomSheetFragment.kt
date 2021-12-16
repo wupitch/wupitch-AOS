@@ -58,7 +58,7 @@ class MemberToBeBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                viewModel.acceptMemberToBe()
+                                viewModel.accept(isGuest = false)
                                 dismiss()
                             }) {
                             Text(
@@ -74,7 +74,7 @@ class MemberToBeBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                viewModel.declineMemberToBe()
+                                viewModel.decline(isGuest = false)
                                 dismiss()
                             }) {
                             Text(

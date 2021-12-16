@@ -68,6 +68,15 @@ class MyImprtDetailFragment : BaseFragment<FragmentMyImprtDetailBinding>(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.viewpagerMyimprtdetail.post {
+            binding.viewpagerMyimprtdetail.currentItem =  viewModel.selectedTab
+        }
+        binding.tablayoutMyimprtdetail.setScrollPosition( viewModel.selectedTab, 0f, true)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

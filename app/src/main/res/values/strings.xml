@@ -304,6 +304,7 @@
     <string name="decline_member">멤버거절</string>
     <string name="accept_visitor">손님수락</string>
     <string name="decline_visitor">손님거절</string>
+    <string name="report_post">게시글 신고하기</string>
 
 <!--    feed-->
     <string name="no_feed_image">크루에 참여하고\n사진을 올려보세요!</string>

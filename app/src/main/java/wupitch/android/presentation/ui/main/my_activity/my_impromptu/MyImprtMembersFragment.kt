@@ -68,6 +68,7 @@ class MyImprtMembersFragment : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data){ _, item ->
                                     ImprtMemberLayout(member = item){
+                                        viewModel.selectedTab = 1
                                         val bundle = Bundle().apply {
                                             putInt("memberId", it)
                                             putInt("imprtId", viewModel.imprtId)

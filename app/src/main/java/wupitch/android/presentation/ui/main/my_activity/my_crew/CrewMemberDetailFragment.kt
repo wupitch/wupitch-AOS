@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -55,7 +56,7 @@ class CrewMemberDetailFragment : Fragment() {
     private lateinit var reportDialog: ReportDialog
     private lateinit var visitorBottomSheetFragment: VisitorBottomSheetFragment
     private lateinit var memberToBeBottomSheetFragment: MemberToBeBottomSheetFragment
-
+    private lateinit var reportBottomSheet: ReportBottomSheetFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +93,22 @@ class CrewMemberDetailFragment : Fragment() {
 
                     val memberState = remember { viewModel.memberInfoState }
 
+                    val acceptState = viewModel.acceptState
+                    if(acceptState.value.isSuccess) {
+                        Toast.makeText(requireContext(), "수락에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    if(acceptState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), acceptState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+
+                    val declineState = viewModel.declineState
+                    if(declineState.value.isSuccess) {
+                        Toast.makeText(requireContext(), "거절에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    if(declineState.value.error.isNotEmpty()){
+                        Toast.makeText(requireContext(), declineState.value.error, Toast.LENGTH_SHORT).show()
+                    }
+
                     ConstraintLayout(
                         Modifier
                             .fillMaxSize()
@@ -108,8 +125,19 @@ class CrewMemberDetailFragment : Fragment() {
                             },
                             onLeftIconClick = { findNavController().navigateUp() },
                             onRightIconClick = {
-//                                showMemberBottomSheet()
-                                               showMemberToBeBottomSheet()
+                                if(viewModel.isCurrentUserLeader){
+                                    if(viewModel.memberStatus.isValid){
+                                        showMemberBottomSheet()
+                                    }else {
+                                        if(viewModel.memberStatus.isGuest){
+                                            showVisitorBottomSheet()
+                                        }else {
+                                            showMemberToBeBottomSheet()
+                                        }
+                                    }
+                                }else {
+                                   showReportBottomSheet()
+                                }
                                                },
                             textString = R.string.profile,
                             icon = R.drawable.more
@@ -155,6 +183,10 @@ class CrewMemberDetailFragment : Fragment() {
     private fun showMemberToBeBottomSheet() {
         memberToBeBottomSheetFragment = MemberToBeBottomSheetFragment(viewModel)
         memberToBeBottomSheetFragment.show(childFragmentManager, "member bottom sheet")
+    }
+    private fun showReportBottomSheet() {
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.MEMBER)
+        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 
 

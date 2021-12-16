@@ -25,6 +25,8 @@ class MyImpromptuViewModel @Inject constructor(
 
 
     var imprtId = -1
+    var selectedTab = 0
+
 
     private var _imprtDetailState = mutableStateOf(ImprtDetailState())
     val imprtDetailState : State<ImprtDetailState> = _imprtDetailState

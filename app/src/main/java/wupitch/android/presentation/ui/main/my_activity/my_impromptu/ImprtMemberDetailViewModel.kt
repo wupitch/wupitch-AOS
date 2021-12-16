@@ -43,6 +43,7 @@ class ImprtMemberDetailViewModel @Inject constructor(
                     _memberInfoState.value = ImprtMemberDetailState(
                         data = res.result.toMemberDetail()
                     )
+                    isCurrentUserLeader = res.result.isAuthAccountLeader
                 }else  _memberInfoState.value = ImprtMemberDetailState(error = res.message)
             }
         }else  _memberInfoState.value = ImprtMemberDetailState(error = "멤버 조회에 실패했습니다.")

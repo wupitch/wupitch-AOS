@@ -58,7 +58,7 @@ class VisitorBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                viewModel.acceptVisitor()
+                                viewModel.accept(isGuest = true)
                                 dismiss()
                             }) {
                             Text(
@@ -74,7 +74,7 @@ class VisitorBottomSheetFragment(
                         Box(modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                viewModel.declineVisitor()
+                                viewModel.decline(isGuest = true)
                                 dismiss()
                             }) {
                             Text(

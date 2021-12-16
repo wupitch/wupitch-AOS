@@ -36,7 +36,7 @@ class ImprtMemberDetailFragment : Fragment() {
 
     private val viewModel: ImprtMemberDetailViewModel by viewModels()
     private lateinit var memberBottomSheet: MemberBottomSheetFragment
-    private lateinit var reportBottomSheet : ReportBottomSheetFragment
+    private lateinit var reportBottomSheet: ReportBottomSheetFragment
     private lateinit var reportDialog: ReportDialog
 
 
@@ -76,11 +76,16 @@ class ImprtMemberDetailFragment : Fragment() {
                     val memberState = remember { viewModel.memberInfoState }
 
                     val dismissMemberState = viewModel.dismissMember
-                    if(dismissMemberState.value.isSuccess) {
-                        Toast.makeText(requireContext(), "멤버 삭제에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                    if (dismissMemberState.value.isSuccess) {
+                        Toast.makeText(requireContext(), "멤버 삭제에 성공했습니다.", Toast.LENGTH_SHORT)
+                            .show()
                     }
-                    if(dismissMemberState.value.error.isNotEmpty()){
-                        Toast.makeText(requireContext(), dismissMemberState.value.error, Toast.LENGTH_SHORT).show()
+                    if (dismissMemberState.value.error.isNotEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            dismissMemberState.value.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                     ConstraintLayout(
@@ -99,10 +104,12 @@ class ImprtMemberDetailFragment : Fragment() {
                             },
                             onLeftIconClick = { findNavController().navigateUp() },
                             onRightIconClick = {
-                                //todo 현재 유저가 리더인지 확인.
-                                showMemberBottomSheet()
-                                //리더가 아니라면 신고하기 바텀시트.
-                                               },
+                                if (viewModel.isCurrentUserLeader) {
+                                    showMemberBottomSheet()
+                                } else {
+                                    showReportBottomSheet()
+                                }
+                            },
                             textString = R.string.profile,
                             icon = R.drawable.more
                         )
@@ -144,10 +151,9 @@ class ImprtMemberDetailFragment : Fragment() {
     }
 
     private fun showReportBottomSheet() {
-        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.CREW)
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.MEMBER)
         reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
-
 
 
 }

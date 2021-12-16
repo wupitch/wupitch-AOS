@@ -64,10 +64,10 @@ class MyCrewMembersFragment() : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data) { _, item ->
                                     CrewMemberLayout(member = item) {
+                                        viewModel.selectedTab = 3
                                         val bundle = Bundle().apply {
                                             putInt("memberId", it)
                                             putInt("crewId", viewModel.crewId)
-//                                            putBoolean("isLeader", viewModel)
                                         }
                                         findNavController().navigate(R.id.action_myCrewDetailFragment_to_memberDetailFragment, bundle)
                                     }
