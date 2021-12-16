@@ -81,4 +81,10 @@ interface CrewApi {
     suspend fun patchPostLike(
         @Path("postId") postId : Int
     ) : Response<BaseResultRes>
+
+    @PATCH("app/posts/{postId}/report-toggle")
+    suspend fun patchPostReport(
+        @Path("postId") postId : Int,
+        @Body reportPostReq : ReportPostReq
+    ) : Response<BaseResultRes>
 }

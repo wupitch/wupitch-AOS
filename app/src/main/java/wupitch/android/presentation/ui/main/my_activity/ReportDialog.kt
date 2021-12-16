@@ -23,7 +23,7 @@ class ReportDialog(context: Context, val viewModel : ViewModel) : Dialog(context
         binding.btnConfirm.setOnClickListener {
             when(viewModel){
                 is MyCrewViewModel -> {
-                    viewModel.postCrewReport(binding.etReport.text.toString())
+                    viewModel.postReport(binding.etReport.text.toString())
                 }
                 is MyImpromptuViewModel -> {
                     viewModel.postImprtReport(binding.etReport.text.toString())

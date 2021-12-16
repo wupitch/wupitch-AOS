@@ -40,6 +40,7 @@ import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.FullToolBar
 import wupitch.android.presentation.ui.components.ReportBottomSheetFragment
+import wupitch.android.util.ReportType
 import wupitch.android.util.SportType
 
 @AndroidEntryPoint
@@ -130,7 +131,7 @@ class MemberDetailFragment : Fragment() {
     }
 
     private fun showReportBottomSheet() {
-        reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.MEMBER)
         reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 

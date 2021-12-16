@@ -36,7 +36,7 @@ import wupitch.android.domain.model.CrewPostResult
 @Composable
 fun MyCrewPostCard(
     post: CrewPostResult,
-    onMoreClick: () -> Unit,
+    onMoreClick: (id : Int) -> Unit,
     onLikeClick: (id: Int) -> Unit
 ) {
 
@@ -143,7 +143,7 @@ fun MyCrewPostCard(
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
-                        onClick = onMoreClick
+                        onClick = {onMoreClick(post.id)}
                     ),
                     painter = painterResource(id = R.drawable.more),
                     contentDescription = null
@@ -203,7 +203,7 @@ fun MyCrewPostCard(
                     .clickable(
                         interactionSource = MutableInteractionSource(),
                         indication = null,
-                        onClick = onMoreClick
+                        onClick = { onMoreClick(post.id) }
                     ),
                     painter = painterResource(id = R.drawable.more),
                     contentDescription = null

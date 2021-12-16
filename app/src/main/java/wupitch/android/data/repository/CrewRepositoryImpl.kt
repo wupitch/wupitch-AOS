@@ -61,5 +61,11 @@ class CrewRepositoryImpl @Inject constructor(
     override suspend fun patchPostLike(postId: Int): Response<BaseResultRes>
     = retrofit.create(CrewApi::class.java).patchPostLike(postId)
 
+    override suspend fun patchPostReport(
+        postId: Int,
+        reportPostReq: ReportPostReq
+    ): Response<BaseResultRes>
+    = retrofit.create(CrewApi::class.java).patchPostReport(postId, reportPostReq)
+
 
 }

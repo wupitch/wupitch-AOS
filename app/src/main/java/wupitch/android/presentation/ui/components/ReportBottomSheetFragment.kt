@@ -22,10 +22,13 @@ import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.main.my_activity.MemberDetailViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewViewModel
 import wupitch.android.presentation.ui.main.my_activity.my_impromptu.MyImpromptuViewModel
+import wupitch.android.util.ReportType
 
 
 class ReportBottomSheetFragment(
-    val viewModel : ViewModel
+    val viewModel : ViewModel,
+    private val reportType : ReportType,
+    private val reportId : Int = -1
 ) : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +56,7 @@ class ReportBottomSheetFragment(
                             .clickable {
                                 when(viewModel){
                                     is MyCrewViewModel -> {
-                                        viewModel.setShowReportDialog()
+                                        viewModel.setShowReportDialog(reportType, reportId)
                                     }
                                     is MyImpromptuViewModel-> {
                                         viewModel.setShowReportDialog()
