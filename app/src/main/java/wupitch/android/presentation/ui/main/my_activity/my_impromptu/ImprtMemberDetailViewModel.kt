@@ -25,6 +25,7 @@ class ImprtMemberDetailViewModel @Inject constructor(
 
     var memberId = -1
     var imprtId = -1
+    var isCurrentUserLeader = false
 
     /*
     * get member info
@@ -61,7 +62,6 @@ class ImprtMemberDetailViewModel @Inject constructor(
     fun postImprtReport(content: String) {
         //todo
         _showReportDialog.value = false
-        Log.d("{MyImpromptuViewModel.postImprtReport}", content.toString())
     }
 
     /**

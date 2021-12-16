@@ -74,23 +74,26 @@ class CrewDetailFragment : Fragment() {
                             .show()
                     }
 
-                    val postVisitState = remember { viewModel.postVisitState }
+                    val postVisitState =  viewModel.postVisitState
                     if (postVisitState.value.isSuccess){
                         joinVisitorDialogOpenState.value = true
-                    }else {
+                    }
+
+                    if (postVisitState.value.error.isNotEmpty()) {
                         when (postVisitState.value.code) {
                             2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
+                            else -> {
+                                Toast.makeText(
+                                    requireContext(),
+                                    postVisitState.value.error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
-                    }
-                    if (postVisitState.value.error.isNotEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            postVisitState.value.error,
-                            Toast.LENGTH_SHORT
-                        ).show()
                         viewModel.initPostVisitState()
+
                     }
 
                     val scrollState = rememberScrollState(0)
@@ -105,26 +108,22 @@ class CrewDetailFragment : Fragment() {
                         ).show()
                     }
 
-                    val joinState = remember { viewModel.joinState }
+                    val joinState =  viewModel.joinState
 
-                    if (joinState.value.isSuccess) {
-                        if (joinState.value.result == true) joinDialogOpenState.value = true
-                        else if (joinState.value.result == false)
-                            Toast.makeText(
-                            requireContext(),
-                            "이미 가입한 크루입니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        when (joinState.value.code) {
+                    if (joinState.value.isSuccess && joinState.value.result == true) {
+                        joinDialogOpenState.value = true
+                    }
+
+                    if(joinState.value.error.isNotEmpty()){
+                         when (joinState.value.code) {
                             2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
-                            -100 -> {
+                            else -> {
                                 Toast.makeText(requireContext(), joinState.value.error, Toast.LENGTH_SHORT).show()
-                                viewModel.initJoinState()
                             }
                         }
+                        viewModel.initJoinState()
                     }
 
 

@@ -19,7 +19,8 @@ data class GetMemberDetailResultDto(
     val isValid: Boolean,
     val phoneNumber: String,
     val profileImage: String?,
-    val sportsList: List<Int>
+    val sportsList: List<Int>,
+    val isAuthAccountLeader : Boolean
 )
 
 fun GetMemberDetailResultDto.toMemberDetail() : MemberDetail {

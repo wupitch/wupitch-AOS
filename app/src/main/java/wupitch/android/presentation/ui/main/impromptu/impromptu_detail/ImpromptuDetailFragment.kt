@@ -79,26 +79,22 @@ class ImpromptuDetailFragment : Fragment() {
                         ).show()
                     }
 
-                    val joinState = remember {viewModel.joinState}
+                    val joinState = viewModel.joinState
 
-                    if(joinState.value.isSuccess){
-                        if(joinState.value.result == true) joinSuccessDialogOpenState.value = true
-                        else if(joinState.value.result == false) Toast.makeText(
-                            requireContext(),
-                            "이미 등록한 번개입니다.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }else {
-                        //todo check server implemented
+                    if(joinState.value.isSuccess && joinState.value.result == true){
+                        joinSuccessDialogOpenState.value = true
+
+                    }
+                    if(joinState.value.error.isNotEmpty()){
                         when(joinState.value.code){
                             2014 -> {
                                 notEnoughInfoDialogOpenState.value = true
                             }
-                            -100 -> {
+                            else -> {
                                 Toast.makeText(requireContext(), joinState.value.error, Toast.LENGTH_SHORT).show()
-                                viewModel.initJoinState()
                             }
                         }
+                        viewModel.initJoinState()
                     }
 
 
