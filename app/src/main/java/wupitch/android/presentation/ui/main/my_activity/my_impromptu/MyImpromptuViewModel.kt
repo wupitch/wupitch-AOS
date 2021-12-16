@@ -10,11 +10,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import wupitch.android.data.remote.dto.toCrewMember
 import wupitch.android.data.remote.dto.toImprtDetailResult
+import wupitch.android.data.remote.dto.toImprtMember
 import wupitch.android.domain.repository.ImprtRepository
 import wupitch.android.presentation.ui.main.impromptu.impromptu_detail.ImprtDetailState
-import wupitch.android.presentation.ui.main.my_activity.my_crew.Member
-import wupitch.android.presentation.ui.main.my_activity.my_crew.MemberState
+import wupitch.android.presentation.ui.main.my_activity.my_crew.CrewMemberState
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,11 +24,14 @@ class MyImpromptuViewModel @Inject constructor(
 ) : ViewModel() {
 
 
+    private var imprtId = -1
+
     private var _imprtDetailState = mutableStateOf(ImprtDetailState())
     val imprtDetailState : State<ImprtDetailState> = _imprtDetailState
 
     fun getImprtDetail(id : Int) = viewModelScope.launch {
         _imprtDetailState.value = ImprtDetailState(isLoading = true)
+        imprtId = id
 
         val response = imprtRepository.getImprtDetail(id)
         if(response.isSuccessful){
@@ -64,27 +68,19 @@ class MyImpromptuViewModel @Inject constructor(
    * members
    * */
 
-    private var _memberState = mutableStateOf(MemberState())
-    val memberState : State<MemberState> = _memberState
+    private var _memberState = mutableStateOf(ImprtMemberState())
+    val memberState : State<ImprtMemberState> = _memberState
 
     fun getMembers() = viewModelScope.launch {
-        _memberState.value = MemberState(isLoading = true)
-        delay(500L)
-        _memberState.value = MemberState(data = listOf(
-            Member(0,"https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg", "베키", true),
-            Member(1,null, "플로라", false),
-            Member(2,null, "스완", false),
-            Member(3,null, "우피치", false),
-            Member(4,null, "우피치", false),
-            Member(5,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
+        _memberState.value = ImprtMemberState(isLoading = true)
 
-            ))
+        val response = imprtRepository.getImprtMembers(imprtId)
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) {
+                    _memberState.value = ImprtMemberState(data = res.result.map { it.toImprtMember() })
+                }else  _memberState.value = ImprtMemberState(error = res.message)
+            }
+        }else  _memberState.value = ImprtMemberState(error = "멤버 조회에 실패했습니다.")
     }
 }

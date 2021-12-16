@@ -54,4 +54,9 @@ interface ImprtApi {
 
     @GET("app/impromptus/accounts/auth")
     suspend fun getMyImpromptus() : Response<GetMyImprt>
+
+    @GET("app/impromptus/{impromptuId}/members")
+    suspend fun getImprtMembers(
+        @Path("impromptuId") impromptuId : Int
+    ) : Response<GetImprtMembersRes>
 }

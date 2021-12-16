@@ -19,12 +19,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import wupitch.android.R
+import wupitch.android.domain.model.CrewMember
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.main.my_activity.my_crew.Member
 
 @Composable
-fun CrewMember( //todo 게시판, 번개 멤버 리팩토링
-    member : Member,
+fun CrewMemberLayout( //todo 게시판, 번개 멤버 리팩토링
+    member : CrewMember,
     onClick : (Int) -> Unit
 ){
     ConstraintLayout(

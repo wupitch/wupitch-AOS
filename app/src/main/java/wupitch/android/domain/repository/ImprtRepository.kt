@@ -21,4 +21,5 @@ interface ImprtRepository {
     suspend fun joinImprt( id : Int) : Response<BaseResultRes>
     suspend fun getSearchImprt(title: String, page : Int) : Response<GetImprtRes>
     suspend fun getMyImprt() : Response<GetMyImprt>
+    suspend fun getImprtMembers(imprtId : Int) : Response<GetImprtMembersRes>
 }

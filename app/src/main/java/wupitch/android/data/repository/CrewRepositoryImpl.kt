@@ -67,5 +67,8 @@ class CrewRepositoryImpl @Inject constructor(
     ): Response<BaseResultRes>
     = retrofit.create(CrewApi::class.java).patchPostReport(postId, reportPostReq)
 
+    override suspend fun getCrewMembers(crewId: Int): Response<GetCrewMembersRes>
+    = retrofit.create(CrewApi::class.java).getCrewMembers(crewId)
+
 
 }

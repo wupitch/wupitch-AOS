@@ -87,4 +87,10 @@ interface CrewApi {
         @Path("postId") postId : Int,
         @Body reportPostReq : ReportPostReq
     ) : Response<BaseResultRes>
+
+    @GET("app/clubs/{clubId}/members")
+    suspend fun getCrewMembers(
+        @Path("clubId") crewId : Int
+    ) : Response<GetCrewMembersRes>
+
 }
