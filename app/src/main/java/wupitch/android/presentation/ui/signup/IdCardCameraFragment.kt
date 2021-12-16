@@ -63,7 +63,7 @@ class IdCardCameraFragment : Fragment() {
                 CameraTheme {
 
                     var imageUri by remember { mutableStateOf(EMPTY_IMAGE_URI) }
-                    val signupState = remember {viewModel.signupState}
+                    val signupState = viewModel.signupState
                     if(signupState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), signupState.value.error, Toast.LENGTH_SHORT).show()
                     }

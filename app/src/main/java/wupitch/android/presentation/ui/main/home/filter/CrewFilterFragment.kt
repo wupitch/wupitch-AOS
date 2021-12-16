@@ -228,7 +228,8 @@ class CrewFilterFragment : Fragment() {
                                 text = R.string.event,
                                 filterItemList = sportsList,
                                 modifier = Modifier
-                                    .width(96.dp)
+                                    .fillMaxWidth(0.3f)
+//                                    .width(96.dp)
                                     .height(48.dp),
                                 checkedListState = eventState
                             )
@@ -238,7 +239,8 @@ class CrewFilterFragment : Fragment() {
                                 text = R.string.day,
                                 filterItemList = dayList,
                                 modifier = Modifier
-                                    .width(48.dp)
+                                    .fillMaxWidth(0.15f)
+//                                    .width(48.dp)
                                     .height(48.dp),
                                 checkedListState = dayState
                             )
@@ -256,7 +258,8 @@ class CrewFilterFragment : Fragment() {
                                 text = R.string.age_group,
                                 filterItemList = ageGroupList,
                                 modifier = Modifier
-                                    .width(96.dp)
+                                    .fillMaxWidth(0.3f)
+//                                    .width(96.dp)
                                     .height(48.dp),
                                 checkedListState = ageGroupState
                             )
@@ -320,7 +323,8 @@ class CrewFilterFragment : Fragment() {
                 itemList.forEachIndexed { index, item ->
                     RadioButton(
                         modifier = Modifier
-                            .width(96.dp)
+                            .fillMaxWidth(0.3f)
+//                            .width(96.dp)
                             .height(48.dp),
                         checkedState = item.state,
                         text = item.name,
