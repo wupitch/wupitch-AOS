@@ -91,7 +91,7 @@ fun ReportDialog(
                     fontSize = 14.sp
                 ) {
                     if(viewModel is MyCrewViewModel){
-                        viewModel.postCrewReport(textState.value)
+                        viewModel.postReport(textState.value)
                     }else if (viewModel is MyImpromptuViewModel){
                         viewModel.postImprtReport(textState.value)
                     }

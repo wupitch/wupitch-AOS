@@ -98,10 +98,6 @@ class CreateCrewSportFragment : Fragment() {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }, textString = R.string.create_crew) {
-                        Log.d(
-                            "{CreateCrewSportFragment.onCreateView}",
-                            viewModel.crewDistrictId.value.toString()
-                        )
                         if (viewModel.crewSportId.value != -1) {
                             dialogOpenState.value = true
                         } else {
@@ -153,14 +149,10 @@ class CreateCrewSportFragment : Fragment() {
 
                         //그런데 다른 파일에 있을 때와 위와 같은데, 한 파일에 있을 때는 여러번 불리지 않는다..
                         //state 가 바뀌는 건 같은데... 도대체 무슨 일일까.,,???
-                        Log.d(
-                            "{CreateCrewSportFragment.onCreateView}",
-                            sportsList.data.map { it.state }.toString()
-                        )
 
-                        Column(Modifier.constrainAs(content) {
+                        Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp).constrainAs(content) {
                             top.linkTo(divider.bottom, margin = 24.dp)
-                            start.linkTo(parent.start, margin = 20.dp)
+                            start.linkTo(parent.start)
                         }) {
                             Text(
                                 text = stringResource(id = R.string.select_crew_sport),
@@ -176,22 +168,17 @@ class CreateCrewSportFragment : Fragment() {
                                     .fillMaxWidth()
                                     .padding(top = 32.dp),
                                 radioBtnModifier = Modifier
-                                    .width(96.dp)
+                                    .fillMaxWidth(0.3f)
                                     .height(48.dp),
                             ) {
                                 //한 파일안 에 있고 아래 state 코드가 없으면 이 if문 이 여러번 불리지 않는다.
                                 //그런데 아래 state 가 바뀌면 if문 이 여러번 호출된다.
                                 //결론 : state 가 사용되는 곳은, state 가 바뀌면 호출된다.
                                 viewModel.setCrewSport(it)
-                                Log.d(
-                                    "{CreateCrewSport.onCreateView}",
-                                    "스포츠 : ${sportSelectedState.value} "
-                                )
                             }
                         }
                     }
 
-                    //todo 동 state 추가.
                     RoundBtn(
                         modifier = Modifier
                             .constrainAs(nextBtn) {
@@ -208,7 +195,6 @@ class CreateCrewSportFragment : Fragment() {
                         fontSize = 16.sp
                     ) {
                         if (sportSelectedState.value != -1) {
-                            Log.d("{CreateCrewSport.onCreateView}", "next btn clicked!")
 
                             viewModel.setCrewSport(sportSelectedState.value)
                             findNavController().navigate(R.id.action_createCrewSport_to_createCrewLocationFragment)

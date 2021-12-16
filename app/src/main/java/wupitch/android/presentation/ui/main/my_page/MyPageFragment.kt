@@ -77,7 +77,7 @@ class MyPageFragment : Fragment() {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val userInfoState = remember {viewModel.userInfo}
 
-                val uploadImageState = remember {viewModel.uploadImageState}
+                val uploadImageState = viewModel.uploadImageState
                 if(uploadImageState.value.error.isNotEmpty()){
                     Toast.makeText(requireContext(), uploadImageState.value.error, Toast.LENGTH_SHORT).show()
                 }

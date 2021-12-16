@@ -34,12 +34,19 @@ import wupitch.android.common.Constants
 import wupitch.android.presentation.theme.Roboto
 import wupitch.android.presentation.theme.WupitchTheme
 import wupitch.android.presentation.ui.components.CreateFab
+import wupitch.android.presentation.ui.components.ReportBottomSheetFragment
 import wupitch.android.presentation.ui.main.home.components.CrewCard
+import wupitch.android.presentation.ui.main.my_activity.ReportDialog
 import wupitch.android.presentation.ui.main.my_activity.components.MyCrewPostCard
+import wupitch.android.util.ReportType
 
 @AndroidEntryPoint
 class MyCrewBoardFragment : Fragment() {
+
     private val viewModel: MyCrewViewModel by viewModels({ requireParentFragment() })
+    private lateinit var reportBottomSheet : ReportBottomSheetFragment
+    private lateinit var reportDialog : ReportDialog
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -90,18 +97,10 @@ class MyCrewBoardFragment : Fragment() {
                                     itemsIndexed(
                                         items = postState.value.data
                                     ) { index, item ->
-//                                        viewModel.onChangeScrollPosition(index)
-//                                        if((index +1) >= (page * Constants.PAGE_SIZE) && !loading.value){
-//                                            viewModel.getNewPage()
-//                                        }
                                         MyCrewPostCard(
                                             post = item,
-                                            onMoreClick = {
-                                                //todo show more
-                                                Log.d(
-                                                    "{MyCrewBoardFragment.onCreateView}",
-                                                    "more clicked!"
-                                                )
+                                            onMoreClick = { postId ->
+                                               showReportBottomSheet(postId)
                                             },
                                             onLikeClick = { postId ->
                                                 viewModel.patchPostLike(postId)
@@ -169,5 +168,10 @@ class MyCrewBoardFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showReportBottomSheet(postId : Int) {
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.POST, postId)
+        reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 }

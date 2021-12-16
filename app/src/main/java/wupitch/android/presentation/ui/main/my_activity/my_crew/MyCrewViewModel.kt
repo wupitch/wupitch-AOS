@@ -11,12 +11,16 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.http.POST
 import wupitch.android.common.BaseState
+import wupitch.android.data.remote.dto.ReportPostReq
 import wupitch.android.data.remote.dto.toCrewDetailResult
+import wupitch.android.data.remote.dto.toCrewMember
 import wupitch.android.data.remote.dto.toResult
 import wupitch.android.domain.repository.CrewRepository
 import wupitch.android.presentation.ui.main.home.crew_detail.CrewDetailState
 import wupitch.android.util.GetImageFile
+import wupitch.android.util.ReportType
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,14 +80,44 @@ class MyCrewViewModel @Inject constructor(
     private var _showReportDialog = MutableLiveData<Boolean>()
     val showReportDialog : LiveData<Boolean> = _showReportDialog
 
-    fun setShowReportDialog() {
+    private var reportType = ReportType.POST
+    private var reportId = -1
+
+    fun setShowReportDialog(reportType: ReportType, reportId : Int) {
         _showReportDialog.value = true
+        this.reportType = reportType
+        this.reportId = reportId
     }
 
-    fun postCrewReport(content : String) {
-        //todo
+    fun postReport(content : String) {
         _showReportDialog.value = false
-        Log.d("{MyCrewViewModel.postCrewReport}", content.toString())
+        when(reportType){
+            ReportType.POST -> reportPost(content, reportId)
+            ReportType.CREW -> reportCrew(content)
+        }
+    }
+
+    private fun reportCrew(content: String) = viewModelScope.launch {
+        //todo
+    }
+
+    private var _postReportState = mutableStateOf(BaseState())
+    val postReportState : State<BaseState> = _postReportState
+
+    private fun reportPost(content: String, postId: Int) = viewModelScope.launch {
+        _postReportState.value = BaseState(isLoading = true)
+
+        val response = crewRepository.patchPostReport(
+            postId = postId,
+            reportPostReq = ReportPostReq(reportContents = content)
+        )
+        if(response.isSuccessful){
+            response.body()?.let { res ->
+                if(res.isSuccess) _postReportState.value = BaseState(isSuccess = true)
+                else _postReportState.value = BaseState(error = res.message)
+            }
+        }else _postReportState.value = BaseState(error = "신고하기에 실패했습니다.")
+
     }
 
     /*
@@ -148,63 +182,22 @@ class MyCrewViewModel @Inject constructor(
 
     }
 
-//    private fun resizeImage(file: File, scaleTo: Int = 1024) {
-//        val bmOptions = BitmapFactory.Options()
-//        bmOptions.inJustDecodeBounds = true
-//        BitmapFactory.decodeFile(file.absolutePath, bmOptions)
-//        val photoW = bmOptions.outWidth
-//        val photoH = bmOptions.outHeight
-//
-//        val scaleFactor = Math.min(photoW / scaleTo, photoH / scaleTo)
-//
-//        bmOptions.inJustDecodeBounds = false
-//        bmOptions.inSampleSize = scaleFactor
-//
-//        val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
-//        file.outputStream().use {
-//            resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
-//            resized.recycle()
-//        }
-//    }
-
     /*
     * members
     * */
 
-    private var _memberState = mutableStateOf(MemberState())
-    val memberState : State<MemberState> = _memberState
+    private var _memberState = mutableStateOf(CrewMemberState())
+    val memberState : State<CrewMemberState> = _memberState
 
     fun getMembers() = viewModelScope.launch {
-        _memberState.value = MemberState(isLoading = true)
-        delay(500L)
-        _memberState.value = MemberState(data = listOf(
-            Member(0,"https://blog.kakaocdn.net/dn/GUa7H/btqCpRytcqf/brPCKwItrfGNw1aWd8ZKb0/img.jpg", "베키", true),
-            Member(1,null, "플로라", false),
-            Member(2,null, "스완", false),
-            Member(3,null, "우피치", false),
-            Member(4,null, "우피치", false),
-            Member(5,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-            Member(6,null, "우피치", false),
-
-        ))
+        _memberState.value = CrewMemberState(isLoading = true)
+        val response = crewRepository.getCrewMembers(crewId)
+        if(response.isSuccessful) {
+            response.body()?.let { res ->
+                if(res.isSuccess) {
+                    _memberState.value = CrewMemberState(data = res.result.map { it.toCrewMember() })
+                }else  _memberState.value = CrewMemberState(error = res.message)
+            }
+        }else  _memberState.value = CrewMemberState(error = "멤버 조회에 실패했습니다.")
     }
 }
-
-data class Member(
-    val id : Int,
-    val userImage : String?,
-    val userName : String,
-    val isLeader : Boolean
-)
-
-data class MemberState(
-    val isLoading : Boolean = false,
-    val data : List<Member> = emptyList(),
-    val error : String = ""
-)

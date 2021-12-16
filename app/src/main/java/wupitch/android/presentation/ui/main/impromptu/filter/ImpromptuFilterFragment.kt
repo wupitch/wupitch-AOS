@@ -210,7 +210,8 @@ class ImpromptuFilterFragment : Fragment() {
                                 text = R.string.day,
                                 filterItemList = dayList,
                                 modifier = Modifier
-                                    .width(48.dp)
+                                    .fillMaxWidth(0.15f)
+//                                    .width(48.dp)
                                     .height(48.dp),
                                 checkedListState = dayState
                             )
@@ -283,7 +284,8 @@ class ImpromptuFilterFragment : Fragment() {
                 itemList.forEachIndexed { index, item ->
                     ScheduleRadioButton(
                         modifier = Modifier
-                            .width(96.dp)
+                            .fillMaxWidth(0.3f)
+//                            .width(96.dp)
                             .height(48.dp),
                         checkedState = item.state,
                         text = item.name,
@@ -368,7 +370,8 @@ class ImpromptuFilterFragment : Fragment() {
                 itemList.forEachIndexed { index, item ->
                     SizeRadioButton(
                         modifier = Modifier
-                            .width(96.dp)
+                            .fillMaxWidth(0.3f)
+//                            .width(96.dp)
                             .height(48.dp),
                         checkedState = item.state,
                         text = item.name,

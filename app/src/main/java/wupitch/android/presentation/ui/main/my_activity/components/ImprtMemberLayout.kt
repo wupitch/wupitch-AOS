@@ -1,17 +1,21 @@
 package wupitch.android.presentation.ui.main.my_activity.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,21 +23,24 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 import wupitch.android.R
+import wupitch.android.domain.model.CrewMember
+import wupitch.android.domain.model.ImprtMember
 import wupitch.android.presentation.theme.Roboto
-import wupitch.android.presentation.ui.main.my_activity.my_crew.Member
 
 @Composable
-fun CrewMember( //todo 게시판, 번개 멤버 리팩토링
-    member : Member,
-    onClick : (Int) -> Unit
-){
+fun ImprtMemberLayout(
+    member: ImprtMember,
+    onClick: (Int) -> Unit
+) {
     ConstraintLayout(
-        Modifier.fillMaxWidth().height(60.dp)
+        Modifier
+            .fillMaxWidth()
+            .height(60.dp)
             .clickable { onClick(member.id) }
 
     ) {
 
-        val (userImage, userName, leaderIcon) = createRefs()
+        val (userImage, userName, leaderIcon, arrow) = createRefs()
 
         Image(
             modifier = Modifier
@@ -73,18 +80,31 @@ fun CrewMember( //todo 게시판, 번개 멤버 리팩토링
             color = colorResource(id = R.color.main_black)
         )
 
-        if(member.isLeader){
+        if (member.isLeader) {
             Image(
                 modifier = Modifier
                     .constrainAs(leaderIcon) {
                         start.linkTo(userName.end)
                         top.linkTo(userName.top)
                         bottom.linkTo(userName.bottom)
-                    }.size(24.dp),
+                    }
+                    .size(24.dp),
                 painter = painterResource(id = R.drawable.btn_03_leader),
                 contentDescription = null
             )
         }
+
+        Image(
+            modifier = Modifier
+                .constrainAs(arrow) {
+                    end.linkTo(parent.end, margin = 20.dp)
+                    top.linkTo(userName.top)
+                    bottom.linkTo(userName.bottom)
+                }
+                .size(24.dp),
+            painter = painterResource(id = R.drawable.i_arrows_chevron_backward),
+            contentDescription = null
+        )
     }
 
 }

@@ -180,8 +180,8 @@
             app:argType="integer"
             android:defaultValue="-1" />
         <action
-            android:id="@+id/action_myImpromptuDetailFragment_to_memberDetailFragment"
-            app:destination="@id/memberDetailFragment"
+            android:id="@+id/action_myImpromptuDetailFragment_to_imprtMemberDetailFragment"
+            app:destination="@id/imprtMemberDetailFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
@@ -562,6 +562,13 @@
         <action
             android:id="@+id/action_myCrewDetailFragment_to_imageDetailFragment"
             app:destination="@id/imageDetailFragment" />
+        <action
+            android:id="@+id/action_myCrewDetailFragment_to_memberDetailFragment"
+            app:destination="@id/crewMemberDetailFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/createMyCrewPostFragment"
@@ -577,11 +584,28 @@
         android:name="wupitch.android.presentation.ui.main.my_activity.my_crew.ImageDetailFragment"
         android:label="ImageDetailFragment" />
     <fragment
-        android:id="@+id/memberDetailFragment"
-        android:name="wupitch.android.presentation.ui.main.my_activity.MemberDetailFragment"
-        android:label="MemberDetailFragment" >
+        android:id="@+id/crewMemberDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.my_crew.CrewMemberDetailFragment"
+        android:label="CrewMemberDetailFragment">
         <argument
             android:name="memberId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="crewId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/imprtMemberDetailFragment"
+        android:name="wupitch.android.presentation.ui.main.my_activity.my_impromptu.ImprtMemberDetailFragment"
+        android:label="ImprtMemberDetailFragment">
+        <argument
+            android:name="memberId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="imprtId"
             app:argType="integer"
             android:defaultValue="-1" />
     </fragment>

@@ -278,7 +278,7 @@ class SignupViewModel @Inject constructor(
         try {
             val stream: OutputStream = FileOutputStream(file)
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, stream)
 
             stream.flush()
             stream.close()

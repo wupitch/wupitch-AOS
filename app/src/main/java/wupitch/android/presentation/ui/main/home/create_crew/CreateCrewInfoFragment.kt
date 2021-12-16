@@ -321,7 +321,7 @@ class CreateCrewInfoFragment : Fragment() {
 
         NumberTextFieldLayout(
             modifier = Modifier
-                .width(59.dp)
+                .width(66.dp)
                 .height(44.dp),
             textState = textState,
             measureString = stringResource(id = R.string.people_count_measure),

@@ -58,5 +58,17 @@ class ImprtRepositoryImpl @Inject constructor(
     override suspend fun getMyImprt(): Response<GetMyImprt>
     = retrofit.create(ImprtApi::class.java).getMyImpromptus()
 
+    override suspend fun getImprtMembers(imprtId: Int): Response<GetImprtMembersRes>
+    = retrofit.create(ImprtApi::class.java).getImprtMembers(imprtId)
+
+    override suspend fun dismissMember(imprtId: Int, memberId: Int): Response<BaseRes>
+    = retrofit.create(ImprtApi::class.java).dismissMember(imprtId, memberId)
+
+    override suspend fun getImprtMemberDetail(
+        imprtId: Int,
+        memberId: Int
+    ): Response<GetMemberDetailRes>
+    = retrofit.create(ImprtApi::class.java).getImprtMemberDetail(imprtId, memberId)
+
 
 }

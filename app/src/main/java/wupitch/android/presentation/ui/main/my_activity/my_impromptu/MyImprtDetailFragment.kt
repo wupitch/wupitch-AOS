@@ -46,6 +46,7 @@ import wupitch.android.presentation.ui.main.impromptu.components.RemainingDays
 import wupitch.android.presentation.ui.main.my_activity.ReportDialog
 import wupitch.android.presentation.ui.main.my_activity.components.ReportDialog
 import wupitch.android.presentation.ui.main.my_activity.my_crew.MyCrewDetailVPAdapter
+import wupitch.android.util.ReportType
 import wupitch.android.util.changeTabFont
 
 @AndroidEntryPoint
@@ -67,6 +68,15 @@ class MyImprtDetailFragment : BaseFragment<FragmentMyImprtDetailBinding>(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.viewpagerMyimprtdetail.post {
+            binding.viewpagerMyimprtdetail.currentItem =  viewModel.selectedTab
+        }
+        binding.tablayoutMyimprtdetail.setScrollPosition( viewModel.selectedTab, 0f, true)
+
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -79,7 +89,7 @@ class MyImprtDetailFragment : BaseFragment<FragmentMyImprtDetailBinding>(
     }
 
     private fun showReportBottomSheet() {
-        reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.IMPROMPTU)
         reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 

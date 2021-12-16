@@ -81,4 +81,32 @@ interface CrewApi {
     suspend fun patchPostLike(
         @Path("postId") postId : Int
     ) : Response<BaseResultRes>
+
+    @PATCH("app/posts/{postId}/report")
+    suspend fun patchPostReport(
+        @Path("postId") postId : Int,
+        @Body reportPostReq : ReportPostReq
+    ) : Response<BaseResultRes>
+
+    @GET("app/clubs/{clubId}/members")
+    suspend fun getCrewMembers(
+        @Path("clubId") crewId : Int
+    ) : Response<GetCrewMembersRes>
+
+    @GET("app/clubs/{clubId}/accounts/{accountId}/profile-info")
+    suspend fun getCrewMemberDetail(
+        @Path("clubId") crewId : Int,
+        @Path("accountId") accountId : Int
+    ): Response<GetMemberDetailRes>
+
+    @PATCH("app/clubs/enroll-member")
+    suspend fun acceptCrewApplicant(
+        @Body acceptCrewApplicantReq: CrewApplicantReq
+    ) : Response<BaseRes>
+
+    @PATCH("app/clubs/disagree-enroll-member")
+    suspend fun dismissCrewApplicant(
+        @Body acceptCrewApplicantReq: CrewApplicantReq
+    ) : Response<BaseRes>
+
 }

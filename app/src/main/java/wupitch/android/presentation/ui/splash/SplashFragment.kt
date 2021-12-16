@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -47,6 +47,7 @@ class SplashFragment : Fragment() {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
+                            modifier = Modifier.size(159.dp, 138.dp),
                             painter = painterResource(id = R.drawable.ic_logo),
                             contentDescription = "splash screen logo"
                         )
@@ -62,9 +63,9 @@ class SplashFragment : Fragment() {
         lifecycleScope.launch {
 
             //development
-            val jwt = viewModel.readJwt()
-            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
-
+//            val jwt = viewModel.readJwt()
+//            Log.d("{SplashFragment.onViewCreated}", jwt.toString())
+            delay(700L)
 
             withContext(Dispatchers.Main) {
                 if (viewModel.checkIsUserConfirmed()) {

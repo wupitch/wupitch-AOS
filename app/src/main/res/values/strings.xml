@@ -298,6 +298,13 @@
     <string name="impromptu_members">번개멤버</string>
     <string name="no_crew_image">가장 먼저 사진을 올려볼까요?</string>
     <string name="report_member">유저 신고하기</string>
+    <string name="waiting_for_acceptance">수락대기</string>
+    <string name="dismiss_member">멤버삭제</string>
+    <string name="accept_member">멤버수락</string>
+    <string name="decline_member">멤버거절</string>
+    <string name="accept_visitor">손님수락</string>
+    <string name="decline_visitor">손님거절</string>
+    <string name="report_post">게시글 신고하기</string>
 
 <!--    feed-->
     <string name="no_feed_image">크루에 참여하고\n사진을 올려보세요!</string>

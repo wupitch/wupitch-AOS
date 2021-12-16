@@ -35,6 +35,8 @@ class GetImageFile(private val context: Context) {
 
             inputStream.copyTo(outputStream)
 
+            resizeImage(file)
+
             file
         }catch (e:Exception) {
             Log.e("LOG>>","createImageFileAndroidQ ERror : $e")
@@ -113,7 +115,7 @@ fun resizeImage(file: File, scaleTo: Int = 1024) {
 
     val resized = BitmapFactory.decodeFile(file.absolutePath, bmOptions) ?: return
     file.outputStream().use {
-        resized.compress(Bitmap.CompressFormat.JPEG, 75, it)
+        resized.compress(Bitmap.CompressFormat.JPEG, 30, it)
         resized.recycle()
     }
 }

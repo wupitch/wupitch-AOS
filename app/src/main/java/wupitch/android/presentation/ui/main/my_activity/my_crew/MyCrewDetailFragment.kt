@@ -20,6 +20,7 @@ import wupitch.android.databinding.FragmentMyCrewDetailBinding
 import wupitch.android.presentation.ui.components.*
 import wupitch.android.presentation.ui.main.my_activity.ReportDialog
 import wupitch.android.presentation.ui.main.my_activity.components.*
+import wupitch.android.util.ReportType
 import wupitch.android.util.changeTabFont
 
 @AndroidEntryPoint
@@ -62,7 +63,7 @@ class MyCrewDetailFragment : BaseFragment<FragmentMyCrewDetailBinding>(
     }
 
     private fun showReportBottomSheet() {
-        reportBottomSheet = ReportBottomSheetFragment(viewModel)
+        reportBottomSheet = ReportBottomSheetFragment(viewModel, ReportType.CREW)
         reportBottomSheet.show(childFragmentManager, "report bottom sheet")
     }
 
