@@ -66,7 +66,6 @@ class OnboardingViewModel @Inject constructor(
                    if(res.result.isChecked){
                        userInfoDataStore.edit { settings ->
                            settings[USER_ID] = res.result.accountId
-                           settings[FIRST_COMER] = true
                        }
                        crewFilterDataStore.updateData {
                            it.toBuilder()

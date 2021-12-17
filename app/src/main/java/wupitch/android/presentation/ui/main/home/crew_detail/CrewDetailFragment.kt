@@ -484,7 +484,7 @@ class CrewDetailFragment : Fragment() {
 
             Text(
                 modifier = Modifier.padding(top = 16.dp),
-                text = crewState.crewName,
+                text = crewState.clubTitle,
                 fontSize = 18.sp,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Bold,
