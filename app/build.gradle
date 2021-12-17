@@ -17,8 +17,8 @@ android {
         applicationId "wupitch.android"
         minSdk 23
         targetSdk 31
-        versionCode 11
-        versionName "1.2.1"
+        versionCode 13
+        versionName "1.2.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

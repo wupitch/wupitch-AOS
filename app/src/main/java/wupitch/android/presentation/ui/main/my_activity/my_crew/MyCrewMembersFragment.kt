@@ -64,7 +64,7 @@ class MyCrewMembersFragment() : Fragment() {
                                 }
                                 itemsIndexed(items = memberState.value.data) { _, item ->
                                     CrewMemberLayout(member = item) {
-                                        viewModel.selectedTab = 3
+                                        viewModel.selectedTab = 2
                                         val bundle = Bundle().apply {
                                             putInt("memberId", it)
                                             putInt("crewId", viewModel.crewId)
