@@ -1,5 +1,7 @@
 package wupitch.android.util
 
+import android.util.Log
+
 fun String.stringToDouble() : Double {
     val hour = this.split(":")[0].toDouble()
     val min = this.split(":")[1].toDouble() / 100
@@ -7,10 +9,11 @@ fun String.stringToDouble() : Double {
 }
 
 fun doubleToTime(time : Double) : String {
-    var hour = time.toInt()
-    var min = ((time -hour)*100).toInt().toString()
+    var hour = time.toString().split(".")[0].toInt()
+    var min = time.toString().split(".")[1]
     if(hour==0) hour = 12
     if(min == "0") min = "00"
+    if(min == "3") min = "30"
     return "$hour:$min"
 }
 

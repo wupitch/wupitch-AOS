@@ -85,6 +85,10 @@ class SignupViewModel @Inject constructor(
     private var _signupState = mutableStateOf(BaseState())
     val signupState: State<BaseState> = _signupState
 
+    fun initSignupState() {
+        _signupState.value = BaseState()
+    }
+
     fun setAllToggleState(state: Boolean) {
         _allToggleState.value = state
     }

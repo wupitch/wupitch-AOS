@@ -66,6 +66,7 @@ class IdCardCameraFragment : Fragment() {
                     val signupState = viewModel.signupState
                     if(signupState.value.error.isNotEmpty()){
                         Toast.makeText(requireContext(), signupState.value.error, Toast.LENGTH_SHORT).show()
+                        viewModel.initSignupState()
                     }
                     if(signupState.value.isSuccess) findNavController().navigate(R.id.action_idCardCameraFragment_to_reqIdCertiFragment)
 
